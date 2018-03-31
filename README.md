@@ -5,9 +5,9 @@ Public Worship and Aids to Devotion Website
 ## static.pwad.org.au
 
 For static files (and website?)
-	- PDF of Pray
-	- PDF of Rejoice
-	- PWAD pdf papers
+  - PDF of Pray
+  - PDF of Rejoice
+  - PWAD pdf papers
   -	Committee page
 	- ...etc - extracted from existing sites
   
