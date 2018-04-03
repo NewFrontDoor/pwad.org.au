@@ -1,0 +1,4 @@
+.circleci
+.git
+node_modules
+__tests__

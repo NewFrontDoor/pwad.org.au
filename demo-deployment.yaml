@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pwa-org-au
+spec:
+  containers:
+  - name: pwa-org-au-auth
+    image: auth.pwad.org.au
