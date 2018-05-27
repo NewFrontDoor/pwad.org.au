@@ -1,0 +1,19 @@
+{
+  "presets": [
+    ["next/babel", {
+      "preset-env": {
+        "modules": "commonjs"
+      }
+    }],
+  ],
+  "env": {
+    "production": {
+      "plugins": [["emotion", { "hoist": true }]]
+    },
+    "development": {
+      "plugins": [
+        ["emotion", { "sourceMap": true, "autoLabel": true }]
+      ]
+    }
+  }
+}
