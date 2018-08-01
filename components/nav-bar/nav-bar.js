@@ -1,4 +1,7 @@
+import React from 'react';
 import styled from 'react-emotion';
+import Link from 'mineral-ui/Link';
+import NextLink from 'next/link';
 
 const Nav = styled.nav`
   margin: 0 auto;
@@ -15,19 +18,49 @@ const NavMenu = styled.ul`
 `;
 
 const NavMenuItem = styled.li`
-  margin: 0 1rem;
-  color: rgb(42, 81, 211);
-  font-size: 0.8rem;
+  &:nth-last-child(2) {
+    margin-left: auto;
+  }
 `;
 
 export default () => (
   <Nav>
     <NavMenu>
-      <NavMenuItem>Home</NavMenuItem>
-      <NavMenuItem>What is worship</NavMenuItem>
-      <NavMenuItem>Worship directory</NavMenuItem>
-      <NavMenuItem>Worship aids</NavMenuItem>
-      <NavMenuItem>Useful links</NavMenuItem>
+      <NavMenuItem>
+        <Link href="/" element={NextLink}>
+          Home
+        </Link>
+      </NavMenuItem>
+      <NavMenuItem>
+        <Link href="/" element={NextLink}>
+          What is worship?
+        </Link>
+      </NavMenuItem>
+      <NavMenuItem>
+        <Link href="/" element={NextLink}>
+          Worship directory
+        </Link>
+      </NavMenuItem>
+      <NavMenuItem>
+        <Link href="/" element={NextLink}>
+          Worship aids
+        </Link>
+      </NavMenuItem>
+      <NavMenuItem>
+        <Link href="/" element={NextLink}>
+          Useful links
+        </Link>
+      </NavMenuItem>
+      <NavMenuItem>
+        <Link href="/" element={NextLink}>
+          Log in
+        </Link>
+      </NavMenuItem>
+      <NavMenuItem>
+        <Link href="/" element={NextLink}>
+          Create account
+        </Link>
+      </NavMenuItem>
     </NavMenu>
   </Nav>
 );

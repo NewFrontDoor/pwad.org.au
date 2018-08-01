@@ -1,4 +1,4 @@
-FROM node:8.9 as builder
+FROM node:8.11 as builder
 
 MAINTAINER v100it Team "it@vision100.org"
 
@@ -15,7 +15,7 @@ RUN npm install
 COPY . ./
 
 # small server
-FROM node:8.9-alpine
+FROM node:8.11-alpine
 
 ENV TZ Australia/Sydney
 

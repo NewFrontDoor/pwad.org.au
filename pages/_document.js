@@ -9,8 +9,9 @@ export default class MyDocument extends Document {
     return {...page, ...styles};
   }
 
-  componentWillMount() {
-    const {__NEXT_DATA__, ids} = this.props;
+  constructor(props) {
+    super(props);
+    const {__NEXT_DATA__, ids} = props;
     if (ids) {
       __NEXT_DATA__.ids = ids;
     }

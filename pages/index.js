@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'react-emotion';
-import {flow} from 'lodash';
-import withData from '../lib/with-data';
-import withEmotion from '../lib/with-emotion';
+
 import NavBar from '../components/nav-bar/nav-bar';
 import Home from '../components/home';
 
@@ -12,18 +10,13 @@ const Footer = styled.footer`
   width: 75vw;
 `;
 
-const enhance = flow(
-  withEmotion,
-  withData,
-);
-
-export default enhance(() => (
+export default () => (
   <React.Fragment>
     <NavBar/>
     <Home slug="home"/>
     <Footer>
-      <hr />
+      <hr/>
       © 2007 - 2018 PWAD & the Presbyterian Church of Australia
     </Footer>
   </React.Fragment>
-));
+);
