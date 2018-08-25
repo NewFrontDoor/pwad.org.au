@@ -4,7 +4,8 @@ const transform = require('model-transform');
 const {Types} = keystone.Field;
 
 const Hymn = new keystone.List('Hymn', {
-  track: true
+  track: true,
+  map: {name: 'title'}
 });
 
 Hymn.add(
@@ -26,5 +27,5 @@ Hymn.add(
 Hymn.schema.virtual('hasWordsCopyright').get(() => true);
 
 transform.toJSON(Hymn);
-Hymn.defaultColumns = '';
+Hymn.defaultColumns = 'title, hymnNumber, bookId';
 Hymn.register();

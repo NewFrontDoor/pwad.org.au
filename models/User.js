@@ -17,7 +17,6 @@ User.add(
       index: true,
       unique: true
     },
-    phone: {type: String, width: 'short'},
     password: {type: Types.Password, initial: true, required: false}
   },
   'Permissions',
