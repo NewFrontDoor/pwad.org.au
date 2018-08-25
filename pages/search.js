@@ -6,7 +6,7 @@ import Box from 'mineral-ui/Box';
 import NavBar from '../components/nav-bar/nav-bar';
 import SearchBox from '../components/search-box/search-box';
 
-const Footer = styled.footer`
+const Footer = styled('footer')`
   padding: 15vh 0;
 `;
 

@@ -1,11 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {css} from 'react-emotion';
 import Link from 'mineral-ui/Link';
 import Text from 'mineral-ui/Text';
 import Box from 'mineral-ui/Box';
 import Flex from 'mineral-ui/Flex';
 import {createStyledComponent} from 'mineral-ui/styles';
 import NextLink from 'next/link';
+
+const noList = css`
+  list-style: none;
+`;
+
+const flexRight = css`
+  margin-left: auto;
+`;
 
 function TextLink({href, children}) {
   return (
@@ -34,6 +43,7 @@ const NavMenuItem = createStyledComponent(Text, {
 const MenuButton = createStyledComponent(Link, {
   letterSpacing: 'inherit',
   textTransform: 'inherit',
+  fontWeight: 'inherit',
   margin: '0',
   padding: '0',
   border: 'none',
@@ -61,46 +71,46 @@ class NavBar extends React.Component {
           element="ul"
           justifyContent="between"
           padding="0"
-          css="list-style: none;"
+          className={noList}
           breakpoints={['narrow', 'medium']}
           direction={['column', 'column', 'row']}
         >
-          <NavMenuItem element="li">
-            <MenuButton onClick={this.handleMenuClick} element="button">
+          <NavMenuItem element="li" fontWeight="bold">
+            <MenuButton element="button" onClick={this.handleMenuClick}>
               Menu
             </MenuButton>
           </NavMenuItem>
-          <NavMenuItem element="li">
+          <NavMenuItem element="li" fontWeight="bold">
             <TextLink href="/">
               Home
             </TextLink>
           </NavMenuItem>
-          <NavMenuItem element="li">
+          <NavMenuItem element="li" fontWeight="bold">
             <TextLink href="/">
               What is worship?
             </TextLink>
           </NavMenuItem>
-          <NavMenuItem element="li">
+          <NavMenuItem element="li" fontWeight="bold">
             <TextLink href="/">
               Worship directory
             </TextLink>
           </NavMenuItem>
-          <NavMenuItem element="li">
+          <NavMenuItem element="li" fontWeight="bold">
             <TextLink href="/">
               Worship aids
             </TextLink>
           </NavMenuItem>
-          <NavMenuItem element="li">
+          <NavMenuItem element="li" fontWeight="bold">
             <TextLink href="/">
               Useful links
             </TextLink>
           </NavMenuItem>
-          <NavMenuItem element="li" css="margin-left: auto;">
+          <NavMenuItem element="li" fontWeight="bold" className={flexRight}>
             <TextLink href="/">
               Log in
             </TextLink>
           </NavMenuItem>
-          <NavMenuItem element="li">
+          <NavMenuItem element="li" fontWeight="bold">
             <TextLink href="/">
               Create account
             </TextLink>

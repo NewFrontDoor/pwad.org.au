@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'react-emotion';
 import Flex, {FlexItem} from 'mineral-ui/Flex';
+import {FormField} from 'mineral-ui/Form';
 import Text from 'mineral-ui/Text';
 import Button from 'mineral-ui/Button';
 import TextInput from 'mineral-ui/TextInput';
@@ -78,12 +79,15 @@ export default class SearchBox extends React.Component {
 
     return (
       <React.Fragment>
-        <TextInput
+        <FormField
+          input={TextInput}
+          label="Search"
           type="search"
           placeholder="Search..."
           value={value.join(' ')}
           onBlur={this.handleBlur}
           onChange={this.handleChange}
+          hideLabel
         />
         <Flex>
           <FlexItem>

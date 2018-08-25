@@ -5,7 +5,7 @@ import Box from 'mineral-ui/Box';
 
 import NavBar from '../components/nav-bar/nav-bar';
 
-const Footer = styled.footer`
+const Footer = styled('footer')`
   padding: 15vh 0;
 `;
 

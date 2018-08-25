@@ -28,7 +28,7 @@ ACL options
 ## search.pwad.org.au
 
 For search
-  - Songs
+  - Hymns
   - Services
   - Search All
 
