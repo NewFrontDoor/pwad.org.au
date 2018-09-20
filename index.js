@@ -21,7 +21,7 @@ module.exports = app
       handle: app.getRequestHandler()
     });
   })
-  .catch(err => console.error(err));
+  .catch(error => console.error(error));
 
 process.once('SIGUSR2', () => {
   stop(server).then(() => {

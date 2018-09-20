@@ -1,22 +1,22 @@
 import {fontFace} from 'polished';
 
-export const lato = fontFace({
-  fontFamily: 'Lato',
+export const cabin = fontFace({
+  fontFamily: 'Cabin',
   fontStyle: 'normal',
   fontWeight: 'normal',
-  fontFilePath: '/static/fonts/lato-latin-400'
+  fontFilePath: '/static/fonts/cabin-latin-400'
 });
 
-export const latoBold = fontFace({
-  fontFamily: 'Lato',
+export const cabinBold = fontFace({
+  fontFamily: 'Cabin',
   fontStyle: 'normal',
   fontWeight: 'bold',
-  fontFilePath: '/static/fonts/lato-latin-700'
+  fontFilePath: '/static/fonts/cabin-latin-700'
 });
 
-export const latoExtraBold = fontFace({
-  fontFamily: 'Lato',
+export const cabinExtraBold = fontFace({
+  fontFamily: 'Cabin',
   fontStyle: 'normal',
   fontWeight: '800',
-  fontFilePath: '/static/fonts/lato-latin-900'
+  fontFilePath: '/static/fonts/cabin-latin-700'
 });

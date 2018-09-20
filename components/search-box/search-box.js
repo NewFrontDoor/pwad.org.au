@@ -80,6 +80,7 @@ export default class SearchBox extends React.Component {
     return (
       <React.Fragment>
         <FormField
+          hideLabel
           input={TextInput}
           label="Search"
           type="search"
@@ -87,7 +88,6 @@ export default class SearchBox extends React.Component {
           value={value.join(' ')}
           onBlur={this.handleBlur}
           onChange={this.handleChange}
-          hideLabel
         />
         <Flex>
           <FlexItem>

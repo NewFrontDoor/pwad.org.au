@@ -7,7 +7,7 @@ import NavBar from '../components/nav-bar/nav-bar';
 import SearchBox from '../components/search-box/search-box';
 
 const Footer = styled('footer')`
-  padding: 15vh 0;
+  padding: 15vh 1rem;
 `;
 
 export default class Search extends React.Component {

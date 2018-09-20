@@ -8,7 +8,7 @@ import withApolloClient from '../lib/with-apollo-client';
 
 const theme = createTheme({
   overrides: {
-    fontFamily: 'lato'
+    fontFamily: 'cabin'
   }
 });
 

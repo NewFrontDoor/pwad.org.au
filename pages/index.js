@@ -6,7 +6,7 @@ import Box from 'mineral-ui/Box';
 import NavBar from '../components/nav-bar/nav-bar';
 
 const Footer = styled('footer')`
-  padding: 15vh 0;
+  padding: 15vh 1rem;
 `;
 
 export default class Index extends React.Component {
