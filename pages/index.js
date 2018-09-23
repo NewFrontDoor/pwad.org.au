@@ -15,19 +15,22 @@ export default class Index extends React.Component {
       <React.Fragment>
         <NavBar onMenuClick={this.handleMenuClick}/>
         <Box width={3 / 4} marginVertical={0} marginHorizontal="auto">
-          <Text element="h1" fontWeight="extraBold">Public Worship and Aids to Devotion Committee Website</Text>
+          <Text element="h1" fontWeight="extraBold">
+            Public Worship and Aids to Devotion Committee Website
+          </Text>
           <Text element="h2">PWAD Committee Website</Text>
           <Text appearance="prose">
-            This website is provided by the PWAD Committee to help congregations
-            within the Presbyterian Church of Australia. This is a long
-            page...please scroll down.
+            This website is provided by the PWAD Committee to help congregations within the
+            Presbyterian Church of Australia.
+          </Text>
+          <Text appearance="prose">
+            Use the below search field to find resources on the PWAD website, or follow the featured
+            links for quick access to particular resources.
           </Text>
         </Box>
         <Footer>
           <hr/>
-          <Text>
-            © 2007 - 2018 PWAD & the Presbyterian Church of Australia
-          </Text>
+          <Text>© 2007 - 2018 PWAD & the Presbyterian Church of Australia</Text>
         </Footer>
       </React.Fragment>
     );

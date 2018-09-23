@@ -18,6 +18,10 @@ export default class Search extends React.Component {
         <Box width={3 / 4} marginVertical={0} marginHorizontal="auto">
           <Text element="h1" fontWeight="extraBold">Public Worship and Aids to Devotion Committee Website</Text>
           <Text element="h2">Search</Text>
+          <Text appearance="prose">
+            Search for hymns, worship resources, prayer resources and worship aids using the search box below.
+            Advanced search will allow you to refine your criteria on data available in the resource.
+          </Text>
           <SearchBox/>
         </Box>
         <Footer>

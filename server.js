@@ -11,6 +11,7 @@ const closeDatabaseConnection = util.promisify(keystone.closeDatabaseConnection.
 const start = async ({handle = () => {}, pretty}) => {
   const keystoneConfig = require('./config/keystone');
   const port = config.get('PORT');
+  const dev = config.get('dev');
 
   const app = express();
 
@@ -35,9 +36,9 @@ const start = async ({handle = () => {}, pretty}) => {
     '/graphql',
     expressGraphQL(req => ({
       schema: require('./schema'),
-      graphiql: config.dev,
+      graphiql: dev,
       rootValue: {request: req},
-      pretty: config.dev
+      pretty: dev
     }))
   );
 

@@ -1,22 +1,55 @@
 import React from 'react';
 import styled from 'react-emotion';
+import Box from 'mineral-ui/Box';
 import Flex, {FlexItem} from 'mineral-ui/Flex';
 import {FormField} from 'mineral-ui/Form';
 import Text from 'mineral-ui/Text';
 import Button from 'mineral-ui/Button';
 import TextInput from 'mineral-ui/TextInput';
+import {CheckboxGroup} from 'mineral-ui/Checkbox';
 
-const setMeter = meter => () => ({
-  meter: (meter || '').toLowerCase()
+const setMeter = (value, checked) => prevState => {
+  const meters = [...prevState.meters];
+  const index = meters.indexOf(value);
+  const hasValue = index !== -1;
+
+  if (checked && !hasValue) {
+    meters.push(value);
+  } else if (hasValue) {
+    meters.splice(index, 1);
+  }
+
+  return {meters};
+};
+
+const toggleHowToSearch = ({showHowToSearch}) => ({
+  showHowToSearch: !showHowToSearch
 });
 
-const setTone = tone => () => ({
-  tone: (tone || '').toLowerCase()
+const toggleAdvancedSearch = ({showAdvancedSeach}) => ({
+  showAdvancedSeach: !showAdvancedSeach
 });
 
-const setContext = context => () => ({
-  context: (context || '').toLowerCase()
-});
+const searchState = ({customMeter, tune, search, ...rest}) => {
+  const value = [];
+  let meters = [...rest.meters];
+
+  if (customMeter) {
+    meters = [...meters, customMeter];
+  }
+
+  if (meters.length > 0) {
+    value.push(`meter:${meters.join(',')}`);
+  }
+
+  if (tune) {
+    value.push(`tune:${tune}`);
+  }
+
+  value.push(search);
+
+  return value;
+};
 
 export default class SearchBox extends React.Component {
   constructor(props) {
@@ -25,122 +58,155 @@ export default class SearchBox extends React.Component {
     this.searchRef = React.createRef();
 
     this.state = {
-      meter: null,
-      tone: null,
-      context: null,
-      value: ''
+      customMeter: '',
+      meters: [],
+      search: '',
+      title: '',
+      tune: '',
+      passage: '',
+      showHowToSearch: false,
+      showAdvancedSeach: !false
     };
 
+    this.handleSearch = this.handleSearch.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleMeter = this.handleMeter.bind(this);
-    this.handleTone = this.handleTone.bind(this);
-    this.handleContext = this.handleContext.bind(this);
+    this.handleHowToSearch = this.handleHowToSearch.bind(this);
+    this.handleAdvancedSearch = this.handleAdvancedSearch.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({
-      value: event.target.value
+  handleChange(name) {
+    return event => this.setState({
+      [name]: event.target.value
     });
   }
 
+  handleSearch(event) {
+    const state = searchState(this.state).slice(0, -1).join(' ');
+    const search = event.target.value.replace(state, '').trimStart();
+    this.setState({search});
+  }
+
   handleMeter(event) {
-    const meter = event.target.textContent;
-    this.setState(setMeter(meter));
+    const {checked, value} = event.target;
+    this.setState(setMeter(value, checked));
   }
 
-  handleTone(event) {
-    const meter = event.target.textContent;
-    this.setState(setTone(meter));
+  handleHowToSearch() {
+    this.setState(toggleHowToSearch);
   }
 
-  handleContext(event) {
-    const meter = event.target.textContent;
-    this.setState(setContext(meter));
+  handleAdvancedSearch() {
+    this.setState(toggleAdvancedSearch);
   }
 
   render() {
-    const value = [];
+    const {customMeter, meters, tune, passage, title, showHowToSearch, showAdvancedSeach} = this.state;
 
-    if (this.state.meter) {
-      value.push(`meter:${this.state.meter}`);
-    }
-
-    if (this.state.tone) {
-      value.push(`tone:${this.state.tone}`);
-    }
-
-    if (this.state.context) {
-      value.push(`context:${this.state.context}`);
-    }
-
-    if (this.state.value) {
-      value.push(this.state.value);
-    }
+    const search = searchState(this.state).join(' ');
 
     return (
       <React.Fragment>
-        <FormField
-          hideLabel
-          input={TextInput}
-          label="Search"
-          type="search"
-          placeholder="Search..."
-          value={value.join(' ')}
-          onBlur={this.handleBlur}
-          onChange={this.handleChange}
-        />
-        <Flex>
+        <Flex marginBottom="1em">
+          <FlexItem grow={1} marginEnd="auto">
+            <FormField
+              hideLabel
+              input={TextInput}
+              label="Search"
+              type="search"
+              placeholder="Search..."
+              value={search}
+              onBlur={this.handleBlur}
+              onChange={this.handleSearch}
+            />
+          </FlexItem>
+          {showAdvancedSeach && (
+            <FlexItem marginStart="1em">
+              <Button>
+                Search
+              </Button>
+            </FlexItem>
+          )}
+        </Flex>
+        <Flex justifyContent="between" marginBottom="1em">
           <FlexItem>
-            <Text fontWeight="bold">
+            <Button minimal size="medium" onClick={this.handleHowToSearch}>
                 How to search
-            </Text>
-            <Text fontWeight="bold">
-                Select a paramete to add it to your search
-            </Text>
-          </FlexItem>
-          <FlexItem>
-            <Text fontWeight="bold">
-                meter:
-            </Text>
-            <Button minimal size="medium" onClick={this.handleMeter}>
-                10.10.10.10
-            </Button>
-            <Button minimal size="medium" onClick={this.handleMeter}>
-                8.8.8.8
-            </Button>
-            <Button minimal size="medium" onClick={this.handleMeter}>
-                6.8.6.8
             </Button>
           </FlexItem>
           <FlexItem>
-            <Text fontWeight="bold">
-                tune:
-            </Text>
-            <Button minimal size="medium" onClick={this.handleTone}>
-                Rockingham
-            </Button>
-            <Button minimal size="medium" onClick={this.handleTone}>
-                Hamburg
-            </Button>
-            <Button minimal size="medium" onClick={this.handleTone}>
-                Eucharist
-            </Button>
-          </FlexItem>
-          <FlexItem>
-            <Text fontWeight="bold">
-                context:
-            </Text>
-            <Button minimal size="medium" onClick={this.handleContext}>
-                10.10.10.10
-            </Button>
-            <Button minimal size="medium" onClick={this.handleContext}>
-                8.8.8.8
-            </Button>
-            <Button minimal size="medium" onClick={this.handleContext}>
-                6.8.6.8
+            <Button minimal size="medium" onClick={this.handleAdvancedSearch}>
+                Advanced Search
             </Button>
           </FlexItem>
         </Flex>
+        {showHowToSearch && (
+          <Text>
+            Search Instructions to help people to search. Lorem ipsum dolor sit amet,
+            affert theophrastus in sea, at aeterno invidunt platonem has.
+            Habeo inimicus rationibus mel ex, nisl fabellas nec ei, quo et quot putant legendos.
+            Prompta definitiones nam an, quidam scaevola per te. Eum at purto vocibus mnesarchum,
+            diam falli an nam. Dicunt perfecto deserunt mel in, mundi moderatius eu eam.
+          </Text>
+        )}
+        {showAdvancedSeach && (
+          <React.Fragment>
+            <Box marginBottom="1em">
+              <FormField
+                input={TextInput}
+                label="Title"
+                value={title}
+                onBlur={this.handleBlur}
+                onChange={this.handleChange('title')}
+              />
+            </Box>
+            <Box marginBottom="1em">
+              <FormField
+                input={CheckboxGroup}
+                label="Hymn Meter"
+                name="hymn-meter"
+                checked={meters}
+                data={[
+                  {label: '10.10.10.10', value: '10.10.10.10'},
+                  {label: '4.4.4.4.4', value: '4.4.4.4.4'},
+                  {label: '8.8.8.8', value: '8.8.8.8'},
+                  {label: '10.10.10.8', value: '10.10.10.8'},
+                  {label: '8.6.8.6', value: '8.6.8.6'}
+                ]}
+                onBlur={this.handleBlur}
+                onChange={this.handleMeter}
+              />
+            </Box>
+            <Box marginBottom="1em">
+              <FormField
+                hideLabel
+                input={TextInput}
+                label="Custom Meter"
+                value={customMeter}
+                onBlur={this.handleBlur}
+                onChange={this.handleChange('customMeter')}
+              />
+            </Box>
+            <Box marginBottom="1em">
+              <FormField
+                input={TextInput}
+                label="Tune"
+                value={tune}
+                onBlur={this.handleBlur}
+                onChange={this.handleChange('tune')}
+              />
+            </Box>
+            <Box marginBottom="1em">
+              <FormField
+                input={TextInput}
+                label="Passage"
+                value={passage}
+                onBlur={this.handleBlur}
+                onChange={this.handleChange('passage')}
+              />
+            </Box>
+          </React.Fragment>
+        )}
       </React.Fragment>
     );
   }

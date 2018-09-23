@@ -18,7 +18,7 @@ COPY . ./
 RUN npm run build
 
 # small server
-FROM node:8.12-alpine
+FROM keymetrics/pm2:8-alpine
 
 ENV TZ Australia/Sydney
 
@@ -31,4 +31,4 @@ RUN npm prune --production
 
 EXPOSE 3000
 
-CMD npm start
+CMD pm2-runtime start ecosystem.config.js
