@@ -10,6 +10,7 @@ module.exports = {
         '.next/**',
         'data/**',
         'node_modules/.cache/**',
+        'node_modules/keystone/admin/**',
         'components/**',
         'pages/**'
       ],

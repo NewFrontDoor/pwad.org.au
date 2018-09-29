@@ -26,6 +26,8 @@ Hymn.add(
 // FIXME check for wordsCopyright
 Hymn.schema.virtual('hasWordsCopyright').get(() => true);
 
+Hymn.schema.index({title: 'text'});
+
 transform.toJSON(Hymn);
 Hymn.defaultColumns = 'title, hymnNumber, bookId';
 Hymn.register();

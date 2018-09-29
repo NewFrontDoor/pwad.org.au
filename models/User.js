@@ -34,5 +34,5 @@ User.schema.methods.wasActive = () => {
 };
 
 transform.toJSON(User);
-User.defaultColumns = 'name, email, phone, photo';
+User.defaultColumns = 'name, email';
 User.register();

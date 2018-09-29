@@ -1,5 +1,7 @@
 import React from 'react';
+import gql from 'graphql-tag';
 import styled from 'react-emotion';
+import {Query} from 'react-apollo';
 import Box from 'mineral-ui/Box';
 import Flex, {FlexItem} from 'mineral-ui/Flex';
 import {FormField} from 'mineral-ui/Form';
@@ -7,6 +9,15 @@ import Text from 'mineral-ui/Text';
 import Button from 'mineral-ui/Button';
 import TextInput from 'mineral-ui/TextInput';
 import {CheckboxGroup} from 'mineral-ui/Checkbox';
+
+const LIST_ALL = gql`
+  query listAll($title: String!) {
+    hymnMany(filter: { title_contains: $title }) {
+      title
+      bookId
+    }
+  }
+`;
 
 const setMeter = (value, checked) => prevState => {
   const meters = [...prevState.meters];
@@ -76,13 +87,16 @@ export default class SearchBox extends React.Component {
   }
 
   handleChange(name) {
-    return event => this.setState({
-      [name]: event.target.value
-    });
+    return event =>
+      this.setState({
+        [name]: event.target.value
+      });
   }
 
   handleSearch(event) {
-    const state = searchState(this.state).slice(0, -1).join(' ');
+    const state = searchState(this.state)
+      .slice(0, -1)
+      .join(' ');
     const search = event.target.value.replace(state, '').trimStart();
     this.setState({search});
   }
@@ -101,7 +115,15 @@ export default class SearchBox extends React.Component {
   }
 
   render() {
-    const {customMeter, meters, tune, passage, title, showHowToSearch, showAdvancedSeach} = this.state;
+    const {
+      customMeter,
+      meters,
+      tune,
+      passage,
+      title,
+      showHowToSearch,
+      showAdvancedSeach
+    } = this.state;
 
     const search = searchState(this.state).join(' ');
 
@@ -122,31 +144,30 @@ export default class SearchBox extends React.Component {
           </FlexItem>
           {showAdvancedSeach && (
             <FlexItem marginStart="1em">
-              <Button>
-                Search
-              </Button>
+              <Button>Search</Button>
             </FlexItem>
           )}
         </Flex>
         <Flex justifyContent="between" marginBottom="1em">
           <FlexItem>
             <Button minimal size="medium" onClick={this.handleHowToSearch}>
-                How to search
+              How to search
             </Button>
           </FlexItem>
           <FlexItem>
             <Button minimal size="medium" onClick={this.handleAdvancedSearch}>
-                Advanced Search
+              Advanced Search
             </Button>
           </FlexItem>
         </Flex>
         {showHowToSearch && (
           <Text>
-            Search Instructions to help people to search. Lorem ipsum dolor sit amet,
-            affert theophrastus in sea, at aeterno invidunt platonem has.
-            Habeo inimicus rationibus mel ex, nisl fabellas nec ei, quo et quot putant legendos.
-            Prompta definitiones nam an, quidam scaevola per te. Eum at purto vocibus mnesarchum,
-            diam falli an nam. Dicunt perfecto deserunt mel in, mundi moderatius eu eam.
+            Search Instructions to help people to search. Lorem ipsum dolor sit
+            amet, affert theophrastus in sea, at aeterno invidunt platonem has.
+            Habeo inimicus rationibus mel ex, nisl fabellas nec ei, quo et quot
+            putant legendos. Prompta definitiones nam an, quidam scaevola per
+            te. Eum at purto vocibus mnesarchum, diam falli an nam. Dicunt
+            perfecto deserunt mel in, mundi moderatius eu eam.
           </Text>
         )}
         {showAdvancedSeach && (
@@ -207,6 +228,23 @@ export default class SearchBox extends React.Component {
             </Box>
           </React.Fragment>
         )}
+        <Query query={LIST_ALL} variables={{title}}>
+          {({loading, error, data}) => {
+            if (loading) {
+              return 'Loading...';
+            }
+
+            if (error) {
+              return `Error! ${error.message}`;
+            }
+
+            return data.hymnMany.map(({title, bookId}) => (
+              <Text key={bookId}>
+                {title}
+              </Text>
+            ));
+          }}
+        </Query>
       </React.Fragment>
     );
   }

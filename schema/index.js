@@ -35,7 +35,13 @@ GQC.rootQuery().addFields({
   hymnById: HymnTC.getResolver('findById'),
   hymnByIds: HymnTC.getResolver('findByIds'),
   hymnOne: HymnTC.getResolver('findOne'),
-  hymnMany: HymnTC.getResolver('findMany'),
+  hymnMany: HymnTC.getResolver('findMany').addFilterArg({
+    name: 'title_contains',
+    type: 'String',
+    query: (query, value) => {
+      query.$text = {$search: value};
+    }
+  }),
   hymnTotal: HymnTC.getResolver('count'),
   hymnConnection: HymnTC.getResolver('connection'),
 
