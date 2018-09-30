@@ -1,3 +1,8 @@
+const {
+  GraphQLString,
+  GraphQLInt
+} = require('graphql');
+const {truncate} = require('lodash');
 const keystone = require('keystone');
 const {GQC} = require('graphql-compose');
 const {composeWithMongoose} = require('graphql-compose-mongoose');
@@ -9,6 +14,25 @@ const TuneTC = composeWithMongoose(keystone.list('Tune').model);
 const UserTC = composeWithMongoose(keystone.list('User').model);
 
 UserTC.removeField(['email', 'password']);
+
+HymnTC.addNestedFields({
+  'lyrics.md': {
+    type: GraphQLString,
+    args: {
+      truncate: GraphQLInt
+    },
+    resolve(result, args) {
+      if (args.truncate) {
+        return truncate(result.md, {
+          length: args.truncate,
+          separator: ' '
+        });
+      }
+
+      return result.md;
+    }
+  }
+});
 
 GQC.rootQuery().addFields({
   userById: UserTC.getResolver('findById'),
@@ -35,13 +59,14 @@ GQC.rootQuery().addFields({
   hymnById: HymnTC.getResolver('findById'),
   hymnByIds: HymnTC.getResolver('findByIds'),
   hymnOne: HymnTC.getResolver('findOne'),
-  hymnMany: HymnTC.getResolver('findMany').addFilterArg({
-    name: 'title_contains',
-    type: 'String',
-    query: (query, value) => {
-      query.$text = {$search: value};
-    }
-  }),
+  hymnMany: HymnTC.getResolver('findMany')
+    .addFilterArg({
+      name: 'title_contains',
+      type: GraphQLString,
+      query: (query, value) => {
+        query.$text = {$search: value};
+      }
+    }),
   hymnTotal: HymnTC.getResolver('count'),
   hymnConnection: HymnTC.getResolver('connection'),
 

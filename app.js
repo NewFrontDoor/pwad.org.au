@@ -18,8 +18,8 @@ module.exports = app
   .prepare()
   .then(async () => {
     server = await start({
-      pretty,
-      handle: app.getRequestHandler()
+      app,
+      pretty
     });
   })
   .catch(error => console.error(error));

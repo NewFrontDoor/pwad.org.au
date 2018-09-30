@@ -8,12 +8,12 @@ const config = require('config');
 const openDatabaseConnection = util.promisify(keystone.openDatabaseConnection.bind(keystone));
 const closeDatabaseConnection = util.promisify(keystone.closeDatabaseConnection.bind(keystone));
 
-const start = async ({handle = () => {}, pretty}) => {
+const start = async ({app, pretty}) => {
   const keystoneConfig = require('./config/keystone');
   const port = config.get('PORT');
   const dev = config.get('dev');
 
-  const app = express();
+  const server = express();
 
   keystone.init(keystoneConfig.options);
   keystone.import('models');
@@ -23,16 +23,16 @@ const start = async ({handle = () => {}, pretty}) => {
   keystone.initDatabaseConfig();
   keystone.initExpressSession();
 
-  app.use('/keystone', keystone.Admin.Server.createStaticRouter(keystone));
-  app.use(express.static('static'));
-  app.use(keystone.get('session options').cookieParser);
-  app.use(keystone.expressSession);
-  app.use(keystone.session.persist);
+  server.use('/keystone', keystone.Admin.Server.createStaticRouter(keystone));
+  server.use(express.static('static'));
+  server.use(keystone.get('session options').cookieParser);
+  server.use(keystone.expressSession);
+  server.use(keystone.session.persist);
 
-  app.use(pinoHttp({stream: pretty}));
-  app.use('/keystone', keystone.Admin.Server.createDynamicRouter(keystone));
+  server.use(pinoHttp({stream: pretty}));
+  server.use('/keystone', keystone.Admin.Server.createDynamicRouter(keystone));
 
-  app.use(
+  server.use(
     '/graphql',
     expressGraphQL(req => ({
       schema: require('./schema'),
@@ -42,11 +42,16 @@ const start = async ({handle = () => {}, pretty}) => {
     }))
   );
 
-  app.get('*', handle);
+  server.get('/song/:id/*', (req, res) => {
+    const {id} = req.params;
+    app.render(req, res, '/song', {id});
+  });
+
+  server.get('*', app.getRequestHandler());
 
   await openDatabaseConnection();
 
-  return app.listen(port, () => {
+  return server.listen(port, () => {
     console.log(`> Ready on http://localhost:${port}`);
   });
 };

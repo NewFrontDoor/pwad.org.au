@@ -9,14 +9,19 @@ import Text from 'mineral-ui/Text';
 import Button from 'mineral-ui/Button';
 import TextInput from 'mineral-ui/TextInput';
 import {CheckboxGroup} from 'mineral-ui/Checkbox';
+import SearchResult from './search-result';
 
 const LIST_ALL = gql`
-  query listAll($title: String!) {
-    hymnMany(filter: { title_contains: $title }) {
-      title
-      bookId
+query listAll($title: String!) {
+  hymnMany(filter: {title_contains: $title}) {
+    _id
+    title
+    bookId
+    lyrics {
+      md(truncate:120)
     }
   }
+}
 `;
 
 const setMeter = (value, checked) => prevState => {
@@ -238,10 +243,8 @@ export default class SearchBox extends React.Component {
               return `Error! ${error.message}`;
             }
 
-            return data.hymnMany.map(({title, bookId}) => (
-              <Text key={bookId}>
-                {title}
-              </Text>
+            return data.hymnMany.map(props => (
+              <SearchResult key={props.bookId} {...props}/>
             ));
           }}
         </Query>

@@ -8,20 +8,18 @@ const Hymn = new keystone.List('Hymn', {
   map: {name: 'title'}
 });
 
-Hymn.add(
-  {
-    hymnNumber: {type: Types.Number, required: true, index: true, initial: true},
-    title: {type: Types.Text, required: true, index: true, initial: true},
-    bookId: {type: Types.Number},
-    chapterVerse: {type: Types.Text},
-    lyrics: {type: Types.Markdown},
-    wordsCopyright: {type: Types.Markdown},
-    tune: {type: Types.Relationship, ref: 'Tune'},
-    bio: {type: Types.Markdown},
-    chapter: {type: Types.Number},
-    verses: {type: Types.Text}
-  }
-);
+Hymn.add({
+  hymnNumber: {type: Types.Number, required: true, index: true, initial: true},
+  title: {type: Types.Text, required: true, index: true, initial: true},
+  bookId: {type: Types.Number},
+  chapterVerse: {type: Types.Text},
+  lyrics: {type: Types.Markdown},
+  wordsCopyright: {type: Types.Text},
+  tune: {type: Types.Relationship, ref: 'Tune'},
+  bio: {type: Types.Markdown},
+  chapter: {type: Types.Number},
+  verses: {type: Types.Text}
+});
 
 // FIXME check for wordsCopyright
 Hymn.schema.virtual('hasWordsCopyright').get(() => true);

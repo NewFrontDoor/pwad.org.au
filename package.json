@@ -67,6 +67,9 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-emotion": "^9.2.10",
+    "remark": "^9.0.0",
+    "remark-breaks": "^1.0.1",
+    "remark-react": "^4.0.3",
     "stream-transform": "^1.0.6"
   },
   "xo": {
@@ -74,6 +77,7 @@
       "xo-react"
     ],
     "space": true,
+    "prettier": true,
     "overrides": [
       {
         "files": "models/*.js",
