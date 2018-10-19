@@ -8,6 +8,7 @@ import Flex from 'mineral-ui/Flex';
 import MineralLink from 'mineral-ui/Link';
 import {createStyledComponent} from 'mineral-ui/styles';
 import Link from '../link';
+import UserAvatar from './user-avatar';
 
 const ME = gql`
   {
@@ -125,6 +126,9 @@ class NavBar extends React.Component {
                       <Link prefetch href="/my-account">
                         My account
                       </Link>
+                    </NavMenuItem>
+                    <NavMenuItem element="li">
+                      <UserAvatar />
                     </NavMenuItem>
                   </>
                 );
