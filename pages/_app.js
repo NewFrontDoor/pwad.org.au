@@ -1,4 +1,5 @@
 import App, {Container} from 'next/app';
+import Head from 'next/head';
 import React from 'react';
 import {ApolloProvider} from 'react-apollo';
 import {createTheme, ThemeProvider} from 'mineral-ui/themes';
@@ -34,6 +35,9 @@ class MyApp extends App {
     const {Component, pageProps, apolloClient} = this.props;
     return (
       <Container>
+        <Head>
+          <title>Public Worship and Aids to Devotion - Home</title>
+        </Head>
         <ApolloProvider client={apolloClient}>
           <ThemeProvider theme={theme}>
             <Component {...pageProps} />

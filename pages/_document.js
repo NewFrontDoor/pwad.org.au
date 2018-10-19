@@ -28,7 +28,6 @@ export default class MyDocument extends Document {
           />
           <meta httpEquiv="x-ua-compatible" content="ie=edge" />
           <link rel="shortcut icon" href="/static/favicon.ico" />
-          <title>Public Worship and Aids to Devotion - Home</title>
           <style
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{__html: this.props.css}}
