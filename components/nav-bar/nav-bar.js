@@ -1,12 +1,25 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import gql from 'graphql-tag';
 import {css} from 'react-emotion';
-import Link from 'mineral-ui/Link';
+import {Query} from 'react-apollo';
 import Text from 'mineral-ui/Text';
 import Box from 'mineral-ui/Box';
 import Flex from 'mineral-ui/Flex';
+import MineralLink from 'mineral-ui/Link';
 import {createStyledComponent} from 'mineral-ui/styles';
-import NextLink from 'next/link';
+import Link from '../link';
+
+const ME = gql`
+  {
+    me {
+      profilePhoto
+      name {
+        first
+        last
+      }
+    }
+  }
+`;
 
 const noList = css`
   list-style: none;
@@ -16,31 +29,13 @@ const flexRight = css`
   margin-left: auto;
 `;
 
-function TextLink({href, children}) {
-  return (
-    <NextLink
-      passHref
-      href={href}
-    >
-      <Link>
-        {children}
-      </Link>
-    </NextLink>
-  );
-}
-
-TextLink.propTypes = {
-  href: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired
-};
-
 const NavMenuItem = createStyledComponent(Text, {
   letterSpacing: '1px',
   textTransform: 'uppercase',
   margin: '0 1em'
 });
 
-const MenuButton = createStyledComponent(Link, {
+const MenuButton = createStyledComponent(MineralLink, {
   letterSpacing: 'inherit',
   textTransform: 'inherit',
   fontWeight: 'inherit',
@@ -60,6 +55,8 @@ class NavBar extends React.Component {
   }
 
   render() {
+    const count = 0;
+
     return (
       <Box
         element="nav"
@@ -81,40 +78,78 @@ class NavBar extends React.Component {
             </MenuButton>
           </NavMenuItem>
           <NavMenuItem element="li" fontWeight="bold">
-            <TextLink href="/">
+            <Link prefetch href="/">
               Home
-            </TextLink>
+            </Link>
           </NavMenuItem>
           <NavMenuItem element="li" fontWeight="bold">
-            <TextLink href="/">
+            <Link prefetch href="/">
               What is worship?
-            </TextLink>
+            </Link>
           </NavMenuItem>
           <NavMenuItem element="li" fontWeight="bold">
-            <TextLink href="/">
+            <Link prefetch href="/">
               Worship directory
-            </TextLink>
+            </Link>
           </NavMenuItem>
           <NavMenuItem element="li" fontWeight="bold">
-            <TextLink href="/">
+            <Link prefetch href="/">
               Worship aids
-            </TextLink>
+            </Link>
           </NavMenuItem>
           <NavMenuItem element="li" fontWeight="bold">
-            <TextLink href="/">
+            <Link prefetch href="/">
               Useful links
-            </TextLink>
+            </Link>
           </NavMenuItem>
-          <NavMenuItem element="li" fontWeight="bold" className={flexRight}>
-            <TextLink href="/">
-              Log in
-            </TextLink>
-          </NavMenuItem>
-          <NavMenuItem element="li" fontWeight="bold">
-            <TextLink href="/">
-              Create account
-            </TextLink>
-          </NavMenuItem>
+          <Query query={ME}>
+            {({data}) => {
+              if (data.me) {
+                return (
+                  <>
+                    <NavMenuItem
+                      element="li"
+                      fontWeight="bold"
+                      className={flexRight}
+                    >
+                      <Link prefetch href="/auth/logout">
+                        Log out
+                      </Link>
+                    </NavMenuItem>
+                    <NavMenuItem element="li" fontWeight="bold">
+                      <Link prefetch href="/short-list">
+                        Short list ({count})
+                      </Link>
+                    </NavMenuItem>
+                    <NavMenuItem element="li" fontWeight="bold">
+                      <Link prefetch href="/my-account">
+                        My account
+                      </Link>
+                    </NavMenuItem>
+                  </>
+                );
+              }
+
+              return (
+                <>
+                  <NavMenuItem
+                    element="li"
+                    fontWeight="bold"
+                    className={flexRight}
+                  >
+                    <Link prefetch href="/sign-in">
+                      Log in
+                    </Link>
+                  </NavMenuItem>
+                  <NavMenuItem element="li" fontWeight="bold">
+                    <Link prefetch href="/create-account">
+                      Create account
+                    </Link>
+                  </NavMenuItem>
+                </>
+              );
+            }}
+          </Query>
         </Flex>
       </Box>
     );

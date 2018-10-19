@@ -24,7 +24,8 @@ const options = {
   session: true,
   auth: true,
   'user model': 'User',
-  'cookie secret': config.get('SESSION_COOKIE_SECRET')
+  'cookie secret': config.get('SESSION_COOKIE_SECRET'),
+  'cookie signin': false
 };
 
 const locals = {};

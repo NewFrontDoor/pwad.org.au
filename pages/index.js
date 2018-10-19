@@ -12,27 +12,27 @@ const Footer = styled('footer')`
 export default class Index extends React.Component {
   render() {
     return (
-      <React.Fragment>
-        <NavBar onMenuClick={this.handleMenuClick}/>
+      <>
+        <NavBar onMenuClick={this.handleMenuClick} />
         <Box width={3 / 4} marginVertical={0} marginHorizontal="auto">
           <Text element="h1" fontWeight="extraBold">
             Public Worship and Aids to Devotion Committee Website
           </Text>
           <Text element="h2">PWAD Committee Website</Text>
           <Text appearance="prose">
-            This website is provided by the PWAD Committee to help congregations within the
-            Presbyterian Church of Australia.
+            This website is provided by the PWAD Committee to help congregations
+            within the Presbyterian Church of Australia.
           </Text>
           <Text appearance="prose">
-            Use the below search field to find resources on the PWAD website, or follow the featured
-            links for quick access to particular resources.
+            Use the below search field to find resources on the PWAD website, or
+            follow the featured links for quick access to particular resources.
           </Text>
         </Box>
         <Footer>
-          <hr/>
+          <hr />
           <Text>© 2007 - 2018 PWAD & the Presbyterian Church of Australia</Text>
         </Footer>
-      </React.Fragment>
+      </>
     );
   }
 }

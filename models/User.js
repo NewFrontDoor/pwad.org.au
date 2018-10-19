@@ -17,6 +17,8 @@ User.add(
       index: true,
       unique: true
     },
+    profilePhoto: {type: Types.Url},
+    googleProviderId: {type: Types.Text, noedit: true},
     password: {type: Types.Password, initial: true, required: false}
   },
   'Permissions',

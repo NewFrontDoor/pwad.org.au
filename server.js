@@ -1,17 +1,25 @@
 const util = require('util');
 const express = require('express');
-const expressGraphQL = require('express-graphql');
 const keystone = require('keystone');
 const pinoHttp = require('pino-http');
 const config = require('config');
 
-const openDatabaseConnection = util.promisify(keystone.openDatabaseConnection.bind(keystone));
-const closeDatabaseConnection = util.promisify(keystone.closeDatabaseConnection.bind(keystone));
+const authenticationHandler = require('./handlers/authentication');
+const sessionHandler = require('./handlers/session');
+const passportHandler = require('./handlers/passport');
+const graphqlHandler = require('./handlers/graphql');
+
+const openDatabaseConnection = util.promisify(
+  keystone.openDatabaseConnection.bind(keystone)
+);
+const closeDatabaseConnection = util.promisify(
+  keystone.closeDatabaseConnection.bind(keystone)
+);
 
 const start = async ({app, pretty}) => {
   const keystoneConfig = require('./config/keystone');
   const port = config.get('PORT');
-  const dev = config.get('dev');
+  const hostUrl = config.get('HOST_URL');
 
   const server = express();
 
@@ -19,28 +27,27 @@ const start = async ({app, pretty}) => {
   keystone.import('models');
   keystone.set('locals', keystoneConfig.locals);
   keystone.set('nav', keystoneConfig.nav);
+  keystone.set('auth', (req, res, next) => {
+    if (req.user) {
+      next();
+    } else {
+      res.redirect('/sign-in');
+    }
+  });
 
   keystone.initDatabaseConfig();
   keystone.initExpressSession();
 
-  server.use('/keystone', keystone.Admin.Server.createStaticRouter(keystone));
-  server.use(express.static('static'));
-  server.use(keystone.get('session options').cookieParser);
-  server.use(keystone.expressSession);
-  server.use(keystone.session.persist);
-
   server.use(pinoHttp({stream: pretty}));
-  server.use('/keystone', keystone.Admin.Server.createDynamicRouter(keystone));
+  server.use(sessionHandler);
+  server.use(keystone.session.persist);
+  server.use(passportHandler(keystone));
 
-  server.use(
-    '/graphql',
-    expressGraphQL(req => ({
-      schema: require('./schema'),
-      graphiql: dev,
-      rootValue: {request: req},
-      pretty: dev
-    }))
-  );
+  server.use(express.static('static'));
+  server.use('/keystone', keystone.Admin.Server.createStaticRouter(keystone));
+  server.use('/keystone', keystone.Admin.Server.createDynamicRouter(keystone));
+  server.use('/auth', authenticationHandler);
+  server.use('/graphql', graphqlHandler(keystone));
 
   server.get('/song/:id/*', (req, res) => {
     const {id} = req.params;
@@ -52,7 +59,7 @@ const start = async ({app, pretty}) => {
   await openDatabaseConnection();
 
   return server.listen(port, () => {
-    console.log(`> Ready on http://localhost:${port}`);
+    console.log(`> Ready on ${hostUrl}`);
   });
 };
 

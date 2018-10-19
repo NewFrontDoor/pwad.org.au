@@ -13,24 +13,25 @@ const Footer = styled('footer')`
 export default class Search extends React.Component {
   render() {
     return (
-      <React.Fragment>
-        <NavBar onMenuClick={this.handleMenuClick}/>
+      <>
+        <NavBar onMenuClick={this.handleMenuClick} />
         <Box width={3 / 4} marginVertical={0} marginHorizontal="auto">
-          <Text element="h1" fontWeight="extraBold">Public Worship and Aids to Devotion Committee Website</Text>
+          <Text element="h1" fontWeight="extraBold">
+            Public Worship and Aids to Devotion Committee Website
+          </Text>
           <Text element="h2">Search</Text>
           <Text appearance="prose">
-            Search for hymns, worship resources, prayer resources and worship aids using the search box below.
-            Advanced search will allow you to refine your criteria on data available in the resource.
+            Search for hymns, worship resources, prayer resources and worship
+            aids using the search box below. Advanced search will allow you to
+            refine your criteria on data available in the resource.
           </Text>
-          <SearchBox/>
+          <SearchBox />
         </Box>
         <Footer>
-          <hr/>
-          <Text>
-            © 2007 - 2018 PWAD & the Presbyterian Church of Australia
-          </Text>
+          <hr />
+          <Text>© 2007 - 2018 PWAD & the Presbyterian Church of Australia</Text>
         </Footer>
-      </React.Fragment>
+      </>
     );
   }
 }

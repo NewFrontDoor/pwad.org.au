@@ -10,14 +10,12 @@ const Tune = new keystone.List('Tune', {
   }
 });
 
-Tune.add(
-  {
-    title: {type: Types.Text, required: true, index: true, initial: true},
-    meter: {type: Types.Relationship, ref: 'Meter'},
-    composer: {type: Types.Relationship, ref: 'Author'},
-    musicCopyright: {type: Types.Text}
-  }
-);
+Tune.add({
+  title: {type: Types.Text, required: true, index: true, initial: true},
+  meter: {type: Types.Relationship, ref: 'Meter'},
+  composer: {type: Types.Relationship, ref: 'Author'},
+  musicCopyright: {type: Types.Text}
+});
 
 // FIXME check for wordsCopyright
 Tune.schema.virtual('hasMusicCopyright').get(() => true);

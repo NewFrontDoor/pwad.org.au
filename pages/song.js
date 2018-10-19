@@ -35,7 +35,7 @@ class Song extends React.Component {
     const {id} = this.props;
 
     return (
-      <React.Fragment>
+      <>
         <NavBar onMenuClick={this.handleMenuClick} />
         <Box width={3 / 4} marginVertical={0} marginHorizontal="auto">
           <Text element="h1" fontWeight="extraBold">
@@ -54,11 +54,11 @@ class Song extends React.Component {
               const {title, lyrics, wordsCopyright} = data.hymnById;
 
               return (
-                <React.Fragment>
+                <>
                   <Text element="h2">{title}</Text>
                   <Text>{wordsCopyright}</Text>
                   <Markdown useBreaks>{lyrics.md}</Markdown>
-                </React.Fragment>
+                </>
               );
             }}
           </Query>
@@ -67,7 +67,7 @@ class Song extends React.Component {
           <hr />
           <Text>© 2007 - 2018 PWAD & the Presbyterian Church of Australia</Text>
         </Footer>
-      </React.Fragment>
+      </>
     );
   }
 }

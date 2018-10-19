@@ -1,6 +1,5 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import styled from 'react-emotion';
 import {Query} from 'react-apollo';
 import Box from 'mineral-ui/Box';
 import Flex, {FlexItem} from 'mineral-ui/Flex';
@@ -12,16 +11,16 @@ import {CheckboxGroup} from 'mineral-ui/Checkbox';
 import SearchResult from './search-result';
 
 const LIST_ALL = gql`
-query listAll($title: String!) {
-  hymnMany(filter: {title_contains: $title}) {
-    _id
-    title
-    bookId
-    lyrics {
-      md(truncate:120)
+  query listAll($title: String!) {
+    hymnMany(filter: {title_contains: $title}) {
+      _id
+      title
+      bookId
+      lyrics {
+        md(truncate: 120)
+      }
     }
   }
-}
 `;
 
 const setMeter = (value, checked) => prevState => {
@@ -133,7 +132,7 @@ export default class SearchBox extends React.Component {
     const search = searchState(this.state).join(' ');
 
     return (
-      <React.Fragment>
+      <>
         <Flex marginBottom="1em">
           <FlexItem grow={1} marginEnd="auto">
             <FormField
@@ -176,7 +175,7 @@ export default class SearchBox extends React.Component {
           </Text>
         )}
         {showAdvancedSeach && (
-          <React.Fragment>
+          <>
             <Box marginBottom="1em">
               <FormField
                 input={TextInput}
@@ -231,7 +230,7 @@ export default class SearchBox extends React.Component {
                 onChange={this.handleChange('passage')}
               />
             </Box>
-          </React.Fragment>
+          </>
         )}
         <Query query={LIST_ALL} variables={{title}}>
           {({loading, error, data}) => {
@@ -244,11 +243,11 @@ export default class SearchBox extends React.Component {
             }
 
             return data.hymnMany.map(props => (
-              <SearchResult key={props.bookId} {...props}/>
+              <SearchResult key={props.bookId} {...props} />
             ));
           }}
         </Query>
-      </React.Fragment>
+      </>
     );
   }
 }

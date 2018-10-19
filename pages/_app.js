@@ -8,13 +8,15 @@ import withApolloClient from '../lib/with-apollo-client';
 
 const theme = createTheme({
   overrides: {
+    // blue: #64aafa
+    // dark-blue: #2952d2
     fontFamily: 'cabin'
   }
 });
 
 const enhance = flow(
   withEmotion,
-  withApolloClient,
+  withApolloClient
 );
 
 class MyApp extends App {
@@ -34,7 +36,7 @@ class MyApp extends App {
       <Container>
         <ApolloProvider client={apolloClient}>
           <ThemeProvider theme={theme}>
-            <Component {...pageProps}/>
+            <Component {...pageProps} />
           </ThemeProvider>
         </ApolloProvider>
       </Container>

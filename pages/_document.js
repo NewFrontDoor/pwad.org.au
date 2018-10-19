@@ -21,13 +21,13 @@ export default class MyDocument extends Document {
     return (
       <html>
         <Head>
-          <meta charSet="utf-8"/>
+          <meta charSet="utf-8" />
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no"
           />
-          <meta httpEquiv="x-ua-compatible" content="ie=edge"/>
-          <link rel="shortcut icon" href="/static/favicon.ico"/>
+          <meta httpEquiv="x-ua-compatible" content="ie=edge" />
+          <link rel="shortcut icon" href="/static/favicon.ico" />
           <title>Public Worship and Aids to Devotion - Home</title>
           <style
             // eslint-disable-next-line react/no-danger
@@ -35,8 +35,8 @@ export default class MyDocument extends Document {
           />
         </Head>
         <body>
-          <Main/>
-          <NextScript/>
+          <Main />
+          <NextScript />
         </body>
       </html>
     );
