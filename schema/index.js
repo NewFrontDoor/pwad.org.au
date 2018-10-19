@@ -5,20 +5,66 @@ const {GQC} = require('graphql-compose');
 const {composeWithMongoose} = require('graphql-compose-mongoose');
 
 module.exports = keystone => {
+  const {model: UserModel} = keystone.list('User');
+
   const AuthorTC = composeWithMongoose(keystone.list('Author').model);
   const CategoryTC = composeWithMongoose(keystone.list('Category').model);
   const HymnTC = composeWithMongoose(keystone.list('Hymn').model);
   const TuneTC = composeWithMongoose(keystone.list('Tune').model);
-  const UserTC = composeWithMongoose(keystone.list('User').model);
+  const UserTC = composeWithMongoose(UserModel);
 
   UserTC.removeField(['email', 'password']);
 
   UserTC.addResolver({
     name: 'me',
     type: UserTC,
-    resolve(rp) {
-      const id = get(rp, 'context.req.user._id', null);
-      return keystone.list('User').model.findById(id);
+    resolve({context}) {
+      const id = get(context, 'user._id', null);
+      return UserModel.findById(id);
+    }
+  });
+
+  UserTC.addResolver({
+    name: 'createUser',
+    type: UserTC,
+    args: {
+      email: 'String!',
+      password: 'String!'
+    },
+    async resolve({args, context}) {
+      const {email, password} = args;
+      const user = new UserModel({email});
+
+      try {
+        await UserModel.register(user, password);
+        await context.login(user);
+        return user;
+      } catch (error) {
+        context.log.error(error);
+        throw new Error('Email / Password Incorrect');
+      }
+    }
+  });
+
+  UserTC.addResolver({
+    name: 'loginUser',
+    type: UserTC,
+    args: {
+      email: 'String!',
+      password: 'String!'
+    },
+    async resolve({args, context}) {
+      const {email, password} = args;
+
+      try {
+        const user = await UserModel.findByUsername(email);
+        await user.authenticate(password);
+        await context.login(user);
+        return user;
+      } catch (error) {
+        context.log.error(error);
+        throw new Error('Email / Password Incorrect');
+      }
     }
   });
 
@@ -77,6 +123,11 @@ module.exports = keystone => {
     tuneMany: TuneTC.getResolver('findMany'),
     tunetotal: TuneTC.getResolver('count'),
     tuneConnection: TuneTC.getResolver('connection')
+  });
+
+  GQC.rootMutation().addFields({
+    createUser: UserTC.getResolver('createUser'),
+    loginUser: UserTC.getResolver('loginUser')
   });
 
   const schema = GQC.buildSchema();

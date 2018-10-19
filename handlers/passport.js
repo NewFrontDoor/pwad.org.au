@@ -6,18 +6,8 @@ const {has} = require('lodash');
 module.exports = keystone => {
   const User = keystone.list('User').model;
 
-  passport.serializeUser((user, done) => {
-    done(null, user.id);
-  });
-
-  passport.deserializeUser(async (id, done) => {
-    try {
-      const user = await User.findById(id);
-      done(null, user);
-    } catch (error) {
-      done(error);
-    }
-  });
+  passport.serializeUser(User.serializeUser());
+  passport.deserializeUser(User.deserializeUser());
 
   async function createOrFindUser(newUser, providerMethod) {
     let storedUser;

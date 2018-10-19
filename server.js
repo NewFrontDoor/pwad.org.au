@@ -5,7 +5,6 @@ const pinoHttp = require('pino-http');
 const config = require('config');
 
 const authenticationHandler = require('./handlers/authentication');
-const sessionHandler = require('./handlers/session');
 const passportHandler = require('./handlers/passport');
 const graphqlHandler = require('./handlers/graphql');
 
@@ -39,7 +38,8 @@ const start = async ({app, pretty}) => {
   keystone.initExpressSession();
 
   server.use(pinoHttp({stream: pretty}));
-  server.use(sessionHandler);
+  server.use(keystone.get('session options').cookieParser);
+  server.use(keystone.expressSession);
   server.use(keystone.session.persist);
   server.use(passportHandler(keystone));
 

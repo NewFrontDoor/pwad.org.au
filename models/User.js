@@ -1,4 +1,5 @@
 const keystone = require('keystone');
+const passportLocalMongoose = require('passport-local-mongoose');
 const transform = require('model-transform');
 
 const {Types} = keystone.Field;
@@ -34,6 +35,11 @@ User.schema.methods.wasActive = () => {
   this.lastActiveOn = new Date();
   return this;
 };
+
+User.schema.plugin(passportLocalMongoose, {
+  usernameField: 'email',
+  usernameUnique: true
+});
 
 transform.toJSON(User);
 User.defaultColumns = 'name, email';

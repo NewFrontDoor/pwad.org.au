@@ -69,6 +69,7 @@
     "next": "^7.0.1",
     "passport": "^0.4.0",
     "passport-google-oauth2": "^0.1.6",
+    "passport-local-mongoose": "^5.0.1",
     "pino-colada": "^1.4.4",
     "pino-http": "^4.0.0",
     "query-string": "^6.2.0",
