@@ -7,6 +7,7 @@ import Box from 'mineral-ui/Box';
 import Flex from 'mineral-ui/Flex';
 import MineralLink from 'mineral-ui/Link';
 import {createStyledComponent} from 'mineral-ui/styles';
+import {ChevronDown as Chevron} from 'react-feather';
 import Link from '../link';
 import UserAvatar from './user-avatar';
 
@@ -34,6 +35,15 @@ const NavMenuItem = createStyledComponent(Text, {
   letterSpacing: '1px',
   textTransform: 'uppercase',
   margin: '0 1em'
+});
+
+const NavLink = createStyledComponent(Link, {
+  display: 'inline-flex',
+  alignItems: 'center'
+});
+
+const ResponsiveMenuItem = createStyledComponent(NavMenuItem, {
+  display: 'none'
 });
 
 const MenuButton = createStyledComponent(MineralLink, {
@@ -73,35 +83,38 @@ class NavBar extends React.Component {
           breakpoints={['narrow', 'medium']}
           direction={['column', 'column', 'row']}
         >
-          <NavMenuItem element="li" fontWeight="bold">
+          <ResponsiveMenuItem element="li" fontWeight="bold">
             <MenuButton element="button" onClick={this.handleMenuClick}>
               Menu
             </MenuButton>
-          </NavMenuItem>
+          </ResponsiveMenuItem>
           <NavMenuItem element="li" fontWeight="bold">
-            <Link prefetch href="/">
+            <NavLink prefetch href="/">
               Home
-            </Link>
+            </NavLink>
           </NavMenuItem>
           <NavMenuItem element="li" fontWeight="bold">
-            <Link prefetch href="/">
-              What is worship?
-            </Link>
+            <NavLink prefetch href="/">
+              GAA Publications
+              <Chevron size="1em" />
+            </NavLink>
           </NavMenuItem>
           <NavMenuItem element="li" fontWeight="bold">
-            <Link prefetch href="/">
-              Worship directory
-            </Link>
+            <NavLink prefetch href="/">
+              PWAD Resources
+              <Chevron size="1em" />
+            </NavLink>
           </NavMenuItem>
           <NavMenuItem element="li" fontWeight="bold">
-            <Link prefetch href="/">
-              Worship aids
-            </Link>
-          </NavMenuItem>
-          <NavMenuItem element="li" fontWeight="bold">
-            <Link prefetch href="/">
+            <NavLink prefetch href="/">
               Useful links
-            </Link>
+              <Chevron size="1em" />
+            </NavLink>
+          </NavMenuItem>
+          <NavMenuItem element="li" fontWeight="bold">
+            <NavLink prefetch href="/">
+              About
+            </NavLink>
           </NavMenuItem>
           <Query query={ME}>
             {({data}) => {
