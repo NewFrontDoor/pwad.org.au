@@ -1,52 +1,28 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import {css} from 'react-emotion';
+import PropTypes from 'prop-types';
+import {rem} from 'polished';
 import {Query} from 'react-apollo';
-import Text from 'mineral-ui/Text';
-import Box from 'mineral-ui/Box';
 import Flex from 'mineral-ui/Flex';
-import MineralLink from 'mineral-ui/Link';
+import Button from 'mineral-ui/Button';
+import Popover from 'mineral-ui/Popover';
+import {createThemedComponent, withTheme} from 'mineral-ui/themes';
 import {createStyledComponent} from 'mineral-ui/styles';
-import {ChevronDown as Chevron} from 'react-feather';
+import Media from '../media';
+
 import Link from '../link';
-import UserAvatar from './user-avatar';
+import Nav from './nav';
 
 const ME = gql`
   {
     me {
       profilePhoto
-      name {
-        first
-        last
-      }
     }
   }
 `;
 
-const noList = css`
-  list-style: none;
-`;
-
-const flexRight = css`
-  margin-left: auto;
-`;
-
-const NavMenuItem = createStyledComponent(Text, {
-  letterSpacing: '1px',
-  textTransform: 'uppercase',
-  margin: '0 1em'
-});
-
-const NavLink = createStyledComponent(Link, {
-  display: 'inline-flex',
-  alignItems: 'center'
-});
-
-const ResponsiveMenuItem = createStyledComponent(NavMenuItem, {
-  display: 'none'
-});
-
-const MenuButton = createStyledComponent(MineralLink, {
+const MenuButton = createStyledComponent(Button, {
+  backgroundColor: 'white',
   letterSpacing: 'inherit',
   textTransform: 'inherit',
   fontWeight: 'inherit',
@@ -56,121 +32,143 @@ const MenuButton = createStyledComponent(MineralLink, {
   cursor: 'pointer'
 });
 
+const Root = createStyledComponent('div', ({isMenuOpen, menuHeight, theme}) => {
+  const transitionProperties = '350ms cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+
+  return {
+    alignItems: 'flex-end',
+    display: 'flex',
+    justifyContent: 'space-between',
+    marginBottom: isMenuOpen
+      ? rem(250) // Dependent on menu height
+      : theme.baseline_7,
+    paddingTop: rem(30), // matches horizontal padding
+    transition: `margin ${transitionProperties}`,
+
+    '& div[id$="content"]': {
+      // Matches nav link padding + menuButton optical adjustment
+      marginTop: `${parseFloat(theme.space_stack_sm) + 0.45}em`,
+      opacity: isMenuOpen ? 1 : 0,
+      transition: `opacity 500ms linear`,
+
+      // CardBlock (tried doing this via theme variables, and it didn't work)
+      '& > div': {
+        margin: 0,
+        padding: 0
+      }
+    },
+
+    [theme.bp_home_navExpanded]: {
+      marginBottom: theme.baseline_9,
+      paddingTop: theme.baseline_2
+    }
+  };
+});
+
+const popoverTheme = {
+  PopoverContent_backgroundColor: null,
+  PopoverContent_borderColor: 'transparent',
+  PopoverContent_borderRadius: null,
+  PopoverContent_boxShadow: null,
+  PopoverContent_paddingVertical: null
+};
+
+const MenuPopover = createThemedComponent(Popover, popoverTheme);
+
+const toggleMenu = ({isMenuOpen}) => ({
+  isMenuOpen: !isMenuOpen
+});
+
 class NavBar extends React.Component {
-  constuctor() {
+  constructor() {
+    super();
+    this.state = {
+      isMenuOpen: false,
+      menuHeight: null
+    };
     this.handleMenuClick = this.handleMenuClick.bind(this);
+    this.menuRef = React.createRef();
   }
 
   handleMenuClick() {
-    console.log('toggle');
+    this.setState(toggleMenu);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.isMenuOpen && !prevState.isMenuOpen) {
+      const {current} = this.menuRef;
+      const {height: menuHeight} = current.getBoundingClientRect();
+      this.setState({menuHeight});
+    }
   }
 
   render() {
-    const count = 0;
+    const {theme} = this.props;
+    const {isMenuOpen, menuHeight} = this.state;
 
     return (
-      <Box
-        element="nav"
-        breakpoints={['narrow', 'medium']}
-        paddingVertical={['0', '0', '15vh']}
-        marginHorizontal="auto"
-      >
+      <Root isMenuOpen={isMenuOpen} menuHeight={menuHeight} theme={theme}>
         <Flex
-          element="ul"
-          justifyContent="between"
-          padding="0"
-          className={noList}
+          element="nav"
           breakpoints={['narrow', 'medium']}
-          direction={['column', 'column', 'row']}
+          paddingVertical={['0', '0', '15vh']}
+          marginHorizontal="auto"
+          width="100%"
+          alignItems="center"
+          justifyContent="between"
         >
-          <ResponsiveMenuItem element="li" fontWeight="bold">
-            <MenuButton element="button" onClick={this.handleMenuClick}>
-              Menu
-            </MenuButton>
-          </ResponsiveMenuItem>
-          <NavMenuItem element="li" fontWeight="bold">
-            <NavLink prefetch href="/">
-              Home
-            </NavLink>
-          </NavMenuItem>
-          <NavMenuItem element="li" fontWeight="bold">
-            <NavLink prefetch href="/">
-              GAA Publications
-              <Chevron size="1em" />
-            </NavLink>
-          </NavMenuItem>
-          <NavMenuItem element="li" fontWeight="bold">
-            <NavLink prefetch href="/">
-              PWAD Resources
-              <Chevron size="1em" />
-            </NavLink>
-          </NavMenuItem>
-          <NavMenuItem element="li" fontWeight="bold">
-            <NavLink prefetch href="/">
-              Useful links
-              <Chevron size="1em" />
-            </NavLink>
-          </NavMenuItem>
-          <NavMenuItem element="li" fontWeight="bold">
-            <NavLink prefetch href="/">
-              About
-            </NavLink>
-          </NavMenuItem>
-          <Query query={ME}>
-            {({data}) => {
-              if (data.me) {
-                return (
-                  <>
-                    <NavMenuItem
-                      element="li"
-                      fontWeight="bold"
-                      className={flexRight}
-                    >
-                      <Link prefetch href="/auth/logout">
-                        Log out
-                      </Link>
-                    </NavMenuItem>
-                    <NavMenuItem element="li" fontWeight="bold">
-                      <Link prefetch href="/short-list">
-                        Short list ({count})
-                      </Link>
-                    </NavMenuItem>
-                    <NavMenuItem element="li" fontWeight="bold">
-                      <Link prefetch href="/my-account">
-                        My account
-                      </Link>
-                    </NavMenuItem>
-                    <NavMenuItem element="li">
-                      <UserAvatar />
-                    </NavMenuItem>
-                  </>
-                );
-              }
-
-              return (
+          <Media query="bp_medium">
+            {matches =>
+              matches ? (
+                <Nav />
+              ) : (
                 <>
-                  <NavMenuItem
-                    element="li"
-                    fontWeight="bold"
-                    className={flexRight}
+                  <MenuPopover
+                    content={
+                      <div ref={this.menuRef}>
+                        <Nav />
+                      </div>
+                    }
+                    hasArrow={false}
+                    isOpen={isMenuOpen}
+                    modifiers={{
+                      preventOverflow: {
+                        padding: 0
+                      }
+                    }}
+                    placement="bottom-end"
+                    onClose={this.handleMenuClick}
+                    onOpen={this.handleMenuClick}
                   >
-                    <Link prefetch href="/sign-in">
-                      Log in
-                    </Link>
-                  </NavMenuItem>
-                  <NavMenuItem element="li" fontWeight="bold">
-                    <Link prefetch href="/create-account">
-                      Create account
-                    </Link>
-                  </NavMenuItem>
+                    <MenuButton minimal>Menu</MenuButton>
+                  </MenuPopover>
+                  <Query query={ME}>
+                    {({data}) => {
+                      if (data.me) {
+                        return (
+                          <Link prefetch href="/my-account">
+                            My account
+                          </Link>
+                        );
+                      }
+
+                      return null;
+                    }}
+                  </Query>
                 </>
-              );
-            }}
-          </Query>
+              )
+            }
+          </Media>
         </Flex>
-      </Box>
+      </Root>
     );
   }
 }
 
-export default NavBar;
+NavBar.propTypes = {
+  theme: PropTypes.shape({
+    bp_medium: PropTypes.string
+  }).isRequired
+};
+
+export default withTheme(NavBar);

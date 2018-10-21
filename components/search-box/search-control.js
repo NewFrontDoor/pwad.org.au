@@ -8,6 +8,7 @@ import Text from 'mineral-ui/Text';
 import Button from 'mineral-ui/Button';
 import TextInput from 'mineral-ui/TextInput';
 import {CheckboxGroup} from 'mineral-ui/Checkbox';
+import Media from '../media';
 import SearchResult from './search-result';
 
 const LIST_ALL = gql`
@@ -153,11 +154,13 @@ export default class SearchBox extends React.Component {
           )}
         </Flex>
         <Flex justifyContent="between" marginBottom="1em">
-          <FlexItem>
-            <Button minimal size="medium" onClick={this.handleHowToSearch}>
-              How to search
-            </Button>
-          </FlexItem>
+          <Media query="bp_medium">
+            <FlexItem>
+              <Button minimal size="medium" onClick={this.handleHowToSearch}>
+                How to search
+              </Button>
+            </FlexItem>
+          </Media>
           <FlexItem>
             <Button minimal size="medium" onClick={this.handleAdvancedSearch}>
               Advanced Search
@@ -176,7 +179,12 @@ export default class SearchBox extends React.Component {
         )}
         {showAdvancedSeach && (
           <Flex>
-            <FlexItem grow={1} width={"50%"}>
+            <FlexItem
+              grow={1}
+              width="50%"
+              breakpoints={['medium']}
+              direction={['column', 'row']}
+            >
               <Box marginBottom="1em">
                 <FormField
                   input={TextInput}
@@ -232,16 +240,19 @@ export default class SearchBox extends React.Component {
                 />
               </Box>
             </FlexItem>
-            <FlexItem grow={1}  width={"50%"}>
-              <Text>
-                Search Instructions to help people to search. Lorem ipsum dolor sit
-                amet, affert theophrastus in sea, at aeterno invidunt platonem has.
-                Habeo inimicus rationibus mel ex, nisl fabellas nec ei, quo et quot
-                putant legendos. Prompta definitiones nam an, quidam scaevola per
-                te. Eum at purto vocibus mnesarchum, diam falli an nam. Dicunt
-                perfecto deserunt mel in, mundi moderatius eu eam.
-              </Text>
-            </FlexItem>
+            <Media query="bp_medium">
+              <FlexItem grow={1} width="50%">
+                <Text>
+                  Search Instructions to help people to search. Lorem ipsum
+                  dolor sit amet, affert theophrastus in sea, at aeterno
+                  invidunt platonem has. Habeo inimicus rationibus mel ex, nisl
+                  fabellas nec ei, quo et quot putant legendos. Prompta
+                  definitiones nam an, quidam scaevola per te. Eum at purto
+                  vocibus mnesarchum, diam falli an nam. Dicunt perfecto
+                  deserunt mel in, mundi moderatius eu eam.
+                </Text>
+              </FlexItem>
+            </Media>
           </Flex>
         )}
         <Query query={LIST_ALL} variables={{title}}>
