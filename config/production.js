@@ -1,3 +1,5 @@
+const {deferConfig} = require('config/defer');
+
 module.exports = {
   dev: false,
 
@@ -5,8 +7,9 @@ module.exports = {
 
   MONGO_URI: process.env.MONGO_URI,
 
-  HOST_URL: 'https://pwad.org.au',
-  GRAPHQL_URI: 'https://pwad.org.au/graphql',
+  HOST_URL:
+    process.env.HOST_URL || process.env.NOW_URL || 'https://pwad.org.au',
+  GRAPHQL_URI: deferConfig(config => `${config.HOST_URL}/graphql`),
 
   API_CLIENT_URL: 'https://pwad.org.au',
   API_SERVER_URL: 'https://pwad.org.au',

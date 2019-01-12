@@ -35,7 +35,7 @@ const start = async ({app, pretty}) => {
   });
 
   keystone.initDatabaseConfig();
-  keystone.initExpressSession();
+  keystone.initExpressSession(keystone.mongoose);
 
   server.use(pinoHttp({stream: pretty}));
   server.use(keystone.get('session options').cookieParser);

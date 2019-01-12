@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "type": "docker",
+  "alias": "stage.pwad.org.au",
+  "env": {
+    "API_CLIENT_URL": "http://localhost:3000",
+    "API_SERVER_URL": "http://localhost:3000",
+
+    "S3_KEY": "@s3-key",
+    "S3_SECRET": "@s3-secret",
+    "S3_BUCKET": "@s3-bucket",
+
+    "MONGO_URI": "@mongo-uri",
+
+    "SESSION_COOKIE_SECRET": "@session-cookie-secret",
+
+    "GOOGLE_OAUTH_CLIENT_ID": "@google-oauth-client-id",
+    "GOOGLE_OAUTH_CLIENT_SECRET": "@google-oauth-client-secret"
+  },
+  "build": {
+    "env": {
+      "NODE_ENV": "production"
+    }
+  }
+}

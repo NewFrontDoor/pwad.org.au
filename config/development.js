@@ -5,7 +5,7 @@ module.exports = {
 
   PORT: process.env.PORT || 3000,
 
-  MONGO_URI: 'mongodb://mongo/pwad',
+  MONGO_URI: process.env.MONGO_URI || 'mongodb://mongo/pwad',
 
   HOST_URL: deferConfig(config => `http://localhost:${config.PORT}`),
   GRAPHQL_URI: deferConfig(config => `http://localhost:${config.PORT}/graphql`),
@@ -17,5 +17,6 @@ module.exports = {
   SESSION_COOKIE_SECRET: 'SESSION_COOKIE_SECRET',
 
   GOOGLE_OAUTH_CLIENT_ID:
-    '847282100207-qf2aed9qpua7spbq1b7j2mr723qnd2sr.apps.googleusercontent.com'
+    '847282100207-qf2aed9qpua7spbq1b7j2mr723qnd2sr.apps.googleusercontent.com',
+  GOOGLE_OAUTH_CLIENT_SECRET: process.env.GOOGLE_OAUTH_CLIENT_SECRET
 };

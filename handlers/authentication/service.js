@@ -13,7 +13,6 @@ const checkToken = (req, res, next) => {
 
 const verifyToken = (req, res, next) => {
   jwt.verify(req.token, config.get('API_TOKEN_SECRET'), (err, authData) => {
-    console.log({authData});
     if (err) {
       res.sendStatus(403);
     } else {

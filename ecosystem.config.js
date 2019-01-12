@@ -6,6 +6,7 @@ module.exports = {
       name: 'app',
       script: './app.js',
       ignore_watch: [
+        '.git',
         '.next',
         '.next/**',
         'data/**',

@@ -1,3 +1,8 @@
+if (process.env.NODE_ENV === 'development') {
+  // eslint-disable-next-line import/no-unassigned-import
+  require('now-env');
+}
+
 const next = require('next');
 const pinoColada = require('pino-colada');
 const config = require('config');
