@@ -3,7 +3,6 @@ services:
   web:
     build: .
     command: pm2-runtime start --watch ecosystem.config.js
-    env_file: .env
     ports:
       - "3000:3000"
     volumes:

@@ -2,16 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import gql from 'graphql-tag';
 import {Query} from 'react-apollo';
-import styled from 'react-emotion';
 import Text from 'mineral-ui/Text';
-import Box from 'mineral-ui/Box';
 
-import NavBar from '../components/nav-bar/nav-bar';
 import Markdown from '../components/markdown/markdown';
-
-const Footer = styled('footer')`
-  padding: 15vh 1rem;
-`;
 
 const FIND_ONE = gql`
   query findOne($id: MongoID!) {
@@ -36,37 +29,30 @@ class Song extends React.Component {
 
     return (
       <>
-        <NavBar onMenuClick={this.handleMenuClick} />
-        <Box width={3 / 4} marginVertical={0} marginHorizontal="auto">
-          <Text element="h1" fontWeight="extraBold">
-            Public Worship and Aids to Devotion Committee Website
-          </Text>
-          <Query query={FIND_ONE} variables={{id}}>
-            {({loading, error, data}) => {
-              if (loading) {
-                return 'Loading...';
-              }
+        <Text element="h1" fontWeight="extraBold">
+          Public Worship and Aids to Devotion Committee Website
+        </Text>
+        <Query query={FIND_ONE} variables={{id}}>
+          {({loading, error, data}) => {
+            if (loading) {
+              return 'Loading...';
+            }
 
-              if (error) {
-                return `Error! ${error.message}`;
-              }
+            if (error) {
+              return `Error! ${error.message}`;
+            }
 
-              const {title, lyrics, wordsCopyright} = data.hymnById;
+            const {title, lyrics, wordsCopyright} = data.hymnById;
 
-              return (
-                <>
-                  <Text element="h2">{title}</Text>
-                  <Text>{wordsCopyright}</Text>
-                  <Markdown useBreaks>{lyrics.md}</Markdown>
-                </>
-              );
-            }}
-          </Query>
-        </Box>
-        <Footer>
-          <hr />
-          <Text>© 2007 - 2018 PWAD & the Presbyterian Church of Australia</Text>
-        </Footer>
+            return (
+              <>
+                <Text element="h2">{title}</Text>
+                <Text>{wordsCopyright}</Text>
+                <Markdown useBreaks>{lyrics.md}</Markdown>
+              </>
+            );
+          }}
+        </Query>
       </>
     );
   }

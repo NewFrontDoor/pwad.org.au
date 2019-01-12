@@ -1,6 +1,5 @@
 import React from 'react';
 import Text from 'mineral-ui/Text';
-import Box from 'mineral-ui/Box';
 import Flex from 'mineral-ui/Flex';
 import FlexItem from 'mineral-ui/Flex/FlexItem';
 import SearchControl from '../components/search-box/search-control';
@@ -10,7 +9,7 @@ import Logo from '../components/logo';
 export default class Index extends React.Component {
   render() {
     return (
-      <Box width={3 / 4} marginVertical={0} marginHorizontal="auto">
+      <>
         <Flex>
           <FlexItem grow={2} width="20%">
             <Logo />
@@ -32,7 +31,7 @@ export default class Index extends React.Component {
           </FlexItem>
         </Flex>
         <SearchControl />
-      </Box>
+      </>
     );
   }
 }
