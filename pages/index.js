@@ -1,7 +1,7 @@
 import React from 'react';
 import Text from 'mineral-ui/Text';
-import Flex from 'mineral-ui/Flex';
-import FlexItem from 'mineral-ui/Flex/FlexItem';
+import Grid, {GridItem} from 'mineral-ui/Grid';
+import Featured from '../components/featured';
 import SearchControl from '../components/search-box/search-control';
 
 import Logo from '../components/logo';
@@ -10,11 +10,11 @@ export default class Index extends React.Component {
   render() {
     return (
       <>
-        <Flex>
-          <FlexItem grow={2} width="20%">
+        <Grid breakpoints={['narrow', 'medium']}>
+          <GridItem span={[4, 3, 2]}>
             <Logo />
-          </FlexItem>
-          <FlexItem grow={2}>
+          </GridItem>
+          <GridItem span={[8, 9, 10]}>
             <Text element="h1" fontWeight="extraBold">
               Public Worship and Aids to Devotion
             </Text>
@@ -28,9 +28,10 @@ export default class Index extends React.Component {
               or follow the featured links for quick access to particular
               resources.
             </Text>
-          </FlexItem>
-        </Flex>
+          </GridItem>
+        </Grid>
         <SearchControl />
+        <Featured />
       </>
     );
   }

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import gql from 'graphql-tag';
 import {css} from 'react-emotion';
 import {Query} from 'react-apollo';
 import Flex from 'mineral-ui/Flex';
@@ -9,19 +8,8 @@ import {ChevronDown as Chevron} from 'react-feather';
 import {createStyledComponent} from 'mineral-ui/styles';
 import Media from '../media';
 import Link from '../link';
+import {ME} from '../queries';
 import UserAvatar from './user-avatar';
-
-const ME = gql`
-  {
-    me {
-      profilePhoto
-      name {
-        first
-        last
-      }
-    }
-  }
-`;
 
 const noList = css`
   list-style: none;
@@ -84,7 +72,7 @@ class Nav extends React.Component {
             About
           </NavLink>
         </NavMenuItem>
-        <Media query="bp_medium">
+        <Media query="medium">
           <Spacer />
         </Media>
         <Query query={ME}>
@@ -93,20 +81,20 @@ class Nav extends React.Component {
               return (
                 <>
                   <NavMenuItem element="li" fontWeight="bold">
-                    <Link prefetch href="/auth/logout">
-                      Log out
-                    </Link>
+                    <Link href="/auth/logout">Log out</Link>
                   </NavMenuItem>
                   <NavMenuItem element="li" fontWeight="bold">
                     <Link prefetch href="/short-list">
                       Short list ({count})
                     </Link>
                   </NavMenuItem>
-                  <NavMenuItem element="li" fontWeight="bold">
-                    <Link prefetch href="/my-account">
-                      My account
-                    </Link>
-                  </NavMenuItem>
+                  <Media query="medium">
+                    <NavMenuItem element="li" fontWeight="bold">
+                      <Link prefetch href="/my-account">
+                        My account
+                      </Link>
+                    </NavMenuItem>
+                  </Media>
                   <NavMenuItem element="li">
                     <UserAvatar />
                   </NavMenuItem>

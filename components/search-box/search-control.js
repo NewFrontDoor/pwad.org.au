@@ -81,7 +81,7 @@ export default class SearchBox extends React.Component {
       tune: '',
       passage: '',
       showHowToSearch: false,
-      showAdvancedSeach: !false
+      showAdvancedSeach: false
     };
 
     this.handleSearch = this.handleSearch.bind(this);
@@ -134,6 +134,12 @@ export default class SearchBox extends React.Component {
 
     return (
       <>
+        <Text element="h3">Search</Text>
+        <Text appearance="prose">
+          Search for hymns, worship resources, prayer resources and worship aids
+          using the search box below. Advanced search will allow you to refine
+          your criteria on data available in the resource.
+        </Text>
         <Flex marginBottom="1em">
           <FlexItem grow={1} marginEnd="auto">
             <FormField
@@ -154,7 +160,7 @@ export default class SearchBox extends React.Component {
           )}
         </Flex>
         <Flex justifyContent="between" marginBottom="1em">
-          <Media query="bp_medium">
+          <Media query="medium">
             <FlexItem>
               <Button minimal size="medium" onClick={this.handleHowToSearch}>
                 How to search
@@ -240,7 +246,7 @@ export default class SearchBox extends React.Component {
                 />
               </Box>
             </FlexItem>
-            <Media query="bp_medium">
+            <Media query="medium">
               <FlexItem grow={1} width="50%">
                 <Text>
                   Search Instructions to help people to search. Lorem ipsum

@@ -2,6 +2,28 @@
 
 Public Worship and Aids to Devotion Website
 
+## Models
+
+### User
+
+- `name: Name`
+- `email: Email`
+  `required`
+  `unique`
+- `profilePhoto: Url`
+- `googleProviderId: Text`
+  `noedit`
+- `password: Password`
+
+
+#### User.Permissions
+- `isProtected: Boolean`
+  `noedit`
+  
+### Transaction
+
+### 
+
 ## static.pwad.org.au
 
 For static files (and website?)

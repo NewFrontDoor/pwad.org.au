@@ -22,7 +22,7 @@
   "homepage": "https://github.com/Vision100IT/pwad.org.au#readme",
   "devDependencies": {
     "@zeit/next-bundle-analyzer": "^0.1.2",
-    "ava": "1.0.0-rc.1",
+    "ava": "^1.0.0",
     "codecov": "^3.1.0",
     "eslint-config-xo": "^0.25.1",
     "eslint-config-xo-react": "^0.17.0",
@@ -40,14 +40,14 @@
     "apollo-link-context": "^1.0.12",
     "apollo-link-http": "^1.5.9",
     "babel-plugin-emotion": "^9.2.11",
-    "config": "^2.0.2",
+    "config": "^3.0.0",
     "connect-mongo": "^2.0.3",
     "cookie": "^0.3.1",
     "emotion": "^9.2.12",
     "emotion-server": "^9.2.12",
     "emotion-theming": "^9.2.9",
     "express": "^4.16.4",
-    "express-graphql": "^0.6.12",
+    "express-graphql": "^0.7.1",
     "express-session": "^1.15.6",
     "graphql": "^14.0.2",
     "graphql-compose": "^5.4.1",
@@ -58,7 +58,7 @@
     "jsonwebtoken": "^8.4.0",
     "keystone": "^4.0.0",
     "lodash": "^4.17.11",
-    "mineral-ui": "^0.48.0",
+    "mineral-ui": "^0.55.0",
     "model-transform": "^2.0.0",
     "next": "^7.0.2",
     "now-env": "^3.1.0",
@@ -77,10 +77,10 @@
     "react-feather": "^1.1.5",
     "react-media": "^1.9.2",
     "react-scroll": "^1.7.10",
-    "remark": "^9.0.0",
+    "remark": "^10.0.0",
     "remark-breaks": "^1.0.2",
-    "remark-react": "^4.0.3",
-    "typeface-cabin": "0.0.54"
+    "remark-react": "^5.0.1",
+    "typeface-cabin": "0.0.71"
   },
   "browserslist": {
     "production": [

@@ -1,25 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import gql from 'graphql-tag';
 import {Mutation} from 'react-apollo';
 import {FormField} from 'mineral-ui/Form';
 import TextInput from 'mineral-ui/TextInput';
 import Box from 'mineral-ui/Box';
+import Text from 'mineral-ui/Text';
 import Button from 'mineral-ui/Button';
 import Router from 'next/router';
 
+import {LOGIN_USER, ME} from '../queries';
 import GoogleButton from './google-button';
-
-const LOGIN_USER = gql`
-  mutation($email: String!, $password: String!) {
-    loginUser(email: $email, password: $password) {
-      name {
-        first
-        last
-      }
-    }
-  }
-`;
 
 class SignInForm extends React.Component {
   constructor(props) {
@@ -29,6 +19,7 @@ class SignInForm extends React.Component {
       password: ''
     };
     this.handleSignIn = this.handleSignIn.bind(this);
+    this.handleSignInUpdate = this.handleSignInUpdate.bind(this);
   }
 
   handleSignIn(loginUser) {
@@ -53,6 +44,16 @@ class SignInForm extends React.Component {
     };
   }
 
+  handleSignInUpdate(cache, {data}) {
+    const {loginUser} = data;
+    cache.writeQuery({
+      query: ME,
+      data: {
+        me: loginUser
+      }
+    });
+  }
+
   handleChange(name) {
     return event =>
       this.setState({
@@ -65,9 +66,15 @@ class SignInForm extends React.Component {
     const {email, password} = this.state;
 
     return (
-      <Box marginBottom="1em">
-        <Box marginBottom="1em">
-          <Mutation mutation={LOGIN_USER}>
+      <>
+        <Box marginBottom="md">
+          <GoogleButton redirectPath={redirectPath} location={location}>
+            Signin with Google
+          </GoogleButton>
+        </Box>
+        <Text appearance="prose">Or</Text>
+        <Box marginBottom="md">
+          <Mutation mutation={LOGIN_USER} update={this.handleSignInUpdate}>
             {(loginUser, {loading, error}) => (
               <form onSubmit={this.handleSignIn(loginUser)}>
                 {loading && 'Loading...'}
@@ -75,20 +82,24 @@ class SignInForm extends React.Component {
                   error.graphQLErrors.map(({message}) => (
                     <p key={message}>{message}</p>
                   ))}
-                <Box marginBottom="1em">
+                <Box marginBottom="md">
                   <FormField
+                    required
                     input={TextInput}
                     label="Email"
                     type="email"
+                    name="email"
                     value={email}
                     onChange={this.handleChange('email')}
                   />
                 </Box>
-                <Box marginBottom="1em">
+                <Box marginBottom="md">
                   <FormField
+                    required
                     input={TextInput}
                     label="Password"
                     type="password"
+                    name="password"
                     value={password}
                     onChange={this.handleChange('password')}
                   />
@@ -98,10 +109,7 @@ class SignInForm extends React.Component {
             )}
           </Mutation>
         </Box>
-        <GoogleButton redirectPath={redirectPath} location={location}>
-          Signin with Google
-        </GoogleButton>
-      </Box>
+      </>
     );
   }
 }

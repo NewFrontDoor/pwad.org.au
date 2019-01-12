@@ -18,6 +18,7 @@ User.add(
       index: true,
       unique: true
     },
+    hasFreeAccount: {type: Types.Boolean},
     profilePhoto: {type: Types.Url},
     googleProviderId: {type: Types.Text, noedit: true},
     password: {type: Types.Password, initial: true, required: false}
@@ -30,6 +31,9 @@ User.add(
 
 // Provide access to Keystone
 User.schema.virtual('canAccessKeystone').get(() => true);
+
+// Check if they've completed a square transaction
+User.schema.virtual('hasPaidAccount').get(() => false);
 
 User.schema.methods.wasActive = () => {
   this.lastActiveOn = new Date();

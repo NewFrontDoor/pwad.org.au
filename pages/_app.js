@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 import App, {Container} from 'next/app';
 import Head from 'next/head';
 import React from 'react';
@@ -21,7 +23,7 @@ const blue = {
   80: '#2C5786',
   90: '#20456E',
   100: '#133153',
-  inflection: 70
+  inflection: 60
 };
 
 const theme = createTheme({
@@ -29,10 +31,6 @@ const theme = createTheme({
     theme: blue
   },
   overrides: {
-    bp_narrow: '(min-width: 512px)',
-    bp_medium: '(min-width: 768px)',
-    bp_wide: '(min-width: 1024px)',
-
     color_theme_hover: blue[70],
 
     fontFamily: 'cabin'
@@ -64,7 +62,12 @@ class MyApp extends App {
         </Head>
         <ApolloProvider client={apolloClient}>
           <ThemeProvider theme={theme}>
-            <Box width={3 / 4} marginVertical={0} marginHorizontal="auto">
+            <Box
+              breakpoints={['narrow']}
+              width={['auto', 3 / 4]}
+              marginVertical={0}
+              marginHorizontal={['md', 'auto']}
+            >
               <NavBar />
               <Component {...pageProps} />
               <Footer />

@@ -1,5 +1,4 @@
 import React from 'react';
-import gql from 'graphql-tag';
 import PropTypes from 'prop-types';
 import {rem} from 'polished';
 import {Query} from 'react-apollo';
@@ -11,15 +10,8 @@ import {createStyledComponent} from 'mineral-ui/styles';
 import Media from '../media';
 
 import Link from '../link';
+import {ME} from '../queries';
 import Nav from './nav';
-
-const ME = gql`
-  {
-    me {
-      profilePhoto
-    }
-  }
-`;
 
 const MenuButton = createStyledComponent(Button, {
   backgroundColor: 'white',
@@ -58,7 +50,7 @@ const Root = createStyledComponent('div', ({isMenuOpen, menuHeight, theme}) => {
       }
     },
 
-    [theme.bp_home_navExpanded]: {
+    [theme.breakpoint_home_navExpanded]: {
       marginBottom: theme.baseline_9,
       paddingTop: theme.baseline_2
     }
@@ -111,13 +103,13 @@ class NavBar extends React.Component {
         <Flex
           element="nav"
           breakpoints={['narrow', 'medium']}
-          paddingVertical={['0', '0', '15vh']}
+          paddingVertical={['0', '0', '5vh']}
           marginHorizontal="auto"
           width="100%"
           alignItems="center"
           justifyContent="between"
         >
-          <Media query="bp_medium">
+          <Media query="medium">
             {matches =>
               matches ? (
                 <Nav />
@@ -167,7 +159,7 @@ class NavBar extends React.Component {
 
 NavBar.propTypes = {
   theme: PropTypes.shape({
-    bp_medium: PropTypes.string
+    breakpoint_medium: PropTypes.string
   }).isRequired
 };
 
