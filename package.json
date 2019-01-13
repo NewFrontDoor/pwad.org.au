@@ -49,6 +49,7 @@
     "express": "^4.16.4",
     "express-graphql": "^0.7.1",
     "express-session": "^1.15.6",
+    "formik": "^1.4.2",
     "graphql": "^14.0.2",
     "graphql-compose": "^5.4.1",
     "graphql-compose-connection": "^4.0.0",
@@ -80,7 +81,8 @@
     "remark": "^10.0.0",
     "remark-breaks": "^1.0.2",
     "remark-react": "^5.0.1",
-    "typeface-cabin": "0.0.71"
+    "typeface-cabin": "0.0.71",
+    "yup": "^0.26.7"
   },
   "browserslist": {
     "production": [

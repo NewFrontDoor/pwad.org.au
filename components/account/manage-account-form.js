@@ -6,34 +6,32 @@ import Flex, {FlexItem} from 'mineral-ui/Flex';
 import Button from 'mineral-ui/Button';
 import Text from 'mineral-ui/Text';
 import TextInput from 'mineral-ui/TextInput';
-import {FormField} from 'mineral-ui/Form';
 import {Check} from 'react-feather';
+import {string, object} from 'yup';
+import {Formik, Form, FormField} from '../form';
 
 import {CHANGE_PASSWORD, FREE_USER, ME} from '../queries';
+
+const validationSchema = object().shape({
+  password: string()
+    .label('Password')
+    .required(),
+  newPassword: string()
+    .label('New password')
+    .required(),
+  confirmPassword: string()
+    .label('Confirm password')
+    .required()
+});
 
 class ManageForm extends React.Component {
   constructor() {
     super();
-
-    this.state = {
-      password: '',
-      newPassword: '',
-      confirmPassword: ''
-    };
-
-    this.handleChange = this.handleChange.bind(this);
     this.handleChangeFreeAccount = this.handleChangeFreeAccount.bind(this);
     this.handleChangeFreeAccountUpdate = this.handleChangeFreeAccountUpdate.bind(
       this
     );
     this.handleChangePassword = this.handleChangePassword.bind(this);
-  }
-
-  handleChange(name) {
-    return event =>
-      this.setState({
-        [name]: event.target.value
-      });
   }
 
   handleChangeFreeAccount(changeFreeAccount) {
@@ -65,10 +63,7 @@ class ManageForm extends React.Component {
   }
 
   handleChangePassword(changePassword) {
-    return event => {
-      event.preventDefault();
-      const {password, newPassword, confirmPassword} = this.state;
-
+    return ({password, newPassword, confirmPassword}) => {
       changePassword({
         variables: {
           password,
@@ -148,41 +143,43 @@ class ManageForm extends React.Component {
             </Flex>
             <Mutation mutation={CHANGE_PASSWORD}>
               {changePassword => (
-                <form onSubmit={this.handleChangePassword(changePassword)}>
-                  <Box marginBottom="md">
-                    <FormField
-                      required
-                      type="password"
-                      label="Old password"
-                      input={TextInput}
-                      name="password"
-                      onChange={this.handleChange('password')}
-                    />
-                  </Box>
-                  <Box marginBottom="md">
-                    <FormField
-                      required
-                      type="password"
-                      label="New password"
-                      input={TextInput}
-                      name="newPassword"
-                      onChange={this.handleChange('newPassword')}
-                    />
-                  </Box>
-                  <Box marginBottom="md">
-                    <FormField
-                      required
-                      type="password"
-                      label="Confirm password"
-                      input={TextInput}
-                      name="confirmPassword"
-                      onChange={this.handleChange('confirmPassword')}
-                    />
-                  </Box>
-                  <Box marginBottom="md">
-                    <Button type="submit">Change Password</Button>
-                  </Box>
-                </form>
+                <Formik
+                  validationSchema={validationSchema}
+                  onSubmit={this.handleChangePassword(changePassword)}
+                >
+                  <Form>
+                    <Box marginBottom="md">
+                      <FormField
+                        required
+                        type="password"
+                        label="Old password"
+                        input={TextInput}
+                        name="password"
+                      />
+                    </Box>
+                    <Box marginBottom="md">
+                      <FormField
+                        required
+                        type="password"
+                        label="New password"
+                        input={TextInput}
+                        name="newPassword"
+                      />
+                    </Box>
+                    <Box marginBottom="md">
+                      <FormField
+                        required
+                        type="password"
+                        label="Confirm password"
+                        input={TextInput}
+                        name="confirmPassword"
+                      />
+                    </Box>
+                    <Box marginBottom="md">
+                      <Button type="submit">Change Password</Button>
+                    </Box>
+                  </Form>
+                </Formik>
               )}
             </Mutation>
           </FlexItem>

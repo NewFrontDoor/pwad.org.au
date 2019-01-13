@@ -1,32 +1,36 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Mutation} from 'react-apollo';
-import {FormField} from 'mineral-ui/Form';
 import TextInput from 'mineral-ui/TextInput';
 import Box from 'mineral-ui/Box';
 import Text from 'mineral-ui/Text';
 import Button from 'mineral-ui/Button';
 import Router from 'next/router';
+import {string, object} from 'yup';
+import {Formik, Form, FormField} from '../form';
 
 import {LOGIN_USER, ME} from '../queries';
 import GoogleButton from './google-button';
 
+const validationSchema = object().shape({
+  email: string()
+    .label('Email')
+    .email()
+    .required(),
+  password: string()
+    .label('Password')
+    .required()
+});
+
 class SignInForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      email: '',
-      password: ''
-    };
     this.handleSignIn = this.handleSignIn.bind(this);
     this.handleSignInUpdate = this.handleSignInUpdate.bind(this);
   }
 
   handleSignIn(loginUser) {
-    return async event => {
-      event.preventDefault();
-      const {email, password} = this.state;
-
+    return async ({email, password}) => {
       try {
         const {data} = await loginUser({
           variables: {
@@ -54,16 +58,8 @@ class SignInForm extends React.Component {
     });
   }
 
-  handleChange(name) {
-    return event =>
-      this.setState({
-        [name]: event.target.value
-      });
-  }
-
   render() {
     const {redirectPath, location} = this.props;
-    const {email, password} = this.state;
 
     return (
       <>
@@ -76,36 +72,37 @@ class SignInForm extends React.Component {
         <Box marginBottom="md">
           <Mutation mutation={LOGIN_USER} update={this.handleSignInUpdate}>
             {(loginUser, {loading, error}) => (
-              <form onSubmit={this.handleSignIn(loginUser)}>
-                {loading && 'Loading...'}
-                {error &&
-                  error.graphQLErrors.map(({message}) => (
-                    <p key={message}>{message}</p>
-                  ))}
-                <Box marginBottom="md">
-                  <FormField
-                    required
-                    input={TextInput}
-                    label="Email"
-                    type="email"
-                    name="email"
-                    value={email}
-                    onChange={this.handleChange('email')}
-                  />
-                </Box>
-                <Box marginBottom="md">
-                  <FormField
-                    required
-                    input={TextInput}
-                    label="Password"
-                    type="password"
-                    name="password"
-                    value={password}
-                    onChange={this.handleChange('password')}
-                  />
-                </Box>
-                <Button type="submit">Signin</Button>
-              </form>
+              <Formik
+                validationSchema={validationSchema}
+                onSubmit={this.handleSignIn(loginUser)}
+              >
+                <Form>
+                  {loading && 'Loading...'}
+                  {error &&
+                    error.graphQLErrors.map(({message}) => (
+                      <p key={message}>{message}</p>
+                    ))}
+                  <Box marginBottom="md">
+                    <FormField
+                      required
+                      input={TextInput}
+                      label="Email"
+                      type="email"
+                      name="email"
+                    />
+                  </Box>
+                  <Box marginBottom="md">
+                    <FormField
+                      required
+                      input={TextInput}
+                      label="Password"
+                      type="password"
+                      name="password"
+                    />
+                  </Box>
+                  <Button type="submit">Signin</Button>
+                </Form>
+              </Formik>
             )}
           </Mutation>
         </Box>

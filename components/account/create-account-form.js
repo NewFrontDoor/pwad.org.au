@@ -6,47 +6,42 @@ import Box from 'mineral-ui/Box';
 import Text from 'mineral-ui/Text';
 import Button from 'mineral-ui/Button';
 import TextInput from 'mineral-ui/TextInput';
-import {FormField} from 'mineral-ui/Form';
+import {string, object} from 'yup';
+import {Formik, Form, FormField} from '../form';
 
 import {CREATE_USER, ME} from '../queries';
 
 import GoogleButton from './google-button';
 
+const validationSchema = object().shape({
+  firstName: string()
+    .label('First name')
+    .required(),
+  lastName: string()
+    .label('Last name')
+    .required(),
+  email: string()
+    .label('Email')
+    .email()
+    .required(),
+  password: string()
+    .label('Password')
+    .required(),
+  confirmPassword: string()
+    .label('Confirm password')
+    .required()
+});
+
 class CreateAccountForm extends React.Component {
   constructor() {
     super();
 
-    this.state = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      password: '',
-      confirmPassword: ''
-    };
-
-    this.handleChange = this.handleChange.bind(this);
     this.handleCreateUser = this.handleCreateUser.bind(this);
     this.handleCreateUserUpdate = this.handleCreateUserUpdate.bind(this);
   }
 
-  handleChange(name) {
-    return event =>
-      this.setState({
-        [name]: event.target.value
-      });
-  }
-
   handleCreateUser(createAccount) {
-    return event => {
-      event.preventDefault();
-      const {
-        firstName,
-        lastName,
-        email,
-        password,
-        confirmPassword
-      } = this.state;
-
+    return ({firstName, lastName, email, password, confirmPassword}) => {
       createAccount({
         variables: {
           firstName,
@@ -87,59 +82,59 @@ class CreateAccountForm extends React.Component {
             onCompleted={() => Router.replace('/manage-account')}
           >
             {createAccount => (
-              <form onSubmit={this.handleCreateUser(createAccount)}>
-                <Box marginBottom="md">
-                  <FormField
-                    required
-                    label="First name"
-                    input={TextInput}
-                    name="firstName"
-                    onChange={this.handleChange('firstName')}
-                  />
-                </Box>
-                <Box marginBottom="md">
-                  <FormField
-                    required
-                    label="Last name"
-                    input={TextInput}
-                    name="lastName"
-                    onChange={this.handleChange('lastName')}
-                  />
-                </Box>
-                <Box marginBottom="md">
-                  <FormField
-                    required
-                    type="email"
-                    label="Email"
-                    input={TextInput}
-                    name="email"
-                    onChange={this.handleChange('email')}
-                  />
-                </Box>
-                <Box marginBottom="md">
-                  <FormField
-                    required
-                    type="password"
-                    label="Password"
-                    input={TextInput}
-                    name="password"
-                    onChange={this.handleChange('password')}
-                  />
-                </Box>
-                <Box marginBottom="md">
-                  <FormField
-                    required
-                    type="password"
-                    label="Confirm password"
-                    input={TextInput}
-                    name="confirmPassword"
-                    onChange={this.handleChange('confirmPassword')}
-                  />
-                </Box>
-                <Box marginBottom="md">
-                  <Button type="submit">Create Account</Button>
-                </Box>
-              </form>
+              <Formik
+                validationSchema={validationSchema}
+                onSubmit={this.handleCreateUser(createAccount)}
+              >
+                <Form>
+                  <Box marginBottom="md">
+                    <FormField
+                      required
+                      label="First name"
+                      input={TextInput}
+                      name="firstName"
+                    />
+                  </Box>
+                  <Box marginBottom="md">
+                    <FormField
+                      required
+                      label="Last name"
+                      input={TextInput}
+                      name="lastName"
+                    />
+                  </Box>
+                  <Box marginBottom="md">
+                    <FormField
+                      required
+                      type="email"
+                      label="Email"
+                      input={TextInput}
+                      name="email"
+                    />
+                  </Box>
+                  <Box marginBottom="md">
+                    <FormField
+                      required
+                      type="password"
+                      label="Password"
+                      input={TextInput}
+                      name="password"
+                    />
+                  </Box>
+                  <Box marginBottom="md">
+                    <FormField
+                      required
+                      type="password"
+                      label="Confirm password"
+                      input={TextInput}
+                      name="confirmPassword"
+                    />
+                  </Box>
+                  <Box marginBottom="md">
+                    <Button type="submit">Create Account</Button>
+                  </Box>
+                </Form>
+              </Formik>
             )}
           </Mutation>
         </Box>
