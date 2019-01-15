@@ -23,13 +23,7 @@ const validationSchema = object().shape({
 });
 
 class SignInForm extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleSignIn = this.handleSignIn.bind(this);
-    this.handleSignInUpdate = this.handleSignInUpdate.bind(this);
-  }
-
-  handleSignIn(loginUser) {
+  handleSignIn = loginUser => {
     return async ({email, password}) => {
       try {
         const {data} = await loginUser({
@@ -46,9 +40,9 @@ class SignInForm extends React.Component {
         console.log(error);
       }
     };
-  }
+  };
 
-  handleSignInUpdate(cache, {data}) {
+  handleSignInUpdate = (cache, {data}) => {
     const {loginUser} = data;
     cache.writeQuery({
       query: ME,
@@ -56,7 +50,7 @@ class SignInForm extends React.Component {
         me: loginUser
       }
     });
-  }
+  };
 
   render() {
     const {redirectPath, location} = this.props;

@@ -72,19 +72,16 @@ const toggleMenu = ({isMenuOpen}) => ({
 });
 
 class NavBar extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      isMenuOpen: false,
-      menuHeight: null
-    };
-    this.handleMenuClick = this.handleMenuClick.bind(this);
-    this.menuRef = React.createRef();
-  }
+  state = {
+    isMenuOpen: false,
+    menuHeight: null
+  };
 
-  handleMenuClick() {
+  menuRef = React.createRef();
+
+  handleMenuClick = () => {
     this.setState(toggleMenu);
-  }
+  };
 
   componentDidUpdate(prevProps, prevState) {
     if (this.state.isMenuOpen && !prevState.isMenuOpen) {

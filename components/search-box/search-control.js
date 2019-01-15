@@ -68,56 +68,46 @@ const searchState = ({customMeter, tune, search, ...rest}) => {
 };
 
 export default class SearchBox extends React.Component {
-  constructor(props) {
-    super(props);
+  searchRef = React.createRef();
 
-    this.searchRef = React.createRef();
+  state = {
+    customMeter: '',
+    meters: [],
+    search: '',
+    title: '',
+    tune: '',
+    passage: '',
+    showHowToSearch: false,
+    showAdvancedSeach: false
+  };
 
-    this.state = {
-      customMeter: '',
-      meters: [],
-      search: '',
-      title: '',
-      tune: '',
-      passage: '',
-      showHowToSearch: false,
-      showAdvancedSeach: false
-    };
-
-    this.handleSearch = this.handleSearch.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleMeter = this.handleMeter.bind(this);
-    this.handleHowToSearch = this.handleHowToSearch.bind(this);
-    this.handleAdvancedSearch = this.handleAdvancedSearch.bind(this);
-  }
-
-  handleChange(name) {
+  handleChange = name => {
     return event =>
       this.setState({
         [name]: event.target.value
       });
-  }
+  };
 
-  handleSearch(event) {
+  handleSearch = event => {
     const state = searchState(this.state)
       .slice(0, -1)
       .join(' ');
     const search = event.target.value.replace(state, '').trimStart();
     this.setState({search});
-  }
+  };
 
-  handleMeter(event) {
+  handleMeter = event => {
     const {checked, value} = event.target;
     this.setState(setMeter(value, checked));
-  }
+  };
 
-  handleHowToSearch() {
+  handleHowToSearch = () => {
     this.setState(toggleHowToSearch);
-  }
+  };
 
-  handleAdvancedSearch() {
+  handleAdvancedSearch = () => {
     this.setState(toggleAdvancedSearch);
-  }
+  };
 
   render() {
     const {

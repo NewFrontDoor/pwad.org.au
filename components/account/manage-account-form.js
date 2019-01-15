@@ -25,16 +25,7 @@ const validationSchema = object().shape({
 });
 
 class ManageForm extends React.Component {
-  constructor() {
-    super();
-    this.handleChangeFreeAccount = this.handleChangeFreeAccount.bind(this);
-    this.handleChangeFreeAccountUpdate = this.handleChangeFreeAccountUpdate.bind(
-      this
-    );
-    this.handleChangePassword = this.handleChangePassword.bind(this);
-  }
-
-  handleChangeFreeAccount(changeFreeAccount) {
+  handleChangeFreeAccount = changeFreeAccount => {
     return () =>
       changeFreeAccount({
         variables: {hasFreeAccount: true},
@@ -46,9 +37,9 @@ class ManageForm extends React.Component {
           }
         }
       });
-  }
+  };
 
-  handleChangeFreeAccountUpdate(cache, {data}) {
+  handleChangeFreeAccountUpdate = (cache, {data}) => {
     const {changeFreeAccount} = data;
     const {me} = cache.readQuery({query: ME});
     cache.writeQuery({
@@ -60,9 +51,9 @@ class ManageForm extends React.Component {
         }
       }
     });
-  }
+  };
 
-  handleChangePassword(changePassword) {
+  handleChangePassword = changePassword => {
     return ({password, newPassword, confirmPassword}) => {
       changePassword({
         variables: {
@@ -72,7 +63,7 @@ class ManageForm extends React.Component {
         }
       });
     };
-  }
+  };
 
   render() {
     const {hasFreeAccount, hasPaidAccount} = this.props;

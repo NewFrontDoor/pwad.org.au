@@ -33,14 +33,7 @@ const validationSchema = object().shape({
 });
 
 class CreateAccountForm extends React.Component {
-  constructor() {
-    super();
-
-    this.handleCreateUser = this.handleCreateUser.bind(this);
-    this.handleCreateUserUpdate = this.handleCreateUserUpdate.bind(this);
-  }
-
-  handleCreateUser(createAccount) {
+  handleCreateUser = createAccount => {
     return ({firstName, lastName, email, password, confirmPassword}) => {
       createAccount({
         variables: {
@@ -52,9 +45,9 @@ class CreateAccountForm extends React.Component {
         }
       });
     };
-  }
+  };
 
-  handleCreateUserUpdate(cache, {data}) {
+  handleCreateUserUpdate = (cache, {data}) => {
     const {createUser} = data;
     cache.writeQuery({
       query: ME,
@@ -62,7 +55,7 @@ class CreateAccountForm extends React.Component {
         me: createUser
       }
     });
-  }
+  };
 
   render() {
     const {redirectPath, location} = this.props;
