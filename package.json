@@ -62,6 +62,7 @@
     "isomorphic-unfetch": "^3.0.0",
     "jsonwebtoken": "^8.4.0",
     "keystone": "^4.0.0",
+    "keystone-storage-adapter-s3": "^2.0.0",
     "lodash": "^4.17.11",
     "mineral-ui": "^0.55.0",
     "model-transform": "^2.0.0",

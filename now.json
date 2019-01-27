@@ -11,7 +11,9 @@
 
     "S3_KEY": "@s3-key",
     "S3_SECRET": "@s3-secret",
-    "S3_BUCKET": "@s3-bucket",
+    "S3_BUCKET": "pwad.org.au",
+    "S3_REGION": "ap-southeast-2",
+    "CLOUDFRONT_PUBLIC_URL": "https://d14i6h6ib67gf5.cloudfront.net",
 
     "MONGO_URI": "@mongo-uri",
 
