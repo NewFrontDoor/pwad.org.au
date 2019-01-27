@@ -1,25 +1,38 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {css} from 'react-emotion';
 import {Query} from 'react-apollo';
 import Flex from 'mineral-ui/Flex';
 import Text from 'mineral-ui/Text';
 import {ChevronDown as Chevron} from 'react-feather';
 import {createStyledComponent} from 'mineral-ui/styles';
+import Box from 'mineral-ui/Box';
+import Dropdown from 'mineral-ui/Dropdown';
+import LinkButton from '../link-button';
 import Media from '../media';
 import Link from '../link';
-import {ME} from '../queries';
+import {MENU_WITH_RESOURCES, ME} from '../queries';
 import UserAvatar from './user-avatar';
 
 const noList = css`
   list-style: none;
 `;
 
-const NavLink = createStyledComponent(Link, {
-  display: 'inline-flex',
-  alignItems: 'center'
-});
+const DropdownItem = ({name}) => {
+  return (
+    <Box padding="md">
+      <Link href={name}>{name}</Link>
+    </Box>
+  );
+};
+
+DropdownItem.propTypes = {
+  name: PropTypes.string.isRequired
+};
 
 const NavMenuItem = createStyledComponent(Text, {
+  display: 'inline-flex',
+  alignItems: 'center',
   letterSpacing: '1px',
   textTransform: 'uppercase',
   margin: '0 1em'
@@ -44,32 +57,31 @@ class Nav extends React.Component {
         direction={['column', 'column', 'row']}
       >
         <NavMenuItem element="li" fontWeight="bold">
-          <NavLink prefetch href="/">
+          <Link prefetch href="/">
             Home
-          </NavLink>
+          </Link>
         </NavMenuItem>
+        <Query query={MENU_WITH_RESOURCES}>
+          {({data}) =>
+            data.menuWithResources.map(menu => (
+              <NavMenuItem key={menu._id} element="li" fontWeight="bold">
+                <Dropdown
+                  data={menu.resources}
+                  item={({props}) => <DropdownItem {...props} />}
+                >
+                  <LinkButton>
+                    {menu.name}
+                    <Chevron size="1em" />
+                  </LinkButton>
+                </Dropdown>
+              </NavMenuItem>
+            ))
+          }
+        </Query>
         <NavMenuItem element="li" fontWeight="bold">
-          <NavLink prefetch href="/">
-            GAA Publications
-            <Chevron size="1em" />
-          </NavLink>
-        </NavMenuItem>
-        <NavMenuItem element="li" fontWeight="bold">
-          <NavLink prefetch href="/">
-            PWAD Resources
-            <Chevron size="1em" />
-          </NavLink>
-        </NavMenuItem>
-        <NavMenuItem element="li" fontWeight="bold">
-          <NavLink prefetch href="/">
-            Useful links
-            <Chevron size="1em" />
-          </NavLink>
-        </NavMenuItem>
-        <NavMenuItem element="li" fontWeight="bold">
-          <NavLink prefetch href="/">
+          <Link prefetch href="/">
             About
-          </NavLink>
+          </Link>
         </NavMenuItem>
         <Media query="medium">
           <Spacer />

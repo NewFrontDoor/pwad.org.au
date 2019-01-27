@@ -1,5 +1,6 @@
 const keystone = require('keystone');
 const transform = require('model-transform');
+const {isEmpty} = require('lodash');
 
 const {Types} = keystone.Field;
 
@@ -21,8 +22,9 @@ Hymn.add({
   verses: {type: Types.Text}
 });
 
-// FIXME check for wordsCopyright
-Hymn.schema.virtual('hasWordsCopyright').get(() => true);
+Hymn.schema
+  .virtual('hasWordsCopyright')
+  .get(() => !isEmpty(this.wordsCopyright));
 
 Hymn.schema.index({title: 'text'});
 

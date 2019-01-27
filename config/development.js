@@ -16,6 +16,12 @@ module.exports = {
   API_TOKEN_SECRET: 'API_TOKEN_SECRET',
   SESSION_COOKIE_SECRET: 'SESSION_COOKIE_SECRET',
 
+  S3_KEY: process.env.S3_KEY,
+  S3_SECRET: process.env.S3_SECRET,
+  S3_BUCKET: process.env.S3_BUCKET,
+  S3_REGION: process.env.S3_REGION,
+  CLOUDFRONT_PUBLIC_URL: process.env.CLOUDFRONT_PUBLIC_URL,
+
   GOOGLE_OAUTH_CLIENT_ID:
     '847282100207-qf2aed9qpua7spbq1b7j2mr723qnd2sr.apps.googleusercontent.com',
   GOOGLE_OAUTH_CLIENT_SECRET: process.env.GOOGLE_OAUTH_CLIENT_SECRET

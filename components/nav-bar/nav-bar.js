@@ -32,12 +32,12 @@ const Root = createStyledComponent('div', ({isMenuOpen, menuHeight, theme}) => {
     display: 'flex',
     justifyContent: 'space-between',
     marginBottom: isMenuOpen
-      ? rem(250) // Dependent on menu height
+      ? rem(300) // Dependent on menu height
       : theme.baseline_7,
     paddingTop: rem(30), // matches horizontal padding
     transition: `margin ${transitionProperties}`,
 
-    '& div[id$="content"]': {
+    '& div[id$="popover"] div[id$="content"]': {
       // Matches nav link padding + menuButton optical adjustment
       marginTop: `${parseFloat(theme.space_stack_sm) + 0.45}em`,
       opacity: isMenuOpen ? 1 : 0,

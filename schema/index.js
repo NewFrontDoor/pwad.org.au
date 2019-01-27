@@ -12,6 +12,8 @@ module.exports = keystone => {
   const CategoryTC = composeWithMongoose(keystone.list('Category').model);
   const HymnTC = composeWithMongoose(keystone.list('Hymn').model);
   const TuneTC = composeWithMongoose(keystone.list('Tune').model);
+  const ResourceTC = composeWithMongoose(keystone.list('Resource').model);
+  const MenuTC = composeWithMongoose(keystone.list('Menu').model);
   const UserTC = composeWithMongoose(UserModel);
 
   UserTC.removeField(['email', 'password']);
@@ -150,6 +152,20 @@ module.exports = keystone => {
     }
   });
 
+  ResourceTC.addRelation('linkedMenu', {
+    resolver: () => MenuTC.getResolver('findById'),
+    prepareArgs: {
+      _id: source => source.menu
+    }
+  });
+
+  MenuTC.addRelation('resources', {
+    resolver: () => ResourceTC.getResolver('findMany'),
+    prepareArgs: {
+      filter: source => ({menu: source._id})
+    }
+  });
+
   GQC.rootQuery().addFields({
     me: UserTC.getResolver('me'),
 
@@ -185,7 +201,10 @@ module.exports = keystone => {
     tuneOne: TuneTC.getResolver('findOne'),
     tuneMany: TuneTC.getResolver('findMany'),
     tunetotal: TuneTC.getResolver('count'),
-    tuneConnection: TuneTC.getResolver('connection')
+    tuneConnection: TuneTC.getResolver('connection'),
+
+    resourcesMany: ResourceTC.getResolver('findMany'),
+    menuWithResources: MenuTC.getResolver('findMany')
   });
 
   GQC.rootMutation().addFields({
