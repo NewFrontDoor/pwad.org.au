@@ -136,6 +136,11 @@ class ManageForm extends React.Component {
               {changePassword => (
                 <Formik
                   validationSchema={validationSchema}
+                  initialValues={{
+                    password: '',
+                    newPassword: '',
+                    confirmPassword: ''
+                  }}
                   onSubmit={this.handleChangePassword(changePassword)}
                 >
                   <Form>

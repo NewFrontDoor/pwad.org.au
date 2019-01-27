@@ -7,6 +7,7 @@ const config = require('config');
 const authenticationHandler = require('./handlers/authentication');
 const passportHandler = require('./handlers/passport');
 const graphqlHandler = require('./handlers/graphql');
+const keystoneHandler = require('./handlers/keystone');
 
 const openDatabaseConnection = util.promisify(
   keystone.openDatabaseConnection.bind(keystone)
@@ -45,6 +46,7 @@ const start = async ({app, pretty}) => {
 
   server.use(express.static('static'));
   server.use('/keystone', keystone.Admin.Server.createStaticRouter(keystone));
+  server.use('/keystone', keystoneHandler);
   server.use('/keystone', keystone.Admin.Server.createDynamicRouter(keystone));
   server.use('/auth', authenticationHandler);
   server.use('/graphql', graphqlHandler(keystone));

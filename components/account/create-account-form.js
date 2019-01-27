@@ -72,6 +72,13 @@ class CreateAccountForm extends React.Component {
           <Mutation
             mutation={CREATE_USER}
             update={this.handleCreateUserUpdate}
+            initialValues={{
+              firstName: '',
+              lastName: '',
+              email: '',
+              password: '',
+              confirmPassword: ''
+            }}
             onCompleted={() => Router.replace('/manage-account')}
           >
             {createAccount => (

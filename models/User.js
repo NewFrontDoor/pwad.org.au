@@ -1,6 +1,7 @@
 const keystone = require('keystone');
 const passportLocalMongoose = require('passport-local-mongoose');
 const transform = require('model-transform');
+const {accessibleRecordsPlugin} = require('@casl/mongoose');
 
 const {Types} = keystone.Field;
 
@@ -25,7 +26,13 @@ User.add(
   },
   'Permissions',
   {
-    isProtected: {type: Boolean, noedit: true}
+    isProtected: {type: Boolean, noedit: true},
+    role: {
+      type: Types.Select,
+      options: 'admin, committee, public',
+      initial: true,
+      required: true
+    }
   }
 );
 
@@ -44,6 +51,8 @@ User.schema.plugin(passportLocalMongoose, {
   usernameField: 'email',
   usernameUnique: true
 });
+
+User.schema.plugin(accessibleRecordsPlugin);
 
 transform.toJSON(User);
 User.defaultColumns = 'name, email';

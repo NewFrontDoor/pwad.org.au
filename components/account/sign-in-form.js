@@ -68,6 +68,7 @@ class SignInForm extends React.Component {
             {(loginUser, {loading, error}) => (
               <Formik
                 validationSchema={validationSchema}
+                initialValues={{email: '', password: ''}}
                 onSubmit={this.handleSignIn(loginUser)}
               >
                 <Form>

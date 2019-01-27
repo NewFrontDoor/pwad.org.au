@@ -2,6 +2,7 @@ const config = require('config');
 const passport = require('passport');
 const {Strategy: GoogleStrategy} = require('passport-google-oauth2');
 const {has} = require('lodash');
+const {createAbilities} = require('./authentication/abilities');
 
 module.exports = keystone => {
   const User = keystone.list('User').model;
@@ -54,7 +55,7 @@ module.exports = keystone => {
         clientSecret: config.get('GOOGLE_OAUTH_CLIENT_SECRET'),
         callbackURL: '/auth/google/callback'
       },
-      (token, tokenSecret, profile, done) => {
+      async (token, tokenSecret, profile, done) => {
         const user = {
           providerId: null,
           googleProviderId: profile.id,
@@ -94,18 +95,14 @@ module.exports = keystone => {
           lastSeen: new Date()
         };
 
-        return createOrFindUser(user, 'googleProviderId')
-          .then(user => {
-            done(null, user);
-            return user;
-          })
-          .catch(error => {
-            done(error);
-            return null;
-          });
+        try {
+          done(null, await createOrFindUser(user, 'googleProviderId'));
+        } catch (error) {
+          done(error);
+        }
       }
     )
   );
 
-  return [passport.initialize(), passport.session()];
+  return [passport.initialize(), passport.session(), createAbilities];
 };
