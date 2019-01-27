@@ -2,6 +2,7 @@ const keystone = require('keystone');
 const passportLocalMongoose = require('passport-local-mongoose');
 const transform = require('model-transform');
 const {accessibleRecordsPlugin} = require('@casl/mongoose');
+const {createAbilities} = require('../handlers/authentication/abilities');
 
 const {Types} = keystone.Field;
 
@@ -28,16 +29,19 @@ User.add(
   {
     isProtected: {type: Boolean, noedit: true},
     role: {
-      type: Types.Select,
-      options: 'admin, committee, public',
+      default: 'public',
       initial: true,
-      required: true
+      options: 'admin, committee, public',
+      required: true,
+      type: Types.Select
     }
   }
 );
 
 // Provide access to Keystone
-User.schema.virtual('canAccessKeystone').get(() => true);
+User.schema.virtual('canAccessKeystone').get(() => {
+  return createAbilities(this).can('read', 'keystone');
+});
 
 // Check if they've completed a square transaction
 User.schema.virtual('hasPaidAccount').get(() => false);

@@ -46,6 +46,7 @@
     "config": "^3.0.0",
     "connect-mongo": "^2.0.3",
     "cookie": "^0.3.1",
+    "cors": "^2.8.5",
     "emotion": "^9.2.12",
     "emotion-server": "^9.2.12",
     "emotion-theming": "^9.2.9",
@@ -110,7 +111,9 @@
     "overrides": [
       {
         "files": "components/**/*.js",
-        "envs": ["browser"]
+        "envs": [
+          "browser"
+        ]
       },
       {
         "files": "models/*.js",

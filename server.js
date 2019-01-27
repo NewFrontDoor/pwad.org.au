@@ -4,6 +4,7 @@ const keystone = require('keystone');
 const pinoHttp = require('pino-http');
 const config = require('config');
 
+const corsHandler = require('./handlers/cors');
 const authenticationHandler = require('./handlers/authentication');
 const passportHandler = require('./handlers/passport');
 const graphqlHandler = require('./handlers/graphql');
@@ -22,6 +23,7 @@ const start = async ({app, pretty}) => {
   const hostUrl = config.get('HOST_URL');
 
   const server = express();
+  server.enable('trust proxy');
 
   keystone.init(keystoneConfig.options);
   keystone.import('models');
@@ -38,6 +40,7 @@ const start = async ({app, pretty}) => {
   keystone.initDatabaseConfig();
   keystone.initExpressSession(keystone.mongoose);
 
+  server.use(corsHandler);
   server.use(pinoHttp({stream: pretty}));
   server.use(keystone.get('session options').cookieParser);
   server.use(keystone.expressSession);

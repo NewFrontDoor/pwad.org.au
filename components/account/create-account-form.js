@@ -79,7 +79,7 @@ class CreateAccountForm extends React.Component {
               password: '',
               confirmPassword: ''
             }}
-            onCompleted={() => Router.replace('/manage-account')}
+            onCompleted={() => Router.replace('/my-account')}
           >
             {createAccount => (
               <Formik
