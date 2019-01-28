@@ -59,6 +59,10 @@ class MyApp extends App {
       <Container>
         <Head>
           <title>Public Worship and Aids to Devotion - Home</title>
+          <meta
+            name="Description"
+            content="Public Worship and Aids to Devotion Committee Website - provided by the PWAD Committee to help congregations within the Presbyterian Church of Australia"
+          />
         </Head>
         <ApolloProvider client={apolloClient}>
           <ThemeProvider theme={theme}>

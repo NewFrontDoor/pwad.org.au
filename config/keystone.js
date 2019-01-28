@@ -22,6 +22,9 @@ const options = {
   mongo: config.get('MONGO_URI'),
 
   session: true,
+  'session options': {
+    domain: config.get('HOST')
+  },
   auth: true,
   'trust proxy': true,
   'session store': 'mongo',

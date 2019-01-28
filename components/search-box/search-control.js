@@ -1,42 +1,24 @@
 import React from 'react';
-import gql from 'graphql-tag';
+import {isEmpty} from 'lodash';
 import {Query} from 'react-apollo';
 import Box from 'mineral-ui/Box';
 import Flex, {FlexItem} from 'mineral-ui/Flex';
-import {FormField} from 'mineral-ui/Form';
 import Text from 'mineral-ui/Text';
 import Button from 'mineral-ui/Button';
 import TextInput from 'mineral-ui/TextInput';
 import {CheckboxGroup} from 'mineral-ui/Checkbox';
 import Media from '../media';
+import {Formik, Form, FormField, FieldArray} from '../form';
+import {LIST_ALL} from '../queries';
 import SearchResult from './search-result';
 
-const LIST_ALL = gql`
-  query listAll($title: String!) {
-    hymnMany(filter: {title_contains: $title}) {
-      _id
-      title
-      bookId
-      lyrics {
-        md(truncate: 120)
-      }
-    }
-  }
-`;
-
-const setMeter = (value, checked) => prevState => {
-  const meters = [...prevState.meters];
-  const index = meters.indexOf(value);
-  const hasValue = index !== -1;
-
-  if (checked && !hasValue) {
-    meters.push(value);
-  } else if (hasValue) {
-    meters.splice(index, 1);
-  }
-
-  return {meters};
-};
+const hymnMeterDefaults = [
+  '10.10.10.10',
+  '4.4.4.4',
+  '8.8.8.8',
+  '10.10.10.8',
+  '8.6.8.6'
+];
 
 const toggleHowToSearch = ({showHowToSearch}) => ({
   showHowToSearch: !showHowToSearch
@@ -46,59 +28,12 @@ const toggleAdvancedSearch = ({showAdvancedSeach}) => ({
   showAdvancedSeach: !showAdvancedSeach
 });
 
-const searchState = ({customMeter, tune, search, ...rest}) => {
-  const value = [];
-  let meters = [...rest.meters];
-
-  if (customMeter) {
-    meters = [...meters, customMeter];
-  }
-
-  if (meters.length > 0) {
-    value.push(`meter:${meters.join(',')}`);
-  }
-
-  if (tune) {
-    value.push(`tune:${tune}`);
-  }
-
-  value.push(search);
-
-  return value;
-};
-
 export default class SearchBox extends React.Component {
   searchRef = React.createRef();
 
   state = {
-    customMeter: '',
-    meters: [],
-    search: '',
-    title: '',
-    tune: '',
-    passage: '',
     showHowToSearch: false,
-    showAdvancedSeach: false
-  };
-
-  handleChange = name => {
-    return event =>
-      this.setState({
-        [name]: event.target.value
-      });
-  };
-
-  handleSearch = event => {
-    const state = searchState(this.state)
-      .slice(0, -1)
-      .join(' ');
-    const search = event.target.value.replace(state, '').trimStart();
-    this.setState({search});
-  };
-
-  handleMeter = event => {
-    const {checked, value} = event.target;
-    this.setState(setMeter(value, checked));
+    showAdvancedSeach: true
   };
 
   handleHowToSearch = () => {
@@ -109,18 +44,13 @@ export default class SearchBox extends React.Component {
     this.setState(toggleAdvancedSearch);
   };
 
-  render() {
-    const {
-      customMeter,
-      meters,
-      tune,
-      passage,
-      title,
-      showHowToSearch,
-      showAdvancedSeach
-    } = this.state;
+  handleSearch = fields => {
+    this.setState(() => fields);
+  };
 
-    const search = searchState(this.state).join(' ');
+  render() {
+    const {showHowToSearch, showAdvancedSeach, ...search} = this.state;
+    const showSearchResults = !isEmpty(search);
 
     return (
       <>
@@ -130,142 +60,143 @@ export default class SearchBox extends React.Component {
           using the search box below. Advanced search will allow you to refine
           your criteria on data available in the resource.
         </Text>
-        <Flex marginBottom="1em">
-          <FlexItem grow={1} marginEnd="auto">
-            <FormField
-              hideLabel
-              input={TextInput}
-              label="Search"
-              type="search"
-              placeholder="Search..."
-              value={search}
-              onBlur={this.handleBlur}
-              onChange={this.handleSearch}
-            />
-          </FlexItem>
-          {showAdvancedSeach && (
-            <FlexItem marginStart="1em">
-              <Button>Search</Button>
-            </FlexItem>
-          )}
-        </Flex>
-        <Flex justifyContent="between" marginBottom="1em">
-          <Media query="medium">
-            <FlexItem>
-              <Button minimal size="medium" onClick={this.handleHowToSearch}>
-                How to search
-              </Button>
-            </FlexItem>
-          </Media>
-          <FlexItem>
-            <Button minimal size="medium" onClick={this.handleAdvancedSearch}>
-              Advanced Search
-            </Button>
-          </FlexItem>
-        </Flex>
-        {showHowToSearch && (
-          <Text>
-            Search Instructions to help people to search. Lorem ipsum dolor sit
-            amet, affert theophrastus in sea, at aeterno invidunt platonem has.
-            Habeo inimicus rationibus mel ex, nisl fabellas nec ei, quo et quot
-            putant legendos. Prompta definitiones nam an, quidam scaevola per
-            te. Eum at purto vocibus mnesarchum, diam falli an nam. Dicunt
-            perfecto deserunt mel in, mundi moderatius eu eam.
-          </Text>
-        )}
-        {showAdvancedSeach && (
-          <Flex>
-            <FlexItem
-              grow={1}
-              width="50%"
-              breakpoints={['medium']}
-              direction={['column', 'row']}
-            >
-              <Box marginBottom="1em">
-                <FormField
-                  input={TextInput}
-                  label="Title"
-                  value={title}
-                  onBlur={this.handleBlur}
-                  onChange={this.handleChange('title')}
-                />
-              </Box>
-              <Box marginBottom="1em">
-                <FormField
-                  input={CheckboxGroup}
-                  label="Hymn Meter"
-                  name="hymn-meter"
-                  checked={meters}
-                  data={[
-                    {label: '10.10.10.10', value: '10.10.10.10'},
-                    {label: '4.4.4.4.4', value: '4.4.4.4.4'},
-                    {label: '8.8.8.8', value: '8.8.8.8'},
-                    {label: '10.10.10.8', value: '10.10.10.8'},
-                    {label: '8.6.8.6', value: '8.6.8.6'}
-                  ]}
-                  onBlur={this.handleBlur}
-                  onChange={this.handleMeter}
-                />
-              </Box>
-              <Box marginBottom="1em">
+        <Formik
+          initialValues={{
+            customMeter: '',
+            hymnMeter: [],
+            search: '',
+            title: '',
+            tune: '',
+            passage: ''
+          }}
+          onSubmit={this.handleSearch}
+        >
+          <Form>
+            <Flex marginBottom="1em">
+              <FlexItem grow={1} marginEnd="auto">
                 <FormField
                   hideLabel
                   input={TextInput}
-                  label="Custom Meter"
-                  value={customMeter}
-                  onBlur={this.handleBlur}
-                  onChange={this.handleChange('customMeter')}
+                  label="Search"
+                  name="search"
+                  placeholder="Search..."
+                  type="search"
                 />
-              </Box>
-              <Box marginBottom="1em">
-                <FormField
-                  input={TextInput}
-                  label="Tune"
-                  value={tune}
-                  onBlur={this.handleBlur}
-                  onChange={this.handleChange('tune')}
-                />
-              </Box>
-              <Box marginBottom="1em">
-                <FormField
-                  input={TextInput}
-                  label="Passage"
-                  value={passage}
-                  onBlur={this.handleBlur}
-                  onChange={this.handleChange('passage')}
-                />
-              </Box>
-            </FlexItem>
-            <Media query="medium">
-              <FlexItem grow={1} width="50%">
-                <Text>
-                  Search Instructions to help people to search. Lorem ipsum
-                  dolor sit amet, affert theophrastus in sea, at aeterno
-                  invidunt platonem has. Habeo inimicus rationibus mel ex, nisl
-                  fabellas nec ei, quo et quot putant legendos. Prompta
-                  definitiones nam an, quidam scaevola per te. Eum at purto
-                  vocibus mnesarchum, diam falli an nam. Dicunt perfecto
-                  deserunt mel in, mundi moderatius eu eam.
-                </Text>
               </FlexItem>
-            </Media>
-          </Flex>
+              {showAdvancedSeach && (
+                <FlexItem marginStart="1em">
+                  <Button type="submit">Search</Button>
+                </FlexItem>
+              )}
+            </Flex>
+            <Flex justifyContent="between" marginBottom="1em">
+              <Media query="medium">
+                <FlexItem>
+                  <Button
+                    minimal
+                    size="medium"
+                    onClick={this.handleHowToSearch}
+                  >
+                    How to search
+                  </Button>
+                </FlexItem>
+              </Media>
+              <FlexItem>
+                <Button
+                  minimal
+                  size="medium"
+                  onClick={this.handleAdvancedSearch}
+                >
+                  Advanced Search
+                </Button>
+              </FlexItem>
+            </Flex>
+            {showHowToSearch && (
+              <Text>
+                Search Instructions to help people to search. Lorem ipsum dolor
+                sit amet, affert theophrastus in sea, at aeterno invidunt
+                platonem has. Habeo inimicus rationibus mel ex, nisl fabellas
+                nec ei, quo et quot putant legendos. Prompta definitiones nam
+                an, quidam scaevola per te. Eum at purto vocibus mnesarchum,
+                diam falli an nam. Dicunt perfecto deserunt mel in, mundi
+                moderatius eu eam.
+              </Text>
+            )}
+            {showAdvancedSeach && (
+              <Flex>
+                <FlexItem
+                  grow={1}
+                  width="50%"
+                  breakpoints={['medium']}
+                  direction={['column', 'row']}
+                >
+                  <Box marginBottom="1em">
+                    <FormField input={TextInput} label="Title" name="title" />
+                  </Box>
+                  <Box marginBottom="1em">
+                    <FieldArray
+                      input={CheckboxGroup}
+                      label="Hymn Meter"
+                      name="hymnMeter"
+                      data={hymnMeterDefaults.map(value => ({
+                        label: value,
+                        value
+                      }))}
+                    />
+                  </Box>
+                  <Box marginBottom="1em">
+                    <FormField
+                      hideLabel
+                      name="customMeter"
+                      input={TextInput}
+                      label="Custom Meter"
+                    />
+                  </Box>
+                  <Box marginBottom="1em">
+                    <FormField input={TextInput} label="Tune" name="tune" />
+                  </Box>
+                  <Box marginBottom="1em">
+                    <FormField
+                      input={TextInput}
+                      label="Passage"
+                      name="passage"
+                    />
+                  </Box>
+                </FlexItem>
+                <Media query="medium">
+                  <FlexItem grow={1} width="50%">
+                    <Text>
+                      Search Instructions to help people to search. Lorem ipsum
+                      dolor sit amet, affert theophrastus in sea, at aeterno
+                      invidunt platonem has. Habeo inimicus rationibus mel ex,
+                      nisl fabellas nec ei, quo et quot putant legendos. Prompta
+                      definitiones nam an, quidam scaevola per te. Eum at purto
+                      vocibus mnesarchum, diam falli an nam. Dicunt perfecto
+                      deserunt mel in, mundi moderatius eu eam.
+                    </Text>
+                  </FlexItem>
+                </Media>
+              </Flex>
+            )}
+          </Form>
+        </Formik>
+        {showSearchResults && (
+          <Query query={LIST_ALL} variables={search}>
+            {({loading, error, data}) => {
+              if (loading) {
+                return 'Loading...';
+              }
+
+              if (error) {
+                return `Error! ${error.message}`;
+              }
+
+              return data.hymnMany.map(props => (
+                <SearchResult key={props.bookId} {...props} />
+              ));
+            }}
+          </Query>
         )}
-        <Query query={LIST_ALL} variables={{title}}>
-          {({loading, error, data}) => {
-            if (loading) {
-              return 'Loading...';
-            }
-
-            if (error) {
-              return `Error! ${error.message}`;
-            }
-
-            return data.hymnMany.map(props => (
-              <SearchResult key={props.bookId} {...props} />
-            ));
-          }}
-        </Query>
       </>
     );
   }

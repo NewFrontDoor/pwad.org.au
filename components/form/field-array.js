@@ -1,24 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {has} from 'lodash';
-import {getIn, Field} from 'formik';
+import {getIn, FieldArray as FormikFieldArray} from 'formik';
 import {FormField as MineralFormField} from 'mineral-ui/Form';
+import {CheckboxGroup} from 'mineral-ui/Checkbox';
 
-const FormField = ({name, ...props}) => (
-  <Field name={name}>
-    {({field, form}) => {
+const FieldArray = ({name, input, ...props}) => (
+  <FormikFieldArray name={name}>
+    {({field, form, push, remove}) => {
       const values = {};
       const value = getIn(form.values, name);
       const touched = getIn(form.touched, name);
-      const invalid = has(form.errors, name);
+      const invalid = typeof getIn(form.errors, name) === 'string';
       const showError = touched && invalid;
       const error = showError ? getIn(form.errors, name) : undefined;
       const variant = showError ? 'danger' : undefined;
 
-      if (props.type === 'checkbox') {
+      if (input === CheckboxGroup) {
         values.checked = value;
-      } else if (props.type === 'radio') {
-        values.checked = props.value === value;
+        values.onChange = event => {
+          if (event.target.checked) {
+            push(event.target.value);
+          } else {
+            const index = value.indexOf(event.target.value);
+            remove(index);
+          }
+        };
       } else {
         values.value = value;
       }
@@ -28,16 +34,18 @@ const FormField = ({name, ...props}) => (
           invalid={invalid}
           caption={error}
           variant={variant}
+          input={input}
+          name={name}
           {...props}
           {...field}
           {...values}
         />
       );
     }}
-  </Field>
+  </FormikFieldArray>
 );
 
-FormField.propTypes = {
+FieldArray.propTypes = {
   input: PropTypes.func.isRequired,
   label: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
@@ -45,9 +53,9 @@ FormField.propTypes = {
   value: PropTypes.string
 };
 
-FormField.defaultProps = {
+FieldArray.defaultProps = {
   type: undefined,
   value: undefined
 };
 
-export default FormField;
+export default FieldArray;

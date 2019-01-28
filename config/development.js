@@ -7,6 +7,7 @@ module.exports = {
 
   MONGO_URI: process.env.MONGO_URI || 'mongodb://mongo/pwad',
 
+  HOST: deferConfig(config => `localhost:${config.PORT}`),
   HOST_URL: deferConfig(config => `http://localhost:${config.PORT}`),
   GRAPHQL_URI: deferConfig(config => `http://localhost:${config.PORT}/graphql`),
 
