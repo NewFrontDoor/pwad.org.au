@@ -8,9 +8,10 @@ const Category = new keystone.List('Category', {
 });
 
 Category.add({
-  name: {type: Types.Text, required: true, index: true, initial: true}
+  name: {type: Types.Text, required: true, index: true, initial: true},
+  parent: {type: Types.Relationship, ref: 'Category'}
 });
 
 transform.toJSON(Category);
-Category.defaultColumns = 'name';
+Category.defaultColumns = 'name, parent';
 Category.register();

@@ -5,6 +5,7 @@ services:
     command: pm2-runtime start --watch ecosystem.config.js
     ports:
       - "3000:3000"
+      - "3100:3100"
     volumes:
       - .:/var/www
     links:

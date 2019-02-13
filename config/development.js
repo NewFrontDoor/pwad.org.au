@@ -23,7 +23,6 @@ module.exports = {
   S3_REGION: process.env.S3_REGION,
   CLOUDFRONT_PUBLIC_URL: process.env.CLOUDFRONT_PUBLIC_URL,
 
-  GOOGLE_OAUTH_CLIENT_ID:
-    '847282100207-qf2aed9qpua7spbq1b7j2mr723qnd2sr.apps.googleusercontent.com',
+  GOOGLE_OAUTH_CLIENT_ID: process.env.GOOGLE_OAUTH_CLIENT_ID,
   GOOGLE_OAUTH_CLIENT_SECRET: process.env.GOOGLE_OAUTH_CLIENT_SECRET
 };

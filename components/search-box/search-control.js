@@ -33,7 +33,7 @@ export default class SearchBox extends React.Component {
 
   state = {
     showHowToSearch: false,
-    showAdvancedSeach: true
+    showAdvancedSeach: false
   };
 
   handleHowToSearch = () => {

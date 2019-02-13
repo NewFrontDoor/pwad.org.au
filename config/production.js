@@ -7,7 +7,7 @@ module.exports = {
 
   MONGO_URI: process.env.MONGO_URI,
 
-  HOST: process.env.HOST || 'pwad.now.sh',
+  HOST: process.env.HOST || 'pwad.org.au',
   HOST_URL: process.env.HOST_URL || 'https://pwad.org.au',
   GRAPHQL_URI: deferConfig(config => `${config.HOST_URL}/graphql`),
 

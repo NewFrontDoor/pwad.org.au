@@ -5,5 +5,8 @@ module.exports = {
     dev: config.get('dev'),
     graphqlUri: config.get('GRAPHQL_URI'),
     hostUrl: config.get('HOST_URL')
+  },
+  onDemandEntries: {
+    websocketPort: 3100
   }
 };

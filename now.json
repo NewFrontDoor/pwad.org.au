@@ -6,6 +6,9 @@
     "stage.pwad.org.au"
   ],
   "env": {
+    "HOST": "pwad.now.sh",
+    "HOST_URL": "https://pwad.now.sh",
+
     "API_CLIENT_URL": "http://localhost:3000",
     "API_SERVER_URL": "http://localhost:3000",
 
@@ -19,7 +22,7 @@
 
     "SESSION_COOKIE_SECRET": "@session-cookie-secret",
 
-    "GOOGLE_OAUTH_CLIENT_ID": "@google-oauth-client-id",
+    "GOOGLE_OAUTH_CLIENT_ID": "847282100207-emjqgnijh0lo6c731bdh58r8s9h7asd2.apps.googleusercontent.com",
     "GOOGLE_OAUTH_CLIENT_SECRET": "@google-oauth-client-secret"
   },
   "build": {
