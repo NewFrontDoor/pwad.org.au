@@ -36,8 +36,10 @@ const options = {
 const locals = {};
 
 const nav = {
-  // people: ['users', 'staffs'],
-  // content: ['pages', 'venues', 'events']
+  people: ['users'],
+  menu: ['menus'],
+  content: ['page-contents', 'resources'],
+  resources: ['hymns', 'prayers', 'liturgies']
 };
 
 module.exports = {

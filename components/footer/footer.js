@@ -1,7 +1,7 @@
 import React from 'react';
 import Text from 'mineral-ui/Text';
 import Box from 'mineral-ui/Box';
-import styled from 'react-emotion';
+import styled from '@emotion/styled';
 
 const FooterBox = styled(Box)`
   padding: 15vh 1rem;

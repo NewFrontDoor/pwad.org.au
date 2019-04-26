@@ -10,7 +10,7 @@ ENV TZ Australia/Sydney
 
 WORKDIR /var/www
 
-COPY package.json package-lock.json ./
+COPY package*.json ./
 
 # install dependencies
 RUN npm install

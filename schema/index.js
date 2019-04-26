@@ -2,7 +2,7 @@ const {strict: assert} = require('assert');
 const {get} = require('lodash');
 const {GraphQLString, GraphQLInt, GraphQLBoolean} = require('graphql');
 const {truncate} = require('lodash');
-const {GQC} = require('graphql-compose');
+const {schemaComposer} = require('graphql-compose');
 const {composeWithMongoose} = require('graphql-compose-mongoose');
 
 module.exports = keystone => {
@@ -15,6 +15,7 @@ module.exports = keystone => {
   const ResourceTC = composeWithMongoose(keystone.list('Resource').model);
   const MenuTC = composeWithMongoose(keystone.list('Menu').model);
   const UserTC = composeWithMongoose(UserModel);
+  const PageContentTC = composeWithMongoose(keystone.list('PageContent').model);
 
   UserTC.removeField(['email', 'password']);
 
@@ -80,10 +81,15 @@ module.exports = keystone => {
 
       try {
         assert.ok(password);
-        const user = await UserModel.findByUsername(email);
-        await user.authenticate(password);
-        await context.login(user);
-        return user;
+        const found = await UserModel.findByUsername(email);
+        const {user, error} = await found.authenticate(password);
+
+        if (user) {
+          await context.login(user);
+          return user;
+        }
+
+        throw error;
       } catch (error) {
         context.log.error(error);
         throw new Error('Email / Password Incorrect');
@@ -152,10 +158,17 @@ module.exports = keystone => {
     }
   });
 
-  ResourceTC.addRelation('linkedMenu', {
+  ResourceTC.addRelation('menu', {
     resolver: () => MenuTC.getResolver('findById'),
     prepareArgs: {
       _id: source => source.menu
+    }
+  });
+
+  ResourceTC.addRelation('content', {
+    resolver: () => PageContentTC.getResolver('findById'),
+    prepareArgs: {
+      _id: source => source.content
     }
   });
 
@@ -166,7 +179,14 @@ module.exports = keystone => {
     }
   });
 
-  GQC.rootQuery().addFields({
+  MenuTC.addRelation('link', {
+    resolver: () => PageContentTC.getResolver('findById'),
+    prepareArgs: {
+      _id: source => source.link
+    }
+  });
+
+  schemaComposer.Query.addFields({
     me: UserTC.getResolver('me'),
 
     authorById: AuthorTC.getResolver('findById'),
@@ -203,18 +223,20 @@ module.exports = keystone => {
     tunetotal: TuneTC.getResolver('count'),
     tuneConnection: TuneTC.getResolver('connection'),
 
+    pageContentOne: PageContentTC.getResolver('findOne'),
+
     resourcesMany: ResourceTC.getResolver('findMany'),
-    menuWithResources: MenuTC.getResolver('findMany')
+    menuMany: MenuTC.getResolver('findMany')
   });
 
-  GQC.rootMutation().addFields({
+  schemaComposer.Mutation.addFields({
     createUser: UserTC.getResolver('createUser'),
     loginUser: UserTC.getResolver('loginUser'),
     changePassword: UserTC.getResolver('changePassword'),
     changeFreeAccount: UserTC.getResolver('changeFreeAccount')
   });
 
-  const schema = GQC.buildSchema();
+  const schema = schemaComposer.buildSchema();
 
   return schema;
 };

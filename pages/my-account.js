@@ -31,8 +31,8 @@ export default class MyAccount extends React.Component {
             <Logo />
           </FlexItem>
           <FlexItem>
-            <Text element="h1">Public Worship and Aids to Devotion</Text>
-            <Text element="h2">My Account</Text>
+            <Text as="h1">Public Worship and Aids to Devotion</Text>
+            <Text as="h2">My Account</Text>
           </FlexItem>
         </Flex>
         <Query query={ME}>

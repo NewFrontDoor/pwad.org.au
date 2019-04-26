@@ -24,7 +24,7 @@ const GoogleButton = ({children, redirectPath, location}) => {
 
   return (
     <Link passHref href={`/auth/google${postAuthRedirectPath}`}>
-      <Button element="a" iconStart={<Google role="img" />}>
+      <Button as="a" iconStart={<Google role="img" />}>
         {children}
       </Button>
     </Link>

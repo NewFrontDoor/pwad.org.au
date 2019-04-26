@@ -37,7 +37,7 @@ class SignInForm extends React.Component {
           Router.replace('/');
         }
       } catch (error) {
-        console.log(error);
+        console.error(error);
       }
     };
   };

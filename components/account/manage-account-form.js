@@ -77,10 +77,10 @@ class ManageForm extends React.Component {
           direction={['column-reverse', 'row-reverse']}
         >
           <FlexItem width="100%">
-            <Text element="h3">
+            <Text as="h3">
               What is included in the Liturgy and Music account option?
             </Text>
-            <Text appearance="prose" element="ul">
+            <Text appearance="prose" as="ul">
               <li>Search Capabilities</li>
               <li>PowerPoint Slides</li>
               <li>Sound Bites</li>

@@ -7,8 +7,8 @@ import {ApolloProvider} from 'react-apollo';
 import {createTheme, ThemeProvider} from 'mineral-ui/themes';
 import Box from 'mineral-ui/Box';
 import {flow} from 'lodash';
-import withEmotion from '../lib/with-emotion';
 import withApolloClient from '../lib/with-apollo-client';
+import GlobalStyles from '../components/global-styles';
 import NavBar from '../components/nav-bar/nav-bar';
 import Footer from '../components/footer/footer';
 
@@ -37,10 +37,7 @@ const theme = createTheme({
   }
 });
 
-const enhance = flow(
-  withEmotion,
-  withApolloClient
-);
+const enhance = flow(withApolloClient);
 
 class MyApp extends App {
   static async getInitialProps({Component, ctx}) {
@@ -64,6 +61,7 @@ class MyApp extends App {
             content="Public Worship and Aids to Devotion Committee Website - provided by the PWAD Committee to help congregations within the Presbyterian Church of Australia"
           />
         </Head>
+        <GlobalStyles />
         <ApolloProvider client={apolloClient}>
           <ThemeProvider theme={theme}>
             <Box

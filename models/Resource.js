@@ -1,11 +1,12 @@
 const config = require('config');
 const keystone = require('keystone');
 const transform = require('model-transform');
-const storageAdapterS3 = require('keystone-storage-adapter-s3');
+const storageAdapterS3 = require('../lib/s3-adapter');
 
 const {Types} = keystone.Field;
 
 const Resource = new keystone.List('Resource', {
+  sortable: true,
   track: true
 });
 
@@ -34,26 +35,46 @@ Resource.add({
     type: Types.Select,
     options: [
       {value: 'url', label: 'URL Resource'},
-      {value: 'file', label: 'File Resource'}
+      {value: 'file', label: 'File Resource'},
+      {value: 'page', label: 'Page Resource'}
     ]
   },
   menu: {type: Types.Relationship, ref: 'Menu'},
-  sortOrder: {type: Types.Number, min: 1000, max: 9999},
   file: {
     type: Types.File,
     storage: fileStorage,
     dependsOn: {type: 'file'},
-    required: true,
     initial: false
   },
   url: {
     type: Types.Url,
     dependsOn: {type: 'url'},
-    required: true,
+    initial: false
+  },
+  content: {
+    type: Types.Relationship,
+    ref: 'PageContent',
+    dependsOn: {type: 'page'},
     initial: false
   }
 });
 
+Resource.schema.pre('save', function(next) {
+  if (this.type !== 'url') {
+    this.url = null;
+  }
+
+  if (this.type !== 'file') {
+    this.file = null;
+  }
+
+  if (this.type !== 'page') {
+    this.content = null;
+  }
+
+  return next();
+});
+
 transform.toJSON(Resource);
-Resource.defaultColumns = 'name, type, menu, sortOrder';
+Resource.defaultColumns = 'name, type, menu';
 Resource.register();

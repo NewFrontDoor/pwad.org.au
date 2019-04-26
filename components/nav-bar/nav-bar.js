@@ -5,15 +5,16 @@ import {Query} from 'react-apollo';
 import Flex from 'mineral-ui/Flex';
 import Button from 'mineral-ui/Button';
 import Popover from 'mineral-ui/Popover';
-import {createThemedComponent, withTheme} from 'mineral-ui/themes';
-import {createStyledComponent} from 'mineral-ui/styles';
+import {themed} from 'mineral-ui/themes';
+import styled from '@emotion/styled';
+import {withTheme} from 'emotion-theming';
 import Media from '../media';
 
 import Link from '../link';
 import {ME} from '../queries';
 import Nav from './nav';
 
-const MenuButton = createStyledComponent(Button, {
+const MenuButton = styled(Button)({
   backgroundColor: 'white',
   letterSpacing: 'inherit',
   textTransform: 'inherit',
@@ -24,7 +25,7 @@ const MenuButton = createStyledComponent(Button, {
   cursor: 'pointer'
 });
 
-const Root = createStyledComponent('div', ({isMenuOpen, menuHeight, theme}) => {
+const Root = styled('div')(({isMenuOpen, menuHeight, theme}) => {
   const transitionProperties = '350ms cubic-bezier(0.175, 0.885, 0.32, 1.275)';
 
   return {
@@ -65,7 +66,7 @@ const popoverTheme = {
   PopoverContent_paddingVertical: null
 };
 
-const MenuPopover = createThemedComponent(Popover, popoverTheme);
+const MenuPopover = themed(Popover)(popoverTheme);
 
 const toggleMenu = ({isMenuOpen}) => ({
   isMenuOpen: !isMenuOpen
@@ -98,7 +99,7 @@ class NavBar extends React.Component {
     return (
       <Root isMenuOpen={isMenuOpen} menuHeight={menuHeight} theme={theme}>
         <Flex
-          element="nav"
+          as="nav"
           breakpoints={['narrow', 'medium']}
           paddingVertical={['0', '0', '5vh']}
           marginHorizontal="auto"

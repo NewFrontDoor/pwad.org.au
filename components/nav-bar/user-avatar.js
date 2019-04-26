@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Query} from 'react-apollo';
-import {withTheme} from 'mineral-ui/themes';
+import {withTheme} from 'emotion-theming';
 import Avatar from 'mineral-ui/Avatar';
 import {User} from 'react-feather';
 

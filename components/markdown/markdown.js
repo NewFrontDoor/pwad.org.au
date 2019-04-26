@@ -8,12 +8,12 @@ import Text from 'mineral-ui/Text';
 const remarkConfig = {
   remarkReactComponents: {
     p: props => <Text appearance="prose" {...props} />,
-    h1: props => <Text element="h1" {...props} />,
-    h2: props => <Text element="h2" {...props} />,
-    h3: props => <Text element="h3" {...props} />,
-    h4: props => <Text element="h4" {...props} />,
-    h5: props => <Text element="h5" {...props} />,
-    h6: props => <Text element="h6" {...props} />
+    h1: props => <Text as="h1" {...props} />,
+    h2: props => <Text as="h2" {...props} />,
+    h3: props => <Text as="h3" {...props} />,
+    h4: props => <Text as="h4" {...props} />,
+    h5: props => <Text as="h5" {...props} />,
+    h6: props => <Text as="h6" {...props} />
   }
 };
 

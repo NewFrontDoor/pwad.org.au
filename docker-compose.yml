@@ -1,6 +1,8 @@
 version: '3'
 services:
   web:
+    environment:
+      DEBUG: keystone-s3
     build: .
     command: pm2-runtime start --watch ecosystem.config.js
     ports:

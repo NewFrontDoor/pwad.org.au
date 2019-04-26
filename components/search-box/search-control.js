@@ -54,7 +54,7 @@ export default class SearchBox extends React.Component {
 
     return (
       <>
-        <Text element="h3">Search</Text>
+        <Text as="h3">Search</Text>
         <Text appearance="prose">
           Search for hymns, worship resources, prayer resources and worship aids
           using the search box below. Advanced search will allow you to refine

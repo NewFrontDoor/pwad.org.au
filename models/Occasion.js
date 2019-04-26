@@ -3,12 +3,12 @@ const transform = require('model-transform');
 
 const {Types} = keystone.Field;
 
-const Topic = new keystone.List('Topic');
+const Occasion = new keystone.List('Occasion');
 
-Topic.add({
+Occasion.add({
   name: {type: Types.Text, required: true, index: true, initial: true}
 });
 
-transform.toJSON(Topic);
-Topic.defaultColumns = 'name';
-Topic.register();
+transform.toJSON(Occasion);
+Occasion.defaultColumns = 'name';
+Occasion.register();

@@ -59,6 +59,11 @@ const start = async ({app, pretty}) => {
     app.render(req, res, '/song', {id});
   });
 
+  server.get('/content/:page', (req, res) => {
+    const {page} = req.params;
+    app.render(req, res, '/content', {page});
+  });
+
   server.get('*', app.getRequestHandler());
 
   await openDatabaseConnection();
