@@ -3,14 +3,7 @@ const keystone = require('keystone');
 const transform = require('model-transform');
 const storageAdapterS3 = require('../lib/s3-adapter');
 
-const {Types} = keystone.Field;
-
-const Resource = new keystone.List('Resource', {
-  sortable: true,
-  track: true
-});
-
-const fileStorage = new keystone.Storage({
+const resourceStorage = new keystone.Storage({
   adapter: storageAdapterS3,
   s3: {
     key: config.get('S3_KEY'),
@@ -29,6 +22,13 @@ const fileStorage = new keystone.Storage({
   }
 });
 
+const {Types} = keystone.Field;
+
+const Resource = new keystone.List('Resource', {
+  sortable: true,
+  track: true
+});
+
 Resource.add({
   name: {type: Types.Text, index: true, unique: true, initial: true},
   type: {
@@ -42,7 +42,7 @@ Resource.add({
   menu: {type: Types.Relationship, ref: 'Menu'},
   file: {
     type: Types.File,
-    storage: fileStorage,
+    storage: resourceStorage,
     dependsOn: {type: 'file'},
     initial: false
   },

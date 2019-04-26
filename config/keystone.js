@@ -38,7 +38,7 @@ const locals = {};
 const nav = {
   people: ['users'],
   menu: ['menus'],
-  content: ['page-contents', 'resources'],
+  content: ['page-contents', 'resources', 'files'],
   resources: ['hymns', 'prayers', 'liturgies']
 };
 
