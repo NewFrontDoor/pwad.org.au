@@ -4,10 +4,7 @@ const callbacks = require('./callbacks');
 
 const router = new Router();
 
-const scope = [
-  'https://www.googleapis.com/auth/plus.login',
-  'https://www.googleapis.com/auth/plus.profile.emails.read'
-];
+const scope = ['profile email'];
 
 const authHandler = auth('google', {scope, session: false});
 const callbackHander = callbacks('google', {scope, session: false});

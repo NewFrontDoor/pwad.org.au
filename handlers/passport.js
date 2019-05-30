@@ -1,6 +1,6 @@
 const config = require('config');
 const passport = require('passport');
-const {Strategy: GoogleStrategy} = require('passport-google-oauth2');
+const {Strategy: GoogleStrategy} = require('passport-google-oauth20');
 const {has} = require('lodash');
 const {createAbilities} = require('./authentication/abilities');
 
@@ -43,6 +43,8 @@ module.exports = keystone => {
         throw new Error(`No user found for id ${newUser.id}.`);
       }
 
+      console.log(newUser);
+
       return new User(newUser).save();
     }
   }
@@ -56,6 +58,7 @@ module.exports = keystone => {
         callbackURL: '/auth/google/callback'
       },
       async (token, tokenSecret, profile, done) => {
+        console.log(profile);
         const user = {
           providerId: null,
           googleProviderId: profile.id,

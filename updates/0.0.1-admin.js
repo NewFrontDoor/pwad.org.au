@@ -3,14 +3,17 @@ const keystone = require('keystone');
 const User = keystone.list('User').model;
 
 module.exports = done => {
-  new User({
+  const user = new User({
     name: {
       first: 'Demo',
       last: 'User'
     },
     email: 'admin@vision100it.org',
-    password: 'admin',
-    isAdmin: true,
+    role: 'admin',
     isProtected: true
-  }).save(done);
+  });
+
+  User.register(user, 'admin')
+    .then(() => done())
+    .catch(error => done(error));
 };
