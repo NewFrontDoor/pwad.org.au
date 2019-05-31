@@ -10,5 +10,13 @@ export default gql`
         md(truncate: 120)
       }
     }
+    scriptureMany(filter: {title_contains: $title}) {
+      _id
+      title
+      translation
+      content {
+        md(truncate: 120)
+      }
+    }
   }
 `;

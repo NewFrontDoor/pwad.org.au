@@ -5,6 +5,27 @@ const {truncate} = require('lodash');
 const {schemaComposer} = require('graphql-compose');
 const {composeWithMongoose} = require('graphql-compose-mongoose');
 
+function truncateMarkdown(field) {
+  return {
+    [field]: {
+      type: GraphQLString,
+      args: {
+        truncate: GraphQLInt
+      },
+      resolve(result, args) {
+        if (args.truncate) {
+          return truncate(result.md, {
+            length: args.truncate,
+            separator: ' '
+          });
+        }
+
+        return result.md;
+      }
+    }
+  };
+}
+
 module.exports = keystone => {
   const {model: UserModel} = keystone.list('User');
 
@@ -16,6 +37,7 @@ module.exports = keystone => {
   const MenuTC = composeWithMongoose(keystone.list('Menu').model);
   const UserTC = composeWithMongoose(UserModel);
   const PageContentTC = composeWithMongoose(keystone.list('PageContent').model);
+  const ScriptureTC = composeWithMongoose(keystone.list('Scripture').model);
 
   UserTC.removeField(['email', 'password']);
 
@@ -139,24 +161,8 @@ module.exports = keystone => {
     }
   });
 
-  HymnTC.addNestedFields({
-    'lyrics.md': {
-      type: GraphQLString,
-      args: {
-        truncate: GraphQLInt
-      },
-      resolve(result, args) {
-        if (args.truncate) {
-          return truncate(result.md, {
-            length: args.truncate,
-            separator: ' '
-          });
-        }
-
-        return result.md;
-      }
-    }
-  });
+  HymnTC.addNestedFields(truncateMarkdown('lyrics.md'));
+  ScriptureTC.addNestedFields(truncateMarkdown('content.md'));
 
   ResourceTC.addRelation('menu', {
     resolver: () => MenuTC.getResolver('findById'),
@@ -215,6 +221,14 @@ module.exports = keystone => {
     }),
     hymnTotal: HymnTC.getResolver('count'),
     hymnConnection: HymnTC.getResolver('connection'),
+
+    scriptureMany: ScriptureTC.getResolver('findMany').addFilterArg({
+      name: 'title_contains',
+      type: GraphQLString,
+      query: (query, value) => {
+        query.$text = {$search: value};
+      }
+    }),
 
     tuneById: TuneTC.getResolver('findById'),
     tuneByIds: TuneTC.getResolver('findByIds'),

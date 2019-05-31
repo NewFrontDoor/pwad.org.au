@@ -39,7 +39,7 @@ const nav = {
   people: ['users'],
   menu: ['menus'],
   content: ['page-contents', 'resources', 'files'],
-  resources: ['hymns', 'prayers', 'liturgies']
+  resources: ['hymns', 'prayers', 'liturgies', 'scriptures']
 };
 
 module.exports = {
