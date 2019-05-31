@@ -17,7 +17,7 @@ const closeDatabaseConnection = util.promisify(
   keystone.closeDatabaseConnection.bind(keystone)
 );
 
-const start = async ({app, pretty}) => {
+const start = async ({app}) => {
   const keystoneConfig = require('./config/keystone');
   const port = config.get('PORT');
   const hostUrl = config.get('HOST_URL');
@@ -41,7 +41,7 @@ const start = async ({app, pretty}) => {
   keystone.initExpressSession(keystone.mongoose);
 
   server.use(corsHandler);
-  server.use(pinoHttp({stream: pretty}));
+  server.use(pinoHttp());
   server.use(keystone.get('session options').cookieParser);
   server.use(keystone.expressSession);
   server.use(keystone.session.persist);

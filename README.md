@@ -2,6 +2,25 @@
 
 Public Worship and Aids to Devotion Website
 
+## Getting Started
+
+### With Mongo
+
+Install [`mongodb`](https://www.mongodb.com/download-center/community)
+```
+npm install
+npm start
+```
+
+### With Docker
+
+Install [Docker](https://www.docker.com/get-started)
+
+```
+npm install
+npm run dev
+```
+
 ## Models
 
 ### User

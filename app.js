@@ -1,30 +1,17 @@
-if (process.env.NODE_ENV === 'development') {
-  // eslint-disable-next-line import/no-unassigned-import
-  require('now-env');
-}
-
 const next = require('next');
-const pinoColada = require('pino-colada');
 const config = require('config');
 const {start, stop} = require('./server');
 
-let pretty;
 let server;
 
 const dev = config.get('dev');
 const app = next({dev});
 
-if (dev) {
-  pretty = pinoColada();
-  pretty.pipe(process.stdout);
-}
-
 module.exports = app
   .prepare()
   .then(async () => {
     server = await start({
-      app,
-      pretty
+      app
     });
   })
   .catch(error => console.error(error));

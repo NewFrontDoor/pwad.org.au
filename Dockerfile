@@ -1,5 +1,5 @@
 # small server
-FROM keymetrics/pm2:8-alpine
+FROM node:8.16.0-alpine
 
 MAINTAINER v100it Team "it@vision100.org"
 
@@ -23,4 +23,4 @@ RUN npm run build
 
 EXPOSE 3000
 
-CMD pm2-runtime start ecosystem.config.js --env production
+CMD node ./app.js

@@ -43,8 +43,6 @@ module.exports = keystone => {
         throw new Error(`No user found for id ${newUser.id}.`);
       }
 
-      console.log(newUser);
-
       return new User(newUser).save();
     }
   }
@@ -58,7 +56,6 @@ module.exports = keystone => {
         callbackURL: '/auth/google/callback'
       },
       async (token, tokenSecret, profile, done) => {
-        console.log(profile);
         const user = {
           providerId: null,
           googleProviderId: profile.id,

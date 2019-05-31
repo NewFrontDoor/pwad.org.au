@@ -5,7 +5,7 @@ module.exports = {
 
   PORT: process.env.PORT || 3000,
 
-  MONGO_URI: process.env.MONGO_URI || 'mongodb://mongo/pwad',
+  MONGO_URI: process.env.MONGO_URI || 'mongodb://localhost:27017/pwad',
 
   HOST: deferConfig(config => `localhost:${config.PORT}`),
   HOST_URL: deferConfig(config => `http://localhost:${config.PORT}`),

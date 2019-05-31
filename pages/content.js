@@ -26,11 +26,13 @@ class Search extends React.Component {
       content: {brief, extended}
     } = this.props;
 
+    const md = brief.md.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+
     return (
       <>
         <Text as="h2">{name}</Text>
-        {brief && <Markdown useBreaks>{brief.md}</Markdown>}
-        {extended && <Markdown useBreaks>{extended.md}</Markdown>}
+        {brief && <Markdown>{md}</Markdown>}
+        {extended && <Markdown>{extended.md}</Markdown>}
       </>
     );
   }

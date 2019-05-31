@@ -5,6 +5,7 @@ import Head from 'next/head';
 import React from 'react';
 import {ApolloProvider} from 'react-apollo';
 import {createTheme, ThemeProvider} from 'mineral-ui/themes';
+import {blue} from 'mineral-ui-tokens';
 import Box from 'mineral-ui/Box';
 import {flow} from 'lodash';
 import withApolloClient from '../lib/with-apollo-client';
@@ -12,26 +13,12 @@ import GlobalStyles from '../components/global-styles';
 import NavBar from '../components/nav-bar/nav-bar';
 import Footer from '../components/footer/footer';
 
-const blue = {
-  10: '#CFE4FC',
-  20: '#C2DDFC',
-  30: '#B5D7FC',
-  40: '#A6CFFC',
-  50: '#8CC1FB',
-  60: '#66ADFA',
-  70: '#4379B4',
-  80: '#2C5786',
-  90: '#20456E',
-  100: '#133153',
-  inflection: 60
-};
-
 const theme = createTheme({
   colors: {
-    theme: blue
+    theme: 'blue'
   },
   overrides: {
-    color_theme_hover: blue[70],
+    color_theme_hover: blue[80],
 
     fontFamily: 'cabin'
   }
