@@ -1,8 +1,9 @@
 /* eslint-disable camelcase */
 
+/** @jsx jsx */
+import {jsx} from '@emotion/core';
 import App, {Container} from 'next/app';
 import Head from 'next/head';
-import React from 'react';
 import {ApolloProvider} from 'react-apollo';
 import {createTheme, ThemeProvider} from 'mineral-ui/themes';
 import {blue} from 'mineral-ui-tokens';
@@ -48,7 +49,7 @@ class MyApp extends App {
             content="Public Worship and Aids to Devotion Committee Website - provided by the PWAD Committee to help congregations within the Presbyterian Church of Australia"
           />
         </Head>
-        <GlobalStyles />
+        <GlobalStyles theme={theme} />
         <ApolloProvider client={apolloClient}>
           <ThemeProvider theme={theme}>
             <Box

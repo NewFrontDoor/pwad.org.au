@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import {rem} from 'polished';
@@ -25,7 +27,7 @@ const MenuButton = styled(Button)({
   cursor: 'pointer'
 });
 
-const Root = styled('div')(({isMenuOpen, menuHeight, theme}) => {
+const Root = styled('div')(({isMenuOpen, theme}) => {
   const transitionProperties = '350ms cubic-bezier(0.175, 0.885, 0.32, 1.275)';
 
   return {
@@ -35,7 +37,7 @@ const Root = styled('div')(({isMenuOpen, menuHeight, theme}) => {
     marginBottom: isMenuOpen
       ? rem(300) // Dependent on menu height
       : theme.baseline_7,
-    paddingTop: rem(30), // matches horizontal padding
+    paddingTop: rem(30), // Matches horizontal padding
     transition: `margin ${transitionProperties}`,
 
     '& div[id$="popover"] div[id$="content"]': {
@@ -88,6 +90,7 @@ class NavBar extends React.Component {
     if (this.state.isMenuOpen && !prevState.isMenuOpen) {
       const {current} = this.menuRef;
       const {height: menuHeight} = current.getBoundingClientRect();
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({menuHeight});
     }
   }

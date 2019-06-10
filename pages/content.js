@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Text from 'mineral-ui/Text';
+import ContentWrap from '../components/content-wrap';
 import Markdown from '../components/markdown/markdown';
 import {PAGE_CONTENT} from '../components/queries';
 
@@ -21,33 +22,20 @@ class Search extends React.Component {
   }
 
   render() {
-    const {
-      name,
-      content: {brief, extended}
-    } = this.props;
-
-    const md = brief.md.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    const {name, mdx} = this.props;
 
     return (
-      <>
+      <ContentWrap>
         <Text as="h2">{name}</Text>
-        {brief && <Markdown>{md}</Markdown>}
-        {extended && <Markdown>{extended.md}</Markdown>}
-      </>
+        {mdx && <Markdown>{mdx}</Markdown>}
+      </ContentWrap>
     );
   }
 }
 
 Search.propTypes = {
   name: PropTypes.string.isRequired,
-  content: PropTypes.shape({
-    brief: PropTypes.shape({
-      md: PropTypes.string.isRequired
-    }).isRequired,
-    extended: PropTypes.shape({
-      md: PropTypes.string.isRequired
-    }).isRequired
-  }).isRequired
+  mdx: PropTypes.string.isRequired
 };
 
 export default Search;

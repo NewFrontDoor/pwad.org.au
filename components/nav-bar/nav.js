@@ -1,6 +1,7 @@
+/** @jsx jsx */
+import {jsx, css} from '@emotion/core';
 import React from 'react';
 import PropTypes from 'prop-types';
-import {css} from '@emotion/core';
 import {Query} from 'react-apollo';
 import Flex from 'mineral-ui/Flex';
 import Text from 'mineral-ui/Text';

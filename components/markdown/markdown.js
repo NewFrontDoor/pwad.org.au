@@ -1,13 +1,14 @@
 /** @jsx jsx */
 import {jsx, css} from '@emotion/core';
 import PropTypes from 'prop-types';
-import MDX from '@mdx-js/runtime';
 import Box from 'mineral-ui/Box';
 import Text from 'mineral-ui/Text';
 import {themed} from 'mineral-ui/themes';
 import {palette} from 'mineral-ui-tokens';
 import BiblePassage from '@newfrontdoor/bible';
+import ContentWrap from '../content-wrap';
 import Link from '../link';
+import MDXRenderer from './render';
 
 const BIBLE =
   'https://8dk9jr13id.execute-api.us-west-2.amazonaws.com/dev/bible';
@@ -63,15 +64,9 @@ function Background({colour, children}) {
         background-color: ${backgroundColor};
       `}
     >
-      <Box
-        breakpoints={['narrow']}
-        width={['auto', 3 / 4]}
-        marginHorizontal={['md', 'auto']}
-        paddingVertical="lg"
-        paddingHorizontal="md"
-      >
+      <ContentWrap paddingVertical="lg" paddingHorizontal="md">
         {children}
-      </Box>
+      </ContentWrap>
     </Box>
   );
 }
@@ -122,6 +117,15 @@ const components = {
   h6: props => <Text as="h6" {...props} />,
   a: props => <Link {...props} />,
   blockquote: Blockquote,
+  img: props => (
+    <img
+      {...props}
+      css={css`
+        max-width: 100%;
+        height: auto;
+      `}
+    />
+  ),
   code: props => (
     <Box
       padding="md"
@@ -136,7 +140,9 @@ const components = {
   )
 };
 
-const Markdown = ({children}) => <MDX components={components}>{children}</MDX>;
+const Markdown = ({children}) => (
+  <MDXRenderer components={components}>{children}</MDXRenderer>
+);
 
 Markdown.propTypes = {
   children: PropTypes.node.isRequired

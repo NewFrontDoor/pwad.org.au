@@ -1,6 +1,7 @@
 const keystone = require('keystone');
 const transform = require('model-transform');
 const sanitizeHtml = require('sanitize-html');
+const mdxRuntime = require('../lib/mdx-runtime');
 
 const {Types} = keystone.Field;
 
@@ -25,11 +26,25 @@ const sanitizeOptions = {
   }
 };
 
+function value() {
+  return mdxRuntime({
+    children: this.content.md.replace(/&lt;/g, '<').replace(/&gt;/g, '>'),
+    remarkPlugins: [
+      [require('remark-toc'), {tight: true}]
+      // require('../lib/remark-list-type')
+    ],
+    rehypePlugins: [require('rehype-slug'), require('rehype-autolink-headings')]
+  });
+}
+
 PageContent.add({
   name: {type: Types.Text, required: true, initial: true},
-  content: {
-    brief: {type: Types.Markdown, markedOptions, sanitizeOptions},
-    extended: {type: Types.Markdown}
+  content: {type: Types.Markdown, markedOptions, sanitizeOptions},
+  mdx: {
+    type: String,
+    hidden: true,
+    watch: 'content.md',
+    value
   }
 });
 
