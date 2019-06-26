@@ -12,7 +12,7 @@ const Tune = new keystone.List('Tune', {
 
 Tune.add({
   title: {type: Types.Text, required: true, index: true, initial: true},
-  meter: {type: Types.Relationship, ref: 'Meter'},
+  metre: {type: Types.Relationship, ref: 'Metre'},
   composer: {type: Types.Relationship, ref: 'Author'},
   musicCopyright: {type: Types.Text}
 });
@@ -21,5 +21,5 @@ Tune.add({
 Tune.schema.virtual('hasMusicCopyright').get(() => true);
 
 transform.toJSON(Tune);
-Tune.defaultColumns = 'title, meter, musicCopyright';
+Tune.defaultColumns = 'title, metre, musicCopyright';
 Tune.register();

@@ -4,8 +4,9 @@ const {GraphQLString, GraphQLInt, GraphQLBoolean} = require('graphql');
 const {truncate} = require('lodash');
 const {schemaComposer} = require('graphql-compose');
 const {composeWithMongoose} = require('graphql-compose-mongoose');
+const renderMdxValue = require('../lib/mdx-value');
 
-function truncateMarkdown(field) {
+function renderMdx(field) {
   return {
     [field]: {
       type: GraphQLString,
@@ -13,14 +14,16 @@ function truncateMarkdown(field) {
         truncate: GraphQLInt
       },
       resolve(result, args) {
+        let {md} = result;
+
         if (args.truncate) {
-          return truncate(result.md, {
+          md = truncate(result.md, {
             length: args.truncate,
             separator: ' '
           });
         }
 
-        return result.md;
+        return renderMdxValue(md);
       }
     }
   };
@@ -161,8 +164,10 @@ module.exports = keystone => {
     }
   });
 
-  HymnTC.addNestedFields(truncateMarkdown('lyrics.md'));
-  ScriptureTC.addNestedFields(truncateMarkdown('content.md'));
+  HymnTC.addNestedFields(renderMdx('lyrics.md'));
+  HymnTC.addNestedFields(renderMdx('bio.md'));
+  ScriptureTC.addNestedFields(renderMdx('content.md'));
+  PageContentTC.addNestedFields(renderMdx('content.md'));
 
   ResourceTC.addRelation('menu', {
     resolver: () => MenuTC.getResolver('findById'),

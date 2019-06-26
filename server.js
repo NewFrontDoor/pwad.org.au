@@ -38,7 +38,7 @@ const start = async ({app}) => {
   });
 
   keystone.initDatabaseConfig();
-  keystone.initExpressSession(keystone.mongoose);
+  keystone.initExpressSession(require('mongoose'));
 
   server.use(corsHandler);
   server.use(pinoHttp());

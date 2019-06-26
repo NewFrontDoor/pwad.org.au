@@ -5,7 +5,9 @@ export default gql`
     pageContentOne(filter: {key: $page}) {
       key
       name
-      mdx
+      content {
+        md
+      }
     }
   }
 `;

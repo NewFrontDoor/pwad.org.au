@@ -3,12 +3,12 @@ const transform = require('model-transform');
 
 const {Types} = keystone.Field;
 
-const Meter = new keystone.List('Meter', {
+const Metre = new keystone.List('Metre', {
   track: true
 });
 
-Meter.add({
-  meter: {
+Metre.add({
+  metre: {
     type: Types.Text,
     required: true,
     index: true,
@@ -17,6 +17,6 @@ Meter.add({
   }
 });
 
-transform.toJSON(Meter);
-Meter.defaultColumns = 'meter';
-Meter.register();
+transform.toJSON(Metre);
+Metre.defaultColumns = 'metre';
+Metre.register();

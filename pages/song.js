@@ -35,7 +35,7 @@ class Song extends React.Component {
               <>
                 <Text as="h2">{title}</Text>
                 <Text>{wordsCopyright}</Text>
-                <Markdown useBreaks>{lyrics.md}</Markdown>
+                <Markdown>{lyrics.md}</Markdown>
               </>
             );
           }}

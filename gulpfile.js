@@ -37,7 +37,7 @@ async function server(done) {
   });
 }
 
-const mongo = task('docker-compose up mongo');
+const mongo = task('docker-compose up -d mongo');
 
 exports.compose = parallel(mongo, server);
 

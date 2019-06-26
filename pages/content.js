@@ -22,12 +22,12 @@ class Search extends React.Component {
   }
 
   render() {
-    const {name, mdx} = this.props;
+    const {name, content} = this.props;
 
     return (
       <ContentWrap>
         <Text as="h2">{name}</Text>
-        {mdx && <Markdown>{mdx}</Markdown>}
+        {content.md && <Markdown>{content.md}</Markdown>}
       </ContentWrap>
     );
   }
@@ -35,7 +35,9 @@ class Search extends React.Component {
 
 Search.propTypes = {
   name: PropTypes.string.isRequired,
-  mdx: PropTypes.string.isRequired
+  content: PropTypes.shape({
+    md: PropTypes.string.isRequired
+  }).isRequired
 };
 
 export default Search;

@@ -12,7 +12,7 @@ import {Formik, Form, FormField, FieldArray} from '../form';
 import {LIST_ALL} from '../queries';
 import SearchResult from './search-result';
 
-const hymnMeterDefaults = [
+const hymnMetreDefaults = [
   '10.10.10.10',
   '4.4.4.4',
   '8.8.8.8',
@@ -62,8 +62,8 @@ export default class SearchBox extends React.Component {
         </Text>
         <Formik
           initialValues={{
-            customMeter: '',
-            hymnMeter: [],
+            customMetre: '',
+            hymnMetre: [],
             search: '',
             title: '',
             tune: '',
@@ -136,9 +136,9 @@ export default class SearchBox extends React.Component {
                   <Box marginBottom="1em">
                     <FieldArray
                       input={CheckboxGroup}
-                      label="Hymn Meter"
-                      name="hymnMeter"
-                      data={hymnMeterDefaults.map(value => ({
+                      label="Hymn Metre"
+                      name="hymnMetre"
+                      data={hymnMetreDefaults.map(value => ({
                         label: value,
                         value
                       }))}
@@ -147,9 +147,9 @@ export default class SearchBox extends React.Component {
                   <Box marginBottom="1em">
                     <FormField
                       hideLabel
-                      name="customMeter"
+                      name="customMetre"
                       input={TextInput}
-                      label="Custom Meter"
+                      label="Custom Metre"
                     />
                   </Box>
                   <Box marginBottom="1em">
@@ -192,7 +192,7 @@ export default class SearchBox extends React.Component {
               }
 
               return data.hymnMany.map(props => (
-                <SearchResult key={props.bookId} {...props} />
+                <SearchResult key={props._id} {...props} />
               ));
             }}
           </Query>
