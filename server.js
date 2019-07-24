@@ -38,7 +38,7 @@ const start = async ({app}) => {
   });
 
   keystone.initDatabaseConfig();
-  keystone.initExpressSession(require('mongoose'));
+  keystone.initExpressSession(keystone.mongoose);
 
   server.use(corsHandler);
   server.use(pinoHttp());
@@ -57,6 +57,16 @@ const start = async ({app}) => {
   server.get('/song/:id/*', (req, res) => {
     const {id} = req.params;
     app.render(req, res, '/song', {id});
+  });
+
+  server.get('/author/:id/*', (req, res) => {
+    const {id} = req.params;
+    app.render(req, res, '/author', {id});
+  });
+
+  server.get('/pray/:id', (req, res) => {
+    const {id} = req.params;
+    app.render(req, res, '/pray', {id});
   });
 
   server.get('/content/:page', (req, res) => {

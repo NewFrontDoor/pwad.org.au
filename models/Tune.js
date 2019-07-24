@@ -14,12 +14,11 @@ Tune.add({
   title: {type: Types.Text, required: true, index: true, initial: true},
   metre: {type: Types.Relationship, ref: 'Metre'},
   composer: {type: Types.Relationship, ref: 'Author'},
-  musicCopyright: {type: Types.Text}
+  files: {type: Types.Relationship, ref: 'File', many: true},
+  musicCopyright: {type: Types.Text},
+  hasMusicCopyright: {type: Types.Boolean}
 });
 
-// FIXME check for wordsCopyright
-Tune.schema.virtual('hasMusicCopyright').get(() => true);
-
 transform.toJSON(Tune);
-Tune.defaultColumns = 'title, metre, musicCopyright';
+Tune.defaultColumns = 'title, composer, metre, musicCopyright';
 Tune.register();

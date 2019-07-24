@@ -6,6 +6,13 @@ import Markdown from '../components/markdown/markdown';
 import {PAGE_CONTENT} from '../components/queries';
 
 class Search extends React.Component {
+  static propTypes = {
+    name: PropTypes.string.isRequired,
+    content: PropTypes.shape({
+      md: PropTypes.string.isRequired
+    }).isRequired
+  };
+
   static async getInitialProps({apolloClient, query: {page}}) {
     const {data} = await apolloClient.query({
       query: PAGE_CONTENT,
@@ -32,12 +39,5 @@ class Search extends React.Component {
     );
   }
 }
-
-Search.propTypes = {
-  name: PropTypes.string.isRequired,
-  content: PropTypes.shape({
-    md: PropTypes.string.isRequired
-  }).isRequired
-};
 
 export default Search;

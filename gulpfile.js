@@ -17,7 +17,7 @@ async function server(done) {
   await waitForLocalhost({port: 27017, useGet: true});
   nodemon({
     script: './app.js',
-    ignore: ['.next', 'data', 'node_modules', 'pages', 'components'],
+    ignore: ['.next', 'data', 'node_modules', 'pages', 'components', 'tmp'],
     env,
     stdout: false,
     readable: false,

@@ -1,8 +1,18 @@
 const fs = require('fs');
+const {uniqBy} = require('lodash');
+// Const util = require('util');
+// const stream = require('stream');
 const csv = require('csv/lib/sync');
 const keystone = require('keystone');
+// Const got = require('got');
+// const {CookieJar} = require('tough-cookie');
+//
+// const pipeline = util.promisify(stream.pipeline);
 
 const Tune = keystone.list('Tune').model;
+const Hymn = keystone.list('Hymn').model;
+
+// Keystone.list('Hymn').schema.set('usePushEach', true);
 
 const data = csv.parse(fs.readFileSync('./import.csv'), {
   columns: true
@@ -20,8 +30,14 @@ function batchPromises(batchSize, collection, callback) {
 }
 
 module.exports = done => {
-  batchPromises(5, data, tune => {
-    // const newHymn = new Hymn({
+  // Const cookieJar = new CookieJar();
+  // cookieJar.setCookieSync(
+  //   '_hymnbase_session=cookie',
+  //   'app.rejoicehymnbase.com.au'
+  // );
+
+  batchPromises(5, data, async hymn => {
+    // Const newHymn = new Hymn({
     //   title: hymn.title,
     //   hymnNumber: hymn.hymn_number ? parseInt(hymn.hymn_number, 10) : 0,
     //   bookId: hymn.book_id ? parseInt(hymn.book_id, 10) : 0,
@@ -38,13 +54,66 @@ module.exports = done => {
     // });
     //
     // return newHymn.save();
+    // const newFile = await File.findOneAndUpdate(
+    //   {
+    //     name: file.data_file_name
+    //   },
+    //   {
+    //     name: file.data_file_name
+    //   },
+    //   {
+    //     new: true,
+    //     upsert: true
+    //   }
+    // );
+    //
+    // if (newFile.file && newFile.file.size) {
+    //   return Promise.resolve();
+    // }
+    //
+    // const url = `http://assets.rejoicehymnbase.com.au/system/data/${parseInt(
+    //   file.id.replace(',', ''),
+    //   10
+    // )}/original/${file.data_file_name}`;
+    //
+    // const path = `./tmp/${file.data_file_name}`;
+    //
+    // await pipeline(got.stream(url, {cookieJar}), fs.createWriteStream(path));
+    //
+    // const uploaded = await new Promise((resolve, reject) => {
+    //   newFile._.file.upload(
+    //     {
+    //       mimetype: file.data_content_type,
+    //       path
+    //     },
+    //     (err, file) => {
+    //       if (err) {
+    //         reject(err);
+    //       } else {
+    //         resolve(file);
+    //       }
+    //     }
+    //   );
+    // });
+    //
+    // newFile.set('file', uploaded);
+    //
+    // return newFile.save();
+    const tune = await Tune.findOne({title: hymn.tune_title}).exec();
 
-    const newTune = new Tune({
-      title: tune.title,
-      musicCopyright: tune.music_copyright
-    });
-
-    return newTune.save();
+    return Hymn.findOneAndUpdate(
+      {
+        title: hymn.title
+      },
+      {
+        title: hymn.title,
+        tune
+      },
+      {
+        new: true,
+        upsert: true
+      }
+    );
   })
     .then(() => done())
     .catch(error => done(error));

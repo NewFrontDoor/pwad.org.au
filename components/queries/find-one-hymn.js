@@ -4,10 +4,42 @@ export default gql`
   query findOne($id: MongoID!) {
     hymnById(_id: $id) {
       title
-      bookId
+      hymnNumber
+      scripture
       wordsCopyright
       lyrics {
         md
+      }
+      author {
+        _id
+        dates
+        name {
+          first
+          last
+        }
+      }
+      tune {
+        title
+        musicCopyright
+        composer {
+          name {
+            first
+            last
+          }
+        }
+      }
+      bio {
+        html
+        md
+      }
+      files {
+        _id
+        file {
+          size
+          mimetype
+          url
+          filename
+        }
       }
     }
   }

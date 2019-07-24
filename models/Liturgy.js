@@ -13,7 +13,8 @@ Liturgy.add({
   author: {type: Types.Relationship, ref: 'Author'},
   copyright: {type: Types.Relationship, ref: 'Copyright'},
   occasion: {type: Types.Relationship, ref: 'Occasion'},
-  keywords: {type: Types.Relationship, ref: 'Keyword', many: true}
+  keywords: {type: Types.Relationship, ref: 'Keyword', many: true},
+  files: {type: Types.Relationship, ref: 'File', many: true}
 });
 
 transform.toJSON(Liturgy);

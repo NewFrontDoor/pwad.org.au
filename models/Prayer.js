@@ -3,11 +3,12 @@ const transform = require('model-transform');
 
 const {Types} = keystone.Field;
 
-const Prayer = new keystone.List('Prayer');
+const Prayer = new keystone.List('Prayer', {
+  map: {name: 'title'}
+});
 
 Prayer.add({
-  name: {type: Types.Text, required: true, index: true, initial: true},
-  title: {type: Types.Text},
+  title: {type: Types.Text, required: true, index: true, initial: true},
   content: {type: Types.Markdown},
   note: {type: Types.Markdown},
   author: {type: Types.Relationship, ref: 'Author'},
@@ -18,5 +19,5 @@ Prayer.add({
 });
 
 transform.toJSON(Prayer);
-Prayer.defaultColumns = 'name';
+Prayer.defaultColumns = 'title';
 Prayer.register();

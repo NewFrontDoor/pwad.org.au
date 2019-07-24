@@ -12,13 +12,15 @@ const markedOptions = {};
 const sanitizeOptions = {
   allowedTags: sanitizeHtml.defaults.allowedTags.concat([
     'Background',
-    'Bible'
+    'Bible',
+    'Text'
   ]),
   selfClosing: sanitizeHtml.defaults.selfClosing.concat(['Bible']),
   allowedAttributes: {
     ...sanitizeHtml.defaults.allowedAttributes,
     Bible: ['passage'],
-    Background: ['colour']
+    Background: ['colour'],
+    p: ['align']
   },
   parser: {
     lowerCaseTags: false

@@ -27,6 +27,7 @@ const {Types} = keystone.Field;
 const File = new keystone.List('File');
 
 File.add({
+  name: {type: Types.Text, required: true, index: true, initial: true},
   file: {
     type: Types.File,
     storage: fileStorage,
@@ -35,5 +36,5 @@ File.add({
 });
 
 transform.toJSON(File);
-File.defaultColumns = 'file';
+File.defaultColumns = 'name, file';
 File.register();

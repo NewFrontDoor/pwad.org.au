@@ -1,173 +1,42 @@
-const {strict: assert} = require('assert');
-const {get} = require('lodash');
-const {GraphQLString, GraphQLInt, GraphQLBoolean} = require('graphql');
-const {truncate} = require('lodash');
+const {GraphQLString} = require('graphql');
 const {schemaComposer} = require('graphql-compose');
 const {composeWithMongoose} = require('graphql-compose-mongoose');
-const renderMdxValue = require('../lib/mdx-value');
-
-function renderMdx(field) {
-  return {
-    [field]: {
-      type: GraphQLString,
-      args: {
-        truncate: GraphQLInt
-      },
-      resolve(result, args) {
-        let {md} = result;
-
-        if (args.truncate) {
-          md = truncate(result.md, {
-            length: args.truncate,
-            separator: ' '
-          });
-        }
-
-        return renderMdxValue(md);
-      }
-    }
-  };
-}
+const renderMdx = require('../lib/render-mdx');
+const userSchema = require('./user');
+const hymnSchema = require('./hymn');
 
 module.exports = keystone => {
-  const {model: UserModel} = keystone.list('User');
-
   const AuthorTC = composeWithMongoose(keystone.list('Author').model);
   const CategoryTC = composeWithMongoose(keystone.list('Category').model);
-  const HymnTC = composeWithMongoose(keystone.list('Hymn').model);
+  const PrayerTC = composeWithMongoose(keystone.list('Prayer').model);
   const TuneTC = composeWithMongoose(keystone.list('Tune').model);
   const ResourceTC = composeWithMongoose(keystone.list('Resource').model);
   const MenuTC = composeWithMongoose(keystone.list('Menu').model);
-  const UserTC = composeWithMongoose(UserModel);
+
   const PageContentTC = composeWithMongoose(keystone.list('PageContent').model);
   const ScriptureTC = composeWithMongoose(keystone.list('Scripture').model);
+  const FileTC = composeWithMongoose(keystone.list('File').model);
 
-  UserTC.removeField(['email', 'password']);
+  const UserTC = userSchema(keystone);
+  const HymnTC = hymnSchema(keystone, {AuthorTC, TuneTC, FileTC});
 
-  UserTC.addFields({
-    hasFreeAccount: {
-      type: GraphQLBoolean
-    },
-    hasPaidAccount: {
-      type: GraphQLBoolean
-    }
-  });
-
-  UserTC.addResolver({
-    name: 'me',
-    type: UserTC,
-    resolve({context}) {
-      const id = get(context, 'user._id', null);
-      return UserModel.findById(id);
-    }
-  });
-
-  UserTC.addResolver({
-    name: 'createUser',
-    type: UserTC,
-    args: {
-      firstName: 'String!',
-      lastName: 'String!',
-      email: 'String!',
-      password: 'String!',
-      confirmPassword: 'String!'
-    },
-    async resolve({args, context}) {
-      const {firstName, lastName, email, password, confirmPassword} = args;
-      const name = {first: firstName, last: lastName};
-
-      try {
-        assert.strictEqual(
-          password,
-          confirmPassword,
-          'Confirm password does not match'
-        );
-
-        const user = new UserModel({email, name});
-        await UserModel.register(user, password);
-        await context.login(user);
-        return user;
-      } catch (error) {
-        context.log.error(error);
-        throw new Error('Email / Password Incorrect');
-      }
-    }
-  });
-
-  UserTC.addResolver({
-    name: 'loginUser',
-    type: UserTC,
-    args: {
-      email: 'String!',
-      password: 'String!'
-    },
-    async resolve({args, context}) {
-      const {email, password} = args;
-
-      try {
-        assert.ok(password);
-        const found = await UserModel.findByUsername(email);
-        const {user, error} = await found.authenticate(password);
-
-        if (user) {
-          await context.login(user);
-          return user;
-        }
-
-        throw error;
-      } catch (error) {
-        context.log.error(error);
-        throw new Error('Email / Password Incorrect');
-      }
-    }
-  });
-
-  UserTC.addResolver({
-    name: 'changeFreeAccount',
-    type: UserTC,
-    args: {
-      hasFreeAccount: 'Boolean!'
-    },
-    async resolve({args, context}) {
-      const {user} = context;
-      const {hasFreeAccount} = args;
-
-      try {
-        await user.set({hasFreeAccount}).save();
-        return user;
-      } catch (error) {
-        context.log.error(error);
-        throw new Error('Unable to update user');
-      }
-    }
-  });
-
-  UserTC.addResolver({
-    name: 'changePassword',
-    type: UserTC,
-    args: {
-      password: 'String!',
-      newPassword: 'String!',
-      confirmPassword: 'String!'
-    },
-    async resolve({args, context}) {
-      const {user} = context;
-      const {password, newPassword, confirmPassword} = args;
-
-      assert.strictEqual(
-        newPassword,
-        confirmPassword,
-        'Confirm password does not match'
-      );
-      await user.changePassword(password, newPassword);
-      return user;
-    }
-  });
-
-  HymnTC.addNestedFields(renderMdx('lyrics.md'));
-  HymnTC.addNestedFields(renderMdx('bio.md'));
   ScriptureTC.addNestedFields(renderMdx('content.md'));
   PageContentTC.addNestedFields(renderMdx('content.md'));
+  PrayerTC.addNestedFields(renderMdx('content.md'));
+
+  TuneTC.addRelation('composer', {
+    resolver: () => AuthorTC.getResolver('findById'),
+    prepareArgs: {
+      _id: source => source.composer
+    }
+  });
+
+  AuthorTC.addRelation('hymns', {
+    resolver: () => HymnTC.getResolver('findMany'),
+    prepareArgs: {
+      filter: source => ({author: source._id})
+    }
+  });
 
   ResourceTC.addRelation('menu', {
     resolver: () => MenuTC.getResolver('findById'),
@@ -243,6 +112,9 @@ module.exports = keystone => {
     tuneConnection: TuneTC.getResolver('connection'),
 
     pageContentOne: PageContentTC.getResolver('findOne'),
+
+    prayerMany: PrayerTC.getResolver('findMany'),
+    prayerById: PrayerTC.getResolver('findById'),
 
     resourcesMany: ResourceTC.getResolver('findMany'),
     menuMany: MenuTC.getResolver('findMany')

@@ -4,7 +4,10 @@ const transform = require('model-transform');
 const {Types} = keystone.Field;
 
 const Metre = new keystone.List('Metre', {
-  track: true
+  track: true,
+  map: {
+    name: 'metre'
+  }
 });
 
 Metre.add({

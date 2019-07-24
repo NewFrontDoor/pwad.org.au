@@ -7,3 +7,6 @@ export {default as MENUS} from './menus';
 export {default as LIST_ALL} from './list-all';
 export {default as PAGE_CONTENT} from './page-content';
 export {default as FIND_ONE_HYMN} from './find-one-hymn';
+export {default as FIND_PRAYER_CONTENTS} from './find-prayer-contents';
+export {default as FIND_ONE_PRAYER} from './find-one-prayer';
+export {default as FIND_ONE_AUTHOR} from './find-one-author';
