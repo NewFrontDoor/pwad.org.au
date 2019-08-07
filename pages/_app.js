@@ -4,7 +4,7 @@
 import {jsx} from '@emotion/core';
 import App, {Container} from 'next/app';
 import Head from 'next/head';
-import {ApolloProvider} from 'react-apollo';
+import {ApolloProvider} from '@apollo/react-hooks';
 import {createTheme, ThemeProvider} from 'mineral-ui/themes';
 import {blue} from 'mineral-ui-tokens';
 import Box from 'mineral-ui/Box';

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Query} from 'react-apollo';
+import {useQuery} from '@apollo/react-hooks';
 import {kebabCase} from 'lodash';
 import Text from 'mineral-ui/Text';
 
@@ -18,47 +18,43 @@ class Author extends React.Component {
 
   render() {
     const {id} = this.props;
+    const {
+      loading,
+      error,
+      data: {authorById}
+    } = useQuery(FIND_ONE_AUTHOR, {
+      variables: {id}
+    });
 
     return (
       <>
         <Text as="h1" fontWeight="extraBold">
           Public Worship and Aids to Devotion Committee Website
         </Text>
-        <Query query={FIND_ONE_AUTHOR} variables={{id}}>
-          {({loading, error, data}) => {
-            if (loading) {
-              return 'Loading...';
-            }
-
-            if (error) {
-              return `Error! ${error.message}`;
-            }
-
-            const {name, dates, hymns} = data.authorById;
-
-            return (
-              <>
-                <Text as="h3">Author</Text>
-                <Text>
-                  {name.first} {name.last} {dates && `(${dates})`}
-                </Text>
-                <Text as="h3">Hymns</Text>
-                <Text as="ul">
-                  {hymns.map(({_id, hymnNumber, title}) => (
-                    <li key={_id}>
-                      <Link
-                        as={`/song/${_id}/${kebabCase(title)}`}
-                        href={`/song?id=${_id}`}
-                      >
-                        {hymnNumber}. {title}
-                      </Link>
-                    </li>
-                  ))}
-                </Text>
-              </>
-            );
-          }}
-        </Query>
+        {loading && 'Loading...'}
+        {error && `Error! ${error.message}`}
+        {authorById && (
+          <>
+            <Text as="h3">Author</Text>
+            <Text>
+              {authorById.name.first} {authorById.name.last}{' '}
+              {authorById.dates && `(${authorById.dates})`}
+            </Text>
+            <Text as="h3">Hymns</Text>
+            <Text as="ul">
+              {authorById.hymns.map(({_id, hymnNumber, title}) => (
+                <li key={_id}>
+                  <Link
+                    as={`/song/${_id}/${kebabCase(title)}`}
+                    href={`/song?id=${_id}`}
+                  >
+                    {hymnNumber}. {title}
+                  </Link>
+                </li>
+              ))}
+            </Text>
+          </>
+        )}
       </>
     );
   }

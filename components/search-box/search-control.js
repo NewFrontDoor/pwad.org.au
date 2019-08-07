@@ -1,6 +1,6 @@
 import React, {useReducer} from 'react';
-import {isEmpty, pickBy, identity} from 'lodash';
-import {Query} from 'react-apollo';
+import {pickBy, identity} from 'lodash';
+import {useQuery} from '@apollo/react-hooks';
 import Box from 'mineral-ui/Box';
 import Flex, {FlexItem} from 'mineral-ui/Flex';
 import Text from 'mineral-ui/Text';
@@ -13,6 +13,7 @@ import SearchResult from './search-result';
 import SearchInput from './search-input';
 
 const initialState = {
+  showSearchResults: false,
   showHowToSearch: false,
   showAdvancedSeach: true
 };
@@ -38,19 +39,39 @@ function reducer(state, action) {
             hymnMetres
           },
           identity
-        )
+        ),
+        showSearchResults: true
       };
     default:
       throw new Error(`Action type ${action.type} does not exist`);
   }
 }
 
+function SearchResults({search}) {
+  const {
+    loading,
+    error,
+    data: {hymnMany}
+  } = useQuery(LIST_ALL, {
+    variables: search
+  });
+
+  if (loading) {
+    return 'Loading...';
+  }
+
+  if (error) {
+    return `Error! ${error.message}`;
+  }
+
+  return hymnMany.map(hymn => <SearchResult key={hymn._id} {...hymn} />);
+}
+
 function SearchBox() {
   const [
-    {showHowToSearch, showAdvancedSeach, ...search},
+    {showHowToSearch, showAdvancedSeach, showSearchResults, ...search},
     dispatch
   ] = useReducer(reducer, initialState);
-  const showSearchResults = !isEmpty(search);
 
   return (
     <>
@@ -162,24 +183,7 @@ function SearchBox() {
           )}
         </Form>
       </Formik>
-      {showSearchResults && (
-        <Query query={LIST_ALL} variables={search}>
-          {({loading, error, data}) => {
-            console.log(search);
-            if (loading) {
-              return 'Loading...';
-            }
-
-            if (error) {
-              return `Error! ${error.message}`;
-            }
-
-            return data.hymnMany.map(hymn => (
-              <SearchResult key={hymn._id} {...hymn} />
-            ));
-          }}
-        </Query>
-      )}
+      {showSearchResults && <SearchResults search={search} />}
     </>
   );
 }

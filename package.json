@@ -50,6 +50,7 @@
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.0.0",
+    "@apollo/react-ssr": "^3.0.0",
     "@babel/core": "^7.5.5",
     "@casl/ability": "^3.2.0",
     "@casl/mongoose": "^2.3.1",
@@ -105,7 +106,6 @@
     "polished": "^3.4.1",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
-    "react-apollo": "^2.5.8",
     "react-dom": "^16.8.6",
     "react-feather": "^2.0.3",
     "react-media": "^1.9.2",

@@ -1,8 +1,7 @@
 /** @jsx jsx */
 import {jsx, css} from '@emotion/core';
-import React from 'react';
 import PropTypes from 'prop-types';
-import {Query} from 'react-apollo';
+import {useQuery} from '@apollo/react-hooks';
 import Flex from 'mineral-ui/Flex';
 import Text from 'mineral-ui/Text';
 import {ChevronDown as Chevron} from 'react-feather';
@@ -66,101 +65,95 @@ const Spacer = styled('li')({
   marginLeft: 'auto'
 });
 
-class Nav extends React.Component {
-  render() {
-    const count = 0;
+function Nav() {
+  const count = 0;
 
-    return (
-      <Flex
-        as="ul"
-        justifyContent="between"
-        padding="0"
-        width="100%"
-        css={noList}
-        breakpoints={['narrow', 'medium']}
-        direction={['column', 'column', 'row']}
-      >
-        <NavMenuItem as="li" fontWeight="bold">
-          <Link prefetch href="/">
-            Home
-          </Link>
+  const {
+    data: {menuMany = []}
+  } = useQuery(MENUS);
+
+  const {
+    data: {me}
+  } = useQuery(ME);
+
+  return (
+    <Flex
+      as="ul"
+      justifyContent="between"
+      padding="0"
+      width="100%"
+      css={noList}
+      breakpoints={['narrow', 'medium']}
+      direction={['column', 'column', 'row']}
+    >
+      <NavMenuItem as="li" fontWeight="bold">
+        <Link prefetch href="/">
+          Home
+        </Link>
+      </NavMenuItem>
+      {menuMany.map(menu => (
+        <NavMenuItem key={menu._id} as="li" fontWeight="bold">
+          {menu.link ? (
+            <Link
+              prefetch
+              href={`/content?page=${menu.link.key}`}
+              as={`/content/${menu.link.key}`}
+            >
+              {menu.link.name}
+            </Link>
+          ) : (
+            <Dropdown
+              data={menu.resources}
+              item={({props}) => <DropdownItem {...props} />}
+            >
+              <LinkButton>
+                {menu.name}
+                <Chevron size="1em" />
+              </LinkButton>
+            </Dropdown>
+          )}
         </NavMenuItem>
-        <Query query={MENUS}>
-          {({data}) =>
-            data.menuMany.map(menu => (
-              <NavMenuItem key={menu._id} as="li" fontWeight="bold">
-                {menu.link ? (
-                  <Link
-                    prefetch
-                    href={`/content?page=${menu.link.key}`}
-                    as={`/content/${menu.link.key}`}
-                  >
-                    {menu.link.name}
-                  </Link>
-                ) : (
-                  <Dropdown
-                    data={menu.resources}
-                    item={({props}) => <DropdownItem {...props} />}
-                  >
-                    <LinkButton>
-                      {menu.name}
-                      <Chevron size="1em" />
-                    </LinkButton>
-                  </Dropdown>
-                )}
-              </NavMenuItem>
-            ))
-          }
-        </Query>
-        <Media query="medium">
-          <Spacer />
-        </Media>
-        <Query query={ME}>
-          {({data}) => {
-            if (data.me) {
-              return (
-                <>
-                  <NavMenuItem as="li" fontWeight="bold">
-                    <Link href="/auth/logout">Log out</Link>
-                  </NavMenuItem>
-                  <NavMenuItem as="li" fontWeight="bold">
-                    <Link prefetch href="/short-list">
-                      Short list ({count})
-                    </Link>
-                  </NavMenuItem>
-                  <Media query="medium">
-                    <NavMenuItem as="li" fontWeight="bold">
-                      <Link prefetch href="/my-account">
-                        My account
-                      </Link>
-                    </NavMenuItem>
-                  </Media>
-                  <NavMenuItem as="li">
-                    <UserAvatar />
-                  </NavMenuItem>
-                </>
-              );
-            }
-
-            return (
-              <>
-                <NavMenuItem as="li" fontWeight="bold">
-                  <Link prefetch href="/sign-in">
-                    Log in
-                  </Link>
-                </NavMenuItem>
-                <NavMenuItem as="li" fontWeight="bold">
-                  <Link prefetch href="/create-account">
-                    Create account
-                  </Link>
-                </NavMenuItem>
-              </>
-            );
-          }}
-        </Query>
-      </Flex>
-    );
-  }
+      ))}
+      <Media query="medium">
+        <Spacer />
+      </Media>
+      {me ? (
+        <>
+          <NavMenuItem as="li" fontWeight="bold">
+            <Link href="/auth/logout">Log out</Link>
+          </NavMenuItem>
+          <NavMenuItem as="li" fontWeight="bold">
+            <Link prefetch href="/short-list">
+              Short list ({count})
+            </Link>
+          </NavMenuItem>
+          <Media query="medium">
+            <NavMenuItem as="li" fontWeight="bold">
+              <Link prefetch href="/my-account">
+                My account
+              </Link>
+            </NavMenuItem>
+          </Media>
+          <NavMenuItem as="li">
+            <UserAvatar />
+          </NavMenuItem>
+        </>
+      ) : (
+        <>
+          <NavMenuItem as="li" fontWeight="bold">
+            <Link prefetch href="/sign-in">
+              Log in
+            </Link>
+          </NavMenuItem>
+          <NavMenuItem as="li" fontWeight="bold">
+            <Link prefetch href="/create-account">
+              Create account
+            </Link>
+          </NavMenuItem>
+        </>
+      )}
+    </Flex>
+  );
 }
 
 export default Nav;

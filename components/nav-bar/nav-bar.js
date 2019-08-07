@@ -1,9 +1,9 @@
 /* eslint-disable camelcase */
 
-import React from 'react';
+import React, {useReducer, useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {rem} from 'polished';
-import {Query} from 'react-apollo';
+import {useQuery} from '@apollo/react-hooks';
 import Flex from 'mineral-ui/Flex';
 import Button from 'mineral-ui/Button';
 import Popover from 'mineral-ui/Popover';
@@ -70,92 +70,87 @@ const popoverTheme = {
 
 const MenuPopover = themed(Popover)(popoverTheme);
 
-const toggleMenu = ({isMenuOpen}) => ({
-  isMenuOpen: !isMenuOpen
-});
+const initialState = {
+  isMenuOpen: false,
+  menuHeight: null
+};
 
-class NavBar extends React.Component {
-  state = {
-    isMenuOpen: false,
-    menuHeight: null
-  };
-
-  menuRef = React.createRef();
-
-  handleMenuClick = () => {
-    this.setState(toggleMenu);
-  };
-
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.isMenuOpen && !prevState.isMenuOpen) {
-      const {current} = this.menuRef;
-      const {height: menuHeight} = current.getBoundingClientRect();
-      // eslint-disable-next-line react/no-did-update-set-state
-      this.setState({menuHeight});
-    }
+function reducer(state, action) {
+  switch (action.type) {
+    case 'toggle-menu':
+      return {...state, isMenuOpen: !state.isMenuOpen};
+    default:
+      throw new Error(`Action type ${action.type} does not exist`);
   }
+}
 
-  render() {
-    const {theme} = this.props;
-    const {isMenuOpen, menuHeight} = this.state;
+function NavBar({theme}) {
+  const menuRef = useRef(null);
+  const [{isMenuOpen, menuHeight}, dispatch] = useReducer(
+    reducer,
+    initialState
+  );
+  const {
+    data: {me}
+  } = useQuery(ME);
 
-    return (
-      <Root isMenuOpen={isMenuOpen} menuHeight={menuHeight} theme={theme}>
-        <Flex
-          as="nav"
-          breakpoints={['narrow', 'medium']}
-          paddingVertical={['0', '0', '5vh']}
-          marginHorizontal="auto"
-          width="100%"
-          alignItems="center"
-          justifyContent="between"
-        >
-          <Media query="medium">
-            {matches =>
-              matches ? (
-                <Nav />
-              ) : (
-                <>
-                  <MenuPopover
-                    content={
-                      <div ref={this.menuRef}>
-                        <Nav />
-                      </div>
+  useEffect(() => {
+    // if (this.state.isMenuOpen && !prevState.isMenuOpen) {
+    //   const {current} = this.menuRef;
+    //   const {height: menuHeight} = current.getBoundingClientRect();
+    //   // eslint-disable-next-line react/no-did-update-set-state
+    //   this.setState({menuHeight});
+    // }
+  });
+
+  return (
+    <Root isMenuOpen={isMenuOpen} menuHeight={menuHeight} theme={theme}>
+      <Flex
+        as="nav"
+        breakpoints={['narrow', 'medium']}
+        paddingVertical={['0', '0', '5vh']}
+        marginHorizontal="auto"
+        width="100%"
+        alignItems="center"
+        justifyContent="between"
+      >
+        <Media query="medium">
+          {matches =>
+            matches ? (
+              <Nav />
+            ) : (
+              <>
+                <MenuPopover
+                  content={
+                    <div ref={menuRef}>
+                      <Nav />
+                    </div>
+                  }
+                  hasArrow={false}
+                  isOpen={isMenuOpen}
+                  modifiers={{
+                    preventOverflow: {
+                      padding: 0
                     }
-                    hasArrow={false}
-                    isOpen={isMenuOpen}
-                    modifiers={{
-                      preventOverflow: {
-                        padding: 0
-                      }
-                    }}
-                    placement="bottom-end"
-                    onClose={this.handleMenuClick}
-                    onOpen={this.handleMenuClick}
-                  >
-                    <MenuButton minimal>Menu</MenuButton>
-                  </MenuPopover>
-                  <Query query={ME}>
-                    {({data}) => {
-                      if (data.me) {
-                        return (
-                          <Link prefetch href="/my-account">
-                            My account
-                          </Link>
-                        );
-                      }
-
-                      return null;
-                    }}
-                  </Query>
-                </>
-              )
-            }
-          </Media>
-        </Flex>
-      </Root>
-    );
-  }
+                  }}
+                  placement="bottom-end"
+                  onClose={() => dispatch({type: 'toggle-menu'})}
+                  onOpen={() => dispatch({type: 'toggle-menu'})}
+                >
+                  <MenuButton minimal>Menu</MenuButton>
+                </MenuPopover>
+                {me && (
+                  <Link prefetch href="/my-account">
+                    My account
+                  </Link>
+                )}
+              </>
+            )
+          }
+        </Media>
+      </Flex>
+    </Root>
+  );
 }
 
 NavBar.propTypes = {

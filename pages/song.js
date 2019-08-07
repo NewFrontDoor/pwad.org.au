@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Query} from 'react-apollo';
+import {useQuery} from '@apollo/react-hooks';
 import {kebabCase} from 'lodash';
 import Text from 'mineral-ui/Text';
 import Flex, {FlexItem} from 'mineral-ui/Flex';
@@ -53,93 +53,87 @@ Composer.defaultProps = {
   name: undefined
 };
 
-class Song extends React.Component {
-  static getInitialProps({query: {id}}) {
-    return {id};
-  }
+function Song({id}) {
+  const {
+    loading,
+    error,
+    data: {hymnById}
+  } = useQuery(FIND_ONE_HYMN, {
+    variables: {id}
+  });
 
-  static propTypes = {
-    id: PropTypes.string.isRequired
-  };
+  const {
+    author,
+    files,
+    hymnNumber,
+    lyrics,
+    scripture,
+    title,
+    tune,
+    wordsCopyright
+  } = hymnById || {};
 
-  render() {
-    const {id} = this.props;
+  return (
+    <>
+      <Text as="h1" fontWeight="extraBold">
+        Public Worship and Aids to Devotion Committee Website
+      </Text>
+      {loading && 'Loading...'}
+      {error && `Error! ${error.message}`}
+      {hymnById && (
+        <Flex
+          gutterWidth="xxl"
+          breakpoints={['narrow', 'medium']}
+          direction={['column-reverse', 'column-reverse', 'row']}
+        >
+          <FlexItem>
+            {files.length > 0 && (
+              <>
+                <Text as="h3">Files</Text>
+                <Text as="ul">
+                  {files.map(({_id, file}) => (
+                    <li key={_id}>
+                      <Link href={file.url}>
+                        {file.filename} ({file.size})
+                      </Link>
+                    </li>
+                  ))}
+                </Text>
+              </>
+            )}
 
-    return (
-      <>
-        <Text as="h1" fontWeight="extraBold">
-          Public Worship and Aids to Devotion Committee Website
-        </Text>
-        <Query query={FIND_ONE_HYMN} variables={{id}}>
-          {({loading, error, data}) => {
-            if (loading) {
-              return 'Loading...';
-            }
+            <Text as="h3">Hymn Author</Text>
+            <Author {...author} />
+            <Text as="h3">Scripture</Text>
+            <Text>{scripture}</Text>
 
-            if (error) {
-              return `Error! ${error.message}`;
-            }
+            <Text as="h3">Tune Composer</Text>
+            <Composer {...tune.composer} />
 
-            const {
-              author,
-              files,
-              hymnNumber,
-              lyrics,
-              scripture,
-              title,
-              tune,
-              wordsCopyright
-            } = data.hymnById;
+            <Text as="h3">Copyright (words)</Text>
+            <Text>{wordsCopyright}</Text>
 
-            return (
-              <Flex
-                gutterWidth="xxl"
-                breakpoints={['narrow', 'medium']}
-                direction={['column-reverse', 'column-reverse', 'row']}
-              >
-                <FlexItem>
-                  {files.length > 0 && (
-                    <>
-                      <Text as="h3">Files</Text>
-                      <Text as="ul">
-                        {files.map(({_id, file}) => (
-                          <li key={_id}>
-                            <Link href={file.url}>
-                              {file.filename} ({file.size})
-                            </Link>
-                          </li>
-                        ))}
-                      </Text>
-                    </>
-                  )}
-
-                  <Text as="h3">Hymn Author</Text>
-                  <Author {...author} />
-                  <Text as="h3">Scripture</Text>
-                  <Text>{scripture}</Text>
-
-                  <Text as="h3">Tune Composer</Text>
-                  <Composer {...tune.composer} />
-
-                  <Text as="h3">Copyright (words)</Text>
-                  <Text>{wordsCopyright}</Text>
-
-                  <Text as="h3">Copyright (music)</Text>
-                  <Text>{tune.musicCopyright}</Text>
-                </FlexItem>
-                <FlexItem width="100%">
-                  <Text as="h2">
-                    {hymnNumber}. {title}
-                  </Text>
-                  <Markdown>{lyrics.md}</Markdown>
-                </FlexItem>
-              </Flex>
-            );
-          }}
-        </Query>
-      </>
-    );
-  }
+            <Text as="h3">Copyright (music)</Text>
+            <Text>{tune.musicCopyright}</Text>
+          </FlexItem>
+          <FlexItem width="100%">
+            <Text as="h2">
+              {hymnNumber}. {title}
+            </Text>
+            <Markdown>{lyrics.md}</Markdown>
+          </FlexItem>
+        </Flex>
+      )}
+    </>
+  );
 }
+
+Song.getInitialProps = function({query: {id}}) {
+  return {id};
+};
+
+Song.propTypes = {
+  id: PropTypes.string.isRequired
+};
 
 export default Song;

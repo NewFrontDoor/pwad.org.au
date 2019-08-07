@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import {Query} from 'react-apollo';
+import {useQuery} from '@apollo/react-hooks';
 import Select from 'react-select';
 
 import {useTheme} from '../use-theme';
@@ -41,36 +41,37 @@ function SearchInput({name, value, onChange}) {
   };
 
   const [searchTerm, setSearchTerm] = useState('');
+  const {
+    loading,
+    error,
+    data: {metreMany = []}
+  } = useQuery(FIND_METRE, {
+    variables: {metre: searchTerm}
+  });
+
+  let options = [];
+
+  if (error) {
+    options = [];
+  } else {
+    options = metreMany.map(({_id, metre}) => ({
+      label: metre,
+      value: _id
+    }));
+  }
 
   return (
-    <Query query={FIND_METRE} variables={{metre: searchTerm}}>
-      {({loading, error, data}) => {
-        let options = [];
-
-        if (error) {
-          options = [];
-        } else {
-          options = data.metreMany.map(({_id, metre}) => ({
-            label: metre,
-            value: _id
-          }));
-        }
-
-        return (
-          <Select
-            isMulti
-            isSearchable
-            styles={styles}
-            isLoading={loading}
-            value={value}
-            inputValue={searchTerm}
-            options={options}
-            onChange={onChange(name)}
-            onInputChange={value => setSearchTerm(value)}
-          />
-        );
-      }}
-    </Query>
+    <Select
+      isMulti
+      isSearchable
+      styles={styles}
+      isLoading={loading}
+      value={value}
+      inputValue={searchTerm}
+      options={options}
+      onChange={onChange(name)}
+      onInputChange={value => setSearchTerm(value)}
+    />
   );
 }
 
