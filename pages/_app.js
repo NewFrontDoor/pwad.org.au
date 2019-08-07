@@ -13,6 +13,7 @@ import withApolloClient from '../lib/with-apollo-client';
 import GlobalStyles from '../components/global-styles';
 import NavBar from '../components/nav-bar/nav-bar';
 import Footer from '../components/footer/footer';
+import BannerImage, {randomBanner} from '../components/banner-image';
 
 const theme = createTheme({
   colors: {
@@ -35,11 +36,14 @@ class MyApp extends App {
       pageProps = await Component.getInitialProps(ctx);
     }
 
-    return {pageProps};
+    const bannerImage = randomBanner();
+
+    return {pageProps, bannerImage};
   }
 
   render() {
-    const {Component, pageProps, apolloClient} = this.props;
+    const {Component, pageProps, apolloClient, bannerImage} = this.props;
+
     return (
       <Container>
         <Head>
@@ -52,16 +56,19 @@ class MyApp extends App {
         <GlobalStyles theme={theme} />
         <ApolloProvider client={apolloClient}>
           <ThemeProvider theme={theme}>
-            <Box
-              breakpoints={['narrow']}
-              width={['auto', 3 / 4]}
-              marginVertical={0}
-              marginHorizontal={['md', 'auto']}
-            >
-              <NavBar />
-              <Component {...pageProps} />
-              <Footer />
-            </Box>
+            <>
+              <Box
+                breakpoints={['narrow']}
+                width={['auto', 3 / 4]}
+                marginVertical={0}
+                marginHorizontal={['md', 'auto']}
+              >
+                <BannerImage image={bannerImage} />
+                <NavBar />
+                <Component {...pageProps} />
+                <Footer />
+              </Box>
+            </>
           </ThemeProvider>
         </ApolloProvider>
       </Container>

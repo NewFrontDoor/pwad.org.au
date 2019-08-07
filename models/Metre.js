@@ -20,6 +20,8 @@ Metre.add({
   }
 });
 
+Metre.schema.index({metre: 'text'});
+
 transform.toJSON(Metre);
 Metre.defaultColumns = 'metre';
 Metre.register();

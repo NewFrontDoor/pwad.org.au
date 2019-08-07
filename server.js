@@ -33,7 +33,7 @@ const start = async ({app}) => {
     if (req.user) {
       next();
     } else {
-      res.redirect('/sign-in');
+      res.redirect(`/sign-in?r=${req.originalUrl}`);
     }
   });
 

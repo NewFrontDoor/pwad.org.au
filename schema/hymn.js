@@ -4,7 +4,7 @@ const {composeWithMongoose} = require('graphql-compose-mongoose');
 const renderMdx = require('../lib/render-mdx');
 const books = require('../lib/books');
 
-function hymnSchema(keystone, {AuthorTC, TuneTC, FileTC}) {
+function hymnSchema(keystone, {AuthorTC, TuneTC, FileTC, MetreTC}) {
   const HymnTC = composeWithMongoose(keystone.list('Hymn').model);
 
   HymnTC.addFields({
@@ -45,6 +45,13 @@ function hymnSchema(keystone, {AuthorTC, TuneTC, FileTC}) {
     resolver: () => TuneTC.getResolver('findById'),
     prepareArgs: {
       _id: source => source.tune
+    }
+  });
+
+  HymnTC.addRelation('metre', {
+    resolver: () => MetreTC.getResolver('findById'),
+    prepareArgs: {
+      _id: source => source.metre
     }
   });
 

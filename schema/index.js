@@ -1,6 +1,9 @@
-const {GraphQLString} = require('graphql');
+const {GraphQLString, GraphQLList} = require('graphql');
 const {schemaComposer} = require('graphql-compose');
-const {composeWithMongoose} = require('graphql-compose-mongoose');
+const {
+  composeWithMongoose,
+  GraphQLMongoID
+} = require('graphql-compose-mongoose');
 const renderMdx = require('../lib/render-mdx');
 const userSchema = require('./user');
 const hymnSchema = require('./hymn');
@@ -12,13 +15,14 @@ module.exports = keystone => {
   const TuneTC = composeWithMongoose(keystone.list('Tune').model);
   const ResourceTC = composeWithMongoose(keystone.list('Resource').model);
   const MenuTC = composeWithMongoose(keystone.list('Menu').model);
+  const MetreTC = composeWithMongoose(keystone.list('Metre').model);
 
   const PageContentTC = composeWithMongoose(keystone.list('PageContent').model);
   const ScriptureTC = composeWithMongoose(keystone.list('Scripture').model);
   const FileTC = composeWithMongoose(keystone.list('File').model);
 
   const UserTC = userSchema(keystone);
-  const HymnTC = hymnSchema(keystone, {AuthorTC, TuneTC, FileTC});
+  const HymnTC = hymnSchema(keystone, {AuthorTC, TuneTC, FileTC, MetreTC});
 
   ScriptureTC.addNestedFields(renderMdx('content.md'));
   PageContentTC.addNestedFields(renderMdx('content.md'));
@@ -86,21 +90,37 @@ module.exports = keystone => {
     hymnById: HymnTC.getResolver('findById'),
     hymnByIds: HymnTC.getResolver('findByIds'),
     hymnOne: HymnTC.getResolver('findOne'),
-    hymnMany: HymnTC.getResolver('findMany').addFilterArg({
-      name: 'title_contains',
-      type: GraphQLString,
-      query: (query, value) => {
-        query.$text = {$search: value};
-      }
-    }),
+    hymnMany: HymnTC.getResolver('findMany')
+      .addFilterArg({
+        name: 'title_contains',
+        type: GraphQLString,
+        query: (query, value, resolveParams) => {
+          query.$text = {$search: value};
+          resolveParams.args.sort = {
+            score: {$meta: 'textScore'}
+          };
+          resolveParams.projection.score = {$meta: 'textScore'};
+        }
+      })
+      .addFilterArg({
+        name: 'includes_metre',
+        type: new GraphQLList(GraphQLMongoID),
+        query: (query, value) => {
+          query.metre = {$in: value};
+        }
+      }),
     hymnTotal: HymnTC.getResolver('count'),
     hymnConnection: HymnTC.getResolver('connection'),
 
     scriptureMany: ScriptureTC.getResolver('findMany').addFilterArg({
       name: 'title_contains',
       type: GraphQLString,
-      query: (query, value) => {
+      query: (query, value, resolveParams) => {
         query.$text = {$search: value};
+        resolveParams.args.sort = {
+          score: {$meta: 'textScore'}
+        };
+        resolveParams.projection.score = {$meta: 'textScore'};
       }
     }),
 
@@ -117,7 +137,20 @@ module.exports = keystone => {
     prayerById: PrayerTC.getResolver('findById'),
 
     resourcesMany: ResourceTC.getResolver('findMany'),
-    menuMany: MenuTC.getResolver('findMany')
+    menuMany: MenuTC.getResolver('findMany'),
+    metreMany: MetreTC.getResolver('findMany').addFilterArg({
+      name: 'metre_contains',
+      type: GraphQLString,
+      query: (query, value, resolveParams) => {
+        query.$text = {$search: value};
+        resolveParams.args.sort = {
+          score: {$meta: 'textScore'}
+        };
+        resolveParams.projection.score = {$meta: 'textScore'};
+      }
+    }),
+
+    searchPrayer: PrayerTC.getResolver('findMany')
   });
 
   schemaComposer.Mutation.addFields({

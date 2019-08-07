@@ -6,7 +6,7 @@ const hostUrl = config.get('HOST_URL');
 
 const callback = (req, res) => {
   const redirectUrl = req.session.redirectUrl
-    ? new URL(req.session.redirectUrl)
+    ? new URL(req.session.redirectUrl, hostUrl)
     : new URL(hostUrl);
 
   req.session.authType = undefined;

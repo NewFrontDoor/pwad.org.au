@@ -1,7 +1,8 @@
 import React from 'react';
+import PropType from 'prop-types';
 import Text from 'mineral-ui/Text';
 
-import redirect from '../lib/redirect';
+import redirect, {buildUrl} from '../lib/redirect';
 import checkLoggedIn from '../lib/check-logged-in';
 
 import Link from '../components/link';
@@ -17,13 +18,26 @@ class Signin extends React.Component {
       redirect(ctx, '/');
     }
 
-    return {};
+    const url = buildUrl(ctx.req);
+
+    return {
+      redirectPath: url.searchParams.get('r')
+    };
   }
 
+  static propTypes = {
+    redirectPath: PropType.string
+  };
+
+  static defaultProps = {
+    redirectPath: undefined
+  };
+
   render() {
+    const {redirectPath} = this.props;
     return (
       <>
-        <SignInForm />
+        <SignInForm redirectPath={redirectPath} />
         <Text>
           New?{' '}
           <Link prefetch href="/create-account">

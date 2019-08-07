@@ -5,7 +5,7 @@ import Flex, {FlexItem} from 'mineral-ui/Flex';
 
 import Logo from '../components/logo';
 import ManageAccountForm from '../components/account/manage-account-form';
-import redirect from '../lib/redirect';
+import redirect, {buildUrl} from '../lib/redirect';
 import checkLoggedIn from '../lib/check-logged-in';
 
 import {ME} from '../components/queries';
@@ -14,13 +14,18 @@ export default class MyAccount extends React.Component {
   static async getInitialProps(ctx) {
     const {loggedInUser} = await checkLoggedIn(ctx.apolloClient);
 
-    if (!loggedInUser.user) {
+    if (loggedInUser.user) {
       // Already signed in? No need to continue.
       // Throw them back to the main page
-      redirect(ctx, '/');
+      return {};
     }
 
-    return {};
+    const currentURL = buildUrl(ctx.req);
+    const url = new URL('/sign-in', currentURL);
+
+    url.searchParams.set('r', currentURL);
+
+    redirect(ctx, url);
   }
 
   render() {

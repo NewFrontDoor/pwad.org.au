@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  query listAll($title: String) {
-    hymnMany(filter: {title_contains: $title}) {
+  query listAll($title: String, $hymnMetres: [MongoID]) {
+    hymnMany(filter: {title_contains: $title, includes_metre: $hymnMetres}) {
       _id
       title
       bookId

@@ -7,10 +7,9 @@ const router = new Router();
 router.use('/', (req, res, next) => {
   if (req.ability.can('read', 'keystone')) {
     keystone.list('User').set('hidden', req.ability.cannot('manage', 'User'));
-    next();
-  } else {
-    res.redirect('/sign-in');
   }
+
+  next();
 });
 
 const checkAbility = (req, res, next) => {
