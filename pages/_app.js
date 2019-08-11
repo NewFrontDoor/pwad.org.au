@@ -30,19 +30,19 @@ const enhance = flow(withApolloClient);
 
 class MyApp extends App {
   static async getInitialProps({Component, ctx}) {
-    let pageProps = {};
+    let props = {};
 
     if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
+      props = await Component.getInitialProps(ctx);
     }
 
     const bannerImage = randomBanner();
 
-    return {pageProps, bannerImage};
+    return {...props, bannerImage};
   }
 
   render() {
-    const {Component, pageProps, apolloClient, bannerImage} = this.props;
+    const {Component, apolloClient, bannerImage, ...props} = this.props;
 
     return (
       <Container>
@@ -65,7 +65,7 @@ class MyApp extends App {
               >
                 <BannerImage image={bannerImage} />
                 <NavBar />
-                <Component {...pageProps} />
+                <Component {...props} />
                 <Footer />
               </Box>
             </>

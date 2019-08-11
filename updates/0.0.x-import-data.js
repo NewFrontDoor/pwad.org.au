@@ -1,18 +1,19 @@
 const fs = require('fs');
-const {uniqBy} = require('lodash');
-// Const util = require('util');
+// const util = require('util');
 // const stream = require('stream');
+// const {uniqBy} = require('lodash');
 const csv = require('csv/lib/sync');
 const keystone = require('keystone');
-// Const got = require('got');
+// const got = require('got');
 // const {CookieJar} = require('tough-cookie');
-//
+
 // const pipeline = util.promisify(stream.pipeline);
 
 const Tune = keystone.list('Tune').model;
+const File = keystone.list('File').model;
 const Hymn = keystone.list('Hymn').model;
 
-// Keystone.list('Hymn').schema.set('usePushEach', true);
+// keystone.list('Hymn').schema.set('usePushEach', true);
 
 const data = csv.parse(fs.readFileSync('./import.csv'), {
   columns: true
@@ -30,14 +31,14 @@ function batchPromises(batchSize, collection, callback) {
 }
 
 module.exports = done => {
-  // Const cookieJar = new CookieJar();
+  // const cookieJar = new CookieJar();
   // cookieJar.setCookieSync(
   //   '_hymnbase_session=cookie',
   //   'app.rejoicehymnbase.com.au'
   // );
 
-  batchPromises(5, data, async hymn => {
-    // Const newHymn = new Hymn({
+  batchPromises(5, data, async tune => {
+    // const newHymn = new Hymn({
     //   title: hymn.title,
     //   hymnNumber: hymn.hymn_number ? parseInt(hymn.hymn_number, 10) : 0,
     //   bookId: hymn.book_id ? parseInt(hymn.book_id, 10) : 0,
@@ -86,11 +87,11 @@ module.exports = done => {
     //       mimetype: file.data_content_type,
     //       path
     //     },
-    //     (err, file) => {
+    //     (err, uploadedFile) => {
     //       if (err) {
     //         reject(err);
     //       } else {
-    //         resolve(file);
+    //         resolve(uploadedFile);
     //       }
     //     }
     //   );
@@ -99,19 +100,23 @@ module.exports = done => {
     // newFile.set('file', uploaded);
     //
     // return newFile.save();
-    const tune = await Tune.findOne({title: hymn.tune_title}).exec();
+    const file = await File.find({
+      name: tune.data_file_name
+    }).exec();
 
-    return Hymn.findOneAndUpdate(
+    return Tune.findOneAndUpdate(
       {
-        title: hymn.title
+        title: tune.title
       },
       {
-        title: hymn.title,
-        tune
-      },
-      {
-        new: true,
-        upsert: true
+        title: tune.title,
+        $addToSet: {
+          files: file
+        }
+        // },
+        // {
+        //   new: true,
+        //   upsert: true
       }
     );
   })

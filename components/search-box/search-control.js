@@ -6,11 +6,13 @@ import Flex, {FlexItem} from 'mineral-ui/Flex';
 import Text from 'mineral-ui/Text';
 import Button from 'mineral-ui/Button';
 import TextInput from 'mineral-ui/TextInput';
-import Media from '../media';
+import {useMediumMedia} from '../use-media';
 import {Formik, Form, FormField} from '../form';
 import {LIST_ALL} from '../queries';
 import SearchResult from './search-result';
-import SearchInput from './search-input';
+import SearchHymnInput from './search-hymn-input';
+import SearchTuneInput from './search-tune-input';
+import SearchPassageInput from './search-passage-input';
 
 const initialState = {
   showSearchResults: false,
@@ -19,6 +21,8 @@ const initialState = {
 };
 
 function reducer(state, action) {
+  let book;
+  let tune;
   let hymnMetres;
 
   switch (action.type) {
@@ -27,8 +31,16 @@ function reducer(state, action) {
     case 'toggle-advanced-search':
       return {...state, showAdvancedSeach: !state.showAdvancedSeach};
     case 'search':
-      if (action.fields.hymnMetres.length > 0) {
+      if (action.fields.hymnMetres && action.fields.hymnMetres.length > 0) {
         hymnMetres = action.fields.hymnMetres.map(({value}) => value);
+      }
+
+      if (action.fields.passage) {
+        book = action.fields.passage.value;
+      }
+
+      if (action.fields.tune) {
+        tune = action.fields.tune.value;
       }
 
       return {
@@ -36,7 +48,9 @@ function reducer(state, action) {
         ...pickBy(
           {
             ...action.fields,
-            hymnMetres
+            hymnMetres,
+            book,
+            tune
           },
           identity
         ),
@@ -64,10 +78,15 @@ function SearchResults({search}) {
     return `Error! ${error.message}`;
   }
 
-  return hymnMany.map(hymn => <SearchResult key={hymn._id} {...hymn} />);
+  if (hymnMany.length > 0) {
+    return hymnMany.map(hymn => <SearchResult key={hymn._id} {...hymn} />);
+  }
+
+  return <Text appearance="prose">No results found...</Text>;
 }
 
 function SearchBox() {
+  const isMedium = useMediumMedia();
   const [
     {showHowToSearch, showAdvancedSeach, showSearchResults, ...search},
     dispatch
@@ -86,8 +105,8 @@ function SearchBox() {
           hymnMetres: [],
           search: '',
           title: '',
-          tune: '',
-          passage: ''
+          tune: null,
+          passage: null
         }}
         onSubmit={fields => dispatch({type: 'search', fields})}
       >
@@ -110,7 +129,7 @@ function SearchBox() {
             )}
           </Flex>
           <Flex justifyContent="between" marginBottom="1em">
-            <Media query="medium">
+            {isMedium && (
               <FlexItem>
                 <Button
                   minimal
@@ -120,7 +139,7 @@ function SearchBox() {
                   How to search
                 </Button>
               </FlexItem>
-            </Media>
+            )}
             <FlexItem>
               <Button
                 minimal
@@ -154,19 +173,23 @@ function SearchBox() {
                 </Box>
                 <Box marginBottom="1em">
                   <FormField
-                    name="hymnMetres"
-                    input={SearchInput}
+                    input={SearchHymnInput}
                     label="Hymn Metre"
+                    name="hymnMetres"
                   />
                 </Box>
                 <Box marginBottom="1em">
-                  <FormField input={TextInput} label="Tune" name="tune" />
+                  <FormField input={SearchTuneInput} label="Tune" name="tune" />
                 </Box>
                 <Box marginBottom="1em">
-                  <FormField input={TextInput} label="Passage" name="passage" />
+                  <FormField
+                    input={SearchPassageInput}
+                    label="Passage"
+                    name="passage"
+                  />
                 </Box>
               </FlexItem>
-              <Media query="medium">
+              {isMedium && (
                 <FlexItem grow={1} width="50%">
                   <Text>
                     Search Instructions to help people to search. Lorem ipsum
@@ -178,7 +201,7 @@ function SearchBox() {
                     deserunt mel in, mundi moderatius eu eam.
                   </Text>
                 </FlexItem>
-              </Media>
+              )}
             </Flex>
           )}
         </Form>

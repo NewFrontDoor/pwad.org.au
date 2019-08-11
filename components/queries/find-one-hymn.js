@@ -27,6 +27,9 @@ export default gql`
             last
           }
         }
+        metre {
+          metre
+        }
       }
       bio {
         html

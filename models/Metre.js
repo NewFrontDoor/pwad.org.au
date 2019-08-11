@@ -20,7 +20,7 @@ Metre.add({
   }
 });
 
-Metre.schema.index({metre: 'text'});
+Metre.schema.options.collation = {locale: 'en', numericOrdering: true};
 
 transform.toJSON(Metre);
 Metre.defaultColumns = 'metre';

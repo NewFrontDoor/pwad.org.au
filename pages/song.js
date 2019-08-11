@@ -102,19 +102,42 @@ function Song({id}) {
               </>
             )}
 
-            <Text as="h3">Hymn Author</Text>
-            <Author {...author} />
-            <Text as="h3">Scripture</Text>
-            <Text>{scripture}</Text>
+            {author && (
+              <>
+                <Text as="h3">Hymn Author</Text>
+                <Author {...author} />
+              </>
+            )}
 
-            <Text as="h3">Tune Composer</Text>
-            <Composer {...tune.composer} />
+            {scripture && (
+              <>
+                <Text as="h3">Scripture</Text>
+                <Text>{scripture}</Text>
+              </>
+            )}
+
+            {tune && (
+              <>
+                <Text as="h3">Tune Composer</Text>
+                <Composer {...tune.composer} />
+                {tune.metre && (
+                  <>
+                    <Text as="h3">Metre</Text>
+                    <Text>{tune.metre.metre}</Text>
+                  </>
+                )}
+              </>
+            )}
 
             <Text as="h3">Copyright (words)</Text>
             <Text>{wordsCopyright}</Text>
 
-            <Text as="h3">Copyright (music)</Text>
-            <Text>{tune.musicCopyright}</Text>
+            {tune && (
+              <>
+                <Text as="h3">Copyright (music)</Text>
+                <Text>{tune.musicCopyright}</Text>
+              </>
+            )}
           </FlexItem>
           <FlexItem width="100%">
             <Text as="h2">

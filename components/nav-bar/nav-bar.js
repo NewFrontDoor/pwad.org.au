@@ -10,7 +10,7 @@ import Popover from 'mineral-ui/Popover';
 import {themed} from 'mineral-ui/themes';
 import styled from '@emotion/styled';
 import {withTheme} from 'emotion-theming';
-import Media from '../media';
+import {useMediumMedia} from '../use-media';
 
 import Link from '../link';
 import {ME} from '../queries';
@@ -103,6 +103,8 @@ function NavBar({theme}) {
     // }
   });
 
+  const isMedium = useMediumMedia('medium');
+
   return (
     <Root isMenuOpen={isMenuOpen} menuHeight={menuHeight} theme={theme}>
       <Flex
@@ -114,40 +116,36 @@ function NavBar({theme}) {
         alignItems="center"
         justifyContent="between"
       >
-        <Media query="medium">
-          {matches =>
-            matches ? (
-              <Nav />
-            ) : (
-              <>
-                <MenuPopover
-                  content={
-                    <div ref={menuRef}>
-                      <Nav />
-                    </div>
-                  }
-                  hasArrow={false}
-                  isOpen={isMenuOpen}
-                  modifiers={{
-                    preventOverflow: {
-                      padding: 0
-                    }
-                  }}
-                  placement="bottom-end"
-                  onClose={() => dispatch({type: 'toggle-menu'})}
-                  onOpen={() => dispatch({type: 'toggle-menu'})}
-                >
-                  <MenuButton minimal>Menu</MenuButton>
-                </MenuPopover>
-                {me && (
-                  <Link prefetch href="/my-account">
-                    My account
-                  </Link>
-                )}
-              </>
-            )
-          }
-        </Media>
+        {isMedium ? (
+          <Nav />
+        ) : (
+          <>
+            <MenuPopover
+              content={
+                <div ref={menuRef}>
+                  <Nav />
+                </div>
+              }
+              hasArrow={false}
+              isOpen={isMenuOpen}
+              modifiers={{
+                preventOverflow: {
+                  padding: 0
+                }
+              }}
+              placement="bottom-end"
+              onClose={() => dispatch({type: 'toggle-menu'})}
+              onOpen={() => dispatch({type: 'toggle-menu'})}
+            >
+              <MenuButton minimal>Menu</MenuButton>
+            </MenuPopover>
+            {me && (
+              <Link prefetch href="/my-account">
+                My account
+              </Link>
+            )}
+          </>
+        )}
       </Flex>
     </Root>
   );

@@ -21,7 +21,6 @@ Hymn.add({
   wordsCopyright: {type: Types.Text},
   author: {type: Types.Relationship, ref: 'Author'},
   tune: {type: Types.Relationship, ref: 'Tune'},
-  metre: {type: Types.Relationship, ref: 'Metre'},
   bio: {type: Types.Markdown},
   chapter: {type: Types.Number},
   verses: {type: Types.Text},
@@ -41,5 +40,5 @@ Hymn.schema.pre('save', function(next) {
 });
 
 transform.toJSON(Hymn);
-Hymn.defaultColumns = 'title, hymnNumber, bookId';
+Hymn.defaultColumns = 'title, hymnNumber, book, author, tune';
 Hymn.register();

@@ -9,7 +9,7 @@ import styled from '@emotion/styled';
 import Box from 'mineral-ui/Box';
 import Dropdown from 'mineral-ui/Dropdown';
 import LinkButton from '../link-button';
-import Media from '../media';
+import {useMediumMedia} from '../use-media';
 import Link from '../link';
 import {MENUS, ME} from '../queries';
 import UserAvatar from './user-avatar';
@@ -67,6 +67,7 @@ const Spacer = styled('li')({
 
 function Nav() {
   const count = 0;
+  const isMedium = useMediumMedia();
 
   const {
     data: {menuMany = []}
@@ -114,9 +115,7 @@ function Nav() {
           )}
         </NavMenuItem>
       ))}
-      <Media query="medium">
-        <Spacer />
-      </Media>
+      {isMedium && <Spacer />}
       {me ? (
         <>
           <NavMenuItem as="li" fontWeight="bold">
@@ -127,13 +126,13 @@ function Nav() {
               Short list ({count})
             </Link>
           </NavMenuItem>
-          <Media query="medium">
+          {isMedium && (
             <NavMenuItem as="li" fontWeight="bold">
               <Link prefetch href="/my-account">
                 My account
               </Link>
             </NavMenuItem>
-          </Media>
+          )}
           <NavMenuItem as="li">
             <UserAvatar />
           </NavMenuItem>

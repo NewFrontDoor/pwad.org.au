@@ -3,11 +3,14 @@ const {get} = require('lodash');
 const {GraphQLBoolean} = require('graphql');
 const {composeWithMongoose} = require('graphql-compose-mongoose');
 
-function userSchema(keystone) {
+function userSchema(keystone, options) {
   const {model: UserModel} = keystone.list('User');
-  const UserTC = composeWithMongoose(UserModel);
-
-  UserTC.removeField(['email', 'password']);
+  const UserTC = composeWithMongoose(UserModel, {
+    ...options,
+    fields: {
+      remove: ['email', 'password']
+    }
+  });
 
   UserTC.addFields({
     hasFreeAccount: {

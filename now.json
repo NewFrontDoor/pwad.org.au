@@ -2,8 +2,7 @@
   "version": 1,
   "type": "docker",
   "alias": [
-    "pwad.now.sh",
-    "stage.pwad.org.au"
+    "pwad.now.sh"
   ],
   "env": {
     "HOST": "pwad.now.sh",
