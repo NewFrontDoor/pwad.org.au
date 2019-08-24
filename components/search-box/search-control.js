@@ -8,22 +8,21 @@ import Button from 'mineral-ui/Button';
 import TextInput from 'mineral-ui/TextInput';
 import {useMediumMedia} from '../use-media';
 import {Formik, Form, FormField} from '../form';
-import {LIST_ALL} from '../queries';
+import {ADVANCED_SEARCH, TEXT_SEARCH} from '../queries';
 import SearchResult from './search-result';
-import SearchHymnInput from './search-hymn-input';
+import SearchMetreInput from './search-metre-input';
 import SearchTuneInput from './search-tune-input';
 import SearchPassageInput from './search-passage-input';
 
 const initialState = {
   showSearchResults: false,
   showHowToSearch: false,
-  showAdvancedSeach: true
+  showAdvancedSeach: false
 };
 
 function reducer(state, action) {
+  let tunes;
   let book;
-  let tune;
-  let hymnMetres;
 
   switch (action.type) {
     case 'toggle-how-to-search':
@@ -32,7 +31,7 @@ function reducer(state, action) {
       return {...state, showAdvancedSeach: !state.showAdvancedSeach};
     case 'search':
       if (action.fields.hymnMetres && action.fields.hymnMetres.length > 0) {
-        hymnMetres = action.fields.hymnMetres.map(({value}) => value);
+        tunes = action.fields.hymnMetres.flatMap(({tunes}) => tunes);
       }
 
       if (action.fields.passage) {
@@ -40,7 +39,11 @@ function reducer(state, action) {
       }
 
       if (action.fields.tune) {
-        tune = action.fields.tune.value;
+        if (tunes) {
+          tunes.push(action.fields.tune.value);
+        } else {
+          tunes = [action.fields.tune.value];
+        }
       }
 
       return {
@@ -48,9 +51,8 @@ function reducer(state, action) {
         ...pickBy(
           {
             ...action.fields,
-            hymnMetres,
             book,
-            tune
+            tunes
           },
           identity
         ),
@@ -61,12 +63,12 @@ function reducer(state, action) {
   }
 }
 
-function SearchResults({search}) {
+function TextSearch({search}) {
   const {
     loading,
     error,
-    data: {hymnMany}
-  } = useQuery(LIST_ALL, {
+    data: {hymnMany, prayerMany, liturgyMany}
+  } = useQuery(TEXT_SEARCH, {
     variables: search
   });
 
@@ -78,8 +80,40 @@ function SearchResults({search}) {
     return `Error! ${error.message}`;
   }
 
-  if (hymnMany.length > 0) {
-    return hymnMany.map(hymn => <SearchResult key={hymn._id} {...hymn} />);
+  const results = [...hymnMany, ...prayerMany, ...liturgyMany].sort(
+    (a, b) => b.score - a.score
+  );
+
+  if (results.length > 0) {
+    return results.map(result => <SearchResult key={result._id} {...result} />);
+  }
+
+  return <Text appearance="prose">No results found...</Text>;
+}
+
+function AdvancedSearch({search}) {
+  const {
+    loading,
+    error,
+    data: {hymnMany, prayerMany, liturgyMany}
+  } = useQuery(ADVANCED_SEARCH, {
+    variables: search
+  });
+
+  if (loading) {
+    return 'Loading...';
+  }
+
+  if (error) {
+    return `Error! ${error.message}`;
+  }
+
+  const results = [...hymnMany, ...prayerMany, ...liturgyMany].sort(
+    (a, b) => b.score - a.score
+  );
+
+  if (results.length > 0) {
+    return results.map(result => <SearchResult key={result._id} {...result} />);
   }
 
   return <Text appearance="prose">No results found...</Text>;
@@ -111,29 +145,31 @@ function SearchBox() {
         onSubmit={fields => dispatch({type: 'search', fields})}
       >
         <Form>
-          <Flex marginBottom="1em">
-            <FlexItem grow={1} marginEnd="auto">
-              <FormField
-                hideLabel
-                input={TextInput}
-                label="Search"
-                name="search"
-                placeholder="Search..."
-                type="search"
-              />
-            </FlexItem>
-            {showAdvancedSeach && (
+          {!showAdvancedSeach && (
+            <Flex marginBottom="1em">
+              <FlexItem grow={1} marginEnd="auto">
+                <FormField
+                  hideLabel
+                  input={TextInput}
+                  label="Search"
+                  name="search"
+                  placeholder="Search..."
+                  type="search"
+                />
+              </FlexItem>
+
               <FlexItem marginStart="1em">
                 <Button type="submit">Search</Button>
               </FlexItem>
-            )}
-          </Flex>
+            </Flex>
+          )}
           <Flex justifyContent="between" marginBottom="1em">
             {isMedium && (
               <FlexItem>
                 <Button
                   minimal
                   size="medium"
+                  type="button"
                   onClick={() => dispatch({type: 'toggle-how-to-search'})}
                 >
                   How to search
@@ -144,6 +180,7 @@ function SearchBox() {
               <Button
                 minimal
                 size="medium"
+                type="button"
                 onClick={() => dispatch({type: 'toggle-advanced-search'})}
               >
                 Advanced Search
@@ -173,7 +210,7 @@ function SearchBox() {
                 </Box>
                 <Box marginBottom="1em">
                   <FormField
-                    input={SearchHymnInput}
+                    input={SearchMetreInput}
                     label="Hymn Metre"
                     name="hymnMetres"
                   />
@@ -187,6 +224,11 @@ function SearchBox() {
                     label="Passage"
                     name="passage"
                   />
+                </Box>
+                <Box marginBottom="1em">
+                  <Button fullWidth type="submit">
+                    Search
+                  </Button>
                 </Box>
               </FlexItem>
               {isMedium && (
@@ -206,7 +248,15 @@ function SearchBox() {
           )}
         </Form>
       </Formik>
-      {showSearchResults && <SearchResults search={search} />}
+      {showSearchResults && (
+        <>
+          {showAdvancedSeach ? (
+            <AdvancedSearch search={search} />
+          ) : (
+            <TextSearch search={search} />
+          )}
+        </>
+      )}
     </>
   );
 }

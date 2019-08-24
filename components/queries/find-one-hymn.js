@@ -22,6 +22,7 @@ export default gql`
         title
         musicCopyright
         composer {
+          _id
           name {
             first
             last

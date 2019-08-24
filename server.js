@@ -54,26 +54,6 @@ const start = async ({app}) => {
   server.use('/auth', authenticationHandler);
   server.use('/graphql', graphqlHandler(keystone));
 
-  server.get('/song/:id/*', (req, res) => {
-    const {id} = req.params;
-    app.render(req, res, '/song', {id});
-  });
-
-  server.get('/author/:id/*', (req, res) => {
-    const {id} = req.params;
-    app.render(req, res, '/author', {id});
-  });
-
-  server.get('/pray/:id', (req, res) => {
-    const {id} = req.params;
-    app.render(req, res, '/pray', {id});
-  });
-
-  server.get('/content/:page', (req, res) => {
-    const {page} = req.params;
-    app.render(req, res, '/content', {page});
-  });
-
   server.get('*', app.getRequestHandler());
 
   await openDatabaseConnection();

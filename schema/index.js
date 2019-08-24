@@ -1,10 +1,6 @@
-const mongoose = require('mongoose');
-const {GraphQLString} = require('graphql');
+const {GraphQLString, GraphQLFloat} = require('graphql');
 const {schemaComposer} = require('graphql-compose');
-const {
-  GraphQLMongoID,
-  composeWithMongoose
-} = require('graphql-compose-mongoose');
+const {composeWithMongoose} = require('graphql-compose-mongoose');
 const renderMdx = require('../lib/render-mdx');
 const userSchema = require('./user');
 const hymnSchema = require('./hymn');
@@ -30,7 +26,8 @@ const defaultOptions = {
 };
 
 module.exports = keystone => {
-  const {model: Hymn} = keystone.list('Hymn');
+  const {model: Prayer} = keystone.list('Prayer');
+  const {model: Liturgy} = keystone.list('Liturgy');
 
   const AuthorTC = composeWithMongoose(
     keystone.list('Author').model,
@@ -40,10 +37,7 @@ module.exports = keystone => {
     keystone.list('Category').model,
     defaultOptions
   );
-  const PrayerTC = composeWithMongoose(
-    keystone.list('Prayer').model,
-    defaultOptions
-  );
+  const PrayerTC = composeWithMongoose(Prayer, defaultOptions);
   const TuneTC = composeWithMongoose(
     keystone.list('Tune').model,
     defaultOptions
@@ -80,21 +74,47 @@ module.exports = keystone => {
     keystone.list('Keyword').model,
     defaultOptions
   );
-  const LiturgyTC = composeWithMongoose(
-    keystone.list('Liturgy').model,
-    defaultOptions
-  );
+  const LiturgyTC = composeWithMongoose(Liturgy, defaultOptions);
 
   const UserTC = userSchema(keystone, defaultOptions);
   const HymnTC = hymnSchema(
     keystone,
-    {AuthorTC, TuneTC, FileTC, MetreTC},
+    {AuthorTC, TuneTC, FileTC, MetreTC, KeywordTC},
     defaultOptions
   );
 
-  ScriptureTC.addNestedFields(renderMdx('content.md'));
-  PageContentTC.addNestedFields(renderMdx('content.md'));
-  PrayerTC.addNestedFields(renderMdx('content.md'));
+  ScriptureTC.addNestedFields(renderMdx('content.md')).addFields({
+    score: {
+      type: GraphQLFloat,
+      resolve(args) {
+        return args.get('score') || 0;
+      }
+    }
+  });
+  PageContentTC.addNestedFields(renderMdx('content.md')).addFields({
+    score: {
+      type: GraphQLFloat,
+      resolve(args) {
+        return args.get('score') || 0;
+      }
+    }
+  });
+  PrayerTC.addNestedFields(renderMdx('content.md')).addFields({
+    score: {
+      type: GraphQLFloat,
+      resolve(args) {
+        return args.get('score') || 0;
+      }
+    }
+  });
+  LiturgyTC.addNestedFields(renderMdx('content.md')).addFields({
+    score: {
+      type: GraphQLFloat,
+      resolve(args) {
+        return args.get('score') || 0;
+      }
+    }
+  });
 
   TuneTC.addRelation('composer', {
     resolver: () => AuthorTC.getResolver('findById'),
@@ -180,6 +200,29 @@ module.exports = keystone => {
     }
   });
 
+  PrayerTC.addRelation('keywords', {
+    resolver: () => KeywordTC.getResolver('findByIds'),
+    prepareArgs: {
+      _ids: source => source.keywords || []
+    },
+    projection: {keywords: true}
+  });
+
+  LiturgyTC.addRelation('keywords', {
+    resolver: () => KeywordTC.getResolver('findByIds'),
+    prepareArgs: {
+      _ids: source => source.keywords || []
+    },
+    projection: {keywords: true}
+  });
+
+  MetreTC.addRelation('tunes', {
+    resolver: () => TuneTC.getResolver('findMany'),
+    prepareArgs: {
+      filter: source => ({metre: source._id})
+    }
+  });
+
   schemaComposer.Query.addFields({
     me: UserTC.getResolver('me'),
 
@@ -201,85 +244,50 @@ module.exports = keystone => {
     keywordById: KeywordTC.getResolver('findById'),
     keywordByIds: KeywordTC.getResolver('findByIds'),
     keywordOne: KeywordTC.getResolver('findOne'),
-    keywordMany: KeywordTC.getResolver('findMany'),
+    keywordMany: KeywordTC.getResolver('findMany').addFilterArg({
+      name: 'text_contains',
+      type: GraphQLString,
+      query: (query, value, resolveParams) => {
+        query.$text = {$search: value};
+        resolveParams.args.sort = {
+          score: {$meta: 'textScore'}
+        };
+        resolveParams.projection.score = {$meta: 'textScore'};
+      }
+    }),
 
     liturgyById: LiturgyTC.getResolver('findById'),
     liturgyByIds: LiturgyTC.getResolver('findByIds'),
     liturgyOne: LiturgyTC.getResolver('findOne'),
-    liturgyMany: LiturgyTC.getResolver('findMany'),
+    liturgyMany: LiturgyTC.getResolver('findMany').addFilterArg({
+      name: 'text_contains',
+      type: GraphQLString,
+      query: (query, value, resolveParams) => {
+        query.$text = {$search: value};
+        resolveParams.args.sort = {
+          score: {$meta: 'textScore'}
+        };
+        resolveParams.projection.score = {$meta: 'textScore'};
+      }
+    }),
 
     hymnById: HymnTC.getResolver('findById'),
     hymnByIds: HymnTC.getResolver('findByIds'),
     hymnOne: HymnTC.getResolver('findOne'),
-    hymnMany: HymnTC.getResolver('findMany')
-      .addFilterArg({
-        name: 'title_contains',
-        type: GraphQLString,
-        query: (query, value, resolveParams) => {
-          query.$text = {$search: value};
-          resolveParams.args.sort = {
-            score: {$meta: 'textScore'}
-          };
-          resolveParams.projection.score = {$meta: 'textScore'};
-        }
-      })
-      .addFilterArg({
-        name: 'includes_metre',
-        type: [GraphQLMongoID],
-        query: (query, value) => {
-          query['tune.metre'] = {$in: value};
-        }
-      })
-      .wrapResolve(() => async ({args}) => {
-        const {filter, limit} = args;
-        console.log(args);
-
-        const query = Hymn.aggregate();
-
-        if (filter.title_contains) {
-          query.match({
-            $text: {$search: filter.title_contains}
-          });
-        }
-
-        if (filter.book) {
-          query.match({
-            book: {$eq: filter.book}
-          });
-        }
-
-        if (filter.tune) {
-          query.match({
-            tune: {$eq: new mongoose.Types.ObjectId(filter.tune)}
-          });
-        }
-
-        query
-          .lookup({
-            from: 'tunes',
-            localField: 'tune',
-            foreignField: '_id',
-            as: 'tune'
-          })
-          .unwind('tune');
-
-        if (filter.includes_metre) {
-          query.match({
-            'tune.metre': {
-              $in: filter.includes_metre.map(
-                id => new mongoose.Types.ObjectId(id)
-              )
-            }
-          });
-        }
-
-        const result = await query.limit(limit).exec();
-
-        return result;
-      }),
+    hymnMany: HymnTC.getResolver('findMany').addFilterArg({
+      name: 'text_contains',
+      type: GraphQLString,
+      query: (query, value, resolveParams) => {
+        query.$text = {$search: value};
+        resolveParams.args.sort = {
+          score: {$meta: 'textScore'}
+        };
+        resolveParams.projection.score = {$meta: 'textScore'};
+      }
+    }),
 
     scriptureMany: ScriptureTC.getResolver('findMany').addFilterArg({
-      name: 'title_contains',
+      name: 'text_contains',
       type: GraphQLString,
       query: (query, value, resolveParams) => {
         query.$text = {$search: value};
@@ -302,8 +310,18 @@ module.exports = keystone => {
     }),
     pageContentOne: PageContentTC.getResolver('findOne'),
 
-    prayerMany: PrayerTC.getResolver('findMany'),
     prayerById: PrayerTC.getResolver('findById'),
+    prayerMany: PrayerTC.getResolver('findMany').addFilterArg({
+      name: 'text_contains',
+      type: GraphQLString,
+      query: (query, value, resolveParams) => {
+        query.$text = {$search: value};
+        resolveParams.args.sort = {
+          score: {$meta: 'textScore'}
+        };
+        resolveParams.projection.score = {$meta: 'textScore'};
+      }
+    }),
 
     resourcesMany: ResourceTC.getResolver('findMany'),
     menuMany: MenuTC.getResolver('findMany'),
@@ -313,9 +331,7 @@ module.exports = keystone => {
       query: (query, value) => {
         query.metre = {$regex: value, $options: '$i'};
       }
-    }),
-
-    searchPrayer: PrayerTC.getResolver('findMany')
+    })
   });
 
   schemaComposer.Mutation.addFields({

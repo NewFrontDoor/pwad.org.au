@@ -1,11 +1,10 @@
-const {GraphQLString} = require('graphql');
+const {GraphQLString, GraphQLFloat} = require('graphql');
 const {composeWithMongoose} = require('graphql-compose-mongoose');
 
 const renderMdx = require('../lib/render-mdx');
 const books = require('../lib/books');
 
-function hymnSchema(keystone, {AuthorTC, TuneTC, FileTC, MetreTC}, options) {
-  const {model: Tune} = keystone.list('Tune');
+function hymnSchema(keystone, {AuthorTC, TuneTC, FileTC, KeywordTC}, options) {
   const HymnTC = composeWithMongoose(keystone.list('Hymn').model, options);
 
   HymnTC.addFields({
@@ -30,6 +29,16 @@ function hymnSchema(keystone, {AuthorTC, TuneTC, FileTC, MetreTC}, options) {
         return scripture;
       },
       projection: {book: true, chapter: true, verses: true}
+    },
+    score: {
+      type: GraphQLFloat,
+      resolve(args) {
+        if (typeof args.get === 'undefined') {
+          return 0;
+        }
+
+        return args.get('score');
+      }
     }
   });
 
@@ -50,23 +59,12 @@ function hymnSchema(keystone, {AuthorTC, TuneTC, FileTC, MetreTC}, options) {
     }
   });
 
-  HymnTC.addRelation('metre', {
-    resolver: () =>
-      MetreTC.getResolver('findOne').wrapResolve(next => async ({source}) => {
-        const result = await Tune.aggregate()
-          .match({_id: source.tune})
-          .lookup({
-            from: 'metres',
-            localField: 'metre',
-            foreignField: '_id',
-            as: 'metre'
-          })
-          .unwind('metre')
-          .exec();
-
-        return next(result);
-      }),
-    projection: {tune: true}
+  HymnTC.addRelation('keywords', {
+    resolver: () => KeywordTC.getResolver('findByIds'),
+    prepareArgs: {
+      _ids: source => source.keywords || []
+    },
+    projection: {keywords: true}
   });
 
   HymnTC.addRelation('files', {

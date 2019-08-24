@@ -17,6 +17,8 @@ Liturgy.add({
   files: {type: Types.Relationship, ref: 'File', many: true}
 });
 
+Liturgy.schema.index({title: 'text', content: 'text'});
+
 transform.toJSON(Liturgy);
 Liturgy.defaultColumns = 'name';
 Liturgy.register();

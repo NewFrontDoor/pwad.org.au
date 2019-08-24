@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/react-hooks';
 import {kebabCase} from 'lodash';
+import prettyBytes from 'pretty-bytes';
 import Text from 'mineral-ui/Text';
 import Flex, {FlexItem} from 'mineral-ui/Flex';
 
-import Link from '../components/link';
-import Markdown from '../components/markdown/markdown';
-import {FIND_ONE_HYMN} from '../components/queries';
+import Link from '../../../components/link';
+import Markdown from '../../../components/markdown/markdown';
+import {FIND_ONE_HYMN} from '../../../components/queries';
 
 function Author({_id, name, dates}) {
   const fullName = `${name.first} ${name.last}`;
@@ -93,9 +94,8 @@ function Song({id}) {
                 <Text as="ul">
                   {files.map(({_id, file}) => (
                     <li key={_id}>
-                      <Link href={file.url}>
-                        {file.filename} ({file.size})
-                      </Link>
+                      <Link href={file.url}>{file.filename}</Link> (
+                      {prettyBytes(file.size)})
                     </li>
                   ))}
                 </Text>
@@ -130,12 +130,12 @@ function Song({id}) {
             )}
 
             <Text as="h3">Copyright (words)</Text>
-            <Text>{wordsCopyright}</Text>
+            <Text>{wordsCopyright || '-'}</Text>
 
             {tune && (
               <>
                 <Text as="h3">Copyright (music)</Text>
-                <Text>{tune.musicCopyright}</Text>
+                <Text>{tune.musicCopyright || '-'}</Text>
               </>
             )}
           </FlexItem>

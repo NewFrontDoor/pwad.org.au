@@ -88,15 +88,12 @@ function Nav() {
       direction={['column', 'column', 'row']}
     >
       <NavMenuItem as="li" fontWeight="bold">
-        <Link prefetch href="/">
-          Home
-        </Link>
+        <Link href="/">Home</Link>
       </NavMenuItem>
       {menuMany.map(menu => (
         <NavMenuItem key={menu._id} as="li" fontWeight="bold">
           {menu.link ? (
             <Link
-              prefetch
               href={`/content?page=${menu.link.key}`}
               as={`/content/${menu.link.key}`}
             >
@@ -122,15 +119,11 @@ function Nav() {
             <Link href="/auth/logout">Log out</Link>
           </NavMenuItem>
           <NavMenuItem as="li" fontWeight="bold">
-            <Link prefetch href="/short-list">
-              Short list ({count})
-            </Link>
+            <Link href="/short-list">Short list ({count})</Link>
           </NavMenuItem>
           {isMedium && (
             <NavMenuItem as="li" fontWeight="bold">
-              <Link prefetch href="/my-account">
-                My account
-              </Link>
+              <Link href="/my-account">My account</Link>
             </NavMenuItem>
           )}
           <NavMenuItem as="li">
@@ -140,14 +133,10 @@ function Nav() {
       ) : (
         <>
           <NavMenuItem as="li" fontWeight="bold">
-            <Link prefetch href="/sign-in">
-              Log in
-            </Link>
+            <Link href="/sign-in">Log in</Link>
           </NavMenuItem>
           <NavMenuItem as="li" fontWeight="bold">
-            <Link prefetch href="/create-account">
-              Create account
-            </Link>
+            <Link href="/create-account">Create account</Link>
           </NavMenuItem>
         </>
       )}

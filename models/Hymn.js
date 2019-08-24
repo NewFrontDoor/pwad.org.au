@@ -24,7 +24,7 @@ Hymn.add({
   lyrics: {type: Types.Markdown},
   occasions: {type: Types.Relationship, ref: 'Occasion', many: true},
   title: {type: Types.Text, required: true, index: true, initial: true},
-  tune: {type: Types.Relationship, ref: 'Tune'},
+  tune: {type: Types.Relationship, ref: 'Tune', index: true},
   verses: {type: Types.Text},
   wordsCopyright: {type: Types.Text}
 });
@@ -33,7 +33,7 @@ Hymn.schema
   .virtual('hasWordsCopyright')
   .get(() => !isEmpty(this.wordsCopyright));
 
-Hymn.schema.index({title: 'text'});
+Hymn.schema.index({title: 'text', lyrics: 'text'});
 
 Hymn.schema.pre('save', function(next) {
   this.bookId = findIndex(books, {value: this.book});

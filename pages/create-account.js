@@ -25,10 +25,7 @@ export default class CreateAccount extends React.Component {
       <>
         <CreateAccountForm />
         <Text>
-          Already have an account?{' '}
-          <Link prefetch href="/sign-in">
-            Sign in
-          </Link>
+          Already have an account? <Link href="/sign-in">Sign in</Link>
         </Text>
       </>
     );

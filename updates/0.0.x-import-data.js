@@ -1,10 +1,10 @@
 const fs = require('fs');
-// const util = require('util');
+// Const util = require('util');
 // const stream = require('stream');
 // const {uniqBy} = require('lodash');
 const csv = require('csv/lib/sync');
 const keystone = require('keystone');
-// const got = require('got');
+// Const got = require('got');
 // const {CookieJar} = require('tough-cookie');
 
 // const pipeline = util.promisify(stream.pipeline);
@@ -13,7 +13,7 @@ const Tune = keystone.list('Tune').model;
 const Hymn = keystone.list('Hymn').model;
 const Keyword = keystone.list('Keyword').model;
 
-// keystone.list('Hymn').schema.set('usePushEach', true);
+// Keystone.list('Hymn').schema.set('usePushEach', true);
 
 const data = csv.parse(fs.readFileSync('./import.csv'), {
   columns: true
@@ -31,14 +31,14 @@ function batchPromises(batchSize, collection, callback) {
 }
 
 module.exports = done => {
-  // const cookieJar = new CookieJar();
+  // Const cookieJar = new CookieJar();
   // cookieJar.setCookieSync(
   //   '_hymnbase_session=cookie',
   //   'app.rejoicehymnbase.com.au'
   // );
 
   batchPromises(5, data, async result => {
-    // const newHymn = new Hymn({
+    // Const newHymn = new Hymn({
     //   title: hymn.title,
     //   hymnNumber: hymn.hymn_number ? parseInt(hymn.hymn_number, 10) : 0,
     //   bookId: hymn.book_id ? parseInt(hymn.book_id, 10) : 0,

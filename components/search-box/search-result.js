@@ -5,22 +5,53 @@ import {kebabCase} from 'lodash';
 import Link from '../link';
 import Markdown from '../markdown/markdown';
 
-const SearchResult = ({_id, title, lyrics}) => (
-  <div>
-    <Text>{title}</Text>
-    <Markdown>{lyrics.md}</Markdown>
-    <Link as={`/song/${_id}/${kebabCase(title)}`} href={`/song?id=${_id}`}>
-      View full details
-    </Link>
-  </div>
-);
+const SearchResult = ({_id, __typename, title, lyrics, content}) => {
+  let prefix;
+
+  if (__typename === 'Hymn') {
+    prefix = 'song';
+  }
+
+  if (__typename === 'Prayer') {
+    prefix = 'pray';
+  }
+
+  if (__typename === 'Liturgy') {
+    prefix = 'rejoice';
+  }
+
+  return (
+    <div>
+      <Text>{title}</Text>
+      {lyrics && <Markdown>{lyrics.md}</Markdown>}
+      {content && <Markdown>{content.md}</Markdown>}
+      {prefix && (
+        <Link
+          as={`/${prefix}/${_id}/${kebabCase(title)}`}
+          href={`/${prefix}?id=${_id}`}
+        >
+          View full details
+        </Link>
+      )}
+    </div>
+  );
+};
 
 SearchResult.propTypes = {
   _id: PropTypes.string.isRequired,
+  __typename: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   lyrics: PropTypes.shape({
     md: PropTypes.string.isRequired
-  }).isRequired
+  }),
+  content: PropTypes.shape({
+    md: PropTypes.string.isRequired
+  })
+};
+
+SearchResult.defaultProps = {
+  lyrics: null,
+  content: null
 };
 
 export default SearchResult;

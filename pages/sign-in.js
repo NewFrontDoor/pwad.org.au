@@ -39,10 +39,7 @@ class Signin extends React.Component {
       <>
         <SignInForm redirectPath={redirectPath} />
         <Text>
-          New?{' '}
-          <Link prefetch href="/create-account">
-            Create account
-          </Link>
+          New? <Link href="/create-account">Create account</Link>
         </Text>
       </>
     );

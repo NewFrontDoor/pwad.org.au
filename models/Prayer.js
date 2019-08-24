@@ -18,6 +18,8 @@ Prayer.add({
   categories: {type: Types.Relationship, ref: 'Category', many: true}
 });
 
+Prayer.schema.index({title: 'text', content: 'text'});
+
 transform.toJSON(Prayer);
 Prayer.defaultColumns = 'title';
 Prayer.register();

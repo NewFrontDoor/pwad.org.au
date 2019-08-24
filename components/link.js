@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import NextLink from 'next/link';
 import MineralLink from 'mineral-ui/Link';
 
-const Link = ({as, href, prefetch, ...props}) => {
+const Link = ({as, href, ...props}) => {
   if (href) {
     return (
-      <NextLink passHref prefetch={prefetch} as={as} href={href}>
+      <NextLink passHref as={as} href={href}>
         <MineralLink {...props} />
       </NextLink>
     );
@@ -17,14 +17,12 @@ const Link = ({as, href, prefetch, ...props}) => {
 
 Link.propTypes = {
   as: PropTypes.string,
-  href: PropTypes.string,
-  prefetch: PropTypes.bool
+  href: PropTypes.string
 };
 
 Link.defaultProps = {
   as: undefined,
-  href: undefined,
-  prefetch: false
+  href: undefined
 };
 
 export default Link;

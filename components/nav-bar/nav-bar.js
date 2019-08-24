@@ -139,11 +139,7 @@ function NavBar({theme}) {
             >
               <MenuButton minimal>Menu</MenuButton>
             </MenuPopover>
-            {me && (
-              <Link prefetch href="/my-account">
-                My account
-              </Link>
-            )}
+            {me && <Link href="/my-account">My account</Link>}
           </>
         )}
       </Flex>
