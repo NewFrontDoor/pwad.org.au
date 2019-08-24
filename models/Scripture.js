@@ -15,7 +15,7 @@ Scripture.add({
     options: [{value: 'niv', label: 'NIV'}, {value: 'kjv', label: 'KJV'}]
   },
   copyright: {type: Types.Relationship, ref: 'Copyright'},
-  occasion: {type: Types.Relationship, ref: 'Occasion'},
+  occasions: {type: Types.Relationship, ref: 'Occasion', many: true},
   keywords: {type: Types.Relationship, ref: 'Keyword', many: true}
 });
 

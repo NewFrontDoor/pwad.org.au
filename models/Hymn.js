@@ -12,19 +12,21 @@ const Hymn = new keystone.List('Hymn', {
 });
 
 Hymn.add({
-  hymnNumber: {type: Types.Number, required: true, index: true, initial: true},
-  title: {type: Types.Text, required: true, index: true, initial: true},
-  bookId: {hidden: true, type: Types.Number},
-  book: {emptyOption: true, type: Types.Select, options: books},
-  chapterVerse: {type: Types.Text},
-  lyrics: {type: Types.Markdown},
-  wordsCopyright: {type: Types.Text},
   author: {type: Types.Relationship, ref: 'Author'},
-  tune: {type: Types.Relationship, ref: 'Tune'},
   bio: {type: Types.Markdown},
+  book: {emptyOption: true, type: Types.Select, options: books},
+  bookId: {hidden: true, type: Types.Number},
   chapter: {type: Types.Number},
+  chapterVerse: {type: Types.Text},
+  files: {type: Types.Relationship, ref: 'File', many: true},
+  hymnNumber: {type: Types.Number, required: true, index: true, initial: true},
+  keywords: {type: Types.Relationship, ref: 'Keyword', many: true},
+  lyrics: {type: Types.Markdown},
+  occasions: {type: Types.Relationship, ref: 'Occasion', many: true},
+  title: {type: Types.Text, required: true, index: true, initial: true},
+  tune: {type: Types.Relationship, ref: 'Tune'},
   verses: {type: Types.Text},
-  files: {type: Types.Relationship, ref: 'File', many: true}
+  wordsCopyright: {type: Types.Text}
 });
 
 Hymn.schema

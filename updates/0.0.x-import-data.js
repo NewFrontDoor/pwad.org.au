@@ -10,8 +10,8 @@ const keystone = require('keystone');
 // const pipeline = util.promisify(stream.pipeline);
 
 const Tune = keystone.list('Tune').model;
-const File = keystone.list('File').model;
 const Hymn = keystone.list('Hymn').model;
+const Keyword = keystone.list('Keyword').model;
 
 // keystone.list('Hymn').schema.set('usePushEach', true);
 
@@ -37,7 +37,7 @@ module.exports = done => {
   //   'app.rejoicehymnbase.com.au'
   // );
 
-  batchPromises(5, data, async tune => {
+  batchPromises(5, data, async result => {
     // const newHymn = new Hymn({
     //   title: hymn.title,
     //   hymnNumber: hymn.hymn_number ? parseInt(hymn.hymn_number, 10) : 0,
@@ -100,23 +100,23 @@ module.exports = done => {
     // newFile.set('file', uploaded);
     //
     // return newFile.save();
-    const file = await File.find({
-      name: tune.data_file_name
+    const keyword = await Keyword.findOne({
+      name: result.topicname
     }).exec();
 
-    return Tune.findOneAndUpdate(
+    return Hymn.findOneAndUpdate(
       {
-        title: tune.title
+        title: result.hymntitle
       },
       {
-        title: tune.title,
-        $addToSet: {
-          files: file
+        title: result.hymntitle,
+        $push: {
+          keywords: keyword
         }
-        // },
-        // {
-        //   new: true,
-        //   upsert: true
+      },
+      {
+        new: true,
+        upsert: true
       }
     );
   })

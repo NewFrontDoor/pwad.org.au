@@ -12,7 +12,7 @@ Prayer.add({
   content: {type: Types.Markdown},
   note: {type: Types.Markdown},
   author: {type: Types.Relationship, ref: 'Author'},
-  occasion: {type: Types.Relationship, ref: 'Occasion'},
+  occasions: {type: Types.Relationship, ref: 'Occasion', many: true},
   copyright: {type: Types.Relationship, ref: 'Copyright'},
   keywords: {type: Types.Relationship, ref: 'Keyword', many: true},
   categories: {type: Types.Relationship, ref: 'Category', many: true}

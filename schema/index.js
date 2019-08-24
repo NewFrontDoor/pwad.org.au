@@ -60,7 +60,10 @@ module.exports = keystone => {
     keystone.list('Metre').model,
     defaultOptions
   );
-
+  const OccasionTC = composeWithMongoose(
+    keystone.list('Occasion').model,
+    defaultOptions
+  );
   const PageContentTC = composeWithMongoose(
     keystone.list('PageContent').model,
     defaultOptions
@@ -71,6 +74,14 @@ module.exports = keystone => {
   );
   const FileTC = composeWithMongoose(
     keystone.list('File').model,
+    defaultOptions
+  );
+  const KeywordTC = composeWithMongoose(
+    keystone.list('Keyword').model,
+    defaultOptions
+  );
+  const LiturgyTC = composeWithMongoose(
+    keystone.list('Liturgy').model,
     defaultOptions
   );
 
@@ -134,6 +145,41 @@ module.exports = keystone => {
     }
   });
 
+  OccasionTC.addRelation('parent', {
+    resolver: () => OccasionTC.getResolver('findById'),
+    prepareArgs: {
+      _id: source => source.parent
+    }
+  });
+
+  OccasionTC.addRelation('hymns', {
+    resolver: () => HymnTC.getResolver('findMany'),
+    prepareArgs: {
+      filter: source => ({occasions: source._id})
+    }
+  });
+
+  KeywordTC.addRelation('hymns', {
+    resolver: () => HymnTC.getResolver('findMany'),
+    prepareArgs: {
+      filter: source => ({keywords: source._id})
+    }
+  });
+
+  KeywordTC.addRelation('prayers', {
+    resolver: () => PrayerTC.getResolver('findMany'),
+    prepareArgs: {
+      filter: source => ({keywords: source._id})
+    }
+  });
+
+  KeywordTC.addRelation('liturgies', {
+    resolver: () => LiturgyTC.getResolver('findMany'),
+    prepareArgs: {
+      filter: source => ({keywords: source._id})
+    }
+  });
+
   schemaComposer.Query.addFields({
     me: UserTC.getResolver('me'),
 
@@ -146,6 +192,21 @@ module.exports = keystone => {
     categoryByIds: CategoryTC.getResolver('findByIds'),
     categoryOne: CategoryTC.getResolver('findOne'),
     categoryMany: CategoryTC.getResolver('findMany'),
+
+    occasionById: OccasionTC.getResolver('findById'),
+    occasionByIds: OccasionTC.getResolver('findByIds'),
+    occasionOne: OccasionTC.getResolver('findOne'),
+    occasionMany: OccasionTC.getResolver('findMany'),
+
+    keywordById: KeywordTC.getResolver('findById'),
+    keywordByIds: KeywordTC.getResolver('findByIds'),
+    keywordOne: KeywordTC.getResolver('findOne'),
+    keywordMany: KeywordTC.getResolver('findMany'),
+
+    liturgyById: LiturgyTC.getResolver('findById'),
+    liturgyByIds: LiturgyTC.getResolver('findByIds'),
+    liturgyOne: LiturgyTC.getResolver('findOne'),
+    liturgyMany: LiturgyTC.getResolver('findMany'),
 
     hymnById: HymnTC.getResolver('findById'),
     hymnByIds: HymnTC.getResolver('findByIds'),
