@@ -4,7 +4,11 @@ const {composeWithMongoose} = require('graphql-compose-mongoose');
 const renderMdx = require('../lib/render-mdx');
 const books = require('../lib/books');
 
-function hymnSchema(keystone, {AuthorTC, TuneTC, FileTC, KeywordTC}, options) {
+function hymnSchema(
+  keystone,
+  {AuthorTC, TuneTC, FileTC, KeywordTC, CopyrightTC, OccasionTC},
+  options
+) {
   const HymnTC = composeWithMongoose(keystone.list('Hymn').model, options);
 
   HymnTC.addFields({
@@ -67,12 +71,27 @@ function hymnSchema(keystone, {AuthorTC, TuneTC, FileTC, KeywordTC}, options) {
     projection: {keywords: true}
   });
 
+  HymnTC.addRelation('wordsCopyright', {
+    resolver: () => CopyrightTC.getResolver('findById'),
+    prepareArgs: {
+      _id: source => source.wordsCopyright
+    }
+  });
+
   HymnTC.addRelation('files', {
     resolver: () => FileTC.getResolver('findByIds'),
     prepareArgs: {
       _ids: source => source.files || []
     },
     projection: {files: true}
+  });
+
+  HymnTC.addRelation('occasions', {
+    resolver: () => OccasionTC.getResolver('findByIds'),
+    prepareArgs: {
+      _ids: source => source.occasions || []
+    },
+    projection: {occasions: true}
   });
 
   return HymnTC;

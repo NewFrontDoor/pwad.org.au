@@ -1,11 +1,17 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  query listAll($title: String, $tunes: [MongoID], $book: EnumHymnBook) {
+  query listAll(
+    $title: String
+    $tunes: [MongoID]
+    $occasion: MongoID
+    $book: EnumHymnBook
+  ) {
     hymnMany(
       filter: {
         text_contains: $title
         book: $book
+        occasion: $occasion
         _operators: {tune: {in: $tunes}}
       }
     ) {

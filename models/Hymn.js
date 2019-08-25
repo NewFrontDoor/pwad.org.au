@@ -22,11 +22,16 @@ Hymn.add({
   hymnNumber: {type: Types.Number, required: true, index: true, initial: true},
   keywords: {type: Types.Relationship, ref: 'Keyword', many: true},
   lyrics: {type: Types.Markdown},
-  occasions: {type: Types.Relationship, ref: 'Occasion', many: true},
+  occasions: {
+    type: Types.Relationship,
+    ref: 'Occasion',
+    many: true,
+    index: true
+  },
   title: {type: Types.Text, required: true, index: true, initial: true},
   tune: {type: Types.Relationship, ref: 'Tune', index: true},
   verses: {type: Types.Text},
-  wordsCopyright: {type: Types.Text}
+  wordsCopyright: {type: Types.Relationship, ref: 'Copyright'}
 });
 
 Hymn.schema

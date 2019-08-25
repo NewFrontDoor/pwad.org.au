@@ -129,13 +129,17 @@ function Song({id}) {
               </>
             )}
 
-            <Text as="h3">Copyright (words)</Text>
-            <Text>{wordsCopyright || '-'}</Text>
+            {wordsCopyright && (
+              <>
+                <Text as="h3">Copyright (words)</Text>
+                <Text>{wordsCopyright.name || '-'}</Text>
+              </>
+            )}
 
-            {tune && (
+            {tune && tune.musicCopyright && (
               <>
                 <Text as="h3">Copyright (music)</Text>
-                <Text>{tune.musicCopyright || '-'}</Text>
+                <Text>{tune.musicCopyright.name || '-'}</Text>
               </>
             )}
           </FlexItem>

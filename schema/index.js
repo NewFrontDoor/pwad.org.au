@@ -1,6 +1,9 @@
-const {GraphQLString, GraphQLFloat} = require('graphql');
+const {GraphQLString, GraphQLFloat, GraphQLList} = require('graphql');
 const {schemaComposer} = require('graphql-compose');
-const {composeWithMongoose} = require('graphql-compose-mongoose');
+const {
+  composeWithMongoose,
+  GraphQLMongoID
+} = require('graphql-compose-mongoose');
 const renderMdx = require('../lib/render-mdx');
 const userSchema = require('./user');
 const hymnSchema = require('./hymn');
@@ -26,6 +29,7 @@ const defaultOptions = {
 };
 
 module.exports = keystone => {
+  const {model: Occasion} = keystone.list('Occasion');
   const {model: Prayer} = keystone.list('Prayer');
   const {model: Liturgy} = keystone.list('Liturgy');
 
@@ -54,10 +58,7 @@ module.exports = keystone => {
     keystone.list('Metre').model,
     defaultOptions
   );
-  const OccasionTC = composeWithMongoose(
-    keystone.list('Occasion').model,
-    defaultOptions
-  );
+  const OccasionTC = composeWithMongoose(Occasion, defaultOptions);
   const PageContentTC = composeWithMongoose(
     keystone.list('PageContent').model,
     defaultOptions
@@ -74,12 +75,16 @@ module.exports = keystone => {
     keystone.list('Keyword').model,
     defaultOptions
   );
+  const CopyrightTC = composeWithMongoose(
+    keystone.list('Copyright').model,
+    defaultOptions
+  );
   const LiturgyTC = composeWithMongoose(Liturgy, defaultOptions);
 
   const UserTC = userSchema(keystone, defaultOptions);
   const HymnTC = hymnSchema(
     keystone,
-    {AuthorTC, TuneTC, FileTC, MetreTC, KeywordTC},
+    {AuthorTC, TuneTC, FileTC, KeywordTC, CopyrightTC, OccasionTC},
     defaultOptions
   );
 
@@ -223,6 +228,60 @@ module.exports = keystone => {
     }
   });
 
+  TuneTC.addRelation('musicCopyright', {
+    resolver: () => CopyrightTC.getResolver('findById'),
+    prepareArgs: {
+      _id: source => source.musicCopyright
+    }
+  });
+
+  PrayerTC.addRelation('copyright', {
+    resolver: () => CopyrightTC.getResolver('findById'),
+    prepareArgs: {
+      _id: source => source.copyright
+    }
+  });
+
+  LiturgyTC.addRelation('copyright', {
+    resolver: () => CopyrightTC.getResolver('findById'),
+    prepareArgs: {
+      _id: source => source.copyright
+    }
+  });
+
+  const OccasionGroupedByIdTC = schemaComposer.createObjectTC({
+    name: 'OccasionGroupedById',
+    fields: {
+      _id: {type: GraphQLMongoID},
+      name: {type: GraphQLString},
+      values: {type: new GraphQLList(OccasionTC.getType())}
+    }
+  });
+
+  OccasionTC.addResolver({
+    name: 'occasionManyGroupById',
+    type: [OccasionGroupedByIdTC],
+    async resolve() {
+      return Occasion.aggregate()
+        .lookup({
+          from: 'occasions',
+          localField: 'parent',
+          foreignField: '_id',
+          as: 'group'
+        })
+        .unwind({
+          path: '$group',
+          preserveNullAndEmptyArrays: true
+        })
+        .group({
+          _id: '$group._id',
+          name: {$first: '$group.name'},
+          values: {$push: {name: '$name', _id: '$_id'}}
+        })
+        .exec();
+    }
+  });
+
   schemaComposer.Query.addFields({
     me: UserTC.getResolver('me'),
 
@@ -240,6 +299,7 @@ module.exports = keystone => {
     occasionByIds: OccasionTC.getResolver('findByIds'),
     occasionOne: OccasionTC.getResolver('findOne'),
     occasionMany: OccasionTC.getResolver('findMany'),
+    occasionManyGroupById: OccasionTC.getResolver('occasionManyGroupById'),
 
     keywordById: KeywordTC.getResolver('findById'),
     keywordByIds: KeywordTC.getResolver('findByIds'),
@@ -274,17 +334,25 @@ module.exports = keystone => {
     hymnById: HymnTC.getResolver('findById'),
     hymnByIds: HymnTC.getResolver('findByIds'),
     hymnOne: HymnTC.getResolver('findOne'),
-    hymnMany: HymnTC.getResolver('findMany').addFilterArg({
-      name: 'text_contains',
-      type: GraphQLString,
-      query: (query, value, resolveParams) => {
-        query.$text = {$search: value};
-        resolveParams.args.sort = {
-          score: {$meta: 'textScore'}
-        };
-        resolveParams.projection.score = {$meta: 'textScore'};
-      }
-    }),
+    hymnMany: HymnTC.getResolver('findMany')
+      .addFilterArg({
+        name: 'text_contains',
+        type: GraphQLString,
+        query: (query, value, resolveParams) => {
+          query.$text = {$search: value};
+          resolveParams.args.sort = {
+            score: {$meta: 'textScore'}
+          };
+          resolveParams.projection.score = {$meta: 'textScore'};
+        }
+      })
+      .addFilterArg({
+        name: 'occasion',
+        type: GraphQLMongoID,
+        query: (query, value) => {
+          query.occasions = value;
+        }
+      }),
 
     scriptureMany: ScriptureTC.getResolver('findMany').addFilterArg({
       name: 'text_contains',

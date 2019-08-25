@@ -1,5 +1,6 @@
 const keystone = require('keystone');
 const transform = require('model-transform');
+const {isEmpty} = require('lodash');
 
 const {Types} = keystone.Field;
 
@@ -15,9 +16,12 @@ Tune.add({
   metre: {type: Types.Relationship, ref: 'Metre'},
   composer: {type: Types.Relationship, ref: 'Author'},
   files: {type: Types.Relationship, ref: 'File', many: true},
-  musicCopyright: {type: Types.Text},
-  hasMusicCopyright: {type: Types.Boolean}
+  musicCopyright: {type: Types.Relationship, ref: 'Copyright'}
 });
+
+Tune.schema
+  .virtual('hasWordsCopyright')
+  .get(() => !isEmpty(this.wordsCopyright));
 
 transform.toJSON(Tune);
 Tune.defaultColumns = 'title, composer, metre, musicCopyright';

@@ -6,7 +6,9 @@ export default gql`
       title
       hymnNumber
       scripture
-      wordsCopyright
+      wordsCopyright {
+        name
+      }
       lyrics {
         md
       }
@@ -20,7 +22,9 @@ export default gql`
       }
       tune {
         title
-        musicCopyright
+        musicCopyright {
+          name
+        }
         composer {
           _id
           name {

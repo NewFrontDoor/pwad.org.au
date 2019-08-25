@@ -13,6 +13,7 @@ import SearchResult from './search-result';
 import SearchMetreInput from './search-metre-input';
 import SearchTuneInput from './search-tune-input';
 import SearchPassageInput from './search-passage-input';
+import SearchOccasionInput from './search-occasion-input';
 
 const initialState = {
   showSearchResults: false,
@@ -23,6 +24,7 @@ const initialState = {
 function reducer(state, action) {
   let tunes;
   let book;
+  let occasion;
 
   switch (action.type) {
     case 'toggle-how-to-search':
@@ -38,6 +40,10 @@ function reducer(state, action) {
         book = action.fields.passage.value;
       }
 
+      if (action.fields.occasion) {
+        occasion = action.fields.occasion.value;
+      }
+
       if (action.fields.tune) {
         if (tunes) {
           tunes.push(action.fields.tune.value);
@@ -51,6 +57,7 @@ function reducer(state, action) {
         ...pickBy(
           {
             ...action.fields,
+            occasion,
             book,
             tunes
           },
@@ -139,6 +146,7 @@ function SearchBox() {
           hymnMetres: [],
           search: '',
           title: '',
+          occasion: '',
           tune: null,
           passage: null
         }}
@@ -223,6 +231,13 @@ function SearchBox() {
                     input={SearchPassageInput}
                     label="Passage"
                     name="passage"
+                  />
+                </Box>
+                <Box marginBottom="1em">
+                  <FormField
+                    input={SearchOccasionInput}
+                    label="Occasion"
+                    name="occasion"
                   />
                 </Box>
                 <Box marginBottom="1em">

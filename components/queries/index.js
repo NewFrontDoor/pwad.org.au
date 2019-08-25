@@ -8,6 +8,7 @@ export {default as ADVANCED_SEARCH} from './advanced-search';
 export {default as TEXT_SEARCH} from './text-search';
 export {default as PAGE_CONTENT} from './page-content';
 export {default as FIND_ONE_HYMN} from './find-one-hymn';
+export {default as FIND_OCCASION} from './find-occasion';
 export {default as FIND_PRAYER_CONTENTS} from './find-prayer-contents';
 export {default as FIND_ONE_PRAYER} from './find-one-prayer';
 export {default as FIND_ONE_AUTHOR} from './find-one-author';
