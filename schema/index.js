@@ -81,12 +81,13 @@ module.exports = keystone => {
   );
   const LiturgyTC = composeWithMongoose(Liturgy, defaultOptions);
 
-  const UserTC = userSchema(keystone, defaultOptions);
   const HymnTC = hymnSchema(
     keystone,
     {AuthorTC, TuneTC, FileTC, KeywordTC, CopyrightTC, OccasionTC},
     defaultOptions
   );
+
+  const UserTC = userSchema(keystone, {HymnTC}, defaultOptions);
 
   ScriptureTC.addNestedFields(renderMdx('content.md')).addFields({
     score: {
@@ -406,7 +407,10 @@ module.exports = keystone => {
     createUser: UserTC.getResolver('createUser'),
     loginUser: UserTC.getResolver('loginUser'),
     changePassword: UserTC.getResolver('changePassword'),
-    changeFreeAccount: UserTC.getResolver('changeFreeAccount')
+    changeFreeAccount: UserTC.getResolver('changeFreeAccount'),
+
+    addShortListItem: UserTC.getResolver('addShortListItem'),
+    removeShortListItem: UserTC.getResolver('removeShortListItem')
   });
 
   const schema = schemaComposer.buildSchema();

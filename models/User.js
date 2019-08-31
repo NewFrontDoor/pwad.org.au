@@ -25,6 +25,10 @@ User.add(
     googleProviderId: {type: Types.Text, noedit: true},
     password: {type: Types.Password, initial: true, required: false}
   },
+  'Short List',
+  {
+    hymns: {type: Types.Relationship, ref: 'Hymn', many: true}
+  },
   'Permissions',
   {
     isProtected: {type: Boolean, noedit: true},

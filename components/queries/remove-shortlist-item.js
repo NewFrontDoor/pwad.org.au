@@ -1,16 +1,9 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  {
-    me {
+  mutation removeShortListItem($hymn: MongoID) {
+    removeShortListItem(hymn: $hymn) {
       _id
-      hasPaidAccount
-      hasFreeAccount
-      profilePhoto
-      name {
-        first
-        last
-      }
       shortlist {
         _id
         title

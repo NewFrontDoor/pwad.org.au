@@ -1,14 +1,17 @@
 const {strict: assert} = require('assert');
 const {get} = require('lodash');
-const {GraphQLBoolean} = require('graphql');
-const {composeWithMongoose} = require('graphql-compose-mongoose');
+const {GraphQLBoolean, GraphQLString} = require('graphql');
+const {
+  composeWithMongoose,
+  GraphQLMongoID
+} = require('graphql-compose-mongoose');
 
-function userSchema(keystone, options) {
+function userSchema(keystone, {HymnTC}, options) {
   const {model: UserModel} = keystone.list('User');
   const UserTC = composeWithMongoose(UserModel, {
     ...options,
     fields: {
-      remove: ['email', 'password']
+      remove: ['email', 'password', 'hash', 'salt', 'googleProviderId']
     }
   });
 
@@ -19,6 +22,14 @@ function userSchema(keystone, options) {
     hasPaidAccount: {
       type: GraphQLBoolean
     }
+  });
+
+  UserTC.addRelation('shortlist', {
+    resolver: () => HymnTC.getResolver('findByIds'),
+    prepareArgs: {
+      _ids: source => source.hymns || []
+    },
+    projection: {hymns: true}
   });
 
   UserTC.addResolver({
@@ -34,11 +45,11 @@ function userSchema(keystone, options) {
     name: 'createUser',
     type: UserTC,
     args: {
-      firstName: 'String!',
-      lastName: 'String!',
-      email: 'String!',
-      password: 'String!',
-      confirmPassword: 'String!'
+      firstName: GraphQLString,
+      lastName: GraphQLString,
+      email: GraphQLString,
+      password: GraphQLString,
+      confirmPassword: GraphQLString
     },
     async resolve({args, context}) {
       const {firstName, lastName, email, password, confirmPassword} = args;
@@ -66,8 +77,8 @@ function userSchema(keystone, options) {
     name: 'loginUser',
     type: UserTC,
     args: {
-      email: 'String!',
-      password: 'String!'
+      email: GraphQLString,
+      password: GraphQLString
     },
     async resolve({args, context}) {
       const {email, password} = args;
@@ -114,9 +125,9 @@ function userSchema(keystone, options) {
     name: 'changePassword',
     type: UserTC,
     args: {
-      password: 'String!',
-      newPassword: 'String!',
-      confirmPassword: 'String!'
+      password: GraphQLString,
+      newPassword: GraphQLString,
+      confirmPassword: GraphQLString
     },
     async resolve({args, context}) {
       const {user} = context;
@@ -129,6 +140,38 @@ function userSchema(keystone, options) {
       );
       await user.changePassword(password, newPassword);
       return user;
+    }
+  });
+
+  UserTC.addResolver({
+    name: 'addShortListItem',
+    type: UserTC,
+    args: {
+      hymn: GraphQLMongoID
+    },
+    async resolve({args, context}) {
+      const {user} = context;
+      const {hymn} = args;
+
+      user.hymns.push(hymn);
+      console.log(user.hymns);
+      return user.save();
+    }
+  });
+
+  UserTC.addResolver({
+    name: 'removeShortListItem',
+    type: UserTC,
+    args: {
+      hymn: GraphQLMongoID
+    },
+    async resolve({args, context}) {
+      const {user} = context;
+      const {hymn} = args;
+
+      user.hymns.pull(hymn);
+      console.log(user.hymns);
+      return user.save();
     }
   });
 

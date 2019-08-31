@@ -73,7 +73,6 @@ const Spacer = styled('li')({
 });
 
 function Nav() {
-  const count = 0;
   const isMedium = useMediumMedia();
 
   const {
@@ -123,7 +122,7 @@ function Nav() {
             <Link href="/auth/logout">Log out</Link>
           </NavMenuItem>
           <NavMenuItem as="li" fontWeight="bold">
-            <Link href="/short-list">Short list ({count})</Link>
+            <Link href="/short-list">Short list ({me.shortlist.length})</Link>
           </NavMenuItem>
           {isMedium && (
             <NavMenuItem as="li" fontWeight="bold">

@@ -9,6 +9,7 @@ import Box from 'mineral-ui/Box';
 import Button from 'mineral-ui/Button';
 import Link, {keywordLinkProps} from '../link';
 import Markdown from '../markdown/markdown';
+import ShortListButton from '../shortlist-button';
 
 const noList = css`
   list-style: none;
@@ -37,7 +38,8 @@ const SearchResult = ({_id, __typename, title, lyrics, keywords, content}) => {
           href={`/${prefix}/[id]/[name]`}
         >
           {title}
-        </Link>
+        </Link>{' '}
+        <ShortListButton hymn={{_id}} />
       </Text>
       {lyrics && <Markdown>{lyrics.md}</Markdown>}
       {content && <Markdown>{content.md}</Markdown>}
