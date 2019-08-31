@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {has} from 'lodash';
+import has from 'lodash/has';
 import {getIn, Field} from 'formik';
 import {FormField as MineralFormField} from 'mineral-ui/Form';
 

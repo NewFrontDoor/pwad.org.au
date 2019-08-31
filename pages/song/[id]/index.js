@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/react-hooks';
-import {kebabCase} from 'lodash';
 import prettyBytes from 'pretty-bytes';
 import Text from 'mineral-ui/Text';
 import Flex, {FlexItem} from 'mineral-ui/Flex';
@@ -9,41 +8,17 @@ import Flex, {FlexItem} from 'mineral-ui/Flex';
 import withApollo from '../../../lib/with-apollo-client';
 
 import PageLayout from '../../../components/page-layout';
-import Link from '../../../components/link';
+import Link, {authorLinkProps} from '../../../components/link';
 import Markdown from '../../../components/markdown/markdown';
 import {FIND_ONE_HYMN} from '../../../components/queries';
 
-function Author({_id, name, dates}) {
-  const fullName = `${name.first} ${name.last}`;
-  return (
-    <Text>
-      <Link
-        as={`/author/${_id}/${kebabCase(fullName)}`}
-        href="/author/[id]/[name]"
-      >
-        {fullName} {dates && `(${dates})`}
-      </Link>
-    </Text>
-  );
-}
-
-Author.propTypes = {
-  _id: PropTypes.string.isRequired,
-  name: PropTypes.shape({
-    first: PropTypes.string,
-    last: PropTypes.string
-  }),
-  dates: PropTypes.string
-};
-
-Author.defaultProps = {
-  name: {},
-  dates: undefined
-};
-
 function Composer(props) {
   if (props.name) {
-    return <Author {...props} />;
+    return (
+      <Text>
+        <Link {...authorLinkProps(props)} />
+      </Text>
+    );
   }
 
   return <Text>No Composer</Text>;
@@ -108,7 +83,9 @@ function Song({id}) {
             {author && (
               <>
                 <Text as="h3">Hymn Author</Text>
-                <Author {...author} />
+                <Text>
+                  <Link {...authorLinkProps(author)} />
+                </Text>
               </>
             )}
 

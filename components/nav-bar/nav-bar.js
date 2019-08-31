@@ -95,7 +95,7 @@ function NavBar({theme}) {
   } = useQuery(ME);
 
   useEffect(() => {
-    // if (this.state.isMenuOpen && !prevState.isMenuOpen) {
+    // If (this.state.isMenuOpen && !prevState.isMenuOpen) {
     //   const {current} = this.menuRef;
     //   const {height: menuHeight} = current.getBoundingClientRect();
     //   // eslint-disable-next-line react/no-did-update-set-state
@@ -103,7 +103,7 @@ function NavBar({theme}) {
     // }
   });
 
-  const isMedium = useMediumMedia('medium');
+  const isMedium = useMediumMedia();
 
   return (
     <Root isMenuOpen={isMenuOpen} menuHeight={menuHeight} theme={theme}>

@@ -1,6 +1,7 @@
 import React, {useReducer} from 'react';
 import PropTypes from 'prop-types';
-import {pickBy, identity} from 'lodash';
+import identity from 'lodash/identity';
+import pickBy from 'lodash/pickBy';
 import {useQuery} from '@apollo/react-hooks';
 import Box from 'mineral-ui/Box';
 import Flex, {FlexItem} from 'mineral-ui/Flex';
@@ -15,6 +16,7 @@ import SearchMetreInput from './search-metre-input';
 import SearchTuneInput from './search-tune-input';
 import SearchPassageInput from './search-passage-input';
 import SearchOccasionInput from './search-occasion-input';
+import SearchKeywordInput from './search-keyword-input';
 
 const initialState = {
   showSearchResults: false,
@@ -23,6 +25,7 @@ const initialState = {
 };
 
 function reducer(state, action) {
+  let keywords;
   let tunes;
   let book;
   let occasion;
@@ -53,6 +56,10 @@ function reducer(state, action) {
         }
       }
 
+      if (action.fields.keyword) {
+        keywords = [action.fields.keyword.value];
+      }
+
       return {
         ...state,
         ...pickBy(
@@ -60,7 +67,8 @@ function reducer(state, action) {
             ...action.fields,
             occasion,
             book,
-            tunes
+            tunes,
+            keywords
           },
           identity
         ),
@@ -160,6 +168,7 @@ function SearchBox() {
           search: '',
           title: '',
           occasion: '',
+          keyword: '',
           tune: null,
           passage: null
         }}
@@ -251,6 +260,13 @@ function SearchBox() {
                     input={SearchOccasionInput}
                     label="Occasion"
                     name="occasion"
+                  />
+                </Box>
+                <Box marginBottom="1em">
+                  <FormField
+                    input={SearchKeywordInput}
+                    label="Keyword"
+                    name="keyword"
                   />
                 </Box>
                 <Box marginBottom="1em">

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/react-hooks';
 import {kebabCase} from 'lodash';
+import Text from 'mineral-ui/Text';
 
 import withApollo from '../../../lib/with-apollo-client';
 
@@ -38,7 +39,7 @@ function Pray({id}) {
 
   return (
     <PageLayout>
-      <ul>
+      <Text as="ul">
         {prayerMany.map(({_id, title}) => (
           <li key={_id}>
             <Link
@@ -49,7 +50,7 @@ function Pray({id}) {
             </Link>
           </li>
         ))}
-      </ul>
+      </Text>
       <Markdown>{prayerById.content.md}</Markdown>
     </PageLayout>
   );

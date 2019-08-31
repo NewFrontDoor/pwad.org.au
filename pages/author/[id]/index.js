@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/react-hooks';
-import {kebabCase} from 'lodash';
 import Text from 'mineral-ui/Text';
 
 import withApollo from '../../../lib/with-apollo-client';
 
 import PageLayout from '../../../components/page-layout';
-import Link from '../../../components/link';
+import Link, {hymnLinkProps} from '../../../components/link';
 import {FIND_ONE_AUTHOR} from '../../../components/queries';
 
 function Author({id}) {
@@ -35,14 +34,9 @@ function Author({id}) {
           </Text>
           <Text as="h3">Hymns</Text>
           <Text as="ul">
-            {authorById.hymns.map(({_id, hymnNumber, title}) => (
-              <li key={_id}>
-                <Link
-                  as={`/song/${_id}/${kebabCase(title)}`}
-                  href="/song/[id]/[name]"
-                >
-                  {hymnNumber}. {title}
-                </Link>
+            {authorById.hymns.map(hymn => (
+              <li key={hymn._id}>
+                <Link {...hymnLinkProps(hymn)} />
               </li>
             ))}
           </Text>

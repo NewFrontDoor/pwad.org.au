@@ -370,7 +370,7 @@ module.exports = keystone => {
     tuneByIds: TuneTC.getResolver('findByIds'),
     tuneOne: TuneTC.getResolver('findOne'),
     tuneMany: TuneTC.getResolver('findMany').addFilterArg({
-      name: 'tune_contains',
+      name: 'text_contains',
       type: GraphQLString,
       query: (query, value) => {
         query.title = {$regex: value, $options: '$i'};

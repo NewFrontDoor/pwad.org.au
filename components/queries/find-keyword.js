@@ -1,15 +1,15 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  query findTune($title: String, $skip: Int, $limit: Int) {
-    tuneMany(
+  query findKeyword($title: String, $skip: Int, $limit: Int) {
+    keywordMany(
       filter: {text_contains: $title}
       limit: $limit
       skip: $skip
-      sort: TITLE_ASC
+      sort: NAME_ASC
     ) {
       _id
-      title
+      name
     }
   }
 `;

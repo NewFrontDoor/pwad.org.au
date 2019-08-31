@@ -5,6 +5,7 @@ export default gql`
     $title: String
     $tunes: [MongoID]
     $occasion: MongoID
+    $keywords: [MongoID]
     $book: EnumHymnBook
   ) {
     hymnMany(
@@ -12,6 +13,7 @@ export default gql`
         text_contains: $title
         book: $book
         occasion: $occasion
+        keywords: $keywords
         _operators: {tune: {in: $tunes}}
       }
     ) {
@@ -19,23 +21,35 @@ export default gql`
       title
       score
       lyrics {
-        md(truncate: 120)
+        md(truncate: 60)
+      }
+      keywords(limit: 3) {
+        _id
+        name
       }
     }
-    prayerMany(filter: {text_contains: $title}) {
+    prayerMany(filter: {text_contains: $title, keywords: $keywords}) {
       _id
       title
       score
       content {
-        md(truncate: 120)
+        md(truncate: 60)
+      }
+      keywords(limit: 3) {
+        _id
+        name
       }
     }
-    liturgyMany(filter: {text_contains: $title}) {
+    liturgyMany(filter: {text_contains: $title, keywords: $keywords}) {
       _id
       title
       score
       content {
-        md(truncate: 120)
+        md(truncate: 60)
+      }
+      keywords(limit: 3) {
+        _id
+        name
       }
     }
   }

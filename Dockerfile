@@ -1,5 +1,5 @@
 # small server
-FROM node:8.16.0-alpine
+FROM node:10.16.3-alpine
 
 MAINTAINER v100it Team "it@vision100.org"
 

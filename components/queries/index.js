@@ -12,5 +12,7 @@ export {default as FIND_OCCASION} from './find-occasion';
 export {default as FIND_PRAYER_CONTENTS} from './find-prayer-contents';
 export {default as FIND_ONE_PRAYER} from './find-one-prayer';
 export {default as FIND_ONE_AUTHOR} from './find-one-author';
+export {default as FIND_ONE_KEYWORD} from './find-one-keyword';
 export {default as FIND_METRE} from './find-metre';
 export {default as FIND_TUNE} from './find-tune';
+export {default as FIND_KEYWORD} from './find-keyword';

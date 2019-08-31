@@ -7,7 +7,11 @@ export default gql`
       title
       score
       lyrics {
-        md(truncate: 120)
+        md(truncate: 60)
+      }
+      keywords(limit: 3) {
+        _id
+        name
       }
     }
     prayerMany(filter: {text_contains: $search}) {
@@ -15,7 +19,11 @@ export default gql`
       title
       score
       content {
-        md(truncate: 120)
+        md(truncate: 60)
+      }
+      keywords(limit: 3) {
+        _id
+        name
       }
     }
     liturgyMany(filter: {text_contains: $search}) {
@@ -23,7 +31,11 @@ export default gql`
       title
       score
       content {
-        md(truncate: 120)
+        md(truncate: 60)
+      }
+      keywords(limit: 3) {
+        _id
+        name
       }
     }
   }
