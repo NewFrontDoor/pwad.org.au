@@ -2,9 +2,12 @@ node_modules
 coverage
 .next
 .nyc_output
-data
 out
 config/local*
+
+# mongodb
+data
+dump
 
 # misc
 *.sql

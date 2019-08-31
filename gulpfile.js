@@ -1,8 +1,10 @@
 const {pipeline} = require('stream');
 const del = require('del');
+const dargs = require('dargs');
+const flatten = require('lodash/flatten');
 const {series, src, dest, parallel} = require('gulp');
 const nodemon = require('gulp-nodemon');
-const {task} = require('gulp-execa');
+const gulpExeca = require('gulp-execa');
 const responsive = require('gulp-responsive');
 const execa = require('execa');
 const dotenv = require('dotenv');
@@ -15,6 +17,10 @@ const config = dotenv.config();
 const env = Object.assign(now.env, config.parsed);
 
 let pinoColada;
+
+function task(...args) {
+  return gulpExeca.task(flatten(args).join(' '));
+}
 
 async function server(done) {
   await waitForLocalhost({port: 27017, useGet: true});
@@ -40,7 +46,14 @@ async function server(done) {
   });
 }
 
-const mongo = task('docker-compose up -d mongo');
+const mongo = task(
+  'docker-compose',
+  'up',
+  dargs({
+    _: ['mongo'],
+    detach: true
+  })
+);
 
 const x1 = {suffix: '@1x'};
 
@@ -127,6 +140,35 @@ function images(done) {
 function cleanImages() {
   return del('static/banners');
 }
+
+const prodDump = task(
+  'mongodump',
+  dargs({
+    uri: env.MONGO_URI
+  })
+);
+
+const localRestore = task(
+  'mongorestore',
+  dargs(
+    {
+      drop: true,
+      uri: 'mongodb://localhost:27017/pwad',
+      nsFrom: 'pwad-stage.*',
+      nsTo: 'pwad.*'
+    },
+    {
+      allowCamelCase: true
+    }
+  )
+);
+
+const devRestore = series(mongo, localRestore);
+
+exports.prodDump = prodDump;
+exports.devRestore = devRestore;
+
+exports.prodcopy = series(prodDump, devRestore);
 
 exports.compose = parallel(mongo, server);
 
