@@ -4,6 +4,9 @@ import {useQuery} from '@apollo/react-hooks';
 import {kebabCase} from 'lodash';
 import Text from 'mineral-ui/Text';
 
+import withApollo from '../../../lib/with-apollo-client';
+
+import PageLayout from '../../../components/page-layout';
 import Link from '../../../components/link';
 import {FIND_ONE_AUTHOR} from '../../../components/queries';
 
@@ -17,7 +20,7 @@ function Author({id}) {
   });
 
   return (
-    <>
+    <PageLayout>
       <Text as="h1" fontWeight="extraBold">
         Public Worship and Aids to Devotion Committee Website
       </Text>
@@ -36,7 +39,7 @@ function Author({id}) {
               <li key={_id}>
                 <Link
                   as={`/song/${_id}/${kebabCase(title)}`}
-                  href={`/song?id=${_id}`}
+                  href="/song/[id]/[name]"
                 >
                   {hymnNumber}. {title}
                 </Link>
@@ -45,7 +48,7 @@ function Author({id}) {
           </Text>
         </>
       )}
-    </>
+    </PageLayout>
   );
 }
 
@@ -57,4 +60,4 @@ Author.propTypes = {
   id: PropTypes.string.isRequired
 };
 
-export default Author;
+export default withApollo(Author);

@@ -28,7 +28,7 @@ const SearchResult = ({_id, __typename, title, lyrics, content}) => {
       {prefix && (
         <Link
           as={`/${prefix}/${_id}/${kebabCase(title)}`}
-          href={`/${prefix}?id=${_id}`}
+          href={`/${prefix}/[id]/[name]`}
         >
           View full details
         </Link>

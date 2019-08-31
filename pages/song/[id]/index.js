@@ -6,6 +6,9 @@ import prettyBytes from 'pretty-bytes';
 import Text from 'mineral-ui/Text';
 import Flex, {FlexItem} from 'mineral-ui/Flex';
 
+import withApollo from '../../../lib/with-apollo-client';
+
+import PageLayout from '../../../components/page-layout';
 import Link from '../../../components/link';
 import Markdown from '../../../components/markdown/markdown';
 import {FIND_ONE_HYMN} from '../../../components/queries';
@@ -16,7 +19,7 @@ function Author({_id, name, dates}) {
     <Text>
       <Link
         as={`/author/${_id}/${kebabCase(fullName)}`}
-        href={`/author?id=${_id}`}
+        href="/author/[id]/[name]"
       >
         {fullName} {dates && `(${dates})`}
       </Link>
@@ -75,7 +78,7 @@ function Song({id}) {
   } = hymnById || {};
 
   return (
-    <>
+    <PageLayout>
       <Text as="h1" fontWeight="extraBold">
         Public Worship and Aids to Devotion Committee Website
       </Text>
@@ -151,7 +154,7 @@ function Song({id}) {
           </FlexItem>
         </Flex>
       )}
-    </>
+    </PageLayout>
   );
 }
 
@@ -163,4 +166,4 @@ Song.propTypes = {
   id: PropTypes.string.isRequired
 };
 
-export default Song;
+export default withApollo(Song);

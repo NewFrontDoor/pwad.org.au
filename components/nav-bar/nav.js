@@ -18,18 +18,24 @@ const noList = css`
   list-style: none;
 `;
 
-const DropdownItem = ({name, url, file, content}) => {
+const DropdownItem = ({name, url, file, type, content}) => {
   let as;
-  let href = file ? file.url : url;
+  let internal = true;
+  let href = url;
+
+  if (type === 'file') {
+    internal = false;
+    href = file.url;
+  }
 
   if (content) {
-    href = `/content?page=${content.key}`;
+    href = `/content/[page]`;
     as = `/content/${content.key}`;
   }
 
   return (
     <Box padding="md">
-      <Link href={href} as={as}>
+      <Link href={href} as={as} internal={internal}>
         {name}
       </Link>
     </Box>
@@ -38,6 +44,7 @@ const DropdownItem = ({name, url, file, content}) => {
 
 DropdownItem.propTypes = {
   name: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
   url: PropTypes.string,
   file: PropTypes.shape({
     url: PropTypes.string.isRequired
@@ -93,10 +100,7 @@ function Nav() {
       {menuMany.map(menu => (
         <NavMenuItem key={menu._id} as="li" fontWeight="bold">
           {menu.link ? (
-            <Link
-              href={`/content?page=${menu.link.key}`}
-              as={`/content/${menu.link.key}`}
-            >
+            <Link href="/content/[page]" as={`/content/${menu.link.key}`}>
               {menu.link.name}
             </Link>
           ) : (

@@ -1,9 +1,16 @@
 import React from 'react';
+import withApollo from '../lib/with-apollo-client';
+
+import PageLayout from '../components/page-layout';
 
 class ShortList extends React.Component {
   render() {
-    return <div />;
+    return (
+      <PageLayout>
+        <div />
+      </PageLayout>
+    );
   }
 }
 
-export default ShortList;
+export default withApollo(ShortList);

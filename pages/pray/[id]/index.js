@@ -2,6 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/react-hooks';
 import {kebabCase} from 'lodash';
+
+import withApollo from '../../../lib/with-apollo-client';
+
+import PageLayout from '../../../components/page-layout';
 import Link from '../../../components/link';
 import Markdown from '../../../components/markdown/markdown';
 import {
@@ -33,13 +37,13 @@ function Pray({id}) {
   }
 
   return (
-    <>
+    <PageLayout>
       <ul>
         {prayerMany.map(({_id, title}) => (
           <li key={_id}>
             <Link
               as={`/pray/${_id}/${kebabCase(title)}`}
-              href={`/pray?id=${_id}`}
+              href="/pray/[id]/[name]"
             >
               {title}
             </Link>
@@ -47,7 +51,7 @@ function Pray({id}) {
         ))}
       </ul>
       <Markdown>{prayerById.content.md}</Markdown>
-    </>
+    </PageLayout>
   );
 }
 
@@ -63,4 +67,4 @@ Pray.getInitialProps = function({query: {id}}) {
   return {id};
 };
 
-export default Pray;
+export default withApollo(Pray);

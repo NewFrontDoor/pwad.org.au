@@ -105,6 +105,24 @@ Bible.propTypes = {
   passage: PropTypes.string.isRequired
 };
 
+const pages = {
+  author: '/author/[id]/[name]',
+  content: '/content/[page]',
+  pray: '/pray/[id]/[name]',
+  song: '/song/[id]/[name]'
+};
+
+function parseLink({href, ...rest}) {
+  const result = href.match(/^\/(author|content|pray|song)\/.+/);
+  const [, page] = result || [];
+  return {
+    ...rest,
+    as: href,
+    href: pages[page] || href,
+    internal: Boolean(result)
+  };
+}
+
 const components = {
   Background,
   Bible,
@@ -115,7 +133,7 @@ const components = {
   h4: props => <Text as="h4" {...props} />,
   h5: props => <Text as="h5" {...props} />,
   h6: props => <Text as="h6" {...props} />,
-  a: props => <Link {...props} />,
+  a: props => <Link {...parseLink(props)} />,
   blockquote: Blockquote,
   img: props => (
     <img

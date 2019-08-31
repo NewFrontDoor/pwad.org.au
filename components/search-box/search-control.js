@@ -1,4 +1,5 @@
 import React, {useReducer} from 'react';
+import PropTypes from 'prop-types';
 import {pickBy, identity} from 'lodash';
 import {useQuery} from '@apollo/react-hooks';
 import Box from 'mineral-ui/Box';
@@ -98,6 +99,10 @@ function TextSearch({search}) {
   return <Text appearance="prose">No results found...</Text>;
 }
 
+TextSearch.propTypes = {
+  search: PropTypes.object.isRequired
+};
+
 function AdvancedSearch({search}) {
   const {
     loading,
@@ -126,12 +131,20 @@ function AdvancedSearch({search}) {
   return <Text appearance="prose">No results found...</Text>;
 }
 
+AdvancedSearch.propTypes = {
+  search: PropTypes.object.isRequired
+};
+
 function SearchBox() {
   const isMedium = useMediumMedia();
-  const [
-    {showHowToSearch, showAdvancedSeach, showSearchResults, ...search},
-    dispatch
-  ] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  const {
+    showHowToSearch,
+    showAdvancedSeach,
+    showSearchResults,
+    ...search
+  } = state;
 
   return (
     <>

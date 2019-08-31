@@ -3,10 +3,12 @@ import {useQuery} from '@apollo/react-hooks';
 import Text from 'mineral-ui/Text';
 import Flex, {FlexItem} from 'mineral-ui/Flex';
 
+import PageLayout from '../components/page-layout';
 import Logo from '../components/logo';
 import ManageAccountForm from '../components/account/manage-account-form';
 import redirect, {buildUrl} from '../lib/redirect';
 import checkLoggedIn from '../lib/check-logged-in';
+import withApollo from '../lib/with-apollo-client';
 
 import {ME} from '../components/queries';
 
@@ -17,7 +19,7 @@ function MyAccount() {
   const {hasPaidAccount, hasFreeAccount, name} = me || {};
 
   return (
-    <>
+    <PageLayout>
       <Flex marginBottom="md">
         <FlexItem width="75px">
           <Logo />
@@ -44,7 +46,7 @@ function MyAccount() {
             <ManageAccountForm {...me} />
           </>
         ))}
-    </>
+    </PageLayout>
   );
 }
 
@@ -65,4 +67,4 @@ MyAccount.getInitialProps = async function(ctx) {
   redirect(ctx, url);
 };
 
-export default MyAccount;
+export default withApollo(MyAccount);
