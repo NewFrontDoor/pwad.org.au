@@ -1,10 +1,20 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  {
-    prayerMany {
-      _id
-      title
+  query findPrayerContents($page: Int) {
+    prayerPagination(page: $page, perPage: 20) {
+      pageInfo {
+        currentPage
+        itemCount
+        perPage
+      }
+      items {
+        _id
+        title
+        content {
+          md
+        }
+      }
     }
   }
 `;

@@ -109,11 +109,12 @@ const pages = {
   author: '/author/[id]/[name]',
   content: '/content/[page]',
   pray: '/pray/[id]/[name]',
-  song: '/song/[id]/[name]'
+  worship: '/worship/[id]/[name]',
+  rejoice: '/rejoice/[id]/[name]'
 };
 
 function parseLink({href, ...rest}) {
-  const result = href.match(/^\/(author|content|pray|song)\/.+/);
+  const result = href.match(/^\/(author|content|pray|worship|rejoice)\/.+/);
   const [, page] = result || [];
   return {
     ...rest,

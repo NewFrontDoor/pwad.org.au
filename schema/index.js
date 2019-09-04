@@ -380,6 +380,7 @@ module.exports = keystone => {
     pageContentOne: PageContentTC.getResolver('findOne'),
 
     prayerById: PrayerTC.getResolver('findById'),
+    prayerPagination: PrayerTC.getResolver('pagination'),
     prayerMany: PrayerTC.getResolver('findMany').addFilterArg({
       name: 'text_contains',
       type: GraphQLString,

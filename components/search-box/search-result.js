@@ -19,7 +19,7 @@ const SearchResult = ({_id, __typename, title, lyrics, keywords, content}) => {
   let prefix;
 
   if (__typename === 'Hymn') {
-    prefix = 'song';
+    prefix = 'rejoice';
   }
 
   if (__typename === 'Prayer') {
@@ -27,19 +27,22 @@ const SearchResult = ({_id, __typename, title, lyrics, keywords, content}) => {
   }
 
   if (__typename === 'Liturgy') {
-    prefix = 'rejoice';
+    prefix = 'worship';
   }
 
   return (
     <Box marginBottom="md">
       <Text as="h4">
+        <ShortListButton hymn={{_id}} />
         <Link
+          css={css`
+            vertical-align: middle;
+          `}
           as={`/${prefix}/${_id}/${kebabCase(title)}`}
           href={`/${prefix}/[id]/[name]`}
         >
           {title}
         </Link>{' '}
-        <ShortListButton hymn={{_id}} />
       </Text>
       {lyrics && <Markdown>{lyrics.md}</Markdown>}
       {content && <Markdown>{content.md}</Markdown>}

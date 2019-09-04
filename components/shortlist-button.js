@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import some from 'lodash/some';
 import {useQuery, useMutation} from '@apollo/react-hooks';
 import Button from 'mineral-ui/Button';
-
+import {Star} from 'react-feather';
 import {ME, ADD_SHORTLIST_ITEM, REMOVE_SHORTLIST_ITEM} from './queries';
 
 function ShortListButton({hymn}) {
@@ -14,19 +14,27 @@ function ShortListButton({hymn}) {
   const [removeShortlistItem] = useMutation(REMOVE_SHORTLIST_ITEM);
 
   const shortlisted = some(me.shortlist, hymn);
-  const manageShortList = shortlisted ? removeShortlistItem : addShortlistItem;
+  const icon = <Star role="img" fill={shortlisted ? '#fad8af' : 'white'} />;
 
   return (
     <Button
-      size="small"
+      circular
+      minimal
+      iconStart={icon}
+      aria-label={shortlisted ? 'Remove from Short List' : 'Add to Short List'}
       onClick={() => {
-        manageShortList({
-          variables: {hymn: hymn._id}
-        });
+        // TODO: optomistic ui
+        if (shortlisted) {
+          removeShortlistItem({
+            variables: {hymn: hymn._id}
+          });
+        } else {
+          addShortlistItem({
+            variables: {hymn: hymn._id}
+          });
+        }
       }}
-    >
-      {shortlisted ? 'Remove from Short List' : 'Add to Short List'}
-    </Button>
+    />
   );
 }
 

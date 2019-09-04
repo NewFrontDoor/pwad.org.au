@@ -28,9 +28,8 @@ function ShortList() {
           <Text as="ul" appearance="prose">
             {me.shortlist.map(hymn => (
               <li key={hymn._id}>
+                <ShortListButton hymn={hymn} />{' '}
                 <Link {...hymnLinkProps(hymn)} />
-
-                <ShortListButton hymn={hymn} />
               </li>
             ))}
           </Text>

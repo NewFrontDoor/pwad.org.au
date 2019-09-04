@@ -10,6 +10,7 @@ import withApollo from '../../../lib/with-apollo-client';
 import PageLayout from '../../../components/page-layout';
 import Link, {authorLinkProps} from '../../../components/link';
 import Markdown from '../../../components/markdown/markdown';
+import ShortListButton from '../../../components/shortlist-button';
 import {FIND_ONE_HYMN} from '../../../components/queries';
 
 function Composer(props) {
@@ -42,6 +43,7 @@ function Song({id}) {
   });
 
   const {
+    _id,
     author,
     files,
     hymnNumber,
@@ -72,8 +74,10 @@ function Song({id}) {
                 <Text as="ul">
                   {files.map(({_id, file}) => (
                     <li key={_id}>
-                      <Link href={file.url}>{file.filename}</Link> (
-                      {prettyBytes(file.size)})
+                      <Link href={file.url} internal={false}>
+                        {file.filename}
+                      </Link>{' '}
+                      ({prettyBytes(file.size)})
                     </li>
                   ))}
                 </Text>
@@ -125,6 +129,7 @@ function Song({id}) {
           </FlexItem>
           <FlexItem width="100%">
             <Text as="h2">
+              <ShortListButton hymn={{_id}} />
               {hymnNumber}. {title}
             </Text>
             <Markdown>{lyrics.md}</Markdown>

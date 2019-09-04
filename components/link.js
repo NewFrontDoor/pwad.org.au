@@ -32,8 +32,8 @@ export default Link;
 
 export function hymnLinkProps({_id, title, hymnNumber}) {
   return {
-    as: `/song/${_id}/${kebabCase(title)}`,
-    href: '/song/[id]/[name]',
+    as: `/rejoice/${_id}/${kebabCase(title)}`,
+    href: '/rejoice/[id]/[name]',
     children: `${hymnNumber}. ${title}`
   };
 }
@@ -50,8 +50,8 @@ export function authorLinkProps({_id, name, dates}) {
 
 export function liturgyLinkProps({_id, name}) {
   return {
-    as: `/rejoice/${_id}/${kebabCase(name)}`,
-    href: '/rejoice/[id]/[name]',
+    as: `/worship/${_id}/${kebabCase(name)}`,
+    href: '/worship/[id]/[name]',
     children: name
   };
 }
