@@ -39,8 +39,6 @@ function Prayers({id}) {
 
   const {currentPage, itemCount, perPage} = prayerPagination.pageInfo;
 
-  console.log(prayerPagination.pageInfo);
-
   return (
     <>
       <Text as="ul">

@@ -5,7 +5,10 @@ import prettyBytes from 'pretty-bytes';
 import Text from 'mineral-ui/Text';
 import Flex, {FlexItem} from 'mineral-ui/Flex';
 
+import redirect from '../../../lib/redirect';
+import checkLoggedIn from '../../../lib/check-logged-in';
 import withApollo from '../../../lib/with-apollo-client';
+import {defineAbilitiesFor} from '../../../lib/abilities';
 
 import PageLayout from '../../../components/page-layout';
 import Link, {authorLinkProps} from '../../../components/link';
@@ -43,7 +46,6 @@ function Song({id}) {
   });
 
   const {
-    _id,
     author,
     files,
     hymnNumber,
@@ -129,7 +131,7 @@ function Song({id}) {
           </FlexItem>
           <FlexItem width="100%">
             <Text as="h2">
-              <ShortListButton hymn={{_id}} />
+              <ShortListButton hymn={hymnById} />
               {hymnNumber}. {title}
             </Text>
             <Markdown>{lyrics.md}</Markdown>
@@ -140,8 +142,24 @@ function Song({id}) {
   );
 }
 
-Song.getInitialProps = function({query: {id}}) {
-  return {id};
+Song.getInitialProps = async function(context) {
+  const {
+    query: {id}
+  } = context;
+
+  const {loggedInUser} = await checkLoggedIn(context.apolloClient);
+
+  if (loggedInUser.user) {
+    const ability = defineAbilitiesFor(loggedInUser.user);
+
+    if (ability.can('read', 'Hymn')) {
+      return {id};
+    }
+
+    redirect(context, '/my-account');
+  }
+
+  redirect(context, '/sign-in');
 };
 
 Song.propTypes = {

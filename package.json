@@ -56,6 +56,7 @@
     "@babel/core": "^7.5.5",
     "@casl/ability": "^3.2.0",
     "@casl/mongoose": "^2.3.1",
+    "@casl/react": "^1.0.4",
     "@emotion/core": "^10.0.17",
     "@emotion/is-prop-valid": "^0.8.2",
     "@emotion/styled": "^10.0.17",

@@ -5,11 +5,11 @@ import TextInput from 'mineral-ui/TextInput';
 import Box from 'mineral-ui/Box';
 import Text from 'mineral-ui/Text';
 import Button from 'mineral-ui/Button';
-import Router from 'next/router';
 import {string, object} from 'yup';
 import {Formik, Form, FormField} from '../form';
 
-import {LOGIN_USER, ME} from '../queries';
+import {LOGIN_USER} from '../queries';
+import redirect from '../../lib/redirect';
 import GoogleButton from './google-button';
 
 const validationSchema = object().shape({
@@ -22,32 +22,22 @@ const validationSchema = object().shape({
     .required()
 });
 
-function handleSignInUpdate(cache, {data}) {
-  const {loginUser} = data;
-  cache.writeQuery({
-    query: ME,
-    data: {
-      me: loginUser
-    }
+function handleSignInUpdate(cache) {
+  // Force a reload of all the current queries now that the user is
+  // logged in
+  cache.reset().then(() => {
+    redirect({}, '/');
   });
 }
 
 function handleSignIn(loginUser) {
-  return async ({email, password}) => {
-    try {
-      const {data} = await loginUser({
-        variables: {
-          email,
-          password
-        }
-      });
-
-      if (data && data.loginUser) {
-        Router.replace('/');
+  return ({email, password}) => {
+    loginUser({
+      variables: {
+        email,
+        password
       }
-    } catch (error) {
-      console.error(error);
-    }
+    });
   };
 }
 

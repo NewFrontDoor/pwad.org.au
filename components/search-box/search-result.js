@@ -15,8 +15,10 @@ const noList = css`
   list-style: none;
 `;
 
-const SearchResult = ({_id, __typename, title, lyrics, keywords, content}) => {
+const SearchResult = props => {
   let prefix;
+
+  const {_id, __typename, title, lyrics, keywords, content} = props;
 
   if (__typename === 'Hymn') {
     prefix = 'rejoice';
@@ -33,7 +35,7 @@ const SearchResult = ({_id, __typename, title, lyrics, keywords, content}) => {
   return (
     <Box marginBottom="md">
       <Text as="h4">
-        <ShortListButton hymn={{_id}} />
+        <ShortListButton hymn={props} />
         <Link
           css={css`
             vertical-align: middle;

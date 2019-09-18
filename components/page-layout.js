@@ -1,12 +1,14 @@
 /* eslint-disable camelcase */
 
 /** @jsx jsx */
+
+import {jsx} from '@emotion/core';
+import PropTypes from 'prop-types';
 import {blue} from 'mineral-ui-tokens';
 import {createTheme, ThemeProvider} from 'mineral-ui/themes';
-import {jsx} from '@emotion/core';
 import Box from 'mineral-ui/Box';
 import Head from 'next/head';
-import PropTypes from 'prop-types';
+
 import NavBar from './nav-bar/nav-bar';
 import Footer from './footer/footer';
 import BannerImage, {randomBanner} from './banner-image';

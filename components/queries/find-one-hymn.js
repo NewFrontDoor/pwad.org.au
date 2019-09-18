@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 export default gql`
   query findOne($id: MongoID!) {
     hymnById(_id: $id) {
+      _id
       title
       hymnNumber
       scripture

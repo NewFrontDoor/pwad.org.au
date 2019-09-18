@@ -3,7 +3,6 @@
 import React, {useReducer, useEffect, useRef} from 'react';
 import PropTypes from 'prop-types';
 import {rem} from 'polished';
-import {useQuery} from '@apollo/react-hooks';
 import Flex from 'mineral-ui/Flex';
 import Button from 'mineral-ui/Button';
 import Popover from 'mineral-ui/Popover';
@@ -11,9 +10,9 @@ import {themed} from 'mineral-ui/themes';
 import styled from '@emotion/styled';
 import {withTheme} from 'emotion-theming';
 import {useMediumMedia} from '../use-media';
+import {Can} from '../ability-context';
 
 import Link from '../link';
-import {ME} from '../queries';
 import Nav from './nav';
 
 const MenuButton = styled(Button)({
@@ -90,9 +89,6 @@ function NavBar({theme}) {
     reducer,
     initialState
   );
-  const {
-    data: {me}
-  } = useQuery(ME);
 
   useEffect(() => {
     // If (this.state.isMenuOpen && !prevState.isMenuOpen) {
@@ -139,7 +135,9 @@ function NavBar({theme}) {
             >
               <MenuButton minimal>Menu</MenuButton>
             </MenuPopover>
-            {me && <Link href="/my-account">My account</Link>}
+            <Can I="read" a="my-account">
+              <Link href="/my-account">My account</Link>
+            </Can>
           </>
         )}
       </Flex>

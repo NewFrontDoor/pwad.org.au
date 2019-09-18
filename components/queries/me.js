@@ -4,6 +4,7 @@ export default gql`
   {
     me {
       _id
+      role
       hasPaidAccount
       hasFreeAccount
       profilePhoto

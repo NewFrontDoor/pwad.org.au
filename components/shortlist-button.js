@@ -13,7 +13,7 @@ function ShortListButton({hymn}) {
   const [addShortlistItem] = useMutation(ADD_SHORTLIST_ITEM);
   const [removeShortlistItem] = useMutation(REMOVE_SHORTLIST_ITEM);
 
-  const shortlisted = some(me.shortlist, hymn);
+  const shortlisted = some(me.shortlist, {_id: hymn._id});
   const icon = <Star role="img" fill={shortlisted ? '#fad8af' : 'white'} />;
 
   return (

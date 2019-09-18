@@ -12,6 +12,7 @@ import LinkButton from '../link-button';
 import {useMediumMedia} from '../use-media';
 import Link from '../link';
 import {MENUS, ME} from '../queries';
+import {Can} from '../ability-context';
 import UserAvatar from './user-avatar';
 
 const noList = css`
@@ -116,33 +117,47 @@ function Nav() {
         </NavMenuItem>
       ))}
       {isMedium && <Spacer />}
-      {me ? (
-        <>
-          <NavMenuItem as="li" fontWeight="bold">
-            <Link href="/auth/logout">Log out</Link>
-          </NavMenuItem>
-          <NavMenuItem as="li" fontWeight="bold">
-            <Link href="/short-list">Short list ({me.shortlist.length})</Link>
-          </NavMenuItem>
-          {isMedium && (
+      <Can I="manage" a="my-account">
+        {() => (
+          <>
             <NavMenuItem as="li" fontWeight="bold">
-              <Link href="/my-account">My account</Link>
+              <Link href="/auth/logout">Log out</Link>
             </NavMenuItem>
-          )}
-          <NavMenuItem as="li">
-            <UserAvatar />
-          </NavMenuItem>
-        </>
-      ) : (
-        <>
-          <NavMenuItem as="li" fontWeight="bold">
-            <Link href="/sign-in">Log in</Link>
-          </NavMenuItem>
-          <NavMenuItem as="li" fontWeight="bold">
-            <Link href="/create-account">Create account</Link>
-          </NavMenuItem>
-        </>
-      )}
+            <NavMenuItem as="li" fontWeight="bold">
+              <Link href="/short-list">Short list ({me.shortlist.length})</Link>
+            </NavMenuItem>
+            {isMedium && (
+              <>
+                <Can I="read" a="keystone">
+                  <NavMenuItem as="li" fontWeight="bold">
+                    <Link href="/keystone" internal={false}>
+                      Admin
+                    </Link>
+                  </NavMenuItem>
+                </Can>
+                <NavMenuItem as="li" fontWeight="bold">
+                  <Link href="/my-account">My account</Link>
+                </NavMenuItem>
+              </>
+            )}
+            <NavMenuItem as="li">
+              <UserAvatar />
+            </NavMenuItem>
+          </>
+        )}
+      </Can>
+      <Can not I="manage" a="my-account">
+        {() => (
+          <>
+            <NavMenuItem as="li" fontWeight="bold">
+              <Link href="/sign-in">Log in</Link>
+            </NavMenuItem>
+            <NavMenuItem as="li" fontWeight="bold">
+              <Link href="/create-account">Create account</Link>
+            </NavMenuItem>
+          </>
+        )}
+      </Can>
     </Flex>
   );
 }

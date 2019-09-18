@@ -10,6 +10,17 @@ const User = new keystone.List('User', {
   track: true
 });
 
+User.schema.plugin(passportLocalMongoose, {
+  usernameField: 'email',
+  usernameUnique: true
+});
+
+User.schema.pre('save', function(next) {
+  // This needs to be setup before the password field is added
+  // otherwise `passport-local-mongoose` won't salt and hash the password
+  this.setPassword(this.password, next);
+});
+
 User.add(
   {
     name: {type: Types.Name, required: true, index: true},
@@ -54,11 +65,6 @@ User.schema.methods.wasActive = () => {
   this.lastActiveOn = new Date();
   return this;
 };
-
-User.schema.plugin(passportLocalMongoose, {
-  usernameField: 'email',
-  usernameUnique: true
-});
 
 User.schema.plugin(accessibleRecordsPlugin);
 

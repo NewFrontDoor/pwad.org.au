@@ -50,21 +50,19 @@ function MyAccount() {
   );
 }
 
-MyAccount.getInitialProps = async function(ctx) {
-  const {loggedInUser} = await checkLoggedIn(ctx.apolloClient);
+MyAccount.getInitialProps = async function(context) {
+  const {loggedInUser} = await checkLoggedIn(context.apolloClient);
 
   if (loggedInUser.user) {
-    // Already signed in? No need to continue.
-    // Throw them back to the main page
     return {};
   }
 
-  const currentURL = buildUrl(ctx.req);
+  const currentURL = buildUrl(context.req);
   const url = new URL('/sign-in', currentURL);
 
   url.searchParams.set('r', currentURL);
 
-  redirect(ctx, url);
+  redirect(context, url);
 };
 
 export default withApollo(MyAccount);

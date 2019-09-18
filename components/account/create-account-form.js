@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Router from 'next/router';
 import {useMutation} from '@apollo/react-hooks';
 import Box from 'mineral-ui/Box';
 import Text from 'mineral-ui/Text';
@@ -9,8 +8,8 @@ import TextInput from 'mineral-ui/TextInput';
 import {string, object} from 'yup';
 import {Formik, Form, FormField} from '../form';
 
-import {CREATE_USER, ME} from '../queries';
-
+import {CREATE_USER} from '../queries';
+import redirect from '../../lib/redirect';
 import GoogleButton from './google-button';
 
 const validationSchema = object().shape({
@@ -46,22 +45,17 @@ function handleCreateUser(createAccount) {
   };
 }
 
-function handleCreateUserUpdate(cache, {data}) {
-  const {createUser} = data;
-  cache.writeQuery({
-    query: ME,
-    data: {
-      me: createUser
-    }
+function handleCreateUserUpdate(cache) {
+  // Force a reload of all the current queries now that the user is
+  // logged in
+  cache.reset().then(() => {
+    redirect({}, '/my-account');
   });
 }
 
 function CreateAccountForm({redirectPath, location}) {
-  const [createAccount] = useMutation(CREATE_USER, {
-    update: handleCreateUserUpdate,
-    onCompleted() {
-      Router.replace('/my-account');
-    }
+  const [createAccount, {loading, error}] = useMutation(CREATE_USER, {
+    update: handleCreateUserUpdate
   });
 
   return (
@@ -86,6 +80,11 @@ function CreateAccountForm({redirectPath, location}) {
               confirmPassword: ''
             }}
           >
+            {loading && 'Loading...'}
+            {error &&
+              error.graphQLErrors.map(({message}) => (
+                <p key={message}>{message}</p>
+              ))}
             <Box marginBottom="md">
               <FormField
                 required

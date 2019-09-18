@@ -1,5 +1,4 @@
 const {strict: assert} = require('assert');
-const {get} = require('lodash');
 const {GraphQLBoolean, GraphQLString} = require('graphql');
 const {
   composeWithMongoose,
@@ -35,9 +34,8 @@ function userSchema(keystone, {HymnTC}, options) {
   UserTC.addResolver({
     name: 'me',
     type: UserTC,
-    resolve({context}) {
-      const id = get(context, 'user._id', null);
-      return UserModel.findById(id);
+    async resolve({context: {user}}) {
+      return user;
     }
   });
 
@@ -153,9 +151,15 @@ function userSchema(keystone, {HymnTC}, options) {
       const {user} = context;
       const {hymn} = args;
 
-      user.hymns.push(hymn);
-      console.log(user.hymns);
-      return user.save();
+      return UserModel.findOneAndUpdate(
+        {_id: user._id},
+        {
+          $addToSet: {
+            hymns: hymn
+          }
+        },
+        {new: true}
+      ).exec();
     }
   });
 
@@ -169,9 +173,15 @@ function userSchema(keystone, {HymnTC}, options) {
       const {user} = context;
       const {hymn} = args;
 
-      user.hymns.pull(hymn);
-      console.log(user.hymns);
-      return user.save();
+      return UserModel.findOneAndUpdate(
+        {_id: user._id},
+        {
+          $pull: {
+            hymns: hymn
+          }
+        },
+        {new: true}
+      ).exec();
     }
   });
 
