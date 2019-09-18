@@ -12,9 +12,7 @@ import ShortListButton from '../components/shortlist-button';
 import {ME} from '../components/queries';
 
 function ShortList() {
-  const {
-    data: {me}
-  } = useQuery(ME);
+  const {data: {me} = {}} = useQuery(ME);
 
   return (
     <PageLayout>

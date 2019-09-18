@@ -143,6 +143,13 @@ module.exports = keystone => {
     }
   });
 
+  AuthorTC.addRelation('liturgies', {
+    resolver: () => LiturgyTC.getResolver('findMany'),
+    prepareArgs: {
+      filter: source => ({author: source._id})
+    }
+  });
+
   ResourceTC.addRelation('menu', {
     resolver: () => MenuTC.getResolver('findById'),
     prepareArgs: {
@@ -250,6 +257,21 @@ module.exports = keystone => {
     }
   });
 
+  LiturgyTC.addRelation('files', {
+    resolver: () => FileTC.getResolver('findByIds'),
+    prepareArgs: {
+      _ids: source => source.files || []
+    },
+    projection: {files: true}
+  });
+
+  LiturgyTC.addRelation('author', {
+    resolver: () => AuthorTC.getResolver('findById'),
+    prepareArgs: {
+      _id: source => source.author
+    }
+  });
+
   const OccasionGroupedByIdTC = schemaComposer.createObjectTC({
     name: 'OccasionGroupedById',
     fields: {
@@ -308,12 +330,8 @@ module.exports = keystone => {
     keywordMany: KeywordTC.getResolver('findMany').addFilterArg({
       name: 'text_contains',
       type: GraphQLString,
-      query: (query, value, resolveParams) => {
-        query.$text = {$search: value};
-        resolveParams.args.sort = {
-          score: {$meta: 'textScore'}
-        };
-        resolveParams.projection.score = {$meta: 'textScore'};
+      query: (query, value) => {
+        query.name = {$regex: value, $options: '$i'};
       }
     }),
 

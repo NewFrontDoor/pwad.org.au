@@ -11,9 +11,7 @@ import {ME} from '../queries';
 User.displayName = 'UserIcon';
 
 const UserAvatar = ({theme}) => {
-  const {
-    data: {me}
-  } = useQuery(ME);
+  const {data: {me} = {}} = useQuery(ME);
 
   if (me) {
     const name = `${me.name.first} ${me.name.last}`;

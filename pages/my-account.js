@@ -13,9 +13,7 @@ import withApollo from '../lib/with-apollo-client';
 import {ME} from '../components/queries';
 
 function MyAccount() {
-  const {
-    data: {me}
-  } = useQuery(ME);
+  const {data: {me} = {}} = useQuery(ME);
   const {hasPaidAccount, hasFreeAccount, name} = me || {};
 
   return (

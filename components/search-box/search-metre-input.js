@@ -7,14 +7,12 @@ import {FIND_METRE} from '../queries';
 
 function SearchInput({name, value, onChange}) {
   const [searchTerm, setSearchTerm] = useState('');
-  const {
-    loading,
-    error,
-    data: {metreMany = []},
-    fetchMore
-  } = useQuery(FIND_METRE, {
-    variables: {metre: searchTerm}
-  });
+  const {loading, error, data: {metreMany = []} = {}, fetchMore} = useQuery(
+    FIND_METRE,
+    {
+      variables: {metre: searchTerm}
+    }
+  );
 
   const fetchMoreMetres = useCallback(() => {
     fetchMore({

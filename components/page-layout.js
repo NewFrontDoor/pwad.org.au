@@ -26,9 +26,9 @@ const theme = createTheme({
   }
 });
 
-function PageLayout({children}) {
-  const bannerImage = randomBanner();
+const bannerImage = randomBanner();
 
+function PageLayout({children}) {
   return (
     <ThemeProvider theme={theme}>
       <>

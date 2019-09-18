@@ -6,11 +6,9 @@ import Select from 'react-select';
 import {FIND_OCCASION} from '../queries';
 
 function SearchInput({name, value, onChange}) {
-  const {
-    loading,
-    error,
-    data: {occasionManyGroupById = []}
-  } = useQuery(FIND_OCCASION);
+  const {loading, error, data: {occasionManyGroupById = []} = {}} = useQuery(
+    FIND_OCCASION
+  );
 
   let options = [];
 

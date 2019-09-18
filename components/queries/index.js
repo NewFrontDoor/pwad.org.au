@@ -11,6 +11,7 @@ export {default as FIND_ONE_HYMN} from './find-one-hymn';
 export {default as FIND_OCCASION} from './find-occasion';
 export {default as FIND_PRAYER_CONTENTS} from './find-prayer-contents';
 export {default as FIND_ONE_PRAYER} from './find-one-prayer';
+export {default as FIND_ONE_LITURGY} from './find-one-liturgy';
 export {default as FIND_ONE_AUTHOR} from './find-one-author';
 export {default as FIND_ONE_KEYWORD} from './find-one-keyword';
 export {default as FIND_METRE} from './find-metre';

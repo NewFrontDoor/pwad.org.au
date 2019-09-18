@@ -48,11 +48,11 @@ export function authorLinkProps({_id, name, dates}) {
   };
 }
 
-export function liturgyLinkProps({_id, name}) {
+export function liturgyLinkProps({_id, title}) {
   return {
-    as: `/worship/${_id}/${kebabCase(name)}`,
+    as: `/worship/${_id}/${kebabCase(title)}`,
     href: '/worship/[id]/[name]',
-    children: name
+    children: title
   };
 }
 

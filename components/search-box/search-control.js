@@ -30,7 +30,7 @@ function TextSearch({search}) {
   const {
     loading,
     error,
-    data: {hymnMany, prayerMany, liturgyMany}
+    data: {hymnMany, prayerMany, liturgyMany} = {}
   } = useQuery(TEXT_SEARCH, {
     variables: search
   });

@@ -13,6 +13,10 @@ export default gql`
         hymnNumber
         title
       }
+      liturgies {
+        _id
+        title
+      }
     }
   }
 `;

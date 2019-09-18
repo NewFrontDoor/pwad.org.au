@@ -79,7 +79,7 @@ function AdvancedSearch({search}) {
   const {
     loading,
     error,
-    data: {hymnMany, prayerMany, liturgyMany}
+    data: {hymnMany, prayerMany, liturgyMany} = {}
   } = useQuery(ADVANCED_SEARCH, {
     variables: search
   });
@@ -120,8 +120,8 @@ function SearchBox() {
           hymnMetres: [],
           search: '',
           title: '',
-          occasion: '',
-          keyword: '',
+          occasion: null,
+          keyword: null,
           tune: null,
           passage: null
         }}

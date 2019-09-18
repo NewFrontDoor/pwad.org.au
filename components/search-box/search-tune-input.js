@@ -7,14 +7,12 @@ import {FIND_TUNE} from '../queries';
 
 function SearchInput({name, value, onChange}) {
   const [searchTerm, setSearchTerm] = useState('');
-  const {
-    loading,
-    error,
-    data: {tuneMany = []},
-    fetchMore
-  } = useQuery(FIND_TUNE, {
-    variables: {title: searchTerm}
-  });
+  const {loading, error, data: {tuneMany = []} = {}, fetchMore} = useQuery(
+    FIND_TUNE,
+    {
+      variables: {title: searchTerm}
+    }
+  );
 
   const fetchMoreTunes = useCallback(() => {
     fetchMore({

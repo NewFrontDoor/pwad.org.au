@@ -15,13 +15,12 @@ import {FIND_PRAYER_CONTENTS, FIND_ONE_PRAYER} from '../../components/queries';
 function Prayers({id}) {
   const [page, changePage] = useState(1);
 
-  const {
-    loading,
-    error,
-    data: {prayerPagination = {}}
-  } = useQuery(FIND_PRAYER_CONTENTS, {
-    variables: {page}
-  });
+  const {loading, error, data: {prayerPagination = {}} = {}} = useQuery(
+    FIND_PRAYER_CONTENTS,
+    {
+      variables: {page}
+    }
+  );
 
   // Const firstId = get(prayerPagination, 'items.0._id');
 

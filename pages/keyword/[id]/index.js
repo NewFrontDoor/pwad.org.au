@@ -15,13 +15,12 @@ import Link, {
 import {FIND_ONE_KEYWORD} from '../../../components/queries';
 
 function Keyword({id}) {
-  const {
-    loading,
-    error,
-    data: {keywordById}
-  } = useQuery(FIND_ONE_KEYWORD, {
-    variables: {id}
-  });
+  const {loading, error, data: {keywordById} = {}} = useQuery(
+    FIND_ONE_KEYWORD,
+    {
+      variables: {id}
+    }
+  );
 
   const {name, hymns, prayers, liturgies} = keywordById || {};
 

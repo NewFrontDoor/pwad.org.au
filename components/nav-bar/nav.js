@@ -75,14 +75,8 @@ const Spacer = styled('li')({
 
 function Nav() {
   const isMedium = useMediumMedia();
-
-  const {
-    data: {menuMany = []}
-  } = useQuery(MENUS);
-
-  const {
-    data: {me}
-  } = useQuery(ME);
+  const {data: {me} = {}} = useQuery(ME);
+  const {data: {menuMany} = {}} = useQuery(MENUS);
 
   return (
     <Flex
@@ -97,25 +91,26 @@ function Nav() {
       <NavMenuItem as="li" fontWeight="bold">
         <Link href="/">Home</Link>
       </NavMenuItem>
-      {menuMany.map(menu => (
-        <NavMenuItem key={menu._id} as="li" fontWeight="bold">
-          {menu.link ? (
-            <Link href="/content/[page]" as={`/content/${menu.link.key}`}>
-              {menu.link.name}
-            </Link>
-          ) : (
-            <Dropdown
-              data={menu.resources}
-              item={({props}) => <DropdownItem {...props} />}
-            >
-              <LinkButton>
-                {menu.name}
-                <Chevron size="1em" />
-              </LinkButton>
-            </Dropdown>
-          )}
-        </NavMenuItem>
-      ))}
+      {menuMany &&
+        menuMany.map(menu => (
+          <NavMenuItem key={menu._id} as="li" fontWeight="bold">
+            {menu.link ? (
+              <Link href="/content/[page]" as={`/content/${menu.link.key}`}>
+                {menu.link.name}
+              </Link>
+            ) : (
+              <Dropdown
+                data={menu.resources}
+                item={({props}) => <DropdownItem {...props} />}
+              >
+                <LinkButton>
+                  {menu.name}
+                  <Chevron size="1em" />
+                </LinkButton>
+              </Dropdown>
+            )}
+          </NavMenuItem>
+        ))}
       {isMedium && <Spacer />}
       <Can I="manage" a="my-account">
         {() => (

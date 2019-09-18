@@ -7,14 +7,12 @@ import {FIND_KEYWORD} from '../queries';
 
 function SearchInput({name, value, onChange}) {
   const [searchTerm, setSearchTerm] = useState('');
-  const {
-    loading,
-    error,
-    data: {keywordMany = []},
-    fetchMore
-  } = useQuery(FIND_KEYWORD, {
-    variables: {title: searchTerm}
-  });
+  const {loading, error, data: {keywordMany = []} = {}, fetchMore} = useQuery(
+    FIND_KEYWORD,
+    {
+      variables: {title: searchTerm}
+    }
+  );
 
   const fetchMoreKeywords = useCallback(() => {
     fetchMore({
