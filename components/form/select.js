@@ -8,9 +8,7 @@ function SearchInput(props) {
 
   const styles = {
     control(provided, {isActive, isFocused}) {
-      const activeBoxShadow = `0 0 0 1px ${
-        theme.boxShadow_focusInner
-      }, 0 0 0 2px ${theme.borderColor_theme_active}`;
+      const activeBoxShadow = `0 0 0 1px ${theme.boxShadow_focusInner}, 0 0 0 2px ${theme.borderColor_theme_active}`;
 
       return {
         ...provided,

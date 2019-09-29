@@ -50,7 +50,9 @@ function SearchInput({name, value, onChange}) {
       options={options}
       onChange={onChange(name)}
       onMenuScrollToBottom={fetchMoreKeywords}
-      onInputChange={value => setSearchTerm(value)}
+      onInputChange={value => {
+        setSearchTerm(value);
+      }}
     />
   );
 }

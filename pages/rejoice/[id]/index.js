@@ -72,7 +72,7 @@ function Song({id}) {
                 <Text as="ul">
                   {files.map(({_id, file}) => (
                     <li key={_id}>
-                      <Link href={file.url} internal={false}>
+                      <Link href={file.url} isInternal={false}>
                         {file.filename}
                       </Link>{' '}
                       ({prettyBytes(file.size)})

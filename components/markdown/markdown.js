@@ -120,7 +120,7 @@ function parseLink({href, ...rest}) {
     ...rest,
     as: href,
     href: pages[page] || href,
-    internal: Boolean(result)
+    isInternal: Boolean(result)
   };
 }
 

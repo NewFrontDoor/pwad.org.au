@@ -4,8 +4,8 @@ import NextLink from 'next/link';
 import MineralLink from 'mineral-ui/Link';
 import kebabCase from 'lodash/kebabCase';
 
-function Link({as, href, internal, ...props}) {
-  if (href && internal) {
+function Link({as, href, isInternal, ...props}) {
+  if (href && isInternal) {
     return (
       <NextLink passHref as={as} href={href}>
         <MineralLink {...props} />
@@ -19,13 +19,13 @@ function Link({as, href, internal, ...props}) {
 Link.propTypes = {
   as: PropTypes.string,
   href: PropTypes.string,
-  internal: PropTypes.bool
+  isInternal: PropTypes.bool
 };
 
 Link.defaultProps = {
   as: undefined,
   href: undefined,
-  internal: true
+  isInternal: true
 };
 
 export default Link;

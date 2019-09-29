@@ -33,7 +33,7 @@ Composer.defaultProps = {
   name: undefined
 };
 
-function Song({id}) {
+function Liturgy({id}) {
   const {loading, error, data: {liturgyById} = {}} = useQuery(
     FIND_ONE_LITURGY,
     {
@@ -63,7 +63,7 @@ function Song({id}) {
                 <Text as="ul">
                   {files.map(({_id, file}) => (
                     <li key={_id}>
-                      <Link href={file.url} internal={false}>
+                      <Link href={file.url} isInternal={false}>
                         {file.filename}
                       </Link>{' '}
                       ({prettyBytes(file.size)})
@@ -102,7 +102,7 @@ function Song({id}) {
   );
 }
 
-Song.getInitialProps = async function(context) {
+Liturgy.getInitialProps = async function(context) {
   const {
     query: {id}
   } = context;
@@ -110,8 +110,8 @@ Song.getInitialProps = async function(context) {
   return {id};
 };
 
-Song.propTypes = {
+Liturgy.propTypes = {
   id: PropTypes.string.isRequired
 };
 
-export default withApollo(Song);
+export default withApollo(Liturgy);

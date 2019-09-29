@@ -35,9 +35,9 @@ function reducer(state, action) {
       }
 
       return {
-        ...state,
         ...pickBy(
           {
+            ...state,
             ...action.fields,
             occasion,
             keywords

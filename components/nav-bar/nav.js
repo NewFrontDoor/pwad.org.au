@@ -21,11 +21,11 @@ const noList = css`
 
 const DropdownItem = ({name, url, file, type, content}) => {
   let as;
-  let internal = true;
+  let isInternal = true;
   let href = url;
 
   if (type === 'file') {
-    internal = false;
+    isInternal = false;
     href = file.url;
   }
 
@@ -36,7 +36,7 @@ const DropdownItem = ({name, url, file, type, content}) => {
 
   return (
     <Box padding="md">
-      <Link href={href} as={as} internal={internal}>
+      <Link href={href} as={as} isInternal={isInternal}>
         {name}
       </Link>
     </Box>
@@ -125,7 +125,7 @@ function Nav() {
               <>
                 <Can I="read" a="keystone">
                   <NavMenuItem as="li" fontWeight="bold">
-                    <Link href="/keystone" internal={false}>
+                    <Link href="/keystone" isInternal={false}>
                       Admin
                     </Link>
                   </NavMenuItem>
