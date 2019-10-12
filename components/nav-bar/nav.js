@@ -1,116 +1,66 @@
 /** @jsx jsx */
-import {jsx, css} from '@emotion/core';
 import PropTypes from 'prop-types';
+import {jsx, css} from '@emotion/core';
 import {useQuery} from '@apollo/react-hooks';
+import Button from 'mineral-ui/Button';
 import Flex from 'mineral-ui/Flex';
 import Text from 'mineral-ui/Text';
-import {ChevronDown as Chevron} from 'react-feather';
 import styled from '@emotion/styled';
-import Box from 'mineral-ui/Box';
-import Dropdown from 'mineral-ui/Dropdown';
-import LinkButton from '../link-button';
+import {X} from 'react-feather';
 import {useMediumMedia} from '../use-media';
 import Link from '../link';
-import {MENUS, ME} from '../queries';
+import {ME} from '../queries';
 import {Can} from '../ability-context';
 import UserAvatar from './user-avatar';
 
 const noList = css`
+  flex: 1 0 0%;
+  padding: 0;
   list-style: none;
 `;
 
-const DropdownItem = ({name, url, file, type, content}) => {
-  let as;
-  let isInternal = true;
-  let href = url;
-
-  if (type === 'file') {
-    isInternal = false;
-    href = file.url;
-  }
-
-  if (content) {
-    href = `/content/[page]`;
-    as = `/content/${content.key}`;
-  }
-
-  return (
-    <Box padding="md">
-      <Link href={href} as={as} isInternal={isInternal}>
-        {name}
-      </Link>
-    </Box>
-  );
-};
-
-DropdownItem.propTypes = {
-  name: PropTypes.string.isRequired,
-  type: PropTypes.string.isRequired,
-  url: PropTypes.string,
-  file: PropTypes.shape({
-    url: PropTypes.string.isRequired
-  }),
-  content: PropTypes.shape({
-    key: PropTypes.string.isRequired
-  })
-};
-
-DropdownItem.defaultProps = {
-  url: undefined,
-  file: undefined,
-  content: undefined
-};
-
 const NavMenuItem = styled(Text)({
-  display: 'inline-flex',
-  alignItems: 'center',
   letterSpacing: '1px',
   textTransform: 'uppercase',
-  margin: '0 1em'
+  marginLeft: '1rem',
+  marginRight: '1rem'
 });
 
 const Spacer = styled('li')({
   marginLeft: 'auto'
 });
 
-function Nav() {
+function Nav({onClose, children}) {
   const isMedium = useMediumMedia();
   const {data: {me} = {}} = useQuery(ME);
-  const {data: {menuMany} = {}} = useQuery(MENUS);
 
   return (
     <Flex
       as="ul"
       justifyContent="between"
-      padding="0"
-      width="100%"
       css={noList}
+      marginHorizontal="1rem"
       breakpoints={['narrow', 'medium']}
       direction={['column', 'column', 'row']}
     >
+      {!isMedium && (
+        <NavMenuItem
+          as="li"
+          css={css`
+            position: absolute;
+            right: 0;
+            margin-right: 1rem;
+          `}
+        >
+          <Button minimal iconStart={<X role="img" />} onClick={onClose} />
+        </NavMenuItem>
+      )}
       <NavMenuItem as="li" fontWeight="bold">
-        <Link href="/">Home</Link>
+        <Link href="/" onClick={onClose}>
+          Home
+        </Link>
       </NavMenuItem>
-      {menuMany &&
-        menuMany.map(menu => (
-          <NavMenuItem key={menu._id} as="li" fontWeight="bold">
-            {menu.link ? (
-              <Link href="/content/[page]" as={`/content/${menu.link.key}`}>
-                {menu.link.name}
-              </Link>
-            ) : (
-              <Dropdown
-                data={menu.resources}
-                item={({props}) => <DropdownItem {...props} />}
-              >
-                <LinkButton>
-                  {menu.name}
-                  <Chevron size="1em" />
-                </LinkButton>
-              </Dropdown>
-            )}
-          </NavMenuItem>
-        ))}
+      {children}
       {isMedium && <Spacer />}
       <Can I="manage" a="my-account">
         {() => (
@@ -156,5 +106,10 @@ function Nav() {
     </Flex>
   );
 }
+
+Nav.propTypes = {
+  onClose: PropTypes.func.isRequired,
+  children: PropTypes.node.isRequired
+};
 
 export default Nav;

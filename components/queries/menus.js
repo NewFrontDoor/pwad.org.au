@@ -11,6 +11,7 @@ export default gql`
         key
       }
       resources(sort: SORTORDER_ASC) {
+        _id
         name
         type
         content {

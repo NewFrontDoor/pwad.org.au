@@ -1,13 +1,10 @@
-/* eslint-disable camelcase */
-
 /** @jsx jsx */
 
-import {jsx} from '@emotion/core';
+import {jsx, css} from '@emotion/core';
 import PropTypes from 'prop-types';
-import {blue} from 'mineral-ui-tokens';
-import {createTheme, ThemeProvider} from 'mineral-ui/themes';
 import Box from 'mineral-ui/Box';
 import Head from 'next/head';
+import {ThemeProvider} from 'mineral-ui/themes';
 
 import NavBar from './nav-bar/nav-bar';
 import Footer from './footer/footer';
@@ -15,18 +12,11 @@ import BannerImage, {randomBanner} from './banner-image';
 
 import GlobalStyles from './global-styles';
 
-const theme = createTheme({
-  colors: {
-    theme: 'blue'
-  },
-  overrides: {
-    color_theme_hover: blue[80],
-
-    fontFamily: 'cabin'
-  }
-});
+import theme from './theme';
 
 const bannerImage = randomBanner();
+
+const isBrowser = typeof window !== 'undefined';
 
 function PageLayout({children}) {
   return (
@@ -41,16 +31,24 @@ function PageLayout({children}) {
         </Head>
         <GlobalStyles theme={theme} />
         <Box
-          breakpoints={['narrow']}
-          width={['auto', 3 / 4]}
-          marginVertical={0}
-          marginHorizontal={['md', 'auto']}
+          marginTop="1rem"
+          paddingBottom="15vh"
+          css={css`
+            background: ${theme.color_theme_10};
+          `}
         >
-          <BannerImage image={bannerImage} />
-          <NavBar />
-          {children}
-          <Footer />
+          <Box
+            breakpoints={['narrow']}
+            width={['auto', 3 / 4]}
+            marginVertical={0}
+            marginHorizontal={['md', 'auto']}
+          >
+            <BannerImage image={bannerImage} />
+            {isBrowser && <NavBar />}
+            {children}
+          </Box>
         </Box>
+        <Footer />
       </>
     </ThemeProvider>
   );

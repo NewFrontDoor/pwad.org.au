@@ -1,19 +1,27 @@
-/* eslint-disable camelcase */
-
-import React, {useReducer, useEffect, useRef} from 'react';
-import PropTypes from 'prop-types';
-import {rem} from 'polished';
+/** @jsx jsx */
+import {useState, useEffect} from 'react';
+import {jsx, css} from '@emotion/core';
+import {useQuery} from '@apollo/react-hooks';
+import {motion} from 'framer-motion';
 import Flex from 'mineral-ui/Flex';
+import Text from 'mineral-ui/Text';
 import Button from 'mineral-ui/Button';
-import Popover from 'mineral-ui/Popover';
-import {themed} from 'mineral-ui/themes';
 import styled from '@emotion/styled';
-import {withTheme} from 'emotion-theming';
 import {useMediumMedia} from '../use-media';
 import {Can} from '../ability-context';
+import {darkTheme, DarkTheme} from '../theme';
 
 import Link from '../link';
+import useToggle from '../use-toggle';
+import {MENUS} from '../queries';
 import Nav from './nav';
+import NavOverlay from './nav-overlay';
+import NavItems from './nav-items';
+
+const NavMenuItem = styled(Text)({
+  letterSpacing: '1px',
+  textTransform: 'uppercase'
+});
 
 const MenuButton = styled(Button)({
   backgroundColor: 'white',
@@ -26,129 +34,107 @@ const MenuButton = styled(Button)({
   cursor: 'pointer'
 });
 
-const Root = styled('div')(({isMenuOpen, theme}) => {
-  const transitionProperties = '350ms cubic-bezier(0.175, 0.885, 0.32, 1.275)';
-
-  return {
-    alignItems: 'flex-end',
-    display: 'flex',
-    justifyContent: 'space-between',
-    marginBottom: isMenuOpen
-      ? rem(300) // Dependent on menu height
-      : theme.baseline_7,
-    paddingTop: rem(30), // Matches horizontal padding
-    transition: `margin ${transitionProperties}`,
-
-    '& div[id$="popover"] div[id$="content"]': {
-      // Matches nav link padding + menuButton optical adjustment
-      marginTop: `${parseFloat(theme.space_stack_sm) + 0.45}em`,
-      opacity: isMenuOpen ? 1 : 0,
-      transition: `opacity 500ms linear`,
-
-      // CardBlock (tried doing this via theme variables, and it didn't work)
-      '& > div': {
-        margin: 0,
-        padding: 0
-      }
-    },
-
-    [theme.breakpoint_home_navExpanded]: {
-      marginBottom: theme.baseline_9,
-      paddingTop: theme.baseline_2
-    }
-  };
-});
-
-const popoverTheme = {
-  PopoverContent_backgroundColor: null,
-  PopoverContent_borderColor: 'transparent',
-  PopoverContent_borderRadius: null,
-  PopoverContent_boxShadow: null,
-  PopoverContent_paddingVertical: null
+const mobileOverlayVariants = {
+  open: {height: '100vh'},
+  closed: {height: '1rem'}
 };
 
-const MenuPopover = themed(Popover)(popoverTheme);
-
-const initialState = {
-  isMenuOpen: false,
-  menuHeight: null
+const desktopOverlayVariants = {
+  open: {height: '33vh'},
+  closed: {height: 0}
 };
 
-function reducer(state, action) {
-  switch (action.type) {
-    case 'toggle-menu':
-      return {...state, isMenuOpen: !state.isMenuOpen};
-    default:
-      throw new Error(`Action type ${action.type} does not exist`);
-  }
-}
-
-function NavBar({theme}) {
-  const menuRef = useRef(null);
-  const [{isMenuOpen, menuHeight}, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+function NavBar() {
+  const isMedium = useMediumMedia();
+  const [selectedMenu, setSelectedMenu] = useState(null);
+  const [isOpen, toggleOpen] = useToggle(false);
+  const {data: {menuMany} = {}} = useQuery(MENUS);
 
   useEffect(() => {
-    // If (this.state.isMenuOpen && !prevState.isMenuOpen) {
-    //   const {current} = this.menuRef;
-    //   const {height: menuHeight} = current.getBoundingClientRect();
-    //   // eslint-disable-next-line react/no-did-update-set-state
-    //   this.setState({menuHeight});
-    // }
-  });
-
-  const isMedium = useMediumMedia();
+    // If nav bar is open on mobile, disable scroll
+    document.body.style.overflowY = isOpen && !isMedium ? 'hidden' : '';
+  }, [isMedium, isOpen]);
 
   return (
-    <Root isMenuOpen={isMenuOpen} menuHeight={menuHeight} theme={theme}>
+    <>
+      <NavOverlay onClickOutside={() => isOpen && toggleOpen()}>
+        <DarkTheme>
+          <motion.div
+            animate={isOpen ? 'open' : 'closed'}
+            variants={isMedium ? desktopOverlayVariants : mobileOverlayVariants}
+            transition={{
+              type: 'spring',
+              damping: 40,
+              stiffness: 400
+            }}
+            css={css`
+              z-index: 1;
+              position: absolute;
+              top: 0;
+              height: 0;
+              padding-top: 1rem;
+              overflow: ${isOpen ? 'scroll' : 'hidden'};
+              background-color: ${darkTheme.backgroundColor};
+            `}
+          >
+            {isMedium ? (
+              menuMany && (
+                <Flex
+                  as="ul"
+                  breakpoints={['narrow']}
+                  width={['auto', 3 / 4]}
+                  marginHorizontal={['md', 'auto']}
+                >
+                  <NavItems selectedMenu={selectedMenu} menuItems={menuMany} />
+                </Flex>
+              )
+            ) : (
+              <Nav onClose={toggleOpen}>
+                {menuMany && (
+                  <NavItems selectedMenu={selectedMenu} menuItems={menuMany} />
+                )}
+              </Nav>
+            )}
+          </motion.div>
+        </DarkTheme>
+      </NavOverlay>
       <Flex
         as="nav"
-        breakpoints={['narrow', 'medium']}
-        paddingVertical={['0', '0', '5vh']}
         marginHorizontal="auto"
         width="100%"
         alignItems="center"
         justifyContent="between"
       >
         {isMedium ? (
-          <Nav />
+          <Nav>
+            {menuMany &&
+              menuMany.map(({_id, name}) => (
+                <NavMenuItem key={_id} as="li">
+                  <Button
+                    minimal
+                    onClick={() => {
+                      toggleOpen();
+                      setSelectedMenu(name);
+                    }}
+                  >
+                    {name}
+                  </Button>
+                </NavMenuItem>
+              ))}
+          </Nav>
         ) : (
           <>
-            <MenuPopover
-              content={
-                <div ref={menuRef}>
-                  <Nav />
-                </div>
-              }
-              hasArrow={false}
-              isOpen={isMenuOpen}
-              modifiers={{
-                preventOverflow: {
-                  padding: 0
-                }
-              }}
-              placement="bottom-end"
-              onClose={() => dispatch({type: 'toggle-menu'})}
-              onOpen={() => dispatch({type: 'toggle-menu'})}
-            >
-              <MenuButton minimal>Menu</MenuButton>
-            </MenuPopover>
+            <MenuButton minimal onClick={toggleOpen}>
+              Menu
+            </MenuButton>
             <Can I="read" a="my-account">
               <Link href="/my-account">My account</Link>
             </Can>
           </>
         )}
       </Flex>
-    </Root>
+    </>
   );
 }
 
-NavBar.propTypes = {
-  theme: PropTypes.shape({
-    breakpoint_medium: PropTypes.string
-  }).isRequired
-};
-
-export default withTheme(NavBar);
+export default NavBar;

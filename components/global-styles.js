@@ -16,7 +16,7 @@ function GlobalStyles({theme}) {
       <Global
         styles={css`
           body {
-            background: ${theme.color_theme_10};
+            background: ${theme.color_gray_100};
           }
 
           .icon {
@@ -41,6 +41,7 @@ function GlobalStyles({theme}) {
 
 GlobalStyles.propTypes = {
   theme: PropTypes.shape({
+    color_gray_100: PropTypes.string,
     color_theme_10: PropTypes.string,
     color_theme_80: PropTypes.string
   }).isRequired
