@@ -1,7 +1,10 @@
+require('dotenv').config();
 const config = require('config');
 
+console.log(config);
+
 module.exports = {
-  publicRuntimeConfig: {
+  env: {
     dev: config.get('dev'),
     stripeClientToken: config.get('STRIPE_CLIENT_TOKEN'),
     graphqlUri: config.get('GRAPHQL_URI'),

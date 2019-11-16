@@ -1,14 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import getConfig from 'next/config';
 import {
   StripeProvider as OldStripeProvider,
   injectStripe,
   Elements
 } from 'react-stripe-elements';
 import {StripeContext} from '../lib/stripe';
-
-const {publicRuntimeConfig} = getConfig();
 
 function StripeHookInjectedProvider({stripe, stripeData, children}) {
   const updatedStripeData = {...stripeData, stripe};
@@ -28,7 +25,7 @@ StripeHookInjectedProvider.propTypes = {
 
 const StripeHookProvider = injectStripe(StripeHookInjectedProvider);
 
-const stripe = new window.Stripe(publicRuntimeConfig.stripeClientToken);
+const stripe = new window.Stripe(process.env.stripeClientToken);
 
 export default function StripeProvider({children}) {
   const stripeData = {

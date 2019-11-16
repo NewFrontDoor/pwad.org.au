@@ -30,7 +30,8 @@
   },
   "build": {
     "env": {
-      "NODE_ENV": "production"
+      "NODE_ENV": "production",
+      "STRIPE_CLIENT_TOKEN": "@pwad-test-stripe-client-token"
     }
   }
 }
