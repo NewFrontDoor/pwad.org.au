@@ -19,3 +19,4 @@ export {default as FIND_TUNE} from './find-tune';
 export {default as FIND_KEYWORD} from './find-keyword';
 export {default as ADD_SHORTLIST_ITEM} from './add-short-list-item';
 export {default as REMOVE_SHORTLIST_ITEM} from './remove-shortlist-item';
+export {default as MAKE_PAYMENT} from './make-payment';

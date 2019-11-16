@@ -3,6 +3,7 @@ const config = require('config');
 module.exports = {
   publicRuntimeConfig: {
     dev: config.get('dev'),
+    stripeClientToken: config.get('STRIPE_CLIENT_TOKEN'),
     graphqlUri: config.get('GRAPHQL_URI'),
     hostUrl: config.get('HOST_URL')
   },

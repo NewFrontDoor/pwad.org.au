@@ -20,6 +20,8 @@ const noList = css`
 `;
 
 const NavMenuItem = styled(Text)({
+  display: 'flex',
+  alignItems: 'center',
   letterSpacing: '1px',
   textTransform: 'uppercase',
   marginLeft: '1rem',

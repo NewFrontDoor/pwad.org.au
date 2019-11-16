@@ -10,7 +10,7 @@ function userSchema(keystone, {HymnTC}, options) {
   const UserTC = composeWithMongoose(UserModel, {
     ...options,
     fields: {
-      remove: ['email', 'password', 'hash', 'salt', 'googleProviderId']
+      remove: ['password', 'hash', 'salt', 'googleProviderId']
     }
   });
 

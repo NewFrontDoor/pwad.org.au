@@ -36,6 +36,10 @@ User.add(
     googleProviderId: {type: Types.Text, noedit: true},
     password: {type: Types.Password, initial: true, required: false}
   },
+  'Payment',
+  {
+    payment: {type: Types.Relationship, ref: 'Payment', noedit: true}
+  },
   'Short List',
   {
     hymns: {type: Types.Relationship, ref: 'Hymn', many: true}

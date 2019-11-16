@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {useMutation} from '@apollo/react-hooks';
+import {useMutation, useQuery} from '@apollo/react-hooks';
 import Box from 'mineral-ui/Box';
 import Flex, {FlexItem} from 'mineral-ui/Flex';
 import Button from 'mineral-ui/Button';
@@ -9,6 +9,8 @@ import TextInput from 'mineral-ui/TextInput';
 import {Check} from 'react-feather';
 import {string, object} from 'yup';
 import {Formik, Form, FormField} from '../form';
+import {useStripe} from '../../lib/stripe';
+import StripeProvider from '../stripe-provider';
 
 import {CHANGE_PASSWORD, FREE_USER, ME} from '../queries';
 
@@ -38,6 +40,22 @@ function handleChangeFreeAccount(changeFreeAccount) {
     });
 }
 
+function handleAccountPayment(stripe, customerEmail) {
+  const successUrl = new URL('/my-account', window.location);
+  const cancelUrl = new URL('/cancel', window.location);
+
+  return async () => {
+    const session = await stripe.redirectToCheckout({
+      items: [{sku: 'sku_GBZZqHosJSdAkX', quantity: 1}],
+      successUrl: successUrl.href,
+      cancelUrl: cancelUrl.href,
+      customerEmail
+    });
+
+    console.log(session);
+  };
+}
+
 function handleChangeFreeAccountUpdate(cache, {data}) {
   const {changeFreeAccount} = data;
   const {me} = cache.readQuery({query: ME});
@@ -64,6 +82,30 @@ function handleChangePassword(changePassword) {
   };
 }
 
+function AccountPaymentButton({children, hasPaidAccount}) {
+  const {stripe} = useStripe();
+
+  const {data: {me} = {}} = useQuery(ME);
+
+  return (
+    <Button
+      primary
+      fullWidth
+      size="jumbo"
+      iconStart={hasPaidAccount ? <Check role="img" /> : undefined}
+      disabled={hasPaidAccount}
+      onClick={handleAccountPayment(stripe, me.email)}
+    >
+      {children}
+    </Button>
+  );
+}
+
+AccountPaymentButton.propTypes = {
+  hasPaidAccount: PropTypes.bool.isRequired,
+  children: PropTypes.node.isRequired
+};
+
 function ManageForm({hasFreeAccount, hasPaidAccount}) {
   const freeAccount = hasFreeAccount && !hasPaidAccount;
 
@@ -74,7 +116,7 @@ function ManageForm({hasFreeAccount, hasPaidAccount}) {
   const [changePassword] = useMutation(CHANGE_PASSWORD);
 
   return (
-    <>
+    <StripeProvider>
       <Flex
         gutterWidth="xxl"
         breakpoints={['narrow']}
@@ -112,15 +154,9 @@ function ManageForm({hasFreeAccount, hasPaidAccount}) {
               <Text appearance="prose">this option is free to use</Text>
             </FlexItem>
             <FlexItem width="100%">
-              <Button
-                primary
-                fullWidth
-                size="jumbo"
-                iconStart={hasPaidAccount ? <Check role="img" /> : undefined}
-                disabled={hasPaidAccount}
-              >
+              <AccountPaymentButton hasPaidAccount={hasPaidAccount}>
                 Liturgy and Music
-              </Button>
+              </AccountPaymentButton>
               <Text appearance="prose">this option has a once off $30 fee</Text>
             </FlexItem>
           </Flex>
@@ -169,7 +205,7 @@ function ManageForm({hasFreeAccount, hasPaidAccount}) {
           </Formik>
         </FlexItem>
       </Flex>
-    </>
+    </StripeProvider>
   );
 }
 

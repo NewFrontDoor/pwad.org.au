@@ -1,16 +1,23 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 import {useQuery} from '@apollo/react-hooks';
 import Text from 'mineral-ui/Text';
 import Flex, {FlexItem} from 'mineral-ui/Flex';
 
 import PageLayout from '../components/page-layout';
 import Logo from '../components/logo';
-import ManageAccountForm from '../components/account/manage-account-form';
 import redirect, {buildUrl} from '../lib/redirect';
 import checkLoggedIn from '../lib/check-logged-in';
 import withApollo from '../lib/with-apollo-client';
 
 import {ME} from '../components/queries';
+
+const ManageAccountForm = dynamic(
+  () => import('../components/account/manage-account-form'),
+  {
+    ssr: false
+  }
+);
 
 function MyAccount() {
   const {data: {me} = {}} = useQuery(ME);

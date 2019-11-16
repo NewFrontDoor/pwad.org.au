@@ -5,6 +5,8 @@ const {start, stop} = require('./server');
 let server;
 
 const dev = config.get('dev');
+const port = config.get('PORT');
+const hostUrl = config.get('HOST_URL');
 const app = next({dev});
 
 module.exports = app
@@ -12,6 +14,10 @@ module.exports = app
   .then(async () => {
     server = await start({
       app
+    });
+
+    server.listen(port, () => {
+      console.log(`> Ready on ${hostUrl}`);
     });
   })
   .catch(error => console.error(error));

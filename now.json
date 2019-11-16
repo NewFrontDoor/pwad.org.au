@@ -22,7 +22,11 @@
     "SESSION_COOKIE_SECRET": "@session-cookie-secret",
 
     "GOOGLE_OAUTH_CLIENT_ID": "847282100207-emjqgnijh0lo6c731bdh58r8s9h7asd2.apps.googleusercontent.com",
-    "GOOGLE_OAUTH_CLIENT_SECRET": "@google-oauth-client-secret"
+    "GOOGLE_OAUTH_CLIENT_SECRET": "@google-oauth-client-secret",
+
+    "STRIPE_CLIENT_TOKEN": "@pwad-test-stripe-client-token",
+    "STRIPE_SECRET_TOKEN": "@pwad-test-stripe-secret-token",
+    "STRIPE_WEBHOOK_SECRET_TOKEN": "@pwad-test-stripe-webhook-secret-token"
   },
   "build": {
     "env": {

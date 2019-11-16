@@ -2,13 +2,13 @@ const util = require('util');
 const express = require('express');
 const keystone = require('keystone');
 const pinoHttp = require('pino-http');
-const config = require('config');
 
 const corsHandler = require('./handlers/cors');
 const authenticationHandler = require('./handlers/authentication');
 const passportHandler = require('./handlers/passport');
 const graphqlHandler = require('./handlers/graphql');
 const keystoneHandler = require('./handlers/keystone');
+const paymentHandler = require('./handlers/payment');
 
 const openDatabaseConnection = util.promisify(
   keystone.openDatabaseConnection.bind(keystone)
@@ -19,8 +19,6 @@ const closeDatabaseConnection = util.promisify(
 
 const start = async ({app}) => {
   const keystoneConfig = require('./config/keystone');
-  const port = config.get('PORT');
-  const hostUrl = config.get('HOST_URL');
 
   const server = express();
   server.enable('trust proxy');
@@ -53,14 +51,13 @@ const start = async ({app}) => {
   server.use('/keystone', keystone.Admin.Server.createDynamicRouter(keystone));
   server.use('/auth', authenticationHandler);
   server.use('/graphql', graphqlHandler(keystone));
+  server.use('/payment', paymentHandler);
 
   server.get('*', app.getRequestHandler());
 
   await openDatabaseConnection();
 
-  return server.listen(port, () => {
-    console.log(`> Ready on ${hostUrl}`);
-  });
+  return server;
 };
 
 const stop = async server => {
