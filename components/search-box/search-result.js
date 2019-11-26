@@ -18,17 +18,17 @@ const noList = css`
 const SearchResult = props => {
   let prefix;
 
-  const {_id, __typename, title, lyrics, keywords, content} = props;
+  const {_id, _type, title, lyrics, keywords, content} = props;
 
-  if (__typename === 'Hymn') {
+  if (_type === 'hymn') {
     prefix = 'rejoice';
   }
 
-  if (__typename === 'Prayer') {
+  if (_type === 'prayer') {
     prefix = 'pray';
   }
 
-  if (__typename === 'Liturgy') {
+  if (_type === 'liturgy') {
     prefix = 'worship';
   }
 
@@ -78,7 +78,7 @@ const SearchResult = props => {
 
 SearchResult.propTypes = {
   _id: PropTypes.string.isRequired,
-  __typename: PropTypes.string.isRequired,
+  _type: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   lyrics: PropTypes.shape({
     md: PropTypes.string.isRequired
@@ -88,7 +88,7 @@ SearchResult.propTypes = {
   }),
   keywords: PropTypes.arrayOf(
     PropTypes.shape({
-      _id: PropTypes.string.isRequired
+      _key: PropTypes.string.isRequired
     })
   )
 };

@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  mutation removeShortListItem($hymn: MongoID) {
+  mutation removeShortListItem($hymn: String) {
     removeShortListItem(hymn: $hymn) {
       _id
       shortlist {

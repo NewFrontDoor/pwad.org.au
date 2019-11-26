@@ -1,12 +1,11 @@
 import React, {useReducer} from 'react';
 import PropTypes from 'prop-types';
-import {useQuery} from '@apollo/react-hooks';
 import Flex, {FlexItem} from 'mineral-ui/Flex';
 import Text from 'mineral-ui/Text';
 import Button from 'mineral-ui/Button';
 import TextInput from 'mineral-ui/TextInput';
 import {Formik, Form, FormField} from '../form';
-import {TEXT_SEARCH} from '../queries';
+import {useSearchQuery} from '../queries';
 import SearchResult from './search-result';
 
 const initialState = {
@@ -27,28 +26,12 @@ function reducer(state, action) {
 }
 
 function TextSearch({search}) {
-  const {
-    loading,
-    error,
-    data: {hymnMany, prayerMany, liturgyMany} = {}
-  } = useQuery(TEXT_SEARCH, {
-    variables: search
-  });
+  const results = useSearchQuery(search);
 
-  if (loading) {
-    return 'Loading...';
-  }
-
-  if (error) {
-    return `Error! ${error.message}`;
-  }
-
-  const results = [...hymnMany, ...prayerMany, ...liturgyMany].sort(
-    (a, b) => b.score - a.score
-  );
-
-  if (results.length > 0) {
-    return results.map(result => <SearchResult key={result._id} {...result} />);
+  if (results && results.length > 0) {
+    return results.map(result => (
+      <SearchResult key={result._key} {...result} />
+    ));
   }
 
   return <Text appearance="prose">No results found...</Text>;

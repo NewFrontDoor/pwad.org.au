@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import {useState, useEffect} from 'react';
+import PropTypes from 'prop-types';
 import {jsx, css} from '@emotion/core';
-import {useQuery} from '@apollo/react-hooks';
 import {motion} from 'framer-motion';
 import Flex from 'mineral-ui/Flex';
 import Text from 'mineral-ui/Text';
@@ -13,7 +13,6 @@ import {darkTheme, DarkTheme} from '../theme';
 
 import Link from '../link';
 import useToggle from '../use-toggle';
-import {MENUS} from '../queries';
 import Nav from './nav';
 import NavOverlay from './nav-overlay';
 import NavItems from './nav-items';
@@ -44,11 +43,10 @@ const desktopOverlayVariants = {
   closed: {height: 0}
 };
 
-function NavBar() {
+function NavBar({menuItems}) {
   const isMedium = useMediumMedia();
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [isOpen, toggleOpen] = useToggle(false);
-  const {data: {menuMany} = {}} = useQuery(MENUS);
 
   useEffect(() => {
     // If nav bar is open on mobile, disable scroll
@@ -78,20 +76,20 @@ function NavBar() {
             `}
           >
             {isMedium ? (
-              menuMany && (
+              menuItems && (
                 <Flex
                   as="ul"
                   breakpoints={['narrow']}
                   width={['auto', 3 / 4]}
                   marginHorizontal={['md', 'auto']}
                 >
-                  <NavItems selectedMenu={selectedMenu} menuItems={menuMany} />
+                  <NavItems selectedMenu={selectedMenu} menuItems={menuItems} />
                 </Flex>
               )
             ) : (
               <Nav onClose={toggleOpen}>
-                {menuMany && (
-                  <NavItems selectedMenu={selectedMenu} menuItems={menuMany} />
+                {menuItems && (
+                  <NavItems selectedMenu={selectedMenu} menuItems={menuItems} />
                 )}
               </Nav>
             )}
@@ -107,17 +105,17 @@ function NavBar() {
       >
         {isMedium ? (
           <Nav>
-            {menuMany &&
-              menuMany.map(({_id, name}) => (
-                <NavMenuItem key={_id} as="li">
+            {menuItems &&
+              menuItems.map(({_key, text}) => (
+                <NavMenuItem key={_key} as="li">
                   <Button
                     minimal
                     onClick={() => {
                       toggleOpen();
-                      setSelectedMenu(name);
+                      setSelectedMenu(text);
                     }}
                   >
-                    {name}
+                    {text}
                   </Button>
                 </NavMenuItem>
               ))}
@@ -136,5 +134,9 @@ function NavBar() {
     </>
   );
 }
+
+NavBar.propTypes = {
+  menuItems: PropTypes.array.isRequired
+};
 
 export default NavBar;

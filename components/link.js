@@ -39,7 +39,11 @@ export function hymnLinkProps({_id, title, hymnNumber}) {
 }
 
 export function authorLinkProps({_id, name, dates}) {
-  const fullName = `${name.first} ${name.last}`;
+  let fullName = name;
+
+  if (typeof fullName === 'object') {
+    fullName = `${name.first} ${name.last}`;
+  }
 
   return {
     as: `/author/${_id}/${kebabCase(fullName)}`,

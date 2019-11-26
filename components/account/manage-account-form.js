@@ -87,6 +87,8 @@ function AccountPaymentButton({children, hasPaidAccount}) {
 
   const {data: {me} = {}} = useQuery(ME);
 
+  console.log(me);
+
   return (
     <Button
       primary

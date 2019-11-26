@@ -17,8 +17,8 @@ const UserAvatar = ({theme}) => {
     const name = `${me.name.first} ${me.name.last}`;
     return (
       <Avatar size="small" background={theme.theme_color}>
-        {me.profilePhoto ? (
-          <img src={me.profilePhoto} alt={name} />
+        {me.picture ? (
+          <img src={me.picture} alt={name} />
         ) : (
           <User title={name} role="img" />
         )}

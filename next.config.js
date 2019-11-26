@@ -1,8 +1,6 @@
 require('dotenv').config();
 const config = require('config');
 
-console.log(config);
-
 module.exports = {
   env: {
     dev: config.get('dev'),

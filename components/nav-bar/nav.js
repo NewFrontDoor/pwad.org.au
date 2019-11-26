@@ -68,7 +68,7 @@ function Nav({onClose, children}) {
         {() => (
           <>
             <NavMenuItem as="li" fontWeight="bold">
-              <Link href="/auth/logout">Log out</Link>
+              <Link href="/api/logout">Log out</Link>
             </NavMenuItem>
             <NavMenuItem as="li" fontWeight="bold">
               <Link href="/short-list">Short list ({me.shortlist.length})</Link>
@@ -97,10 +97,10 @@ function Nav({onClose, children}) {
         {() => (
           <>
             <NavMenuItem as="li" fontWeight="bold">
-              <Link href="/sign-in">Log in</Link>
+              <Link href="/api/login">Log in</Link>
             </NavMenuItem>
             <NavMenuItem as="li" fontWeight="bold">
-              <Link href="/create-account">Create account</Link>
+              <Link href="/api/login">Create account</Link>
             </NavMenuItem>
           </>
         )}

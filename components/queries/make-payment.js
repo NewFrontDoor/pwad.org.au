@@ -6,7 +6,7 @@ export default gql`
       _id
       hasPaidAccount
       hasFreeAccount
-      profilePhoto
+      picture
       name {
         first
         last

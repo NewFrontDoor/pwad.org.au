@@ -19,10 +19,10 @@ const NavMenuItem = styled(Text)({
   textTransform: 'uppercase'
 });
 
-function NavCollapse({name, resources}) {
+function NavCollapse({text, childpages}) {
   return (
     <>
-      <Text appearance="prose">{name}</Text>
+      <Text appearance="prose">{text}</Text>
       <div
         css={css`
           display: flex;
@@ -31,7 +31,7 @@ function NavCollapse({name, resources}) {
         `}
       >
         <Text as="ul" appearance="prose" css={noList}>
-          {resources.map(item => (
+          {childpages.map(item => (
             <NavMenuItem key={item._id}>
               <NavLink {...item} />
             </NavMenuItem>
@@ -43,8 +43,12 @@ function NavCollapse({name, resources}) {
 }
 
 NavCollapse.propTypes = {
-  name: PropTypes.string.isRequired,
-  resources: PropTypes.array.isRequired
+  text: PropTypes.string.isRequired,
+  childpages: PropTypes.array
+};
+
+NavCollapse.defaultProps = {
+  childpages: []
 };
 
 const collapseVariants = {

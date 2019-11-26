@@ -1,17 +1,14 @@
 /** @jsx jsx */
 import {jsx, css} from '@emotion/core';
+import PropTypes from 'prop-types';
 import Text from 'mineral-ui/Text';
 import Box from 'mineral-ui/Box';
 import Grid, {GridItem} from 'mineral-ui/Grid';
-import {useQuery} from '@apollo/react-hooks';
-import {MENUS} from '../queries';
 import Link from '../link';
 import {darkTheme, DarkTheme} from '../theme';
 import NavLink from '../nav-bar/nav-link';
 
-function Footer() {
-  const {data: {menuMany} = {}} = useQuery(MENUS);
-
+function Footer({menuItems}) {
   return (
     <DarkTheme>
       <Box
@@ -27,28 +24,27 @@ function Footer() {
           width={['auto', 3 / 4]}
           marginHorizontal={['md', 'auto']}
         >
-          {menuMany && (
+          {menuItems && (
             <Grid breakpoints={['medium', 'wide']}>
-              {menuMany.map(menu => (
-                <GridItem key={menu._id} span={[12, 6, 3]}>
-                  {menu.name && <Text appearance="prose">{menu.name}</Text>}
-                  {menu.link ? (
+              {menuItems.map(menu => (
+                <GridItem key={menu._key} span={[12, 6, 3]}>
+                  {menu.text && <Text appearance="prose">{menu.text}</Text>}
+                  {menu.link && (
                     <Link
                       href="/content/[page]"
                       as={`/content/${menu.link.key}`}
                     >
-                      {menu.link.name}
+                      {menu.link.text}
                     </Link>
-                  ) : (
-                    <>
-                      <Text appearance="prose" as="ul">
-                        {menu.resources.map(item => (
-                          <li key={item._id}>
-                            <NavLink {...item} />
-                          </li>
-                        ))}
-                      </Text>
-                    </>
+                  )}
+                  {menu.childpages && (
+                    <Text appearance="prose" as="ul">
+                      {menu.childpages.map(item => (
+                        <li key={item._key}>
+                          <NavLink {...item} />
+                        </li>
+                      ))}
+                    </Text>
                   )}
                 </GridItem>
               ))}
@@ -60,5 +56,9 @@ function Footer() {
     </DarkTheme>
   );
 }
+
+Footer.propTypes = {
+  menuItems: PropTypes.array.isRequired
+};
 
 export default Footer;

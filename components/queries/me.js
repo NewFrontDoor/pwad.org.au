@@ -8,7 +8,7 @@ export default gql`
       role
       hasPaidAccount
       hasFreeAccount
-      profilePhoto
+      picture
       name {
         first
         last

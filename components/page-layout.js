@@ -18,7 +18,7 @@ const bannerImage = randomBanner();
 
 const isBrowser = typeof window !== 'undefined';
 
-function PageLayout({children}) {
+function PageLayout({menuItems, children}) {
   return (
     <ThemeProvider theme={theme}>
       <>
@@ -44,18 +44,19 @@ function PageLayout({children}) {
             marginHorizontal={['md', 'auto']}
           >
             <BannerImage image={bannerImage} />
-            {isBrowser && <NavBar />}
+            {isBrowser && <NavBar menuItems={menuItems} />}
             {children}
           </Box>
         </Box>
-        <Footer />
+        <Footer menuItems={menuItems} />
       </>
     </ThemeProvider>
   );
 }
 
 PageLayout.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
+  menuItems: PropTypes.array.isRequired
 };
 
 export default PageLayout;
