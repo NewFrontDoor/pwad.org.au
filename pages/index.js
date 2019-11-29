@@ -51,7 +51,9 @@ Index.getInitialProps = async () => {
   const [result] = await fetchQuery(
     ['*']
       .concat(['[_type == "main"]', '[!(_id in path("drafts.**"))]'])
-      .concat(['{blurb, heading, menuitems, subheading}'])
+      .concat([
+        '{blurb,heading,menuitems[] {...,childpages[]->{...,"_key": _id}},subheading}'
+      ])
       .join('|')
   );
 
