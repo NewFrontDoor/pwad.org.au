@@ -14,6 +14,13 @@ export const schema = gql`
     keywordById(id: ID!): Keyword
     liturgyById(id: ID!): Liturgy
 
+    tuneMany(
+      filter: FilterInput
+      limit: Int
+      skip: Int
+      sort: TuneSortByInput
+    ): [Tune]
+
     prayerById(id: ID!): Prayer
     prayerPagination(page: Int!, perPage: Int!): PrayerPagination
   }
@@ -55,6 +62,7 @@ export const schema = gql`
   input FilterInput {
     id: String
     search: String
+    text_contains: String
   }
 
   interface Document {
@@ -255,6 +263,11 @@ export const schema = gql`
     composer: Author
     files: [Asset]
     musicCopyright: Copyright
+  }
+
+  enum TuneSortByInput {
+    title_ASC
+    title_DESC
   }
 
   type Asset implements Document {

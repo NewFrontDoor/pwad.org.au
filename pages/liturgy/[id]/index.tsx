@@ -53,8 +53,7 @@ const Liturgy: NextPage<LiturgyProps> = ({id}) => {
       {data?.liturgyById && (
         <Flex
           gutterWidth="xxl"
-          breakpoints={['narrow', 'medium']}
-          direction={['column-reverse', 'column-reverse', 'row']}
+          sx={{flexDirection: ['column-reverse', 'column-reverse', 'row']}}
         >
           <Box>
             {files?.length > 0 && (

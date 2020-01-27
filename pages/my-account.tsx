@@ -1,7 +1,7 @@
 import React from 'react';
 import {NextPage} from 'next';
 import dynamic from 'next/dynamic';
-import {Text, Flex, Box, Styled} from 'theme-ui';
+import {Styled, Flex, Box} from 'theme-ui';
 
 import PageLayout from '../components/page-layout';
 import Logo from '../components/logo';
@@ -25,12 +25,12 @@ const MyAccount: NextPage = () => {
   return (
     <PageLayout>
       <Flex marginBottom={3}>
-        <Box width="75px">
+        <Box sx={{width: '75px'}}>
           <Logo />
         </Box>
         <Box>
-          <Text as="h1">Public Worship and Aids to Devotion</Text>
-          <Text as="h2">My Account</Text>
+          <Styled.h1>Public Worship and Aids to Devotion</Styled.h1>
+          <Styled.h2>My Account</Styled.h2>
         </Box>
       </Flex>
       {data.me &&
@@ -66,7 +66,7 @@ MyAccount.getInitialProps = async (context: WithApolloPageContext) => {
 
   url.searchParams.set('r', currentURL.href);
 
-  redirect(context, url);
+  redirect(context, url.href);
 };
 
 export default withApollo(MyAccount);

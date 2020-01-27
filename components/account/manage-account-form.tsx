@@ -127,8 +127,9 @@ const ManageForm: FC<ManageFormProps> = ({hasFreeAccount, hasPaidAccount}) => {
     <StripeProvider>
       <Flex
         gutterWidth="xxl"
-        breakpoints={['narrow']}
-        direction={['column-reverse', 'row-reverse']}
+        sx={{
+          flexDirection: ['column-reverse', 'row-reverse']
+        }}
       >
         <Box width="100%">
           <Text as="h3">
@@ -148,7 +149,11 @@ const ManageForm: FC<ManageFormProps> = ({hasFreeAccount, hasPaidAccount}) => {
           </Styled.p>
         </Box>
         <Box width="100%">
-          <Flex breakpoints={['narrow']} direction={['column-reverse', 'row']}>
+          <Flex
+            sx={{
+              flexDirection: ['column-reverse', 'row']
+            }}
+          >
             <Box width="100%">
               <Button
                 fullWidth

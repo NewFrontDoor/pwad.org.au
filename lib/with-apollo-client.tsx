@@ -6,11 +6,16 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import {ApolloProvider} from '@apollo/react-hooks';
 import {ApolloClient} from 'apollo-client';
-import {InMemoryCache, NormalizedCacheObject} from 'apollo-cache-inmemory';
+import {
+  InMemoryCache,
+  NormalizedCacheObject,
+  IntrospectionFragmentMatcher
+} from 'apollo-cache-inmemory';
 import {createHttpLink} from 'apollo-link-http';
 import {setContext} from 'apollo-link-context';
 import fetch from 'isomorphic-unfetch';
 import {AbilityProvider} from '../components/ability-context';
+import introspectionQueryResultData from './fragment-types.json';
 
 export type TApolloClient = ApolloClient<NormalizedCacheObject>;
 
@@ -22,6 +27,10 @@ type InitialProps = {
   apolloClient?: TApolloClient;
   apolloState?: NormalizedCacheObject;
 } & Record<string, any>;
+
+const fragmentMatcher = new IntrospectionFragmentMatcher({
+  introspectionQueryResultData
+});
 
 export default function withApollo(
   PageComponent: NextPage,
@@ -167,6 +176,8 @@ function createApolloClient(
     connectToDevTools: isBrowser,
     ssrMode: !isBrowser, // Disables forceFetch on the server (so queries are only run once)
     link: authLink.concat(httpLink),
-    cache: new InMemoryCache().restore(initialState)
+    cache: new InMemoryCache({
+      fragmentMatcher
+    }).restore(initialState)
   });
 }

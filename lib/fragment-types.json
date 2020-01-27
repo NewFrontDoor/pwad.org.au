@@ -1,0 +1,162 @@
+{
+  "__schema": {
+    "types": [
+      {
+        "kind": "INTERFACE",
+        "name": "Document",
+        "possibleTypes": [
+          {
+            "name": "User"
+          },
+          {
+            "name": "Hymn"
+          },
+          {
+            "name": "Author"
+          },
+          {
+            "name": "Liturgy"
+          },
+          {
+            "name": "Asset"
+          },
+          {
+            "name": "Keyword"
+          },
+          {
+            "name": "Prayer"
+          },
+          {
+            "name": "Occasion"
+          },
+          {
+            "name": "Copyright"
+          },
+          {
+            "name": "Category"
+          },
+          {
+            "name": "Scripture"
+          },
+          {
+            "name": "Tune"
+          },
+          {
+            "name": "Metre"
+          },
+          {
+            "name": "Main"
+          },
+          {
+            "name": "PageContent"
+          },
+          {
+            "name": "ExternalUrl"
+          },
+          {
+            "name": "RelativeUrl"
+          },
+          {
+            "name": "Menu"
+          },
+          {
+            "name": "Resource"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "ShortList",
+        "possibleTypes": [
+          {
+            "name": "Hymn"
+          },
+          {
+            "name": "Prayer"
+          },
+          {
+            "name": "Liturgy"
+          },
+          {
+            "name": "Scripture"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "FeaturedReference",
+        "possibleTypes": [
+          {
+            "name": "PageContent"
+          },
+          {
+            "name": "ExternalUrl"
+          },
+          {
+            "name": "RelativeUrl"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "ChildPageReference",
+        "possibleTypes": [
+          {
+            "name": "PageContent"
+          },
+          {
+            "name": "Hymn"
+          },
+          {
+            "name": "Prayer"
+          },
+          {
+            "name": "Liturgy"
+          },
+          {
+            "name": "Scripture"
+          },
+          {
+            "name": "Asset"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "SearchResult",
+        "possibleTypes": [
+          {
+            "name": "Hymn"
+          },
+          {
+            "name": "Prayer"
+          },
+          {
+            "name": "Liturgy"
+          },
+          {
+            "name": "Scripture"
+          }
+        ]
+      },
+      {
+        "kind": "UNION",
+        "name": "ResourceType",
+        "possibleTypes": [
+          {
+            "name": "Asset"
+          },
+          {
+            "name": "RelativeUrl"
+          },
+          {
+            "name": "ExternalUrl"
+          },
+          {
+            "name": "PageContent"
+          }
+        ]
+      }
+    ]
+  }
+}

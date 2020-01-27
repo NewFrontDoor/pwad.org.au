@@ -93,8 +93,7 @@ function SearchBox() {
             <Box
               grow={1}
               width="50%"
-              breakpoints={['medium']}
-              direction={['column', 'row']}
+              sx={{flexDirection: ['column', 'row']}}
             >
               <Box marginBottom="1em">
                 <FormField input={Input} label="Title" name="title" />

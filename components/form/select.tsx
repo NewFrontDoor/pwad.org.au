@@ -1,13 +1,13 @@
-import React from 'react';
+import React, {FC} from 'react';
 import Select from 'react-select';
 
 import {useThemeUI} from 'theme-ui';
 
-function SearchInput(props) {
+const SearchInput: FC = props => {
   const {theme} = useThemeUI();
 
   const styles = {
-    control(provided, {isActive, isFocused}) {
+    control(provided: Record<string, object>, {isActive, isFocused}) {
       const activeBoxShadow = `0 0 0 1px ${theme.boxShadow_focusInner}, 0 0 0 2px ${theme.borderColor_theme_active}`;
 
       return {
@@ -26,7 +26,7 @@ function SearchInput(props) {
         }
       };
     },
-    menu(provided) {
+    menu(provided: Record<string, string>) {
       return {
         ...provided,
         zIndex: theme.zIndex_100
@@ -35,6 +35,6 @@ function SearchInput(props) {
   };
 
   return <Select styles={styles} {...props} />;
-}
+};
 
 export default SearchInput;

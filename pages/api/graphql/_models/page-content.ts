@@ -1,5 +1,5 @@
 import {PageContent} from '../_gen-types';
-import sanity from '../../../../lib/sanity';
+import sanity from './sanity';
 
 export async function getById(pageId: string): Promise<PageContent> {
   return sanity.fetch(

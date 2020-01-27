@@ -25,6 +25,7 @@
   "devDependencies": {
     "@graphql-codegen/add": "^1.11.2",
     "@graphql-codegen/cli": "^1.11.2",
+    "@graphql-codegen/fragment-matcher": "^1.11.2",
     "@graphql-codegen/typescript": "^1.11.2",
     "@graphql-codegen/typescript-operations": "^1.11.2",
     "@graphql-codegen/typescript-react-apollo": "^1.11.2",
@@ -72,6 +73,7 @@
     "@casl/ability": "^3.4.0",
     "@casl/mongoose": "^2.3.2",
     "@casl/react": "^1.0.4",
+    "@emotion/core": "^10.0.27",
     "@mdx-js/mdx": "^1.5.5",
     "@mdx-js/react": "^1.5.5",
     "@mdx-js/runtime": "^1.5.5",

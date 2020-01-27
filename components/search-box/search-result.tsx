@@ -32,10 +32,9 @@ const SearchResultList: FC<SearchResult> = props => {
         padding="0"
         gutterWidth="md"
         sx={{
+          flexDirection: ['column', 'column', 'row'],
           listStyle: 'none'
         }}
-        breakpoints={['narrow', 'medium']}
-        direction={['column', 'column', 'row']}
       >
         {keywords.map(keyword => {
           const {as, href, children} = keywordLinkProps(keyword);

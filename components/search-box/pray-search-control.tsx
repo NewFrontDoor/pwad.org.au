@@ -89,12 +89,7 @@ const SearchBox: FC = () => {
       >
         <Form>
           <Flex>
-            <Box
-              grow={1}
-              width="50%"
-              breakpoints={['medium']}
-              direction={['column', 'row']}
-            >
+            <Box grow={1} width="50%" sx={{flexDirection: ['column', 'row']}}>
               <Box marginBottom="1em">
                 <TextField label="Title" name="title" />
               </Box>

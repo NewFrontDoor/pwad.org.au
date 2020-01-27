@@ -1,6 +1,8 @@
+/* eslint-env browser */
+
 import {useState, useEffect, useLayoutEffect} from 'react';
 
-function usePortal(id) {
+function usePortal(id: string): Element {
   const [portalNode, setPortalNode] = useState(null);
 
   useEffect(() => {
@@ -21,8 +23,8 @@ function usePortal(id) {
 
     rootNode.append(portalNode);
 
-    return function() {
-      rootNode.remove(portalNode);
+    return () => {
+      rootNode.remove();
     };
   }, [id, portalNode]);
 

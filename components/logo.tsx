@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {FC} from 'react';
 
-export default () => (
+const Logo: FC = () => (
   <svg
     viewBox="0 0 207 256"
     fillRule="evenodd"
@@ -45,3 +45,5 @@ export default () => (
     />
   </svg>
 );
+
+export default Logo;

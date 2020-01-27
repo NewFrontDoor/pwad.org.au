@@ -89,6 +89,7 @@ export type FeaturedReference = PageContent | ExternalUrl | RelativeUrl;
 export type FilterInput = {
   id?: Maybe<Scalars['String']>,
   search?: Maybe<Scalars['String']>,
+  text_contains?: Maybe<Scalars['String']>,
 };
 
 export type Hymn = Document & {
@@ -306,6 +307,7 @@ export type Query = {
   hymnById?: Maybe<Hymn>,
   keywordById?: Maybe<Keyword>,
   liturgyById?: Maybe<Liturgy>,
+  tuneMany?: Maybe<Array<Maybe<Tune>>>,
   prayerById?: Maybe<Prayer>,
   prayerPagination?: Maybe<PrayerPagination>,
 };
@@ -338,6 +340,14 @@ export type QueryKeywordByIdArgs = {
 
 export type QueryLiturgyByIdArgs = {
   id: Scalars['ID']
+};
+
+
+export type QueryTuneManyArgs = {
+  filter?: Maybe<FilterInput>,
+  limit?: Maybe<Scalars['Int']>,
+  skip?: Maybe<Scalars['Int']>,
+  sort?: Maybe<TuneSortByInput>
 };
 
 
@@ -407,6 +417,11 @@ export type Tune = Document & {
   files?: Maybe<Array<Maybe<Asset>>>,
   musicCopyright?: Maybe<Copyright>,
 };
+
+export enum TuneSortByInput {
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC'
+}
 
 export type User = Document & {
    __typename?: 'User',
@@ -527,6 +542,7 @@ export type ResolversTypes = {
   ChildPageReference: ResolverTypeWrapper<any>,
   FilterInput: ResolverTypeWrapper<any>,
   SearchResult: ResolverTypeWrapper<any>,
+  TuneSortByInput: ResolverTypeWrapper<any>,
   PrayerPagination: ResolverTypeWrapper<any>,
   PageInfo: ResolverTypeWrapper<any>,
   Mutation: ResolverTypeWrapper<{}>,
@@ -569,6 +585,7 @@ export type ResolversParentTypes = {
   ChildPageReference: any,
   FilterInput: any,
   SearchResult: any,
+  TuneSortByInput: any,
   PrayerPagination: any,
   PageInfo: any,
   Mutation: {},
@@ -817,6 +834,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   hymnById?: Resolver<Maybe<ResolversTypes['Hymn']>, ParentType, ContextType, RequireFields<QueryHymnByIdArgs, 'id'>>,
   keywordById?: Resolver<Maybe<ResolversTypes['Keyword']>, ParentType, ContextType, RequireFields<QueryKeywordByIdArgs, 'id'>>,
   liturgyById?: Resolver<Maybe<ResolversTypes['Liturgy']>, ParentType, ContextType, RequireFields<QueryLiturgyByIdArgs, 'id'>>,
+  tuneMany?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tune']>>>, ParentType, ContextType, QueryTuneManyArgs>,
   prayerById?: Resolver<Maybe<ResolversTypes['Prayer']>, ParentType, ContextType, RequireFields<QueryPrayerByIdArgs, 'id'>>,
   prayerPagination?: Resolver<Maybe<ResolversTypes['PrayerPagination']>, ParentType, ContextType, RequireFields<QueryPrayerPaginationArgs, 'page' | 'perPage'>>,
 };

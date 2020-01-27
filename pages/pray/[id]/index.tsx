@@ -29,8 +29,7 @@ const PrayerById: FC<PrayerByIdProps> = ({id}) => {
       {data?.prayerById && (
         <Flex
           gutterWidth="xxl"
-          breakpoints={['narrow', 'medium']}
-          direction={['column-reverse', 'column-reverse', 'row']}
+          sx={{flexDirection: ['column-reverse', 'column-reverse', 'row']}}
         >
           <Box>
             {author && (

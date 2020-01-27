@@ -1,6 +1,10 @@
+/* eslint-env browser */
+
+import {IncomingMessage} from 'http';
+import {NextPageContext} from 'next';
 import Router from 'next/router';
 
-export default (context, url) => {
+export default (context: NextPageContext, url: string): void => {
   if (context.res) {
     // Server
     // 303: "See other"
@@ -12,10 +16,10 @@ export default (context, url) => {
   }
 };
 
-export function buildUrl(req) {
+export function buildUrl(req: IncomingMessage): URL {
   if (req) {
     return new URL(req.originalUrl, 'http://localhost:3000');
   }
 
-  return new URL(global.location);
+  return new URL(window.location.href);
 }

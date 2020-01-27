@@ -1,7 +1,7 @@
 import microCors from 'micro-cors';
 import {NextApiRequest} from 'next';
 import {ApolloServer} from 'apollo-server-micro';
-import auth0 from '../../../lib/auth0';
+import auth0 from '../_auth0';
 import * as prayerModel from './_models/prayer';
 import * as resourceModel from './_models/resource';
 import * as userModel from './_models/user';

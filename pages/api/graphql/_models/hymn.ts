@@ -1,5 +1,5 @@
 import {Hymn} from '../_gen-types';
-import sanity from '../../../../lib/sanity';
+import sanity from './sanity';
 
 export async function getById(id: string): Promise<Hymn> {
   return sanity.fetch(

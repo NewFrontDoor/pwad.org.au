@@ -64,7 +64,6 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
               menuItems && (
                 <Flex
                   as="ul"
-                  breakpoints={['narrow']}
                   marginX={[4, 'auto']}
                   sx={{
                     width: ['auto', '75%']

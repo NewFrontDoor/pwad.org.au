@@ -18,7 +18,6 @@ const Footer: FC<FooterProps> = ({menuItems}) => {
           as="footer"
           paddingTop="1rem"
           paddingBottom="15vh"
-          breakpoints={['narrow']}
           marginX={[3, 'auto']}
           sx={{
             width: ['auto', '75%']

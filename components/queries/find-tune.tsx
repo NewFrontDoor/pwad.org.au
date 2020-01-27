@@ -6,7 +6,7 @@ export default gql`
       filter: {text_contains: $title}
       limit: $limit
       skip: $skip
-      sort: TITLE_ASC
+      sort: title_ASC
     ) {
       _id
       title

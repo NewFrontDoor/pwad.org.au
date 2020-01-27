@@ -89,6 +89,7 @@ export type FeaturedReference = PageContent | ExternalUrl | RelativeUrl;
 export type FilterInput = {
   id?: Maybe<Scalars['String']>,
   search?: Maybe<Scalars['String']>,
+  text_contains?: Maybe<Scalars['String']>,
 };
 
 export type Hymn = Document & {
@@ -306,6 +307,7 @@ export type Query = {
   hymnById?: Maybe<Hymn>,
   keywordById?: Maybe<Keyword>,
   liturgyById?: Maybe<Liturgy>,
+  tuneMany?: Maybe<Array<Maybe<Tune>>>,
   prayerById?: Maybe<Prayer>,
   prayerPagination?: Maybe<PrayerPagination>,
 };
@@ -338,6 +340,14 @@ export type QueryKeywordByIdArgs = {
 
 export type QueryLiturgyByIdArgs = {
   id: Scalars['ID']
+};
+
+
+export type QueryTuneManyArgs = {
+  filter?: Maybe<FilterInput>,
+  limit?: Maybe<Scalars['Int']>,
+  skip?: Maybe<Scalars['Int']>,
+  sort?: Maybe<TuneSortByInput>
 };
 
 
@@ -407,6 +417,11 @@ export type Tune = Document & {
   files?: Maybe<Array<Maybe<Asset>>>,
   musicCopyright?: Maybe<Copyright>,
 };
+
+export enum TuneSortByInput {
+  TitleAsc = 'title_ASC',
+  TitleDesc = 'title_DESC'
+}
 
 export type User = Document & {
    __typename?: 'User',
@@ -612,6 +627,21 @@ export type FindPrayerContentsQuery = (
       & Pick<Prayer, '_id' | 'title' | 'content'>
     )>>> }
   )> }
+);
+
+export type FindTuneQueryVariables = {
+  title?: Maybe<Scalars['String']>,
+  skip?: Maybe<Scalars['Int']>,
+  limit?: Maybe<Scalars['Int']>
+};
+
+
+export type FindTuneQuery = (
+  { __typename?: 'Query' }
+  & { tuneMany: Maybe<Array<Maybe<(
+    { __typename?: 'Tune' }
+    & Pick<Tune, '_id' | 'title'>
+  )>>> }
 );
 
 export type ChangeFreeAccountMutationVariables = {
@@ -1151,6 +1181,42 @@ export function useFindPrayerContentsLazyQuery(baseOptions?: ApolloReactHooks.La
 export type FindPrayerContentsQueryHookResult = ReturnType<typeof useFindPrayerContentsQuery>;
 export type FindPrayerContentsLazyQueryHookResult = ReturnType<typeof useFindPrayerContentsLazyQuery>;
 export type FindPrayerContentsQueryResult = ApolloReactCommon.QueryResult<FindPrayerContentsQuery, FindPrayerContentsQueryVariables>;
+export const FindTuneDocument = gql`
+    query findTune($title: String, $skip: Int, $limit: Int) {
+  tuneMany(filter: {text_contains: $title}, limit: $limit, skip: $skip, sort: title_ASC) {
+    _id
+    title
+  }
+}
+    `;
+
+/**
+ * __useFindTuneQuery__
+ *
+ * To run a query within a React component, call `useFindTuneQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindTuneQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindTuneQuery({
+ *   variables: {
+ *      title: // value for 'title'
+ *      skip: // value for 'skip'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useFindTuneQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FindTuneQuery, FindTuneQueryVariables>) {
+        return ApolloReactHooks.useQuery<FindTuneQuery, FindTuneQueryVariables>(FindTuneDocument, baseOptions);
+      }
+export function useFindTuneLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FindTuneQuery, FindTuneQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<FindTuneQuery, FindTuneQueryVariables>(FindTuneDocument, baseOptions);
+        }
+export type FindTuneQueryHookResult = ReturnType<typeof useFindTuneQuery>;
+export type FindTuneLazyQueryHookResult = ReturnType<typeof useFindTuneLazyQuery>;
+export type FindTuneQueryResult = ApolloReactCommon.QueryResult<FindTuneQuery, FindTuneQueryVariables>;
 export const ChangeFreeAccountDocument = gql`
     mutation changeFreeAccount($hasFreeAccount: Boolean!) {
   changeFreeAccount(hasFreeAccount: $hasFreeAccount) {
