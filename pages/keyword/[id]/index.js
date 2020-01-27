@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {useQuery} from '@apollo/react-hooks';
-import Text from 'mineral-ui/Text';
+import {Text} from 'theme-ui';
 
 import withApollo from '../../../lib/with-apollo-client';
 
@@ -25,7 +25,7 @@ function Keyword({id}) {
   const {name, hymns, prayers, liturgies} = keywordById || {};
 
   return (
-    <PageLayout>
+    <PageLayout menuItems={menuItems}>
       <Text as="h1" fontWeight="extraBold">
         Public Worship and Aids to Devotion Committee Website
       </Text>

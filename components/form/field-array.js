@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {getIn, FieldArray as FormikFieldArray} from 'formik';
-import {FormField as MineralFormField} from 'mineral-ui/Form';
-import {CheckboxGroup} from 'mineral-ui/Checkbox';
+import {Checkbox} from 'theme-ui';
+
+const CheckboxGroup = () => {};
 
 const FieldArray = ({name, input, ...props}) => (
   <FormikFieldArray name={name}>

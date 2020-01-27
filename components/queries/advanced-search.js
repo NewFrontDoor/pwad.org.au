@@ -3,9 +3,9 @@ import gql from 'graphql-tag';
 export default gql`
   query listAll(
     $title: String
-    $tunes: [MongoID]
-    $occasion: MongoID
-    $keywords: [MongoID]
+    $tunes: [String]
+    $occasion: String
+    $keywords: [String]
     $book: EnumHymnBook
   ) {
     hymnMany(

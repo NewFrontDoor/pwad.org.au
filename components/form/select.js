@@ -1,10 +1,10 @@
 import React from 'react';
 import Select from 'react-select';
 
-import {useTheme} from '../use-theme';
+import {useThemeUI} from 'theme-ui';
 
 function SearchInput(props) {
-  const theme = useTheme();
+  const {theme} = useThemeUI();
 
   const styles = {
     control(provided, {isActive, isFocused}) {

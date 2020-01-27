@@ -1,0 +1,21 @@
+schema: ./pages/api/graphql/_schema.ts
+generates:
+  ./pages/api/graphql/_gen-types.ts:
+    config:
+      defaultMapper: any
+      contextType: ./#Context
+    plugins:
+      - add: /* eslint-disable */
+      - typescript
+      - typescript-resolvers
+  ./components/queries/index.tsx:
+    documents: ./components/queries/*.tsx
+    plugins:
+      - add: /* eslint-disable */
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
+    config:
+      withComponent: false
+      withHooks: true
+      withHOC: false

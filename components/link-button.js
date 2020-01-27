@@ -1,12 +1,13 @@
 /* eslint-disable camelcase */
 
 import React from 'react';
-import styled from '@emotion/styled';
-import {withTheme} from 'emotion-theming';
+import {styled, useThemeUI} from 'theme-ui';
 import {ThemeProvider} from 'mineral-ui/themes';
 import Button from 'mineral-ui/Button';
 
-const LinkButton = styled(Button)(({appearance, theme}) => {
+const LinkButton = styled(Button)(({appearance}) => {
+  const { theme } = useThemeUI()
+
   return {
     padding: 0,
     border: 'none',
