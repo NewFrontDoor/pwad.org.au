@@ -26,7 +26,7 @@ const theme = {
     black: '#000',
     white: '#fff',
     text: '#333840',
-    background: '#000',
+    background: '#333840',
     gray: [
       null,
       '#f7fafc',
@@ -158,13 +158,17 @@ const theme = {
       color: 'primary',
       background: 'none',
       cursor: 'pointer',
-      border: 'none'
+      border: 'none',
+      '&:hover': {
+        textDecoration: 'underline'
+      }
     }
   },
   cards: {
     primary: {
-      padding: 2,
+      padding: 3,
       borderRadius: 4,
+      background: 'white',
       boxShadow: '0 0 8px rgba(0, 0, 0, 0.125)'
     }
   },
@@ -229,7 +233,11 @@ const theme = {
       lineHeight: 'body'
     },
     a: {
-      color: 'primary'
+      color: 'primary',
+      textDecoration: 'none',
+      '&:hover': {
+        textDecoration: 'underline'
+      }
     },
     pre: {
       fontFamily: 'monospace',
@@ -262,23 +270,3 @@ const theme = {
 };
 
 export default theme;
-
-export const darkTheme = {
-  ...theme,
-  colors: {
-    ...theme.colors,
-    primary: '#fff',
-    background: '#000',
-    text: '#fff'
-  },
-  styles: {
-    ...theme.styles,
-    a: {
-      color: 'primary'
-    }
-  }
-};
-
-export const DarkTheme: FC<any> = props => (
-  <ThemeProvider theme={darkTheme} {...props} />
-);

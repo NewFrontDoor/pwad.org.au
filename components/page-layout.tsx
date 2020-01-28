@@ -39,28 +39,32 @@ const PageLayout: FC<PageLayoutProps> = ({children}) => {
         <GlobalStyles />
         <Box
           marginTop="1rem"
-          paddingBottom="15vh"
           sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: '100vh',
             background: `linear-gradient(
                 0deg,
                 ${theme.colors.gray[1]},
-                ${rgba(theme.colors.gray[1], 0.2)}
+                ${rgba(theme.colors.gray[1], 0.4)}
               )`
           }}
         >
           <Box
             marginY={0}
             marginX={[4, 'auto']}
+            paddingBottom="10vh"
             sx={{
-              width: ['auto', '75%']
+              width: ['auto', '75%'],
+              flex: '1 1 auto'
             }}
           >
             <BannerImage image={bannerImage} />
             {data && isBrowser && <NavBar menuItems={data.main.menuItems} />}
             {children}
           </Box>
+          {data && <Footer menuItems={data.main.menuItems} />}
         </Box>
-        {data && <Footer menuItems={data.main.menuItems} />}
       </>
     </ThemeProvider>
   );

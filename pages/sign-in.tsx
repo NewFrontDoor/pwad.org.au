@@ -32,7 +32,7 @@ Signin.getInitialProps = async (context: WithApolloPageContext) => {
   if (loggedInUser.user) {
     // Already signed in? No need to continue.
     // Throw them back to the main page
-    redirect(context, '/');
+    redirect('/', context);
   }
 
   const url = buildUrl(context.req);

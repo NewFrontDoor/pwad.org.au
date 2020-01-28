@@ -1,11 +1,11 @@
-import React, {useReducer} from 'react';
+import React, {Fc, useReducer} from 'react';
 import PropTypes from 'prop-types';
 import identity from 'lodash/identity';
 import pickBy from 'lodash/pickBy';
-import {useQuery} from '@apollo/react-hooks';
-import {Box, Flex, Text, Button, Input} from 'mineral-ui/Box';
-import {Formik, Form, FormField} from '../form';
-import {ADVANCED_SEARCH} from '../queries';
+import {Box, Flex, Styled, Button} from 'theme-ui';
+import {Formik, Form, Field} from 'formik';
+import {TextField} from '../form';
+import {useAdvancedSearchQuery} from '../queries';
 import SearchResult from './search-result';
 import SearchOccasionInput from './search-occasion-input';
 import SearchKeywordInput from './search-keyword-input';
@@ -48,7 +48,7 @@ function reducer(state, action) {
 }
 
 function AdvancedSearch({search}) {
-  const {loading, error, data: {liturgyMany} = {}} = useQuery(ADVANCED_SEARCH, {
+  const {loading, error, data} = useAdvancedSearchQuery({
     variables: search
   });
 
@@ -60,20 +60,20 @@ function AdvancedSearch({search}) {
     return `Error! ${error.message}`;
   }
 
-  const results = liturgyMany.sort((a, b) => b.score - a.score);
-
-  if (results.length > 0) {
-    return results.map(result => <SearchResult key={result._id} {...result} />);
+  if (data.search.length > 0) {
+    return data.search.map(result => (
+      <SearchResult key={result._id} {...result} />
+    ));
   }
 
-  return <Styled.p variant="prose">No results found...</Text>;
+  return <Styled.p variant="prose">No results found...</Styled.p>;
 }
 
 AdvancedSearch.propTypes = {
   search: PropTypes.object.isRequired
 };
 
-function SearchBox() {
+const SearchBox: FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const {showSearchResults, ...search} = state;
@@ -90,27 +90,19 @@ function SearchBox() {
       >
         <Form>
           <Flex>
-            <Box
-              grow={1}
-              width="50%"
-              sx={{flexDirection: ['column', 'row']}}
-            >
+            <Box grow={1} width="50%" sx={{flexDirection: ['column', 'row']}}>
               <Box marginBottom="1em">
-                <FormField input={Input} label="Title" name="title" />
+                <TextField label="Title" name="title" />
               </Box>
               <Box marginBottom="1em">
-                <FormField
-                  input={SearchOccasionInput}
+                <Field
+                  as={SearchOccasionInput}
                   label="Occasion"
                   name="occasion"
                 />
               </Box>
               <Box marginBottom="1em">
-                <FormField
-                  input={SearchKeywordInput}
-                  label="Keyword"
-                  name="keyword"
-                />
+                <Field as={SearchKeywordInput} label="Keyword" name="keyword" />
               </Box>
               <Box marginBottom="1em">
                 <Button fullWidth type="submit">
@@ -124,6 +116,6 @@ function SearchBox() {
       {showSearchResults && <AdvancedSearch search={search} />}
     </>
   );
-}
+};
 
 export default SearchBox;

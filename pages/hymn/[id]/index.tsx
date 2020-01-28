@@ -116,7 +116,7 @@ const Song: NextPage<SongProps> = ({id}) => {
             </>
           )}
         </Box>
-        <Box width="100%">
+        <Box sx={{width: '100%'}}>
           <Text as="h2">
             <ShortListButton hymn={props} />
             {hymnNumber}. {title}
@@ -139,10 +139,14 @@ Song.getInitialProps = async (context: WithApolloPageContext) => {
     const ability = defineAbilitiesFor(loggedInUser.user);
 
     if (ability.cannot('read', 'Hymn')) {
-      redirect(context, '/my-account');
+      redirect('/my-account', context);
     }
   } else {
-    redirect(context, '/sign-in');
+    redirect('/sign-in', context);
+  }
+
+  if (Array.isArray(id)) {
+    return {id: id[0]};
   }
 
   return {id};

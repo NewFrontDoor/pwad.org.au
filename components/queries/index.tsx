@@ -73,6 +73,76 @@ export type Document = {
   _updatedAt?: Maybe<Scalars['Date']>,
 };
 
+export enum EnumHymnBook {
+  None = 'NONE',
+  Genesis = 'GENESIS',
+  Exodus = 'EXODUS',
+  Leviticus = 'LEVITICUS',
+  Numbers = 'NUMBERS',
+  Deuteronomy = 'DEUTERONOMY',
+  Joshua = 'JOSHUA',
+  Judges = 'JUDGES',
+  Ruth = 'RUTH',
+  FirstSamuel = 'FIRST_SAMUEL',
+  SecondSamuel = 'SECOND_SAMUEL',
+  FirstKings = 'FIRST_KINGS',
+  SecondKings = 'SECOND_KINGS',
+  FirstChronicles = 'FIRST_CHRONICLES',
+  SecondChronicles = 'SECOND_CHRONICLES',
+  Ezra = 'EZRA',
+  Nehemiah = 'NEHEMIAH',
+  Esther = 'ESTHER',
+  Job = 'JOB',
+  Psalms = 'PSALMS',
+  Proverbs = 'PROVERBS',
+  Ecclesiastes = 'ECCLESIASTES',
+  SongOfSongs = 'SONG_OF_SONGS',
+  Isaiah = 'ISAIAH',
+  Jeremiah = 'JEREMIAH',
+  Lamentations = 'LAMENTATIONS',
+  Ezekiel = 'EZEKIEL',
+  Daniel = 'DANIEL',
+  Hosea = 'HOSEA',
+  Joel = 'JOEL',
+  Amos = 'AMOS',
+  Obadiah = 'OBADIAH',
+  Jonah = 'JONAH',
+  Micah = 'MICAH',
+  Nahum = 'NAHUM',
+  Habakkuk = 'HABAKKUK',
+  Zephaniah = 'ZEPHANIAH',
+  Haggai = 'HAGGAI',
+  Zechariah = 'ZECHARIAH',
+  Malachi = 'MALACHI',
+  Matthew = 'MATTHEW',
+  Mark = 'MARK',
+  Luke = 'LUKE',
+  John = 'JOHN',
+  Acts = 'ACTS',
+  Romans = 'ROMANS',
+  FirstCorinthians = 'FIRST_CORINTHIANS',
+  SecondCorinthians = 'SECOND_CORINTHIANS',
+  Galatians = 'GALATIANS',
+  Ephesians = 'EPHESIANS',
+  Philippians = 'PHILIPPIANS',
+  Colossians = 'COLOSSIANS',
+  FirstThessalonians = 'FIRST_THESSALONIANS',
+  SecondThessalonians = 'SECOND_THESSALONIANS',
+  FirstTimothy = 'FIRST_TIMOTHY',
+  SecondTimothy = 'SECOND_TIMOTHY',
+  Titus = 'TITUS',
+  Philemon = 'PHILEMON',
+  Hebrews = 'HEBREWS',
+  James = 'JAMES',
+  FirstPeter = 'FIRST_PETER',
+  SecondPeter = 'SECOND_PETER',
+  FirstJohn = 'FIRST_JOHN',
+  SecondJohn = 'SECOND_JOHN',
+  ThirdJohn = 'THIRD_JOHN',
+  Jude = 'JUDE',
+  Revelation = 'REVELATION'
+}
+
 export type ExternalUrl = Document & {
    __typename?: 'ExternalUrl',
   _createdAt?: Maybe<Scalars['Date']>,
@@ -127,6 +197,11 @@ export type Keyword = Document & {
   prayers?: Maybe<Array<Maybe<Prayer>>>,
   liturgies?: Maybe<Array<Maybe<Liturgy>>>,
 };
+
+export enum KeywordSortBy {
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC'
+}
 
 export type Liturgy = Document & {
    __typename?: 'Liturgy',
@@ -188,7 +263,13 @@ export type Metre = Document & {
   _type?: Maybe<Scalars['String']>,
   _updatedAt?: Maybe<Scalars['Date']>,
   metre?: Maybe<Scalars['String']>,
+  tunes?: Maybe<Array<Maybe<Tune>>>,
 };
+
+export enum MetreSortBy {
+  MetreAsc = 'metre_ASC',
+  MetreDesc = 'metre_DESC'
+}
 
 export type Mutation = {
    __typename?: 'Mutation',
@@ -198,6 +279,7 @@ export type Mutation = {
   createUser?: Maybe<User>,
   loginUser?: Maybe<User>,
   changePassword?: Maybe<User>,
+  makePayment?: Maybe<User>,
 };
 
 
@@ -237,6 +319,12 @@ export type MutationChangePasswordArgs = {
   confirmPassword: Scalars['String']
 };
 
+
+export type MutationMakePaymentArgs = {
+  email: Scalars['String'],
+  password: Scalars['String']
+};
+
 export type Name = {
    __typename?: 'Name',
   first?: Maybe<Scalars['String']>,
@@ -253,6 +341,13 @@ export type Occasion = Document & {
   name?: Maybe<Scalars['String']>,
   parent?: Maybe<Occasion>,
   churchyear?: Maybe<Scalars['Boolean']>,
+};
+
+export type OccasionGroupedById = {
+   __typename?: 'OccasionGroupedById',
+  _id: Scalars['ID'],
+  name?: Maybe<Scalars['String']>,
+  values?: Maybe<Array<Maybe<Occasion>>>,
 };
 
 export type PageContent = Document & {
@@ -300,14 +395,18 @@ export type Query = {
    __typename?: 'Query',
   me?: Maybe<User>,
   main?: Maybe<Main>,
+  occasionManyGroupById?: Maybe<Array<Maybe<OccasionGroupedById>>>,
   menuItems?: Maybe<Array<Maybe<MenuItem>>>,
   textSearch?: Maybe<Array<Maybe<SearchResult>>>,
+  search?: Maybe<Array<Maybe<SearchResult>>>,
   pageContentOne?: Maybe<PageContent>,
   authorById?: Maybe<Author>,
   hymnById?: Maybe<Hymn>,
   keywordById?: Maybe<Keyword>,
+  keywordMany?: Maybe<Array<Maybe<Keyword>>>,
   liturgyById?: Maybe<Liturgy>,
   tuneMany?: Maybe<Array<Maybe<Tune>>>,
+  metreMany?: Maybe<Array<Maybe<Metre>>>,
   prayerById?: Maybe<Prayer>,
   prayerPagination?: Maybe<PrayerPagination>,
 };
@@ -315,6 +414,11 @@ export type Query = {
 
 export type QueryTextSearchArgs = {
   filter: FilterInput
+};
+
+
+export type QuerySearchArgs = {
+  filter: SearchInput
 };
 
 
@@ -338,6 +442,14 @@ export type QueryKeywordByIdArgs = {
 };
 
 
+export type QueryKeywordManyArgs = {
+  filter?: Maybe<FilterInput>,
+  limit?: Maybe<Scalars['Int']>,
+  skip?: Maybe<Scalars['Int']>,
+  sort?: Maybe<KeywordSortBy>
+};
+
+
 export type QueryLiturgyByIdArgs = {
   id: Scalars['ID']
 };
@@ -347,7 +459,15 @@ export type QueryTuneManyArgs = {
   filter?: Maybe<FilterInput>,
   limit?: Maybe<Scalars['Int']>,
   skip?: Maybe<Scalars['Int']>,
-  sort?: Maybe<TuneSortByInput>
+  sort?: Maybe<TuneSortBy>
+};
+
+
+export type QueryMetreManyArgs = {
+  filter?: Maybe<FilterInput>,
+  limit?: Maybe<Scalars['Int']>,
+  skip?: Maybe<Scalars['Int']>,
+  sort?: Maybe<MetreSortBy>
 };
 
 
@@ -400,6 +520,18 @@ export type Scripture = Document & {
   keywords?: Maybe<Array<Maybe<Keyword>>>,
 };
 
+export type SearchInput = {
+  text_contains?: Maybe<Scalars['String']>,
+  book?: Maybe<EnumHymnBook>,
+  occasion?: Maybe<Scalars['String']>,
+  keywords?: Maybe<Array<Maybe<Scalars['String']>>>,
+  _operators?: Maybe<SearchInputOperator>,
+};
+
+export type SearchInputOperator = {
+  tune?: Maybe<TuneIn>,
+};
+
 export type SearchResult = Hymn | Prayer | Liturgy | Scripture;
 
 export type ShortList = Hymn | Prayer | Liturgy | Scripture;
@@ -418,7 +550,11 @@ export type Tune = Document & {
   musicCopyright?: Maybe<Copyright>,
 };
 
-export enum TuneSortByInput {
+export type TuneIn = {
+  in?: Maybe<Array<Maybe<Scalars['String']>>>,
+};
+
+export enum TuneSortBy {
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC'
 }
@@ -450,6 +586,44 @@ export type AddShortListItemMutation = (
     { __typename?: 'Hymn' }
     & Pick<Hymn, '_id' | 'title' | 'hymnNumber'>
   ) | { __typename?: 'Prayer' } | { __typename?: 'Liturgy' } | { __typename?: 'Scripture' }>>> }
+);
+
+export type AdvancedSearchQueryVariables = {
+  title?: Maybe<Scalars['String']>,
+  tunes?: Maybe<Array<Maybe<Scalars['String']>>>,
+  occasion?: Maybe<Scalars['String']>,
+  keywords?: Maybe<Array<Maybe<Scalars['String']>>>,
+  book?: Maybe<EnumHymnBook>
+};
+
+
+export type AdvancedSearchQuery = (
+  { __typename?: 'Query' }
+  & { search: Maybe<Array<Maybe<(
+    { __typename?: 'Hymn' }
+    & Pick<Hymn, '_id' | '_type' | 'title' | 'content'>
+    & { keywords: Maybe<Array<Maybe<(
+      { __typename?: 'Keyword' }
+      & Pick<Keyword, '_id' | 'name'>
+    )>>> }
+  ) | (
+    { __typename?: 'Prayer' }
+    & Pick<Prayer, '_id' | '_type' | 'title' | 'content'>
+    & { keywords: Maybe<Array<Maybe<(
+      { __typename?: 'Keyword' }
+      & Pick<Keyword, '_id' | 'name'>
+    )>>> }
+  ) | (
+    { __typename?: 'Liturgy' }
+    & Pick<Liturgy, '_id' | '_type' | 'title' | 'content'>
+    & { keywords: Maybe<Array<Maybe<(
+      { __typename?: 'Keyword' }
+      & Pick<Keyword, '_id' | 'name'>
+    )>>> }
+  ) | (
+    { __typename?: 'Scripture' }
+    & Pick<Scripture, '_id' | '_type'>
+  )>>> }
 );
 
 export type ChangePasswordMutationVariables = {
@@ -486,6 +660,55 @@ export type CreateUserMutation = (
       & Pick<Name, 'first' | 'last'>
     )> }
   )> }
+);
+
+export type FindKeywordQueryVariables = {
+  title?: Maybe<Scalars['String']>,
+  skip?: Maybe<Scalars['Int']>,
+  limit?: Maybe<Scalars['Int']>
+};
+
+
+export type FindKeywordQuery = (
+  { __typename?: 'Query' }
+  & { keywordMany: Maybe<Array<Maybe<(
+    { __typename?: 'Keyword' }
+    & Pick<Keyword, '_id' | 'name'>
+  )>>> }
+);
+
+export type FindMetreQueryVariables = {
+  metre?: Maybe<Scalars['String']>,
+  skip?: Maybe<Scalars['Int']>,
+  limit?: Maybe<Scalars['Int']>
+};
+
+
+export type FindMetreQuery = (
+  { __typename?: 'Query' }
+  & { metreMany: Maybe<Array<Maybe<(
+    { __typename?: 'Metre' }
+    & Pick<Metre, '_id' | 'metre'>
+    & { tunes: Maybe<Array<Maybe<(
+      { __typename?: 'Tune' }
+      & Pick<Tune, '_id'>
+    )>>> }
+  )>>> }
+);
+
+export type FindOccasionQueryVariables = {};
+
+
+export type FindOccasionQuery = (
+  { __typename?: 'Query' }
+  & { occasionManyGroupById: Maybe<Array<Maybe<(
+    { __typename?: 'OccasionGroupedById' }
+    & Pick<OccasionGroupedById, 'name'>
+    & { values: Maybe<Array<Maybe<(
+      { __typename?: 'Occasion' }
+      & Pick<Occasion, '_id' | 'name'>
+    )>>> }
+  )>>> }
 );
 
 export type FindOneAuthorQueryVariables = {
@@ -694,6 +917,24 @@ export type LoginUserMutation = (
   )> }
 );
 
+export type Unnamed_1_MutationVariables = {
+  email: Scalars['String'],
+  password: Scalars['String']
+};
+
+
+export type Unnamed_1_Mutation = (
+  { __typename?: 'Mutation' }
+  & { makePayment: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, '_id' | 'hasPaidAccount' | 'hasFreeAccount' | 'picture'>
+    & { name: Maybe<(
+      { __typename?: 'Name' }
+      & Pick<Name, 'first' | 'last'>
+    )> }
+  )> }
+);
+
 export type MeQueryVariables = {};
 
 
@@ -818,6 +1059,70 @@ export function useAddShortListItemMutation(baseOptions?: ApolloReactHooks.Mutat
 export type AddShortListItemMutationHookResult = ReturnType<typeof useAddShortListItemMutation>;
 export type AddShortListItemMutationResult = ApolloReactCommon.MutationResult<AddShortListItemMutation>;
 export type AddShortListItemMutationOptions = ApolloReactCommon.BaseMutationOptions<AddShortListItemMutation, AddShortListItemMutationVariables>;
+export const AdvancedSearchDocument = gql`
+    query advancedSearch($title: String, $tunes: [String], $occasion: String, $keywords: [String], $book: EnumHymnBook) {
+  search(filter: {text_contains: $title, book: $book, occasion: $occasion, keywords: $keywords, _operators: {tune: {in: $tunes}}}) {
+    ... on Document {
+      _id
+      _type
+    }
+    ... on Hymn {
+      title
+      content
+      keywords {
+        _id
+        name
+      }
+    }
+    ... on Prayer {
+      title
+      content
+      keywords {
+        _id
+        name
+      }
+    }
+    ... on Liturgy {
+      title
+      content
+      keywords {
+        _id
+        name
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useAdvancedSearchQuery__
+ *
+ * To run a query within a React component, call `useAdvancedSearchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAdvancedSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAdvancedSearchQuery({
+ *   variables: {
+ *      title: // value for 'title'
+ *      tunes: // value for 'tunes'
+ *      occasion: // value for 'occasion'
+ *      keywords: // value for 'keywords'
+ *      book: // value for 'book'
+ *   },
+ * });
+ */
+export function useAdvancedSearchQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<AdvancedSearchQuery, AdvancedSearchQueryVariables>) {
+        return ApolloReactHooks.useQuery<AdvancedSearchQuery, AdvancedSearchQueryVariables>(AdvancedSearchDocument, baseOptions);
+      }
+export function useAdvancedSearchLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<AdvancedSearchQuery, AdvancedSearchQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<AdvancedSearchQuery, AdvancedSearchQueryVariables>(AdvancedSearchDocument, baseOptions);
+        }
+export type AdvancedSearchQueryHookResult = ReturnType<typeof useAdvancedSearchQuery>;
+export type AdvancedSearchLazyQueryHookResult = ReturnType<typeof useAdvancedSearchLazyQuery>;
+export type AdvancedSearchQueryResult = ApolloReactCommon.QueryResult<AdvancedSearchQuery, AdvancedSearchQueryVariables>;
 export const ChangePasswordDocument = gql`
     mutation changePassword($password: String!, $newPassword: String!, $confirmPassword: String!) {
   changePassword(password: $password, newPassword: $newPassword, confirmPassword: $confirmPassword) {
@@ -895,6 +1200,117 @@ export function useCreateUserMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = ApolloReactCommon.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const FindKeywordDocument = gql`
+    query findKeyword($title: String, $skip: Int, $limit: Int) {
+  keywordMany(filter: {text_contains: $title}, limit: $limit, skip: $skip, sort: name_ASC) {
+    _id
+    name
+  }
+}
+    `;
+
+/**
+ * __useFindKeywordQuery__
+ *
+ * To run a query within a React component, call `useFindKeywordQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindKeywordQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindKeywordQuery({
+ *   variables: {
+ *      title: // value for 'title'
+ *      skip: // value for 'skip'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useFindKeywordQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FindKeywordQuery, FindKeywordQueryVariables>) {
+        return ApolloReactHooks.useQuery<FindKeywordQuery, FindKeywordQueryVariables>(FindKeywordDocument, baseOptions);
+      }
+export function useFindKeywordLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FindKeywordQuery, FindKeywordQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<FindKeywordQuery, FindKeywordQueryVariables>(FindKeywordDocument, baseOptions);
+        }
+export type FindKeywordQueryHookResult = ReturnType<typeof useFindKeywordQuery>;
+export type FindKeywordLazyQueryHookResult = ReturnType<typeof useFindKeywordLazyQuery>;
+export type FindKeywordQueryResult = ApolloReactCommon.QueryResult<FindKeywordQuery, FindKeywordQueryVariables>;
+export const FindMetreDocument = gql`
+    query findMetre($metre: String, $skip: Int, $limit: Int) {
+  metreMany(filter: {text_contains: $metre}, limit: $limit, skip: $skip, sort: metre_ASC) {
+    _id
+    metre
+    tunes {
+      _id
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindMetreQuery__
+ *
+ * To run a query within a React component, call `useFindMetreQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindMetreQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindMetreQuery({
+ *   variables: {
+ *      metre: // value for 'metre'
+ *      skip: // value for 'skip'
+ *      limit: // value for 'limit'
+ *   },
+ * });
+ */
+export function useFindMetreQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FindMetreQuery, FindMetreQueryVariables>) {
+        return ApolloReactHooks.useQuery<FindMetreQuery, FindMetreQueryVariables>(FindMetreDocument, baseOptions);
+      }
+export function useFindMetreLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FindMetreQuery, FindMetreQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<FindMetreQuery, FindMetreQueryVariables>(FindMetreDocument, baseOptions);
+        }
+export type FindMetreQueryHookResult = ReturnType<typeof useFindMetreQuery>;
+export type FindMetreLazyQueryHookResult = ReturnType<typeof useFindMetreLazyQuery>;
+export type FindMetreQueryResult = ApolloReactCommon.QueryResult<FindMetreQuery, FindMetreQueryVariables>;
+export const FindOccasionDocument = gql`
+    query findOccasion {
+  occasionManyGroupById {
+    name
+    values {
+      _id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useFindOccasionQuery__
+ *
+ * To run a query within a React component, call `useFindOccasionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindOccasionQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindOccasionQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useFindOccasionQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FindOccasionQuery, FindOccasionQueryVariables>) {
+        return ApolloReactHooks.useQuery<FindOccasionQuery, FindOccasionQueryVariables>(FindOccasionDocument, baseOptions);
+      }
+export function useFindOccasionLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FindOccasionQuery, FindOccasionQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<FindOccasionQuery, FindOccasionQueryVariables>(FindOccasionDocument, baseOptions);
+        }
+export type FindOccasionQueryHookResult = ReturnType<typeof useFindOccasionQuery>;
+export type FindOccasionLazyQueryHookResult = ReturnType<typeof useFindOccasionLazyQuery>;
+export type FindOccasionQueryResult = ApolloReactCommon.QueryResult<FindOccasionQuery, FindOccasionQueryVariables>;
 export const FindOneAuthorDocument = gql`
     query findOneAuthor($id: ID!) {
   authorById(id: $id) {

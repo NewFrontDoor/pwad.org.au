@@ -40,10 +40,10 @@ const SignInForm: FC<SignInForm> = ({redirectPath}) => {
       // Force a reload of all the current queries now that the user is
       // logged in
       // cache.reset().then(() => {
-      //   redirect({}, '/');
+      //   redirect('/');
       // });
 
-      redirect({}, '/');
+      redirect('/');
     }
   });
 

@@ -10,6 +10,7 @@ const committee = AbilityBuilder.define((can, cannot) => {
 });
 
 const publicUser = AbilityBuilder.define(can => {
+  can('read', 'all'); // TODO remove
   can('manage', 'my-account');
 });
 

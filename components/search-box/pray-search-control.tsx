@@ -4,8 +4,9 @@ import identity from 'lodash/identity';
 import pickBy from 'lodash/pickBy';
 import {useQuery} from '@apollo/react-hooks';
 import {Styled, Box, Flex, Button} from 'theme-ui';
-import {Formik, Form, TextField} from '../form';
-import {ADVANCED_SEARCH} from '../queries';
+import {Formik, Form, Field} from 'formik';
+import {TextField} from '../form';
+import {useAdvancedSearchQuery} from '../queries';
 import SearchResult from './search-result';
 import SearchOccasionInput from './search-occasion-input';
 import SearchKeywordInput from './search-keyword-input';
@@ -46,7 +47,7 @@ function reducer(state, action) {
 }
 
 function AdvancedSearch({search}) {
-  const {loading, error, data} = useQuery(ADVANCED_SEARCH, {
+  const {loading, error, data} = useAdvancedSearchQuery({
     variables: search
   });
 
@@ -58,10 +59,10 @@ function AdvancedSearch({search}) {
     return `Error! ${error.message}`;
   }
 
-  const results = data.prayerMany.sort((a, b) => b.score - a.score);
-
-  if (results.length > 0) {
-    return results.map(result => <SearchResult key={result._id} {...result} />);
+  if (data.search.length > 0) {
+    return data.search.map(result => (
+      <SearchResult key={result._id} {...result} />
+    ));
   }
 
   return <Styled.p variant="prose">No results found...</Styled.p>;
@@ -94,18 +95,14 @@ const SearchBox: FC = () => {
                 <TextField label="Title" name="title" />
               </Box>
               <Box marginBottom="1em">
-                <FormField
-                  input={SearchOccasionInput}
+                <Field
+                  as={SearchOccasionInput}
                   label="Occasion"
                   name="occasion"
                 />
               </Box>
               <Box marginBottom="1em">
-                <FormField
-                  input={SearchKeywordInput}
-                  label="Keyword"
-                  name="keyword"
-                />
+                <Field as={SearchKeywordInput} label="Keyword" name="keyword" />
               </Box>
               <Box marginBottom="1em">
                 <Button fullWidth type="submit">

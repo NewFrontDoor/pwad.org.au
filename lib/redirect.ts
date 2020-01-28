@@ -4,8 +4,8 @@ import {IncomingMessage} from 'http';
 import {NextPageContext} from 'next';
 import Router from 'next/router';
 
-export default (context: NextPageContext, url: string): void => {
-  if (context.res) {
+export default (url: string, context?: NextPageContext): void => {
+  if (context?.res) {
     // Server
     // 303: "See other"
     context.res.writeHead(303, {Location: url});

@@ -2,11 +2,11 @@ import React, {FC, useReducer} from 'react';
 import PropTypes from 'prop-types';
 import identity from 'lodash/identity';
 import pickBy from 'lodash/pickBy';
-import {useQuery} from '@apollo/react-hooks';
-import {Styled, Button, Flex, Box} from 'theme-ui';
-import {Formik, Form} from 'formik';
+import {useResponsiveValue} from '@theme-ui/match-media';
+import {Styled, Button, Grid, Box} from 'theme-ui';
+import {Formik, Form, Field} from 'formik';
 import {TextField} from '../form';
-import {ADVANCED_SEARCH} from '../queries';
+import {useAdvancedSearchQuery, EnumHymnBook} from '../queries';
 import SearchResult from './search-result';
 import SearchMetreInput from './search-metre-input';
 import SearchTuneInput from './search-tune-input';
@@ -14,17 +14,44 @@ import SearchPassageInput from './search-passage-input';
 import SearchOccasionInput from './search-occasion-input';
 import SearchKeywordInput from './search-keyword-input';
 
+type AdvancedSearchProps = {
+  search: {
+    book?: EnumHymnBook;
+    keywords?: string[];
+    occasion?: string;
+    title?: string;
+    tunes?: string[];
+  };
+};
+
+type State = AdvancedSearchProps['search'] & {
+  showSearchResults?: boolean;
+  showHowToSearch?: boolean;
+  showAdvancedSeach?: boolean;
+};
+
+type Action = {
+  type: 'search';
+  fields: {
+    hymnMetres?: unknown[];
+    passage?: {value: string};
+    occasion?: {value: string};
+    tune?: {value: string};
+    keyword?: {value: string};
+  };
+};
+
 const initialState = {
   showSearchResults: false,
   showHowToSearch: false,
   showAdvancedSeach: false
 };
 
-function reducer(state, action) {
-  let keywords;
-  let tunes;
-  let book;
-  let occasion;
+function reducer(state: State, action: Action): State {
+  let keywords: string[];
+  let tunes: string[];
+  let book: string;
+  let occasion: string;
 
   switch (action.type) {
     case 'search':
@@ -67,20 +94,12 @@ function reducer(state, action) {
         showSearchResults: true
       };
     default:
-      throw new Error(`Action type ${action.type} does not exist`);
+      throw new Error(`Action type ${String(action.type)} does not exist`);
   }
 }
 
-type AdvancedSearchProps = {
-  search: string;
-};
-
 const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
-  const {
-    loading,
-    error,
-    data: {hymnMany, prayerMany, liturgyMany} = {}
-  } = useQuery(ADVANCED_SEARCH, {
+  const {loading, error, data} = useAdvancedSearchQuery({
     variables: search
   });
 
@@ -92,23 +111,21 @@ const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
     return `Error! ${error.message}`;
   }
 
-  const results = [...hymnMany, ...prayerMany, ...liturgyMany].sort(
-    (a, b) => b.score - a.score
-  );
-
-  if (results.length > 0) {
-    return results.map(result => <SearchResult key={result._id} {...result} />);
+  if (data?.search?.length > 0) {
+    return data.search.map(result => (
+      <SearchResult key={result._id} {...result} />
+    ));
   }
 
   return <Styled.p variant="prose">No results found...</Styled.p>;
 };
 
 AdvancedSearch.propTypes = {
-  search: PropTypes.object.isRequired
+  search: PropTypes.any.isRequired
 };
 
-function SearchBox() {
-  const isMedium = useMediumMedia();
+const SearchBox: FC = () => {
+  const isMedium = useResponsiveValue([false, true]);
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const {showSearchResults, ...search} = state;
@@ -128,41 +145,33 @@ function SearchBox() {
         onSubmit={fields => dispatch({type: 'search', fields})}
       >
         <Form>
-          <Flex>
-            <Box grow={1} width="50%" sx={{flexDirection: ['column', 'row']}}>
+          <Grid columns={[1, 2]}>
+            <Box>
               <Box marginBottom="1em">
                 <TextField label="Title" name="title" />
               </Box>
               <Box marginBottom="1em">
-                <TextField
-                  input={SearchMetreInput}
+                <Field
+                  as={SearchMetreInput}
                   label="Hymn Metre"
                   name="hymnMetres"
                 />
               </Box>
               <Box marginBottom="1em">
-                <TextField input={SearchTuneInput} label="Tune" name="tune" />
+                <Field as={SearchTuneInput} label="Tune" name="tune" />
               </Box>
               <Box marginBottom="1em">
-                <TextField
-                  input={SearchPassageInput}
-                  label="Passage"
-                  name="passage"
-                />
+                <Field as={SearchPassageInput} label="Passage" name="passage" />
               </Box>
               <Box marginBottom="1em">
-                <TextField
-                  input={SearchOccasionInput}
+                <Field
+                  as={SearchOccasionInput}
                   label="Occasion"
                   name="occasion"
                 />
               </Box>
               <Box marginBottom="1em">
-                <TextField
-                  input={SearchKeywordInput}
-                  label="Keyword"
-                  name="keyword"
-                />
+                <Field as={SearchKeywordInput} label="Keyword" name="keyword" />
               </Box>
               <Box marginBottom="1em">
                 <Button fullWidth type="submit">
@@ -171,7 +180,7 @@ function SearchBox() {
               </Box>
             </Box>
             {isMedium && (
-              <Box grow={1} width="50%">
+              <Box>
                 <Styled.p>
                   Search Instructions to help people to search. Lorem ipsum
                   dolor sit amet, affert theophrastus in sea, at aeterno
@@ -183,12 +192,12 @@ function SearchBox() {
                 </Styled.p>
               </Box>
             )}
-          </Flex>
+          </Grid>
         </Form>
       </Formik>
       {showSearchResults && <AdvancedSearch search={search} />}
     </>
   );
-}
+};
 
 export default SearchBox;

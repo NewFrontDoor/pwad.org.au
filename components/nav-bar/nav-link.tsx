@@ -5,7 +5,9 @@ import PropTypes from 'prop-types';
 import Link from '../link';
 import {ChildPageReference, PageContent, Asset} from '../queries';
 
-export type NavLinkProps = ChildPageReference;
+export type NavLinkProps = ChildPageReference & {
+  sx: any;
+};
 
 function isAsset(link: ChildPageReference): link is Asset {
   return link.__typename === 'Asset';
@@ -35,13 +37,14 @@ const NavLink: FC<NavLinkProps> = props => {
   }
 
   return (
-    <Link href={href} as={as} isInternal={isInternal}>
+    <Link {...props} href={href} as={as} isInternal={isInternal}>
       {title}
     </Link>
   );
 };
 
 NavLink.propTypes = {
+  sx: PropTypes.any,
   title: PropTypes.string.isRequired,
   _id: PropTypes.string.isRequired,
   name: PropTypes.string,
@@ -49,6 +52,7 @@ NavLink.propTypes = {
 };
 
 NavLink.defaultProps = {
+  sx: undefined,
   file: undefined,
   name: undefined
 };

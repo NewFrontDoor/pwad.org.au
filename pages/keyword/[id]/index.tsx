@@ -1,6 +1,6 @@
 import React from 'react';
+import {NextPage} from 'next';
 import PropTypes from 'prop-types';
-import {useQuery} from '@apollo/react-hooks';
 import {Text} from 'theme-ui';
 
 import withApollo from '../../../lib/with-apollo-client';
@@ -12,27 +12,28 @@ import Link, {
   prayerLinkProps,
   liturgyLinkProps
 } from '../../../components/link';
-import {FIND_ONE_KEYWORD} from '../../../components/queries';
+import {useFindOneKeywordQuery} from '../../../components/queries';
 
-function Keyword({id}) {
-  const {loading, error, data: {keywordById} = {}} = useQuery(
-    FIND_ONE_KEYWORD,
-    {
-      variables: {id}
-    }
-  );
+type KeywordProps = {
+  id: string;
+};
 
-  const {name, hymns, prayers, liturgies} = keywordById || {};
+const Keyword: NextPage<KeywordProps> = ({id}) => {
+  const {loading, error, data} = useFindOneKeywordQuery({
+    variables: {id}
+  });
+
+  const {name, hymns, prayers, liturgies} = data?.keywordById ?? {};
 
   return (
-    <PageLayout menuItems={menuItems}>
+    <PageLayout>
       <Text as="h1" fontWeight="extraBold">
         Public Worship and Aids to Devotion Committee Website
       </Text>
       <ContentWrap>
         {loading && 'Loading...'}
         {error && `Error! ${error.message}`}
-        {keywordById && (
+        {data.keywordById && (
           <>
             <Text as="h2">{name}</Text>
             {hymns.length > 0 && (
@@ -76,9 +77,13 @@ function Keyword({id}) {
       </ContentWrap>
     </PageLayout>
   );
-}
+};
 
-Keyword.getInitialProps = function({query: {id}}) {
+Keyword.getInitialProps = ({query: {id}}) => {
+  if (Array.isArray(id)) {
+    return {id: id[0]};
+  }
+
   return {id};
 };
 

@@ -48,7 +48,7 @@ const PrayerById: FC<PrayerByIdProps> = ({id}) => {
               </>
             )}
           </Box>
-          <Box width="100%">
+          <Box sx={{ width: '100%' }}>
             <Text as="h2">
               <ShortListButton hymn={data.prayerById} />
               {title}

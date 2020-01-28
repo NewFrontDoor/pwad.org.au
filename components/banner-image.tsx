@@ -32,7 +32,7 @@ const BannerImage: FC<BannerImageProps> = ({image}) => {
     backgroundImage: `linear-gradient(
         0deg,
         ${theme.colors.gray[1]},
-        ${rgba(theme.colors.gray[1], 0.2)}
+        ${rgba(theme.colors.gray[1], 0.4)}
       ),
       url('/static/banners/${image}${size}.jpeg')`
   });

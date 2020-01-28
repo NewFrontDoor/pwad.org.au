@@ -14,7 +14,9 @@ type NavCollapseProps = MenuItem;
 const NavCollapse: FC<NavCollapseProps> = ({text, childpages}) => {
   return (
     <>
-      <Styled.p variant="prose">{text}</Styled.p>
+      <Styled.p variant="prose" sx={{color: 'gray.4'}}>
+        {text}
+      </Styled.p>
       <Flex
         css={{
           flexBasis: 0,
@@ -32,12 +34,20 @@ const NavCollapse: FC<NavCollapseProps> = ({text, childpages}) => {
           {childpages.map(item => (
             <Text
               key={item._id}
-              css={{
+              sx={{
                 letterSpacing: '1px',
                 textTransform: 'uppercase'
               }}
             >
-              <NavLink {...item} />
+              <NavLink
+                {...item}
+                sx={{
+                  color: 'gray.4',
+                  '&:hover': {
+                    color: 'gray.2'
+                  }
+                }}
+              />
             </Text>
           ))}
         </Text>
@@ -68,56 +78,42 @@ type NavItemsProps = {
 const NavItems: FC<NavItemsProps> = ({selectedMenu, menuItems}) => {
   const isMedium = useResponsiveValue([false, true]);
 
+  /* eslint-disable react/jsx-no-useless-fragment */
   return (
     <>
-      {menuItems.map(menu =>
-        menu.link ? (
+      {menuItems.map(menu => (
+        <motion.li
+          key={menu._key}
+          css={{
+            flexBasis: isMedium ? '0' : 'auto',
+            flexShrink: 1,
+            flexGrow: 0,
+            marginLeft: '1rem',
+            marginRight: '1rem',
+            overflow: 'hidden'
+          }}
+          animate={selectedMenu === menu.text ? 'open' : 'closed'}
+          variants={collapseVariants}
+          transition={{
+            type: 'spring',
+            damping: 40,
+            stiffness: 400
+          }}
+        >
           <Text
-            key={menu._key}
-            as="li"
-            fontWeight="bold"
             css={{
+              fontWeight: 'bold',
               letterSpacing: '1px',
               textTransform: 'uppercase'
             }}
           >
-            <Link href="/content/[page]" as={`/content/${menu.link.key}`}>
-              {menu.link.name}
-            </Link>
+            <NavCollapse {...menu} />
           </Text>
-        ) : (
-          <motion.li
-            key={menu._key}
-            css={{
-              flexBasis: isMedium ? '0' : 'auto',
-              flexShrink: 1,
-              flexGrow: 0,
-              marginLeft: '1rem',
-              marginRight: '1rem',
-              overflow: 'hidden'
-            }}
-            animate={selectedMenu === menu.name ? 'open' : 'closed'}
-            variants={collapseVariants}
-            transition={{
-              type: 'spring',
-              damping: 40,
-              stiffness: 400
-            }}
-          >
-            <Text
-              fontWeight="bold"
-              css={{
-                letterSpacing: '1px',
-                textTransform: 'uppercase'
-              }}
-            >
-              <NavCollapse {...menu} />
-            </Text>
-          </motion.li>
-        )
-      )}
+        </motion.li>
+      ))}
     </>
   );
+  /* eslint-enable react/jsx-no-useless-fragment */
 };
 
 NavItems.propTypes = {

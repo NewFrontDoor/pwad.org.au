@@ -33,7 +33,7 @@ const MyAccount: NextPage = () => {
           <Styled.h2>My Account</Styled.h2>
         </Box>
       </Flex>
-      {data.me &&
+      {data?.me &&
         (hasPaidAccount || hasFreeAccount ? (
           <>
             <Styled.p variant="h1">Welcome back {name.first}!</Styled.p>
@@ -66,7 +66,7 @@ MyAccount.getInitialProps = async (context: WithApolloPageContext) => {
 
   url.searchParams.set('r', currentURL.href);
 
-  redirect(context, url.href);
+  redirect(url.href, context);
 };
 
 export default withApollo(MyAccount);

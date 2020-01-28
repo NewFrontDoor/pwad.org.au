@@ -73,6 +73,76 @@ export type Document = {
   _updatedAt?: Maybe<Scalars['Date']>,
 };
 
+export enum EnumHymnBook {
+  None = 'NONE',
+  Genesis = 'GENESIS',
+  Exodus = 'EXODUS',
+  Leviticus = 'LEVITICUS',
+  Numbers = 'NUMBERS',
+  Deuteronomy = 'DEUTERONOMY',
+  Joshua = 'JOSHUA',
+  Judges = 'JUDGES',
+  Ruth = 'RUTH',
+  FirstSamuel = 'FIRST_SAMUEL',
+  SecondSamuel = 'SECOND_SAMUEL',
+  FirstKings = 'FIRST_KINGS',
+  SecondKings = 'SECOND_KINGS',
+  FirstChronicles = 'FIRST_CHRONICLES',
+  SecondChronicles = 'SECOND_CHRONICLES',
+  Ezra = 'EZRA',
+  Nehemiah = 'NEHEMIAH',
+  Esther = 'ESTHER',
+  Job = 'JOB',
+  Psalms = 'PSALMS',
+  Proverbs = 'PROVERBS',
+  Ecclesiastes = 'ECCLESIASTES',
+  SongOfSongs = 'SONG_OF_SONGS',
+  Isaiah = 'ISAIAH',
+  Jeremiah = 'JEREMIAH',
+  Lamentations = 'LAMENTATIONS',
+  Ezekiel = 'EZEKIEL',
+  Daniel = 'DANIEL',
+  Hosea = 'HOSEA',
+  Joel = 'JOEL',
+  Amos = 'AMOS',
+  Obadiah = 'OBADIAH',
+  Jonah = 'JONAH',
+  Micah = 'MICAH',
+  Nahum = 'NAHUM',
+  Habakkuk = 'HABAKKUK',
+  Zephaniah = 'ZEPHANIAH',
+  Haggai = 'HAGGAI',
+  Zechariah = 'ZECHARIAH',
+  Malachi = 'MALACHI',
+  Matthew = 'MATTHEW',
+  Mark = 'MARK',
+  Luke = 'LUKE',
+  John = 'JOHN',
+  Acts = 'ACTS',
+  Romans = 'ROMANS',
+  FirstCorinthians = 'FIRST_CORINTHIANS',
+  SecondCorinthians = 'SECOND_CORINTHIANS',
+  Galatians = 'GALATIANS',
+  Ephesians = 'EPHESIANS',
+  Philippians = 'PHILIPPIANS',
+  Colossians = 'COLOSSIANS',
+  FirstThessalonians = 'FIRST_THESSALONIANS',
+  SecondThessalonians = 'SECOND_THESSALONIANS',
+  FirstTimothy = 'FIRST_TIMOTHY',
+  SecondTimothy = 'SECOND_TIMOTHY',
+  Titus = 'TITUS',
+  Philemon = 'PHILEMON',
+  Hebrews = 'HEBREWS',
+  James = 'JAMES',
+  FirstPeter = 'FIRST_PETER',
+  SecondPeter = 'SECOND_PETER',
+  FirstJohn = 'FIRST_JOHN',
+  SecondJohn = 'SECOND_JOHN',
+  ThirdJohn = 'THIRD_JOHN',
+  Jude = 'JUDE',
+  Revelation = 'REVELATION'
+}
+
 export type ExternalUrl = Document & {
    __typename?: 'ExternalUrl',
   _createdAt?: Maybe<Scalars['Date']>,
@@ -127,6 +197,11 @@ export type Keyword = Document & {
   prayers?: Maybe<Array<Maybe<Prayer>>>,
   liturgies?: Maybe<Array<Maybe<Liturgy>>>,
 };
+
+export enum KeywordSortBy {
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC'
+}
 
 export type Liturgy = Document & {
    __typename?: 'Liturgy',
@@ -188,7 +263,13 @@ export type Metre = Document & {
   _type?: Maybe<Scalars['String']>,
   _updatedAt?: Maybe<Scalars['Date']>,
   metre?: Maybe<Scalars['String']>,
+  tunes?: Maybe<Array<Maybe<Tune>>>,
 };
+
+export enum MetreSortBy {
+  MetreAsc = 'metre_ASC',
+  MetreDesc = 'metre_DESC'
+}
 
 export type Mutation = {
    __typename?: 'Mutation',
@@ -198,6 +279,7 @@ export type Mutation = {
   createUser?: Maybe<User>,
   loginUser?: Maybe<User>,
   changePassword?: Maybe<User>,
+  makePayment?: Maybe<User>,
 };
 
 
@@ -237,6 +319,12 @@ export type MutationChangePasswordArgs = {
   confirmPassword: Scalars['String']
 };
 
+
+export type MutationMakePaymentArgs = {
+  email: Scalars['String'],
+  password: Scalars['String']
+};
+
 export type Name = {
    __typename?: 'Name',
   first?: Maybe<Scalars['String']>,
@@ -253,6 +341,13 @@ export type Occasion = Document & {
   name?: Maybe<Scalars['String']>,
   parent?: Maybe<Occasion>,
   churchyear?: Maybe<Scalars['Boolean']>,
+};
+
+export type OccasionGroupedById = {
+   __typename?: 'OccasionGroupedById',
+  _id: Scalars['ID'],
+  name?: Maybe<Scalars['String']>,
+  values?: Maybe<Array<Maybe<Occasion>>>,
 };
 
 export type PageContent = Document & {
@@ -300,14 +395,18 @@ export type Query = {
    __typename?: 'Query',
   me?: Maybe<User>,
   main?: Maybe<Main>,
+  occasionManyGroupById?: Maybe<Array<Maybe<OccasionGroupedById>>>,
   menuItems?: Maybe<Array<Maybe<MenuItem>>>,
   textSearch?: Maybe<Array<Maybe<SearchResult>>>,
+  search?: Maybe<Array<Maybe<SearchResult>>>,
   pageContentOne?: Maybe<PageContent>,
   authorById?: Maybe<Author>,
   hymnById?: Maybe<Hymn>,
   keywordById?: Maybe<Keyword>,
+  keywordMany?: Maybe<Array<Maybe<Keyword>>>,
   liturgyById?: Maybe<Liturgy>,
   tuneMany?: Maybe<Array<Maybe<Tune>>>,
+  metreMany?: Maybe<Array<Maybe<Metre>>>,
   prayerById?: Maybe<Prayer>,
   prayerPagination?: Maybe<PrayerPagination>,
 };
@@ -315,6 +414,11 @@ export type Query = {
 
 export type QueryTextSearchArgs = {
   filter: FilterInput
+};
+
+
+export type QuerySearchArgs = {
+  filter: SearchInput
 };
 
 
@@ -338,6 +442,14 @@ export type QueryKeywordByIdArgs = {
 };
 
 
+export type QueryKeywordManyArgs = {
+  filter?: Maybe<FilterInput>,
+  limit?: Maybe<Scalars['Int']>,
+  skip?: Maybe<Scalars['Int']>,
+  sort?: Maybe<KeywordSortBy>
+};
+
+
 export type QueryLiturgyByIdArgs = {
   id: Scalars['ID']
 };
@@ -347,7 +459,15 @@ export type QueryTuneManyArgs = {
   filter?: Maybe<FilterInput>,
   limit?: Maybe<Scalars['Int']>,
   skip?: Maybe<Scalars['Int']>,
-  sort?: Maybe<TuneSortByInput>
+  sort?: Maybe<TuneSortBy>
+};
+
+
+export type QueryMetreManyArgs = {
+  filter?: Maybe<FilterInput>,
+  limit?: Maybe<Scalars['Int']>,
+  skip?: Maybe<Scalars['Int']>,
+  sort?: Maybe<MetreSortBy>
 };
 
 
@@ -400,6 +520,18 @@ export type Scripture = Document & {
   keywords?: Maybe<Array<Maybe<Keyword>>>,
 };
 
+export type SearchInput = {
+  text_contains?: Maybe<Scalars['String']>,
+  book?: Maybe<EnumHymnBook>,
+  occasion?: Maybe<Scalars['String']>,
+  keywords?: Maybe<Array<Maybe<Scalars['String']>>>,
+  _operators?: Maybe<SearchInputOperator>,
+};
+
+export type SearchInputOperator = {
+  tune?: Maybe<TuneIn>,
+};
+
 export type SearchResult = Hymn | Prayer | Liturgy | Scripture;
 
 export type ShortList = Hymn | Prayer | Liturgy | Scripture;
@@ -418,7 +550,11 @@ export type Tune = Document & {
   musicCopyright?: Maybe<Copyright>,
 };
 
-export enum TuneSortByInput {
+export type TuneIn = {
+  in?: Maybe<Array<Maybe<Scalars['String']>>>,
+};
+
+export enum TuneSortBy {
   TitleAsc = 'title_ASC',
   TitleDesc = 'title_DESC'
 }
@@ -540,9 +676,16 @@ export type ResolversTypes = {
   RelativeUrl: ResolverTypeWrapper<any>,
   MenuItem: ResolverTypeWrapper<any>,
   ChildPageReference: ResolverTypeWrapper<any>,
+  OccasionGroupedById: ResolverTypeWrapper<any>,
   FilterInput: ResolverTypeWrapper<any>,
   SearchResult: ResolverTypeWrapper<any>,
-  TuneSortByInput: ResolverTypeWrapper<any>,
+  SearchInput: ResolverTypeWrapper<any>,
+  EnumHymnBook: ResolverTypeWrapper<any>,
+  SearchInputOperator: ResolverTypeWrapper<any>,
+  TuneIn: ResolverTypeWrapper<any>,
+  KeywordSortBy: ResolverTypeWrapper<any>,
+  TuneSortBy: ResolverTypeWrapper<any>,
+  MetreSortBy: ResolverTypeWrapper<any>,
   PrayerPagination: ResolverTypeWrapper<any>,
   PageInfo: ResolverTypeWrapper<any>,
   Mutation: ResolverTypeWrapper<{}>,
@@ -583,9 +726,16 @@ export type ResolversParentTypes = {
   RelativeUrl: any,
   MenuItem: any,
   ChildPageReference: any,
+  OccasionGroupedById: any,
   FilterInput: any,
   SearchResult: any,
-  TuneSortByInput: any,
+  SearchInput: any,
+  EnumHymnBook: any,
+  SearchInputOperator: any,
+  TuneIn: any,
+  KeywordSortBy: any,
+  TuneSortBy: any,
+  MetreSortBy: any,
   PrayerPagination: any,
   PageInfo: any,
   Mutation: {},
@@ -760,6 +910,7 @@ export type MetreResolvers<ContextType = Context, ParentType extends ResolversPa
   _type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   _updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>,
   metre?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  tunes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tune']>>>, ParentType, ContextType>,
 };
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
@@ -769,6 +920,7 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'firstName' | 'lastName' | 'email' | 'password' | 'confirmPassword'>>,
   loginUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'email' | 'password'>>,
   changePassword?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationChangePasswordArgs, 'password' | 'newPassword' | 'confirmPassword'>>,
+  makePayment?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationMakePaymentArgs, 'email' | 'password'>>,
 };
 
 export type NameResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Name'] = ResolversParentTypes['Name']> = {
@@ -785,6 +937,12 @@ export type OccasionResolvers<ContextType = Context, ParentType extends Resolver
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   parent?: Resolver<Maybe<ResolversTypes['Occasion']>, ParentType, ContextType>,
   churchyear?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
+};
+
+export type OccasionGroupedByIdResolvers<ContextType = Context, ParentType extends ResolversParentTypes['OccasionGroupedById'] = ResolversParentTypes['OccasionGroupedById']> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  values?: Resolver<Maybe<Array<Maybe<ResolversTypes['Occasion']>>>, ParentType, ContextType>,
 };
 
 export type PageContentResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PageContent'] = ResolversParentTypes['PageContent']> = {
@@ -827,14 +985,18 @@ export type PrayerPaginationResolvers<ContextType = Context, ParentType extends 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   main?: Resolver<Maybe<ResolversTypes['Main']>, ParentType, ContextType>,
+  occasionManyGroupById?: Resolver<Maybe<Array<Maybe<ResolversTypes['OccasionGroupedById']>>>, ParentType, ContextType>,
   menuItems?: Resolver<Maybe<Array<Maybe<ResolversTypes['MenuItem']>>>, ParentType, ContextType>,
   textSearch?: Resolver<Maybe<Array<Maybe<ResolversTypes['SearchResult']>>>, ParentType, ContextType, RequireFields<QueryTextSearchArgs, 'filter'>>,
+  search?: Resolver<Maybe<Array<Maybe<ResolversTypes['SearchResult']>>>, ParentType, ContextType, RequireFields<QuerySearchArgs, 'filter'>>,
   pageContentOne?: Resolver<Maybe<ResolversTypes['PageContent']>, ParentType, ContextType, RequireFields<QueryPageContentOneArgs, 'filter'>>,
   authorById?: Resolver<Maybe<ResolversTypes['Author']>, ParentType, ContextType, RequireFields<QueryAuthorByIdArgs, 'id'>>,
   hymnById?: Resolver<Maybe<ResolversTypes['Hymn']>, ParentType, ContextType, RequireFields<QueryHymnByIdArgs, 'id'>>,
   keywordById?: Resolver<Maybe<ResolversTypes['Keyword']>, ParentType, ContextType, RequireFields<QueryKeywordByIdArgs, 'id'>>,
+  keywordMany?: Resolver<Maybe<Array<Maybe<ResolversTypes['Keyword']>>>, ParentType, ContextType, QueryKeywordManyArgs>,
   liturgyById?: Resolver<Maybe<ResolversTypes['Liturgy']>, ParentType, ContextType, RequireFields<QueryLiturgyByIdArgs, 'id'>>,
   tuneMany?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tune']>>>, ParentType, ContextType, QueryTuneManyArgs>,
+  metreMany?: Resolver<Maybe<Array<Maybe<ResolversTypes['Metre']>>>, ParentType, ContextType, QueryMetreManyArgs>,
   prayerById?: Resolver<Maybe<ResolversTypes['Prayer']>, ParentType, ContextType, RequireFields<QueryPrayerByIdArgs, 'id'>>,
   prayerPagination?: Resolver<Maybe<ResolversTypes['PrayerPagination']>, ParentType, ContextType, RequireFields<QueryPrayerPaginationArgs, 'page' | 'perPage'>>,
 };
@@ -934,6 +1096,7 @@ export type Resolvers<ContextType = Context> = {
   Mutation?: MutationResolvers<ContextType>,
   Name?: NameResolvers<ContextType>,
   Occasion?: OccasionResolvers<ContextType>,
+  OccasionGroupedById?: OccasionGroupedByIdResolvers<ContextType>,
   PageContent?: PageContentResolvers<ContextType>,
   PageInfo?: PageInfoResolvers<ContextType>,
   Prayer?: PrayerResolvers<ContextType>,

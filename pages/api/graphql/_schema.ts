@@ -4,22 +4,40 @@ export const schema = gql`
   type Query {
     me: User
     main: Main
+    occasionManyGroupById: [OccasionGroupedById]
     menuItems: [MenuItem]
     textSearch(filter: FilterInput!): [SearchResult]
+    search(filter: SearchInput!): [SearchResult]
 
     pageContentOne(filter: FilterInput!): PageContent
 
     authorById(id: ID!): Author
+
     hymnById(id: ID!): Hymn
+
     keywordById(id: ID!): Keyword
+    keywordMany(
+      filter: FilterInput
+      limit: Int
+      skip: Int
+      sort: KeywordSortBy
+    ): [Keyword]
+
     liturgyById(id: ID!): Liturgy
 
     tuneMany(
       filter: FilterInput
       limit: Int
       skip: Int
-      sort: TuneSortByInput
+      sort: TuneSortBy
     ): [Tune]
+
+    metreMany(
+      filter: FilterInput
+      limit: Int
+      skip: Int
+      sort: MetreSortBy
+    ): [Metre]
 
     prayerById(id: ID!): Prayer
     prayerPagination(page: Int!, perPage: Int!): PrayerPagination
@@ -45,6 +63,8 @@ export const schema = gql`
       newPassword: String!
       confirmPassword: String!
     ): User
+
+    makePayment(email: String!, password: String!): User
   }
 
   scalar Date
@@ -52,6 +72,98 @@ export const schema = gql`
   scalar JSON
 
   union SearchResult = Hymn | Prayer | Liturgy | Scripture
+
+  type OccasionGroupedById {
+    _id: ID!
+    name: String
+    values: [Occasion]
+  }
+
+  input SearchInput {
+    text_contains: String
+    book: EnumHymnBook
+    occasion: String
+    keywords: [String]
+    _operators: SearchInputOperator
+  }
+
+  input SearchInputOperator {
+    tune: TuneIn
+  }
+
+  input TuneIn {
+    in: [String]
+  }
+
+  enum EnumHymnBook {
+    NONE
+    GENESIS
+    EXODUS
+    LEVITICUS
+    NUMBERS
+    DEUTERONOMY
+    JOSHUA
+    JUDGES
+    RUTH
+    FIRST_SAMUEL
+    SECOND_SAMUEL
+    FIRST_KINGS
+    SECOND_KINGS
+    FIRST_CHRONICLES
+    SECOND_CHRONICLES
+    EZRA
+    NEHEMIAH
+    ESTHER
+    JOB
+    PSALMS
+    PROVERBS
+    ECCLESIASTES
+    SONG_OF_SONGS
+    ISAIAH
+    JEREMIAH
+    LAMENTATIONS
+    EZEKIEL
+    DANIEL
+    HOSEA
+    JOEL
+    AMOS
+    OBADIAH
+    JONAH
+    MICAH
+    NAHUM
+    HABAKKUK
+    ZEPHANIAH
+    HAGGAI
+    ZECHARIAH
+    MALACHI
+    MATTHEW
+    MARK
+    LUKE
+    JOHN
+    ACTS
+    ROMANS
+    FIRST_CORINTHIANS
+    SECOND_CORINTHIANS
+    GALATIANS
+    EPHESIANS
+    PHILIPPIANS
+    COLOSSIANS
+    FIRST_THESSALONIANS
+    SECOND_THESSALONIANS
+    FIRST_TIMOTHY
+    SECOND_TIMOTHY
+    TITUS
+    PHILEMON
+    HEBREWS
+    JAMES
+    FIRST_PETER
+    SECOND_PETER
+    FIRST_JOHN
+    SECOND_JOHN
+    THIRD_JOHN
+    JUDE
+    REVELATION
+  }
 
   type PageInfo {
     currentPage: Int!
@@ -169,6 +281,11 @@ export const schema = gql`
     liturgies: [Liturgy]
   }
 
+  enum KeywordSortBy {
+    name_ASC
+    name_DESC
+  }
+
   type Liturgy implements Document {
     _createdAt: Date
     _id: ID!
@@ -204,6 +321,12 @@ export const schema = gql`
     _type: String
     _updatedAt: Date
     metre: String
+    tunes: [Tune]
+  }
+
+  enum MetreSortBy {
+    metre_ASC
+    metre_DESC
   }
 
   type Occasion implements Document {
@@ -265,7 +388,7 @@ export const schema = gql`
     musicCopyright: Copyright
   }
 
-  enum TuneSortByInput {
+  enum TuneSortBy {
     title_ASC
     title_DESC
   }

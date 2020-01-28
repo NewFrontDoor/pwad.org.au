@@ -5,7 +5,7 @@ import {Check} from 'react-feather';
 import {string, object} from 'yup';
 import {Formik, Form} from 'formik';
 import {TextField} from '../form';
-import {useStripe, StripeProvider} from '../use-stripe';
+import {useStripe, StripeProvider, Elements} from '../use-stripe';
 
 import {
   useChangePasswordMutation,
@@ -124,100 +124,98 @@ const ManageForm: FC<ManageFormProps> = ({hasFreeAccount, hasPaidAccount}) => {
   const [changePassword] = useChangePasswordMutation();
 
   return (
-    <StripeProvider>
-      <Flex
-        gutterWidth="xxl"
-        sx={{
-          flexDirection: ['column-reverse', 'row-reverse']
-        }}
-      >
-        <Box width="100%">
-          <Text as="h3">
-            What is included in the Liturgy and Music account option?
-          </Text>
-          <Styled.p variant="prose" as="ul">
-            <li>Search Capabilities</li>
-            <li>PowerPoint Slides</li>
-            <li>Sound Bites</li>
-            <li>Music Scores</li>
-            <li>Alternate Tunes</li>
-            <li>Author Index</li>
-            <li>Topical Index</li>
-            <li>Metre Index</li>
-            <li>Occasion Index</li>
-            <li>Year Index</li>
-          </Styled.p>
-        </Box>
-        <Box width="100%">
-          <Flex
-            sx={{
-              flexDirection: ['column-reverse', 'row']
-            }}
-          >
-            <Box width="100%">
-              <Button
-                fullWidth
-                iconStart={freeAccount ? <Check role="img" /> : undefined}
-                disabled={hasFreeAccount || hasPaidAccount}
-                size="jumbo"
-                onClick={handleChangeFreeAccount(changeFreeAccount)}
-              >
-                Liturgy only
-              </Button>
-              <Styled.p variant="prose">this option is free to use</Styled.p>
-            </Box>
-            <Box width="100%">
-              <AccountPaymentButton hasPaidAccount={hasPaidAccount}>
-                Liturgy and Music
-              </AccountPaymentButton>
-              <Styled.p variant="prose">
-                this option has a once off $30 fee
-              </Styled.p>
-            </Box>
-          </Flex>
+    <Flex
+      gutterWidth="xxl"
+      sx={{
+        flexDirection: ['column-reverse', 'row-reverse']
+      }}
+    >
+      <Box sx={{width: '100%'}}>
+        <Text as="h3">
+          What is included in the Liturgy and Music account option?
+        </Text>
+        <Styled.p variant="prose" as="ul">
+          <li>Search Capabilities</li>
+          <li>PowerPoint Slides</li>
+          <li>Sound Bites</li>
+          <li>Music Scores</li>
+          <li>Alternate Tunes</li>
+          <li>Author Index</li>
+          <li>Topical Index</li>
+          <li>Metre Index</li>
+          <li>Occasion Index</li>
+          <li>Year Index</li>
+        </Styled.p>
+      </Box>
+      <Box sx={{width: '100%'}}>
+        <Flex
+          sx={{
+            flexDirection: ['column-reverse', 'row']
+          }}
+        >
+          <Box sx={{width: '100%'}}>
+            <Button
+              fullWidth
+              iconStart={freeAccount ? <Check role="img" /> : undefined}
+              disabled={hasFreeAccount || hasPaidAccount}
+              size="jumbo"
+              onClick={handleChangeFreeAccount(changeFreeAccount)}
+            >
+              Liturgy only
+            </Button>
+            <Styled.p variant="prose">this option is free to use</Styled.p>
+          </Box>
+          <Box sx={{width: '100%'}}>
+            <AccountPaymentButton hasPaidAccount={hasPaidAccount}>
+              Liturgy and Music
+            </AccountPaymentButton>
+            <Styled.p variant="prose">
+              this option has a once off $30 fee
+            </Styled.p>
+          </Box>
+        </Flex>
 
-          <Formik
-            validationSchema={validationSchema}
-            initialValues={{
-              password: '',
-              newPassword: '',
-              confirmPassword: ''
-            }}
-            onSubmit={handleChangePassword(changePassword)}
-          >
-            <Form>
-              <Box marginBottom={3}>
-                <TextField
-                  required
-                  type="password"
-                  label="Old password"
-                  name="password"
-                />
-              </Box>
-              <Box marginBottom={3}>
-                <TextField
-                  required
-                  type="password"
-                  label="New password"
-                  name="newPassword"
-                />
-              </Box>
-              <Box marginBottom={3}>
-                <TextField
-                  required
-                  type="password"
-                  label="Confirm password"
-                  name="confirmPassword"
-                />
-              </Box>
-              <Box marginBottom={3}>
-                <Button type="submit">Change Password</Button>
-              </Box>
-            </Form>
-          </Formik>
-        </Box>
-      </Flex>
-    </StripeProvider>
+        <Formik
+          validationSchema={validationSchema}
+          initialValues={{
+            password: '',
+            newPassword: '',
+            confirmPassword: ''
+          }}
+          onSubmit={handleChangePassword(changePassword)}
+        >
+          <Form>
+            <Box marginBottom={3}>
+              <TextField
+                required
+                type="password"
+                label="Old password"
+                name="password"
+              />
+            </Box>
+            <Box marginBottom={3}>
+              <TextField
+                required
+                type="password"
+                label="New password"
+                name="newPassword"
+              />
+            </Box>
+            <Box marginBottom={3}>
+              <TextField
+                required
+                type="password"
+                label="Confirm password"
+                name="confirmPassword"
+              />
+            </Box>
+            <Box marginBottom={3}>
+              <Button type="submit">Change Password</Button>
+            </Box>
+          </Form>
+        </Formik>
+      </Box>
+    </Flex>
   );
 };
 
@@ -226,4 +224,12 @@ ManageForm.propTypes = {
   hasPaidAccount: PropTypes.bool.isRequired
 };
 
-export default ManageForm;
+const ManageFormProvider: FC<ManageFormProps> = props => (
+  <StripeProvider>
+    <Elements>
+      <ManageForm {...props} />
+    </Elements>
+  </StripeProvider>
+);
+
+export default ManageFormProvider;

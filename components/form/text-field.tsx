@@ -17,7 +17,7 @@ const FormField: FC<FormFieldProps> = ({label, isLabelHidden, ...props}) => {
   const [field, meta] = useField(props);
 
   return (
-    <Label>
+    <Label sx={{flexDirection: 'column'}}>
       {!isLabelHidden && <span>{label}</span>}
       <Input {...field} {...props} />
       {meta.touched && meta.error ? (

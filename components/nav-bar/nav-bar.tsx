@@ -1,11 +1,10 @@
 /** @jsx jsx */
 import {FC, useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
-import {jsx, Flex, Text, Button} from 'theme-ui';
+import {jsx, Flex, Box, Styled, Button} from 'theme-ui';
 import {useResponsiveValue} from '@theme-ui/match-media';
 import {motion} from 'framer-motion';
 import {Can} from '../ability-context';
-import {darkTheme, DarkTheme} from '../theme';
 
 import {MenuItem} from '../queries';
 import Link from '../link';
@@ -41,23 +40,27 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
   return (
     <>
       <NavOverlay onClickOutside={() => isOpen && toggleOpen()}>
-        <DarkTheme>
-          <motion.div
-            animate={isOpen ? 'open' : 'closed'}
-            variants={isMedium ? desktopOverlayVariants : mobileOverlayVariants}
-            transition={{
-              type: 'spring',
-              damping: 40,
-              stiffness: 400
-            }}
-            css={{
-              zIndex: 1,
-              position: 'absolute',
-              top: 0,
-              height: 0,
-              paddingTop: '1rem',
-              overflow: isOpen ? 'scroll' : 'hidden',
-              backgroundColor: darkTheme.colors.background
+        <motion.div
+          animate={isOpen ? 'open' : 'closed'}
+          variants={isMedium ? desktopOverlayVariants : mobileOverlayVariants}
+          transition={{
+            type: 'spring',
+            damping: 40,
+            stiffness: 400
+          }}
+          css={{
+            zIndex: 1,
+            position: 'absolute',
+            top: 0,
+            height: 0,
+            paddingTop: '1rem',
+            width: '100%',
+            overflow: isOpen ? 'scroll' : 'hidden'
+          }}
+        >
+          <Box
+            sx={{
+              bg: 'background'
             }}
           >
             {isMedium ? (
@@ -79,8 +82,8 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
                 )}
               </Nav>
             )}
-          </motion.div>
-        </DarkTheme>
+          </Box>
+        </motion.div>
       </NavOverlay>
       <Flex
         as="nav"
@@ -94,10 +97,11 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
         {isMedium ? (
           <Nav>
             {menuItems.map(({_key, text}) => (
-              <Text
+              <Styled.li
                 key={_key}
-                as="li"
-                css={{
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
                   letterSpacing: '1px',
                   textTransform: 'uppercase'
                 }}
@@ -115,7 +119,7 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
                 >
                   {text}
                 </Button>
-              </Text>
+              </Styled.li>
             ))}
           </Nav>
         ) : (

@@ -33,14 +33,12 @@ Rejoice.getInitialProps = async (context: WithApolloPageContext) => {
   if (loggedInUser.user) {
     const ability = defineAbilitiesFor(loggedInUser.user);
 
-    if (ability.can('read', 'Hymn')) {
-      return;
+    if (ability.cannot('read', 'Hymn')) {
+      redirect('/my-account', context);
     }
-
-    redirect(context, '/my-account');
+  } else {
+    redirect('/sign-in', context);
   }
-
-  redirect(context, '/sign-in');
 };
 
 export default withApollo(Rejoice);

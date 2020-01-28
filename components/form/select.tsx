@@ -1,9 +1,9 @@
 import React, {FC} from 'react';
-import Select from 'react-select';
+import Select, {Props} from 'react-select';
 
 import {useThemeUI} from 'theme-ui';
 
-const SearchInput: FC = props => {
+const SearchInput: FC<Props> = props => {
   const {theme} = useThemeUI();
 
   const styles = {

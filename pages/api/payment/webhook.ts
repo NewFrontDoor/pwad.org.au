@@ -1,4 +1,5 @@
 import {buffer} from 'micro';
+import {NextApiRequest, NextApiResponse} from 'next';
 import Stripe from 'stripe';
 import {ManagementClient} from 'auth0';
 
@@ -37,7 +38,7 @@ async function handleCheckoutSession(session: Session): Promise<void> {
   }
 }
 
-async function webhook(req, res) {
+async function webhook(req: NextApiRequest, res: NextApiResponse): void {
   const signature = req.headers['stripe-signature'];
 
   let event: Stripe.Event;
