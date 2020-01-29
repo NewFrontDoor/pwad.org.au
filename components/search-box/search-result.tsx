@@ -26,7 +26,16 @@ const SearchResultList: FC<SearchResult> = props => {
           {title}
         </Link>{' '}
       </Styled.h4>
-      {content && <BlockContent blocks={content} />}
+      {content && (
+        <div>
+          {content
+            .map(item => item.children)
+            .flat()
+            .map(child => (child ? child.text : ''))
+            .join(' ')
+            .substring(0, 180) + '...'}
+        </div>
+      )}
       <Flex
         as="ul"
         padding="0"
