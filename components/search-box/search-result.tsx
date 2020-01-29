@@ -27,13 +27,19 @@ const SearchResultList: FC<SearchResult> = props => {
         </Link>{' '}
       </Styled.h4>
       {content && (
-        <div>
+        <div
+          sx={{
+            width: '100%',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis'
+          }}
+        >
           {content
             .map(item => item.children)
             .flat()
             .map(child => (child ? child.text : ''))
-            .join(' ')
-            .substring(0, 180) + '...'}
+            .join(' ')}
         </div>
       )}
       <Flex
