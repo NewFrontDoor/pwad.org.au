@@ -11,7 +11,7 @@ import NavLink from './nav-link';
 
 type NavCollapseProps = MenuItem;
 
-const NavCollapse: FC<NavCollapseProps> = ({text, childpages}) => {
+const NavCollapse: FC<NavCollapseProps> = ({text, childpages, onNavigate}) => {
   return (
     <>
       <Styled.p variant="prose" sx={{color: 'gray.4'}}>
@@ -41,6 +41,7 @@ const NavCollapse: FC<NavCollapseProps> = ({text, childpages}) => {
             >
               <NavLink
                 {...item}
+                onNavigate={onNavigate}
                 sx={{
                   color: 'gray.4',
                   '&:hover': {
@@ -75,7 +76,7 @@ type NavItemsProps = {
   menuItems: MenuItem[];
 };
 
-const NavItems: FC<NavItemsProps> = ({selectedMenu, menuItems}) => {
+const NavItems: FC<NavItemsProps> = ({selectedMenu, menuItems, onNavigate}) => {
   const isMedium = useResponsiveValue([false, true]);
 
   /* eslint-disable react/jsx-no-useless-fragment */
@@ -107,7 +108,7 @@ const NavItems: FC<NavItemsProps> = ({selectedMenu, menuItems}) => {
               textTransform: 'uppercase'
             }}
           >
-            <NavCollapse {...menu} />
+            <NavCollapse {...menu} onNavigate={onNavigate} />
           </Text>
         </motion.li>
       ))}

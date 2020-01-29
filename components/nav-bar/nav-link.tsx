@@ -37,7 +37,7 @@ const NavLink: FC<NavLinkProps> = props => {
   }
 
   return (
-    <Link {...props} href={href} as={as} isInternal={isInternal}>
+    <Link {...props} href={href} as={as} isInternal={isInternal} onClick={props.onNavigate}>
       {title}
     </Link>
   );

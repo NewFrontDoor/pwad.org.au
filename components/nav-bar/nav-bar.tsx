@@ -72,7 +72,11 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
                     width: ['auto', '75%']
                   }}
                 >
-                  <NavItems selectedMenu={selectedMenu} menuItems={menuItems} />
+                  <NavItems
+                    selectedMenu={selectedMenu}
+                    menuItems={menuItems}
+                    onNavigate={() => isOpen && toggleOpen()}
+                  />
                 </Flex>
               )
             ) : (
