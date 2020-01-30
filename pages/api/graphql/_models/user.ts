@@ -9,7 +9,7 @@ export async function getById(id: string): Promise<User> {
       name,
       email,
       "role": permission.role,
-      "shortlist":shortlist.hymns[]->{_id,_type,title,hymnNumber}
+      shortlist->{_id,_type,title,hymnNumber}
   }`,
     {id}
   );
@@ -24,7 +24,7 @@ export async function findOrCreate(
       name,
       email,
       "role": permission.role,
-      "shortlist":shortlist.hymns[]->{_id,_type,title,hymnNumber}
+      shortlist->{_id,_type,title,hymnNumber}
   }`,
     {googleProviderId: user.sub}
   );
@@ -53,8 +53,8 @@ export async function addShortListItem(
 ): Promise<ShortList[]> {
   await sanity
     .patch(id)
-    .setIfMissing({shortlist: {hymns: []}})
-    .append('shortlist.hymns', [
+    .setIfMissing({shortlist: []})
+    .append('shortlist', [
       {
         _key: nanoid(),
         _ref: hymnId,
@@ -75,8 +75,8 @@ export async function removeShortListItem(
   if (hymnIndex >= 0) {
     await sanity
       .patch(id)
-      .setIfMissing({shortlist: {hymns: []}})
-      .insert('replace', `shortlist.hymns[${hymnIndex}]`, [])
+      .setIfMissing({shortlist: []})
+      .insert('replace', `shortlist[${hymnIndex}]`, [])
       .commit();
   }
 
