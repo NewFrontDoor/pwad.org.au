@@ -9,7 +9,7 @@ export async function getById(id: string): Promise<User> {
       name,
       email,
       "role": permission.role,
-      shortlist->{_id,_type,title,hymnNumber}
+      shortlist[]->{_id,_type,title,hymnNumber}
   }`,
     {id}
   );
@@ -24,7 +24,7 @@ export async function findOrCreate(
       name,
       email,
       "role": permission.role,
-      shortlist->{_id,_type,title,hymnNumber}
+      shortlist[]->{_id,_type,title,hymnNumber}
   }`,
     {googleProviderId: user.sub}
   );
