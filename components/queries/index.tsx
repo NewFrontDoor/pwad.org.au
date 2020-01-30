@@ -74,73 +74,73 @@ export type Document = {
 };
 
 export enum EnumHymnBook {
-  None = 'NONE',
-  Genesis = 'GENESIS',
-  Exodus = 'EXODUS',
-  Leviticus = 'LEVITICUS',
-  Numbers = 'NUMBERS',
-  Deuteronomy = 'DEUTERONOMY',
-  Joshua = 'JOSHUA',
-  Judges = 'JUDGES',
-  Ruth = 'RUTH',
-  FirstSamuel = 'FIRST_SAMUEL',
-  SecondSamuel = 'SECOND_SAMUEL',
-  FirstKings = 'FIRST_KINGS',
-  SecondKings = 'SECOND_KINGS',
-  FirstChronicles = 'FIRST_CHRONICLES',
-  SecondChronicles = 'SECOND_CHRONICLES',
-  Ezra = 'EZRA',
-  Nehemiah = 'NEHEMIAH',
-  Esther = 'ESTHER',
-  Job = 'JOB',
-  Psalms = 'PSALMS',
-  Proverbs = 'PROVERBS',
-  Ecclesiastes = 'ECCLESIASTES',
-  SongOfSongs = 'SONG_OF_SONGS',
-  Isaiah = 'ISAIAH',
-  Jeremiah = 'JEREMIAH',
-  Lamentations = 'LAMENTATIONS',
-  Ezekiel = 'EZEKIEL',
-  Daniel = 'DANIEL',
-  Hosea = 'HOSEA',
-  Joel = 'JOEL',
-  Amos = 'AMOS',
-  Obadiah = 'OBADIAH',
-  Jonah = 'JONAH',
-  Micah = 'MICAH',
-  Nahum = 'NAHUM',
-  Habakkuk = 'HABAKKUK',
-  Zephaniah = 'ZEPHANIAH',
-  Haggai = 'HAGGAI',
-  Zechariah = 'ZECHARIAH',
-  Malachi = 'MALACHI',
-  Matthew = 'MATTHEW',
-  Mark = 'MARK',
-  Luke = 'LUKE',
-  John = 'JOHN',
-  Acts = 'ACTS',
-  Romans = 'ROMANS',
-  FirstCorinthians = 'FIRST_CORINTHIANS',
-  SecondCorinthians = 'SECOND_CORINTHIANS',
-  Galatians = 'GALATIANS',
-  Ephesians = 'EPHESIANS',
-  Philippians = 'PHILIPPIANS',
-  Colossians = 'COLOSSIANS',
-  FirstThessalonians = 'FIRST_THESSALONIANS',
-  SecondThessalonians = 'SECOND_THESSALONIANS',
-  FirstTimothy = 'FIRST_TIMOTHY',
-  SecondTimothy = 'SECOND_TIMOTHY',
-  Titus = 'TITUS',
-  Philemon = 'PHILEMON',
-  Hebrews = 'HEBREWS',
-  James = 'JAMES',
-  FirstPeter = 'FIRST_PETER',
-  SecondPeter = 'SECOND_PETER',
-  FirstJohn = 'FIRST_JOHN',
-  SecondJohn = 'SECOND_JOHN',
-  ThirdJohn = 'THIRD_JOHN',
-  Jude = 'JUDE',
-  Revelation = 'REVELATION'
+  None = 'none',
+  Genesis = 'genesis',
+  Exodus = 'exodus',
+  Leviticus = 'leviticus',
+  Numbers = 'numbers',
+  Deuteronomy = 'deuteronomy',
+  Joshua = 'joshua',
+  Judges = 'judges',
+  Ruth = 'ruth',
+  FirstSamuel = 'first_samuel',
+  SecondSamuel = 'second_samuel',
+  FirstKings = 'first_kings',
+  SecondKings = 'second_kings',
+  FirstChronicles = 'first_chronicles',
+  SecondChronicles = 'second_chronicles',
+  Ezra = 'ezra',
+  Nehemiah = 'nehemiah',
+  Esther = 'esther',
+  Job = 'job',
+  Psalms = 'psalms',
+  Proverbs = 'proverbs',
+  Ecclesiastes = 'ecclesiastes',
+  SongOfSongs = 'song_of_songs',
+  Isaiah = 'isaiah',
+  Jeremiah = 'jeremiah',
+  Lamentations = 'lamentations',
+  Ezekiel = 'ezekiel',
+  Daniel = 'daniel',
+  Hosea = 'hosea',
+  Joel = 'joel',
+  Amos = 'amos',
+  Obadiah = 'obadiah',
+  Jonah = 'jonah',
+  Micah = 'micah',
+  Nahum = 'nahum',
+  Habakkuk = 'habakkuk',
+  Zephaniah = 'zephaniah',
+  Haggai = 'haggai',
+  Zechariah = 'zechariah',
+  Malachi = 'malachi',
+  Matthew = 'matthew',
+  Mark = 'mark',
+  Luke = 'luke',
+  John = 'john',
+  Acts = 'acts',
+  Romans = 'romans',
+  FirstCorinthians = 'first_corinthians',
+  SecondCorinthians = 'second_corinthians',
+  Galatians = 'galatians',
+  Ephesians = 'ephesians',
+  Philippians = 'philippians',
+  Colossians = 'colossians',
+  FirstThessalonians = 'first_thessalonians',
+  SecondThessalonians = 'second_thessalonians',
+  FirstTimothy = 'first_timothy',
+  SecondTimothy = 'second_timothy',
+  Titus = 'titus',
+  Philemon = 'philemon',
+  Hebrews = 'hebrews',
+  James = 'james',
+  FirstPeter = 'first_peter',
+  SecondPeter = 'second_peter',
+  FirstJohn = 'first_john',
+  SecondJohn = 'second_john',
+  ThirdJohn = 'third_john',
+  Jude = 'jude',
+  Revelation = 'revelation'
 }
 
 export type ExternalUrl = Document & {
@@ -159,7 +159,7 @@ export type FeaturedReference = PageContent | ExternalUrl | RelativeUrl;
 export type FilterInput = {
   id?: Maybe<Scalars['String']>,
   search?: Maybe<Scalars['String']>,
-  text_contains?: Maybe<Scalars['String']>,
+  textContains?: Maybe<Scalars['String']>,
 };
 
 export type Hymn = Document & {
@@ -177,6 +177,7 @@ export type Hymn = Document & {
   book?: Maybe<Scalars['String']>,
   chapter?: Maybe<Scalars['Int']>,
   chapterVerse?: Maybe<Scalars['String']>,
+  scripture?: Maybe<Scalars['String']>,
   files?: Maybe<Array<Maybe<Asset>>>,
   keywords?: Maybe<Array<Maybe<Keyword>>>,
   occasions?: Maybe<Array<Maybe<Occasion>>>,
@@ -521,7 +522,7 @@ export type Scripture = Document & {
 };
 
 export type SearchInput = {
-  text_contains?: Maybe<Scalars['String']>,
+  textContains?: Maybe<Scalars['String']>,
   book?: Maybe<EnumHymnBook>,
   occasion?: Maybe<Scalars['String']>,
   keywords?: Maybe<Array<Maybe<Scalars['String']>>>,
@@ -740,7 +741,7 @@ export type FindOneHymnQuery = (
   { __typename?: 'Query' }
   & { hymnById: Maybe<(
     { __typename?: 'Hymn' }
-    & Pick<Hymn, '_id' | 'title' | 'hymnNumber' | 'content'>
+    & Pick<Hymn, '_id' | 'title' | 'hymnNumber' | 'content' | 'scripture'>
     & { copyright: Maybe<(
       { __typename?: 'Copyright' }
       & Pick<Copyright, 'name'>
@@ -1061,7 +1062,7 @@ export type AddShortListItemMutationResult = ApolloReactCommon.MutationResult<Ad
 export type AddShortListItemMutationOptions = ApolloReactCommon.BaseMutationOptions<AddShortListItemMutation, AddShortListItemMutationVariables>;
 export const AdvancedSearchDocument = gql`
     query advancedSearch($title: String, $tunes: [String], $occasion: String, $keywords: [String], $book: EnumHymnBook) {
-  search(filter: {text_contains: $title, book: $book, occasion: $occasion, keywords: $keywords, _operators: {tune: {in: $tunes}}}) {
+  search(filter: {textContains: $title, book: $book, occasion: $occasion, keywords: $keywords, _operators: {tune: {in: $tunes}}}) {
     ... on Document {
       _id
       _type
@@ -1202,7 +1203,7 @@ export type CreateUserMutationResult = ApolloReactCommon.MutationResult<CreateUs
 export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const FindKeywordDocument = gql`
     query findKeyword($title: String, $skip: Int, $limit: Int) {
-  keywordMany(filter: {text_contains: $title}, limit: $limit, skip: $skip, sort: name_ASC) {
+  keywordMany(filter: {textContains: $title}, limit: $limit, skip: $skip, sort: name_ASC) {
     _id
     name
   }
@@ -1238,7 +1239,7 @@ export type FindKeywordLazyQueryHookResult = ReturnType<typeof useFindKeywordLaz
 export type FindKeywordQueryResult = ApolloReactCommon.QueryResult<FindKeywordQuery, FindKeywordQueryVariables>;
 export const FindMetreDocument = gql`
     query findMetre($metre: String, $skip: Int, $limit: Int) {
-  metreMany(filter: {text_contains: $metre}, limit: $limit, skip: $skip, sort: metre_ASC) {
+  metreMany(filter: {textContains: $metre}, limit: $limit, skip: $skip, sort: metre_ASC) {
     _id
     metre
     tunes {
@@ -1368,6 +1369,7 @@ export const FindOneHymnDocument = gql`
       name
     }
     content
+    scripture
     author {
       _id
       dates
@@ -1599,7 +1601,7 @@ export type FindPrayerContentsLazyQueryHookResult = ReturnType<typeof useFindPra
 export type FindPrayerContentsQueryResult = ApolloReactCommon.QueryResult<FindPrayerContentsQuery, FindPrayerContentsQueryVariables>;
 export const FindTuneDocument = gql`
     query findTune($title: String, $skip: Int, $limit: Int) {
-  tuneMany(filter: {text_contains: $title}, limit: $limit, skip: $skip, sort: title_ASC) {
+  tuneMany(filter: {textContains: $title}, limit: $limit, skip: $skip, sort: title_ASC) {
     _id
     title
   }

@@ -48,7 +48,7 @@ const PrayerById: FC<PrayerByIdProps> = ({id}) => {
               </>
             )}
           </Box>
-          <Box sx={{ width: '100%' }}>
+          <Box sx={{width: '100%'}}>
             <Text as="h2">
               <ShortListButton hymn={data.prayerById} />
               {title}
@@ -65,7 +65,7 @@ PrayerById.propTypes = {
   id: PropTypes.string.isRequired
 };
 
-// const Prayers: FC = () => {
+// Const Prayers: FC = () => {
 //   const [page, changePage] = useState(1);
 //
 //   const {loading, error, data} = useFindPrayerContentsQuery({

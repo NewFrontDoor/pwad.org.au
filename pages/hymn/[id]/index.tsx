@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import {NextPage} from 'next';
 import PropTypes from 'prop-types';
 import prettyBytes from 'pretty-bytes';
-import {Text, Flex, Box} from 'theme-ui';
+import {Styled, Flex, Box} from 'theme-ui';
 
 import redirect from '../../../lib/redirect';
 import checkLoggedIn from '../../../lib/check-logged-in';
@@ -20,13 +20,13 @@ import {Author, useFindOneHymnQuery} from '../../../components/queries';
 const Composer: FC<Author> = props => {
   if (props.name) {
     return (
-      <Text>
+      <Styled.p>
         <Link {...authorLinkProps(props)} />
-      </Text>
+      </Styled.p>
     );
   }
 
-  return <Text>No Composer</Text>;
+  return <Styled.p>No Composer</Styled.p>;
 };
 
 Composer.propTypes = {
@@ -43,15 +43,16 @@ type SongProps = {
 
 const Song: NextPage<SongProps> = ({id}) => {
   const {data} = useFindOneHymnQuery({variables: {id}});
-  const {author, hymnNumber, content, title, tune, copyright} = data?.hymnById;
+  const {author, hymnNumber, content, title, tune, copyright, scripture} =
+    data?.hymnById ?? {};
 
   const files = [];
 
   return (
     <PageLayout>
-      <Text as="h1" fontWeight="extraBold">
+      <Styled.h1 fontWeight="extraBold">
         Public Worship and Aids to Devotion Committee Website
-      </Text>
+      </Styled.h1>
       <Flex
         gutterWidth="xxl"
         sx={{flexDirection: ['column-reverse', 'column-reverse', 'row']}}
@@ -59,8 +60,8 @@ const Song: NextPage<SongProps> = ({id}) => {
         <Box>
           {files.length > 0 && (
             <>
-              <Text as="h3">Files</Text>
-              <Text as="ul">
+              <Styled.h3>Files</Styled.h3>
+              <Styled.ul>
                 {files.map(({_id, file}) => (
                   <li key={_id}>
                     <Link href={file.url} isInternal={false}>
@@ -69,34 +70,34 @@ const Song: NextPage<SongProps> = ({id}) => {
                     ({prettyBytes(file.size)})
                   </li>
                 ))}
-              </Text>
+              </Styled.ul>
             </>
           )}
 
           {author && (
             <>
-              <Text as="h3">Hymn Author</Text>
-              <Text>
+              <Styled.h3>Hymn Author</Styled.h3>
+              <Styled.p>
                 <Link {...authorLinkProps(author)} />
-              </Text>
+              </Styled.p>
             </>
           )}
 
           {scripture && (
             <>
-              <Text as="h3">Scripture</Text>
-              <Text>{scripture}</Text>
+              <Styled.h3>Scripture</Styled.h3>
+              <Styled.p>{scripture}</Styled.p>
             </>
           )}
 
           {tune && (
             <>
-              <Text as="h3">Tune Composer</Text>
+              <Styled.h3>Tune Composer</Styled.h3>
               <Composer {...tune.composer} />
               {tune.metre && (
                 <>
-                  <Text as="h3">Metre</Text>
-                  <Text>{tune.metre.metre}</Text>
+                  <Styled.h3>Metre</Styled.h3>
+                  <Styled.p>{tune.metre.metre}</Styled.p>
                 </>
               )}
             </>
@@ -104,23 +105,23 @@ const Song: NextPage<SongProps> = ({id}) => {
 
           {copyright && (
             <>
-              <Text as="h3">Copyright (words)</Text>
-              <Text>{copyright.name || '-'}</Text>
+              <Styled.h3>Copyright (words)</Styled.h3>
+              <Styled.p>{copyright.name || '-'}</Styled.p>
             </>
           )}
 
           {tune?.musicCopyright && (
             <>
-              <Text as="h3">Copyright (music)</Text>
-              <Text>{tune.musicCopyright.name || '-'}</Text>
+              <Styled.h3>Copyright (music)</Styled.h3>
+              <Styled.p>{tune.musicCopyright.name || '-'}</Styled.p>
             </>
           )}
         </Box>
         <Box sx={{width: '100%'}}>
-          <Text as="h2">
-            <ShortListButton hymn={props} />
+          <Styled.h2>
+            <ShortListButton hymn={data?.hymnById} />
             {hymnNumber}. {title}
-          </Text>
+          </Styled.h2>
           <BlockContent blocks={content} />
         </Box>
       </Flex>

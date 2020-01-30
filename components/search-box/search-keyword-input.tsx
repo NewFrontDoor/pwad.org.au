@@ -2,20 +2,16 @@ import React, {FC, useState, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import {Label} from 'theme-ui';
-
+import {useField} from 'formik';
 import {useFindKeywordQuery} from '../queries';
 
 type SearchInput = {
   name: string;
   label: string;
-  value: {
-    label?: string;
-    value?: string;
-  };
-  onChange: (name: string) => () => void;
 };
 
-const SearchInput: FC<SearchInput> = ({name, label, value, onChange}) => {
+const SearchInput: FC<SearchInput> = ({label, ...props}) => {
+  const [field, _, helpers] = useField(props);
   const [searchTerm, setSearchTerm] = useState('');
   const {loading, error, data, fetchMore} = useFindKeywordQuery({
     variables: {title: searchTerm}
@@ -55,10 +51,10 @@ const SearchInput: FC<SearchInput> = ({name, label, value, onChange}) => {
         isClearable
         isSearchable
         isLoading={loading}
-        value={value}
+        value={field.value}
         inputValue={searchTerm}
         options={options}
-        onChange={onChange(name)}
+        onChange={value => helpers.setValue(value)}
         onMenuScrollToBottom={fetchMoreKeywords}
         onInputChange={value => {
           setSearchTerm(value);
@@ -71,10 +67,6 @@ const SearchInput: FC<SearchInput> = ({name, label, value, onChange}) => {
 SearchInput.propTypes = {
   name: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  value: PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired
-  }),
   onChange: PropTypes.func.isRequired
 };
 

@@ -1,5 +1,6 @@
 import upperFirst from 'lodash/upperFirst';
-import {Resolvers, ShortList, Maybe} from './_gen-types';
+import books from '../../../lib/books';
+import {Resolvers, ShortList, Hymn, Maybe} from './_gen-types';
 
 type SanityType =
   | 'User'
@@ -84,9 +85,31 @@ export const resolvers: Resolvers = {
     async authorById(_parent, args, context) {
       return context.models.author.getById(args.id);
     },
+    async occasionManyGroupById(_parent, _args, context) {
+      return context.models.occasion.findAll();
+    },
     async pageContentOne(_parent, args, context) {
       const {id} = args.filter;
       return context.models.pageContent.getById(id);
+    },
+    async metreMany(_parent, args, context) {
+      return context.models.metre.findMany(
+        args.filter,
+        args.sort,
+        args.skip,
+        args.limit
+      );
+    },
+    async tuneMany(_parent, args, context) {
+      return context.models.tune.findMany(
+        args.filter,
+        args.sort,
+        args.skip,
+        args.limit
+      );
+    },
+    async search(_parent, args, context) {
+      return context.models.hymn.search(args.filter);
     }
   },
   Mutation: {
@@ -103,6 +126,27 @@ export const resolvers: Resolvers = {
   Document: {
     __resolveType(parent, _context, _info) {
       return resolveSanityType(parent);
+    }
+  },
+  Hymn: {
+    scripture(parent, _context, _info) {
+      const {book, chapter, verses} = parent as Hymn;
+      let scripture = '';
+      const found = books.find(({value}) => book === value);
+
+      if (found) {
+        scripture += found.label;
+
+        if (chapter) {
+          scripture += ` ${chapter}`;
+
+          if (verses) {
+            scripture += `:${verses}`;
+          }
+        }
+      }
+
+      return scripture;
     }
   },
   ShortList: {

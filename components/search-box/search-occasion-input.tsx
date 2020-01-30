@@ -2,20 +2,16 @@ import React, {FC} from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import {Label} from 'theme-ui';
-
+import {useField} from 'formik';
 import {useFindOccasionQuery} from '../queries';
 
 type SearchInput = {
   name: string;
   label: string;
-  value: {
-    label?: string;
-    value?: string;
-  };
-  onChange: (name: string) => () => void;
 };
 
-const SearchInput: FC<SearchInput> = ({name, label, value, onChange}) => {
+const SearchInput: FC<SearchInput> = ({label, ...props}) => {
+  const [field, _, helpers] = useField(props);
   const {loading, error, data} = useFindOccasionQuery();
 
   let options = [];
@@ -37,9 +33,9 @@ const SearchInput: FC<SearchInput> = ({name, label, value, onChange}) => {
         isClearable
         isSearchable
         isLoading={loading}
-        value={value}
+        value={field.value}
         options={options}
-        onChange={onChange(name)}
+        onChange={value => helpers.setValue(value)}
       />
     </Label>
   );
@@ -47,16 +43,7 @@ const SearchInput: FC<SearchInput> = ({name, label, value, onChange}) => {
 
 SearchInput.propTypes = {
   name: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  value: PropTypes.shape({
-    label: PropTypes.string.isRequired,
-    value: PropTypes.string.isRequired
-  }),
-  onChange: PropTypes.func.isRequired
-};
-
-SearchInput.defaultProps = {
-  value: undefined
+  label: PropTypes.string.isRequired
 };
 
 export default SearchInput;

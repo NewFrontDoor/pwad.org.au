@@ -11,9 +11,6 @@ module.exports = {
   typescript: {
     ignoreDevErrors: true,
   },
-  onDemandEntries: {
-    websocketPort: 3100
-  },
   webpack(config) {
     config.node = {fs: 'empty'};
     return config;

@@ -56,7 +56,7 @@ const ShortListButton: FC<ShortListButtonProps> = ({hymn}) => {
   }
 
   if (data?.me) {
-    const shortlisted = some(data.me.shortlist, {_id: hymn._id});
+    const shortlisted = some(data.me.shortlist, {_id: hymn?._id});
     const label = shortlisted ? 'Remove from Short List' : 'Add to Short List';
 
     return (
