@@ -66,7 +66,7 @@ const AccountPaymentButton: FC<AccountPaymentButton> = ({
 
   const handleAccountPayment = useCallback(async () => {
     const successUrl = new URL('/my-account', window.location);
-    const cancelUrl = new URL('/cancel', window.location);
+    const cancelUrl = new URL('/my-account', window.location);
 
     const session = await stripe.redirectToCheckout({
       items: [{sku: 'sku_GBZZqHosJSdAkX', quantity: 1}],
