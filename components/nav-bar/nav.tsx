@@ -77,9 +77,6 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
               <UserAvatar />
             </NavMenuItem>
             <div>
-              <NavMenuItem as="li" fontWeight="bold">
-                <Link href="/api/logout">Log out</Link>
-              </NavMenuItem>
               <Can I="read" a="keystone">
                 <NavMenuItem as="li" fontWeight="bold">
                   <Link href="/keystone" isInternal={false}>
@@ -89,6 +86,9 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
               </Can>
               <NavMenuItem as="li" fontWeight="bold">
                 <Link href="/my-account">My account</Link>
+              </NavMenuItem>
+              <NavMenuItem as="li" fontWeight="bold">
+                <Link href="/api/logout">Log out</Link>
               </NavMenuItem>
             </div>
           </>
