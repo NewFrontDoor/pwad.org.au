@@ -17,7 +17,6 @@ const UserAvatar: FC = () => {
     return data.me.picture ? (
       <Avatar src={data.me.picture} alt={name} background={theme.theme_color} />
     ) : (
-      // @ts-ignore
       <User title={name} role="img" />
     );
   }

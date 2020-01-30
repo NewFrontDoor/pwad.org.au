@@ -89,6 +89,7 @@ const ShortListButton: FC<ShortListButtonProps> = ({hymn}) => {
 };
 
 ShortListButton.propTypes = {
+  // @ts-ignore
   hymn: PropTypes.shape({
     _id: PropTypes.string.isRequired
   }).isRequired

@@ -4,7 +4,7 @@ import sanity from './sanity';
 const allResourcesQuery = ['*']
   .concat([
     `[_type in ["hymn", "prayer", "liturgy"] && (title match $search || keywords[]->name match $search)][0...10]{
-      _id, _type, title, lyrics, content, keywords[]->{_id, name}
+      _id, _type, title, lyrics, content[0..1], keywords[]->{_id, name}
     }`,
     '[!(_id in path("drafts.**"))]'
   ])
@@ -13,7 +13,7 @@ const allResourcesQuery = ['*']
 const freeResourcesQuery = ['*']
   .concat([
     `[_type in ["prayer", "liturgy"] && (title match $search || keywords[]->name match $search)][0...10]{
-        _id, _type, title, lyrics, content, keywords[]->{_id, name}
+        _id, _type, title, lyrics, content[0..1], keywords[]->{_id, name}
       }`,
     '[!(_id in path("drafts.**"))]'
   ])
