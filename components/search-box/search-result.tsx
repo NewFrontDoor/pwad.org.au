@@ -35,11 +35,7 @@ const SearchResultList: FC<SearchResult> = props => {
             textOverflow: 'ellipsis'
           }}
         >
-          {content
-            .map(item => item.children)
-            .flat()
-            .map(child => (child ? child.text : ''))
-            .join(' ')}
+          <BlockContent blocks={content} />
         </div>
       )}
       <Flex
