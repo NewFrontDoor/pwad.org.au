@@ -3,18 +3,9 @@ const {deferConfig} = require('config/defer');
 module.exports = {
   dev: true,
 
-  PORT: process.env.PORT || 3000,
+  HOST: 'localhost:3000',
+  HOST_URL: 'http://localhost:3000',
 
-  MONGO_URI: process.env.MONGO_URI || 'mongodb://localhost:27017/pwad',
-
-  HOST: deferConfig(config => `localhost:${config.PORT}`),
-  HOST_URL: deferConfig(config => `http://localhost:${config.PORT}`),
-  GRAPHQL_URI: deferConfig(config => `http://localhost:${config.PORT}/graphql`),
-
-  API_CLIENT_URL: deferConfig(config => `http://localhost:${config.PORT}`),
-  API_SERVER_URL: deferConfig(config => `http://localhost:${config.PORT}`),
-
-  API_TOKEN_SECRET: 'API_TOKEN_SECRET',
   SESSION_COOKIE_SECRET: 'SESSION_COOKIE_SECRET',
 
   S3_KEY: process.env.S3_KEY,

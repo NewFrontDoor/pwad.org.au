@@ -11,7 +11,7 @@ type SearchInput = {
 };
 
 const SearchInput: FC<SearchInput> = ({label, ...props}) => {
-  const [field, _, helpers] = useField(props);
+  const [field, , helpers] = useField(props);
   const [searchTerm, setSearchTerm] = useState('');
 
   return (

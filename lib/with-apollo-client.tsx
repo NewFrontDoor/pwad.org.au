@@ -154,7 +154,7 @@ function createApolloClient(
   initialState: NormalizedCacheObject = {},
   cookie = ''
 ): TApolloClient {
-  const uri = 'http://localhost:3000/api/graphql';
+  const {href: uri} = new URL('/api/graphql', process.env.HOST_URL);
 
   const authLink = setContext((_, {headers}) => {
     return {

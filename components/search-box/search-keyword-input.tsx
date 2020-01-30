@@ -11,7 +11,7 @@ type SearchInput = {
 };
 
 const SearchInput: FC<SearchInput> = ({label, ...props}) => {
-  const [field, _, helpers] = useField(props);
+  const [field, , helpers] = useField(props);
   const [searchTerm, setSearchTerm] = useState('');
   const {loading, error, data, fetchMore} = useFindKeywordQuery({
     variables: {title: searchTerm}
@@ -66,12 +66,7 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
 
 SearchInput.propTypes = {
   name: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired
-};
-
-SearchInput.defaultProps = {
-  value: undefined
+  label: PropTypes.string.isRequired
 };
 
 export default SearchInput;

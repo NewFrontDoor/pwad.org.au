@@ -44,11 +44,9 @@ async function webhook(req: NextApiRequest, res: NextApiResponse): void {
   let event: Stripe.Event;
 
   try {
-    event = stripe.webhooks.constructEvent(
-      await buffer(req),
-      signature,
-      endpointSecret
-    );
+    const body = await buffer(req);
+
+    event = stripe.webhooks.constructEvent(body, signature, endpointSecret);
   } catch (error) {
     console.error(error);
     return res.status(400).send(`Webhook Error: ${error.message}`);

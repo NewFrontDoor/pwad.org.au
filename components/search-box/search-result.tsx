@@ -3,9 +3,8 @@ import {FC} from 'react';
 import {jsx, Flex, Box, Styled, Button} from 'theme-ui';
 import PropTypes from 'prop-types';
 import NextLink from 'next/link';
-import {kebabCase} from 'lodash';
+import kebabCase from 'lodash/kebabCase';
 import {SearchResult} from '../queries';
-import BlockContent from '../block-content';
 import Link, {keywordLinkProps} from '../link';
 import ShortListButton from '../shortlist-button';
 
@@ -27,7 +26,7 @@ const SearchResultList: FC<SearchResult> = props => {
         </Link>{' '}
       </Styled.h4>
       {content && (
-        <div
+        <Styled.div
           sx={{
             width: '100%',
             whiteSpace: 'nowrap',
@@ -40,7 +39,7 @@ const SearchResultList: FC<SearchResult> = props => {
             .flat()
             .map(child => (child ? child.text : ''))
             .join(' ')}
-        </div>
+        </Styled.div>
       )}
       <Flex
         as="ul"

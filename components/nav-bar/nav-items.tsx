@@ -6,7 +6,6 @@ import {useResponsiveValue} from '@theme-ui/match-media';
 import {motion} from 'framer-motion';
 
 import {MenuItem} from '../queries';
-import Link from '../link';
 import NavLink from './nav-link';
 
 type NavCollapseProps = MenuItem;

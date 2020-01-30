@@ -1,9 +1,9 @@
-import React, {FC} from 'react';
+import React, {FC, SVGProps} from 'react';
 import PropTypes from 'prop-types';
 
 type GoogleProps = {
-  size: string | number;
-};
+  size?: string | number;
+} & SVGProps<SVGSVGElement>;
 
 const Google: FC<GoogleProps> = props => {
   const {size, ...otherProps} = props;

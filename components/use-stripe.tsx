@@ -11,7 +11,7 @@ export const StripeProvider: FC = ({children}) => {
   const [stripe, setStripe] = useState(null);
 
   const initializeStripe = (): void => {
-    setStripe(window.Stripe(process.env.stripeClientToken));
+    setStripe(window.Stripe(process.env.STRIPE_CLIENT_TOKEN));
   };
 
   useEffect(() => {

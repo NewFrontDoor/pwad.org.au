@@ -1,18 +1,20 @@
 require('dotenv').config();
-const config = require('config');
+const bundleAnalyzer = require('@next/bundle-analyzer')
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+})
 
-module.exports = {
+module.exports = withBundleAnalyzer({
   env: {
-    dev: config.get('dev'),
-    stripeClientToken: config.get('STRIPE_CLIENT_TOKEN'),
-    graphqlUri: config.get('GRAPHQL_URI'),
-    hostUrl: config.get('HOST_URL')
+    STRIPE_CLIENT_TOKEN: process.env.STRIPE_CLIENT_TOKEN,
+    HOST_URL: process.env.HOST_URL,
   },
   typescript: {
     ignoreDevErrors: true,
+    ignoreBuildErrors: true,
   },
   webpack(config) {
     config.node = {fs: 'empty'};
     return config;
   }
-};
+})

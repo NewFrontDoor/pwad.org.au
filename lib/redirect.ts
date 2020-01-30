@@ -18,7 +18,7 @@ export default (url: string, context?: NextPageContext): void => {
 
 export function buildUrl(req: IncomingMessage): URL {
   if (req) {
-    return new URL(req.originalUrl, 'http://localhost:3000');
+    return new URL(req.originalUrl, process.env.HOST_URL);
   }
 
   return new URL(window.location.href);

@@ -7,28 +7,31 @@
     "HOST": "pwad.now.sh",
     "HOST_URL": "https://pwad.now.sh",
 
-    "API_CLIENT_URL": "http://localhost:3000",
-    "API_SERVER_URL": "http://localhost:3000",
-
     "S3_KEY": "@s3-key",
     "S3_SECRET": "@s3-secret",
     "S3_BUCKET": "pwad.org.au",
     "S3_REGION": "ap-southeast-2",
     "CLOUDFRONT_PUBLIC_URL": "https://d14i6h6ib67gf5.cloudfront.net",
 
-    "MONGO_URI": "@mongo-uri",
+    "SESSION_COOKIE_SECRET": "@pwad-session-cookie-secret",
 
-    "SESSION_COOKIE_SECRET": "@session-cookie-secret",
+    "SANITY_TOKEN": "@pwad-sanity-token",
 
     "GOOGLE_OAUTH_CLIENT_ID": "847282100207-emjqgnijh0lo6c731bdh58r8s9h7asd2.apps.googleusercontent.com",
     "GOOGLE_OAUTH_CLIENT_SECRET": "@google-oauth-client-secret",
 
     "STRIPE_CLIENT_TOKEN": "@pwad-test-stripe-client-token",
     "STRIPE_SECRET_TOKEN": "@pwad-test-stripe-secret-token",
-    "STRIPE_WEBHOOK_SECRET_TOKEN": "@pwad-test-stripe-webhook-secret-token"
+    "STRIPE_WEBHOOK_SECRET_TOKEN": "@pwad-test-stripe-webhook-secret-token",
+
+    "AUTH0_DOMAIN": "@pwad-auth0-domain",
+    "AUTH0_CLIENT_ID": "@pwad-auth0-client-id",
+    "AUTH0_CLIENT_SECRET": "@pwad-auth0-client-secret"
   },
   "build": {
     "env": {
+      "HOST_URL": "https://pwad.now.sh",
+
       "STRIPE_CLIENT_TOKEN": "@pwad-test-stripe-client-token"
     }
   }

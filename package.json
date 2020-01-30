@@ -71,6 +71,7 @@
     "@casl/ability": "^3.4.0",
     "@casl/react": "^1.0.4",
     "@emotion/core": "^10.0.27",
+    "@next/bundle-analyzer": "^9.2.1",
     "@sanity/block-content-to-react": "^2.0.7",
     "@sanity/client": "^0.147.3",
     "@theme-ui/color": "^0.3.1",
@@ -145,32 +146,14 @@
         {
           "SwitchCase": 1
         }
-      ],
-      "unicorn/filename-case": "off",
-      "react/jsx-pascal-case": [
-        "error",
-        {
-          "allowAllCaps": true
-        }
       ]
     },
     "overrides": [
       {
-        "files": "components/**/*.js",
+        "files": "components/**/*.tsx",
         "envs": [
           "browser"
         ]
-      },
-      {
-        "files": "models/*.js",
-        "rules": {
-          "unicorn/filename-case": [
-            "error",
-            {
-              "case": "pascalCase"
-            }
-          ]
-        }
       }
     ]
   },

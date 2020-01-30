@@ -1,7 +1,7 @@
 import React, {FC, ReactNode} from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
-import {Button} from 'theme-ui';
+import Button from '../button';
 
 import Google from './google-icon';
 

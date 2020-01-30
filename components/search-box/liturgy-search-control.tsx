@@ -1,4 +1,4 @@
-import React, {Fc, useReducer} from 'react';
+import React, {FC, useReducer} from 'react';
 import PropTypes from 'prop-types';
 import identity from 'lodash/identity';
 import pickBy from 'lodash/pickBy';
