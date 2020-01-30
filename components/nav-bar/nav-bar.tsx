@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import {FC, useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
+import Router from 'next/router';
 import {jsx, Flex, Box, Styled, Button} from 'theme-ui';
 import {useResponsiveValue} from '@theme-ui/match-media';
 import {motion} from 'framer-motion';
@@ -33,13 +34,22 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
   const [isOpen, toggleOpen] = useToggle(false);
 
   useEffect(() => {
+    const handleRouteChange = (): void => toggleOpen(false);
+
+    Router.events.on('routeChangeStart', handleRouteChange);
+    return () => {
+      Router.events.off('routeChangeStart', handleRouteChange);
+    };
+  }, [isOpen, toggleOpen]);
+
+  useEffect(() => {
     // If nav bar is open on mobile, disable scroll
     document.body.style.overflowY = isOpen && !isMedium ? 'hidden' : '';
   }, [isMedium, isOpen]);
 
   return (
     <>
-      <NavOverlay onClickOutside={() => isOpen && toggleOpen()}>
+      <NavOverlay onClickOutside={() => toggleOpen(false)}>
         <motion.div
           animate={isOpen ? 'open' : 'closed'}
           variants={isMedium ? desktopOverlayVariants : mobileOverlayVariants}
