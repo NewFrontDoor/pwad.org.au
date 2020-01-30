@@ -10,6 +10,7 @@ export default gql`
         name
       }
       content
+      scripture
       author {
         _id
         dates

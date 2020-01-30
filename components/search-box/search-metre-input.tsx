@@ -2,25 +2,20 @@ import React, {FC, useState, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import Select from 'react-select';
 import {Label} from 'theme-ui';
-
+import {useField} from 'formik';
 import {useFindMetreQuery} from '../queries';
 
 type SearchInput = {
-  name: string;
   label: string;
-  value: Array<{
-    label?: string;
-    value?: string;
-  }>;
-  onChange: (name: string) => () => void;
+  name: string;
 };
 
-const SearchInput: FC<SearchInput> = ({name, label, value, onChange}) => {
+const SearchInput: FC<SearchInput> = ({label, ...props}) => {
+  const [field, _, helpers] = useField(props);
   const [searchTerm, setSearchTerm] = useState('');
   const {loading, error, data, fetchMore} = useFindMetreQuery({
     variables: {metre: searchTerm}
   });
-
   const fetchMoreMetres = useCallback(() => {
     fetchMore({
       variables: {
@@ -42,10 +37,10 @@ const SearchInput: FC<SearchInput> = ({name, label, value, onChange}) => {
     options = [];
   } else {
     options =
-      data?.metreMany?.map(({_id, metre, tunes}) => ({
+      data?.metreMany.map(({_id, metre, tunes}) => ({
         label: metre,
         value: _id,
-        tunes: tunes.map(({_id}) => _id)
+        tunes: tunes?.map(({_id}) => _id) ?? []
       })) ?? [];
   }
 
@@ -57,10 +52,10 @@ const SearchInput: FC<SearchInput> = ({name, label, value, onChange}) => {
         isClearable
         isSearchable
         isLoading={loading}
-        value={value}
+        value={field.value}
         inputValue={searchTerm}
         options={options}
-        onChange={onChange(name)}
+        onChange={value => helpers.setValue(value)}
         onMenuScrollToBottom={fetchMoreMetres}
         onInputChange={value => setSearchTerm(value)}
       />
@@ -70,14 +65,7 @@ const SearchInput: FC<SearchInput> = ({name, label, value, onChange}) => {
 
 SearchInput.propTypes = {
   name: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  value: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string.isRequired,
-      value: PropTypes.string.isRequired
-    })
-  ).isRequired,
-  onChange: PropTypes.func.isRequired
+  label: PropTypes.string.isRequired
 };
 
 export default SearchInput;

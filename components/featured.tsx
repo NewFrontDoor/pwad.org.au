@@ -7,13 +7,13 @@ const Featured: FC = () => (
   <>
     <Styled.h3>Featured</Styled.h3>
     <Grid columns={[1, 3]}>
-      <Link href="/hymn">
+      <Link href="/litergy">
         <Card>Worship</Card>
       </Link>
       <Link href="/pray">
         <Card>Pray</Card>
       </Link>
-      <Link href="/litergy">
+      <Link href="/hymn">
         <Card>Rejoice</Card>
       </Link>
     </Grid>

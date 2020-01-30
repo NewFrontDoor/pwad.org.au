@@ -9,6 +9,9 @@ import * as pageContentModel from './_models/page-content';
 import * as liturgyModel from './_models/liturgy';
 import * as authorModel from './_models/author';
 import * as hymnModel from './_models/hymn';
+import * as metreModel from './_models/metre';
+import * as tuneModel from './_models/tune';
+import * as occasionModel from './_models/occasion';
 import {schema} from './_schema';
 import {resolvers} from './_resolvers';
 import {User} from './_gen-types';
@@ -23,6 +26,9 @@ export type Context = {
     hymn: typeof hymnModel;
     liturgy: typeof liturgyModel;
     author: typeof authorModel;
+    metre: typeof metreModel;
+    tune: typeof tuneModel;
+    occasion: typeof occasionModel;
   };
 };
 
@@ -35,7 +41,10 @@ function context({req}: {req: NextApiRequest}): Context {
       prayer: prayerModel,
       hymn: hymnModel,
       user: userModel,
-      liturgy: liturgyModel
+      liturgy: liturgyModel,
+      metre: metreModel,
+      tune: tuneModel,
+      occasion: occasionModel
     },
     user: getUserContext(req)
   };

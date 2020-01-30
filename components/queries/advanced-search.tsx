@@ -10,7 +10,7 @@ export default gql`
   ) {
     search(
       filter: {
-        text_contains: $title
+        textContains: $title
         book: $book
         occasion: $occasion
         keywords: $keywords

@@ -80,7 +80,7 @@ export const schema = gql`
   }
 
   input SearchInput {
-    text_contains: String
+    textContains: String
     book: EnumHymnBook
     occasion: String
     keywords: [String]
@@ -96,73 +96,73 @@ export const schema = gql`
   }
 
   enum EnumHymnBook {
-    NONE
-    GENESIS
-    EXODUS
-    LEVITICUS
-    NUMBERS
-    DEUTERONOMY
-    JOSHUA
-    JUDGES
-    RUTH
-    FIRST_SAMUEL
-    SECOND_SAMUEL
-    FIRST_KINGS
-    SECOND_KINGS
-    FIRST_CHRONICLES
-    SECOND_CHRONICLES
-    EZRA
-    NEHEMIAH
-    ESTHER
-    JOB
-    PSALMS
-    PROVERBS
-    ECCLESIASTES
-    SONG_OF_SONGS
-    ISAIAH
-    JEREMIAH
-    LAMENTATIONS
-    EZEKIEL
-    DANIEL
-    HOSEA
-    JOEL
-    AMOS
-    OBADIAH
-    JONAH
-    MICAH
-    NAHUM
-    HABAKKUK
-    ZEPHANIAH
-    HAGGAI
-    ZECHARIAH
-    MALACHI
-    MATTHEW
-    MARK
-    LUKE
-    JOHN
-    ACTS
-    ROMANS
-    FIRST_CORINTHIANS
-    SECOND_CORINTHIANS
-    GALATIANS
-    EPHESIANS
-    PHILIPPIANS
-    COLOSSIANS
-    FIRST_THESSALONIANS
-    SECOND_THESSALONIANS
-    FIRST_TIMOTHY
-    SECOND_TIMOTHY
-    TITUS
-    PHILEMON
-    HEBREWS
-    JAMES
-    FIRST_PETER
-    SECOND_PETER
-    FIRST_JOHN
-    SECOND_JOHN
-    THIRD_JOHN
-    JUDE
-    REVELATION
+    none
+    genesis
+    exodus
+    leviticus
+    numbers
+    deuteronomy
+    joshua
+    judges
+    ruth
+    first_samuel
+    second_samuel
+    first_kings
+    second_kings
+    first_chronicles
+    second_chronicles
+    ezra
+    nehemiah
+    esther
+    job
+    psalms
+    proverbs
+    ecclesiastes
+    song_of_songs
+    isaiah
+    jeremiah
+    lamentations
+    ezekiel
+    daniel
+    hosea
+    joel
+    amos
+    obadiah
+    jonah
+    micah
+    nahum
+    habakkuk
+    zephaniah
+    haggai
+    zechariah
+    malachi
+    matthew
+    mark
+    luke
+    john
+    acts
+    romans
+    first_corinthians
+    second_corinthians
+    galatians
+    ephesians
+    philippians
+    colossians
+    first_thessalonians
+    second_thessalonians
+    first_timothy
+    second_timothy
+    titus
+    philemon
+    hebrews
+    james
+    first_peter
+    second_peter
+    first_john
+    second_john
+    third_john
+    jude
+    revelation
   }
 
   type PageInfo {
@@ -174,7 +174,7 @@ export const schema = gql`
   input FilterInput {
     id: String
     search: String
-    text_contains: String
+    textContains: String
   }
 
   interface Document {
@@ -262,6 +262,7 @@ export const schema = gql`
     book: String
     chapter: Int
     chapterVerse: String
+    scripture: String
     files: [Asset]
     keywords: [Keyword]
     occasions: [Occasion]
