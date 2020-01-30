@@ -69,30 +69,28 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
         {() => (
           <>
             <NavMenuItem as="li" fontWeight="bold">
-              <Link href="/api/logout">Log out</Link>
-            </NavMenuItem>
-            <NavMenuItem as="li" fontWeight="bold">
               <Link href="/short-list">
                 Short list ({data.me.shortlist.length})
               </Link>
             </NavMenuItem>
-            {isMedium && (
-              <>
-                <Can I="read" a="keystone">
-                  <NavMenuItem as="li" fontWeight="bold">
-                    <Link href="/keystone" isInternal={false}>
-                      Admin
-                    </Link>
-                  </NavMenuItem>
-                </Can>
-                <NavMenuItem as="li" fontWeight="bold">
-                  <Link href="/my-account">My account</Link>
-                </NavMenuItem>
-              </>
-            )}
             <NavMenuItem as="li">
               <UserAvatar />
             </NavMenuItem>
+            <div>
+              <NavMenuItem as="li" fontWeight="bold">
+                <Link href="/api/logout">Log out</Link>
+              </NavMenuItem>
+              <Can I="read" a="keystone">
+                <NavMenuItem as="li" fontWeight="bold">
+                  <Link href="/keystone" isInternal={false}>
+                    Admin
+                  </Link>
+                </NavMenuItem>
+              </Can>
+              <NavMenuItem as="li" fontWeight="bold">
+                <Link href="/my-account">My account</Link>
+              </NavMenuItem>
+            </div>
           </>
         )}
       </Can>
