@@ -1,9 +1,9 @@
 /** @jsx jsx */
-import React, {FC, ReactNode} from 'react';
+import React, {FC, ReactNode, HTMLProps} from 'react';
 import PropTypes from 'prop-types';
-import {jsx, Styled, Button as BaseButton} from 'theme-ui';
+import {jsx, Button as BaseButton} from 'theme-ui';
 
-type ButtonProps = {
+type ButtonProps = HTMLProps<HTMLButtonElement> & {
   as?: any;
   iconStart?: JSX.Element;
   iconEnd?: JSX.Element;
@@ -32,7 +32,7 @@ const Button: FC<ButtonProps> = ({children, iconStart, iconEnd, ...props}) => {
 
   return (
     <BaseButton {...props}>
-      <Styled.span
+      <span
         sx={{
           alignItems: 'center',
           display: 'inline-flex',
@@ -63,7 +63,7 @@ const Button: FC<ButtonProps> = ({children, iconStart, iconEnd, ...props}) => {
         {startIcon}
         {children && <span>{children}</span>}
         {endIcon}
-      </Styled.span>
+      </span>
     </BaseButton>
   );
 };

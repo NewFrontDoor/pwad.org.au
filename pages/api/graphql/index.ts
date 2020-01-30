@@ -55,6 +55,11 @@ async function getUserContext(req: NextApiRequest): Promise<User | null> {
 
   if (response) {
     const {user} = response;
+    let hasPaidAccount = false;
+
+    if (typeof user['https://pwad.now.sh/paymentIntent'] === 'string') {
+      hasPaidAccount = user['https://pwad.now.sh/paymentIntent'].length > 0;
+    }
 
     const {
       _id,
@@ -70,6 +75,7 @@ async function getUserContext(req: NextApiRequest): Promise<User | null> {
       name,
       email,
       shortlist,
+      hasPaidAccount,
       picture: user.picture
     };
   }

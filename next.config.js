@@ -4,10 +4,16 @@ const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true',
 })
 
+let HOST_URL = 'http://localhost:3000'
+
+if (process.env.NODE_ENV === 'production') {
+  HOST_URL = process.env.HOST_URL
+}
+
 module.exports = withBundleAnalyzer({
   env: {
     STRIPE_CLIENT_TOKEN: process.env.STRIPE_CLIENT_TOKEN,
-    HOST_URL: process.env.HOST_URL,
+    HOST_URL,
   },
   typescript: {
     ignoreDevErrors: true,

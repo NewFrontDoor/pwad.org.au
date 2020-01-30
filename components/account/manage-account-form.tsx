@@ -1,10 +1,11 @@
 import React, {FC, ReactNode, useCallback} from 'react';
 import PropTypes from 'prop-types';
-import {Styled, Box, Flex, Button, Text} from 'theme-ui';
+import {Styled, Box, Flex, Text} from 'theme-ui';
 import {Check} from 'react-feather';
 import {string, object} from 'yup';
 import {Formik, Form} from 'formik';
 import {TextField} from '../form';
+import Button from '../button';
 import {useStripe, StripeProvider, Elements} from '../use-stripe';
 
 import {

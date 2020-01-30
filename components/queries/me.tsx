@@ -7,6 +7,7 @@ export default gql`
       email
       role
       hasFreeAccount
+      hasPaidAccount
       picture
       name {
         first

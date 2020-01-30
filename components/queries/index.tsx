@@ -943,7 +943,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, '_id' | 'email' | 'role' | 'hasFreeAccount' | 'picture'>
+    & Pick<User, '_id' | 'email' | 'role' | 'hasFreeAccount' | 'hasPaidAccount' | 'picture'>
     & { name: Maybe<(
       { __typename?: 'Name' }
       & Pick<Name, 'first' | 'last'>
@@ -1760,6 +1760,7 @@ export const MeDocument = gql`
     email
     role
     hasFreeAccount
+    hasPaidAccount
     picture
     name {
       first

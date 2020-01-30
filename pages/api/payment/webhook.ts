@@ -23,19 +23,14 @@ type Session = Stripe.Event.Data.Object & {
 
 async function handleCheckoutSession(session: Session): Promise<void> {
   const {customer_email: email, payment_intent: paymentIntent} = session;
+  const [user] = await management.getUsersByEmail(email);
 
-  try {
-    if (email) {
-      console.log('handleCheckout for', {email});
-      const user = await management.getUsersByEmail(email);
-
-      await management.updateUserMetadata(user, {
-        paymentIntent
-      });
+  await management.updateUserMetadata(
+    {id: user.user_id},
+    {
+      paymentIntent
     }
-  } catch (error) {
-    console.log(error);
-  }
+  );
 }
 
 async function webhook(req: NextApiRequest, res: NextApiResponse): void {
