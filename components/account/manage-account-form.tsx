@@ -66,7 +66,10 @@ const AccountPaymentButton: FC<AccountPaymentButton> = ({
   const {data} = useMeQuery();
 
   const handleAccountPayment = useCallback(async () => {
-    const successUrl = new URL('/my-account', window.location.href);
+    const successUrl = new URL(
+      '/api/callback/payment-success',
+      window.location.href
+    );
     const cancelUrl = new URL('/my-account', window.location.href);
 
     const session = await stripe.redirectToCheckout({

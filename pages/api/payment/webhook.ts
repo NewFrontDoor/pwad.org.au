@@ -13,7 +13,7 @@ const management = new ManagementClient({
   domain: process.env.AUTH0_DOMAIN,
   clientId: process.env.AUTH0_CLIENT_ID,
   clientSecret: process.env.AUTH0_CLIENT_SECRET,
-  scope: 'read:users update:users'
+  scope: 'read:users update:users update:users_app_metadata'
 });
 
 type Session = Stripe.Event.Data.Object & {
@@ -25,7 +25,7 @@ async function handleCheckoutSession(session: Session): Promise<void> {
   const {customer_email: email, payment_intent: paymentIntent} = session;
   const [user] = await management.getUsersByEmail(email);
 
-  await management.updateUserMetadata(
+  await management.updateAppMetadata(
     {id: user.user_id},
     {
       paymentIntent
@@ -33,7 +33,10 @@ async function handleCheckoutSession(session: Session): Promise<void> {
   );
 }
 
-async function webhook(req: NextApiRequest, res: NextApiResponse): void {
+async function webhook(
+  req: NextApiRequest,
+  res: NextApiResponse
+): Promise<void> {
   const signature = req.headers['stripe-signature'];
 
   let event: Stripe.Event;
@@ -50,7 +53,7 @@ async function webhook(req: NextApiRequest, res: NextApiResponse): void {
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object;
 
-    handleCheckoutSession(session);
+    await handleCheckoutSession(session);
   }
 
   res.json({received: true});
