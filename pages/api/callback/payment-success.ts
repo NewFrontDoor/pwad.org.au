@@ -6,11 +6,14 @@ export default async function callback(
   res: NextApiResponse
 ): Promise<void> {
   try {
-    const tokenCache = auth0.tokenCache(req, res);
-    await tokenCache.getAccessToken();
-    res.writeHead(302, {Location: '/my-account'}).end();
+    const {user} = await auth0.getSession(req);
+    console.log(user);
+    await auth0.handleProfile(req, res, {
+      refetch: true,
+      redirect: '/my-account'
+    });
   } catch (error) {
     console.error(error);
-    res.status(error.status || 400).end(error.message);
+    res.status(error.status || 500).end(error.message);
   }
 }
