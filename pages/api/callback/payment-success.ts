@@ -6,9 +6,7 @@ export default async function callback(
   res: NextApiResponse
 ): Promise<void> {
   try {
-    const tokenCache = auth0.tokenCache(req, res);
-    await tokenCache.getAccessToken();
-    res.writeHead(302, {Location: '/my-account'}).end();
+    await auth0.handleLogin(req, res, {});
   } catch (error) {
     console.error(error);
     res.status(error.status || 400).end(error.message);

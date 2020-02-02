@@ -13,9 +13,9 @@ export default initAuth0({
   session: {
     cookieSecret,
     cookieLifetime: EIGHT_HOURS,
-    storeIdToken: false,
-    storeAccessToken: false,
-    storeRefreshToken: false
+    storeIdToken: true,
+    storeAccessToken: true,
+    storeRefreshToken: true
   },
   oidcClient: {
     httpTimeout: 2500,
