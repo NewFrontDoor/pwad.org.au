@@ -400,6 +400,8 @@ export type Query = {
   menuItems?: Maybe<Array<Maybe<MenuItem>>>,
   textSearch?: Maybe<Array<Maybe<SearchResult>>>,
   search?: Maybe<Array<Maybe<SearchResult>>>,
+  prayerSearch?: Maybe<Array<Maybe<Prayer>>>,
+  liturgySearch?: Maybe<Array<Maybe<Liturgy>>>,
   pageContentOne?: Maybe<PageContent>,
   authorById?: Maybe<Author>,
   hymnById?: Maybe<Hymn>,
@@ -419,6 +421,16 @@ export type QueryTextSearchArgs = {
 
 
 export type QuerySearchArgs = {
+  filter: SearchInput
+};
+
+
+export type QueryPrayerSearchArgs = {
+  filter: SearchInput
+};
+
+
+export type QueryLiturgySearchArgs = {
   filter: SearchInput
 };
 
@@ -900,6 +912,25 @@ export type HomeQuery = (
   )> }
 );
 
+export type LiturgySearchQueryVariables = {
+  title?: Maybe<Scalars['String']>,
+  occasion?: Maybe<Scalars['String']>,
+  keywords?: Maybe<Array<Maybe<Scalars['String']>>>
+};
+
+
+export type LiturgySearchQuery = (
+  { __typename?: 'Query' }
+  & { liturgySearch: Maybe<Array<Maybe<(
+    { __typename?: 'Liturgy' }
+    & Pick<Liturgy, '_id' | '_type' | 'title' | 'content'>
+    & { keywords: Maybe<Array<Maybe<(
+      { __typename?: 'Keyword' }
+      & Pick<Keyword, '_id' | 'name'>
+    )>>> }
+  )>>> }
+);
+
 export type LoginUserMutationVariables = {
   email: Scalars['String'],
   password: Scalars['String']
@@ -974,6 +1005,25 @@ export type PageContentQuery = (
     { __typename?: 'PageContent' }
     & Pick<PageContent, '_id' | 'title' | 'content'>
   )> }
+);
+
+export type PrayerSearchQueryVariables = {
+  title?: Maybe<Scalars['String']>,
+  occasion?: Maybe<Scalars['String']>,
+  keywords?: Maybe<Array<Maybe<Scalars['String']>>>
+};
+
+
+export type PrayerSearchQuery = (
+  { __typename?: 'Query' }
+  & { prayerSearch: Maybe<Array<Maybe<(
+    { __typename?: 'Prayer' }
+    & Pick<Prayer, '_id' | '_type' | 'title' | 'content'>
+    & { keywords: Maybe<Array<Maybe<(
+      { __typename?: 'Keyword' }
+      & Pick<Keyword, '_id' | 'name'>
+    )>>> }
+  )>>> }
 );
 
 export type RemoveShortListItemMutationVariables = {
@@ -1713,6 +1763,48 @@ export function useHomeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOpt
 export type HomeQueryHookResult = ReturnType<typeof useHomeQuery>;
 export type HomeLazyQueryHookResult = ReturnType<typeof useHomeLazyQuery>;
 export type HomeQueryResult = ApolloReactCommon.QueryResult<HomeQuery, HomeQueryVariables>;
+export const LiturgySearchDocument = gql`
+    query liturgySearch($title: String, $occasion: String, $keywords: [String]) {
+  liturgySearch(filter: {textContains: $title, occasion: $occasion, keywords: $keywords}) {
+    _id
+    _type
+    title
+    content
+    keywords {
+      _id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __useLiturgySearchQuery__
+ *
+ * To run a query within a React component, call `useLiturgySearchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useLiturgySearchQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useLiturgySearchQuery({
+ *   variables: {
+ *      title: // value for 'title'
+ *      occasion: // value for 'occasion'
+ *      keywords: // value for 'keywords'
+ *   },
+ * });
+ */
+export function useLiturgySearchQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<LiturgySearchQuery, LiturgySearchQueryVariables>) {
+        return ApolloReactHooks.useQuery<LiturgySearchQuery, LiturgySearchQueryVariables>(LiturgySearchDocument, baseOptions);
+      }
+export function useLiturgySearchLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<LiturgySearchQuery, LiturgySearchQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<LiturgySearchQuery, LiturgySearchQueryVariables>(LiturgySearchDocument, baseOptions);
+        }
+export type LiturgySearchQueryHookResult = ReturnType<typeof useLiturgySearchQuery>;
+export type LiturgySearchLazyQueryHookResult = ReturnType<typeof useLiturgySearchLazyQuery>;
+export type LiturgySearchQueryResult = ApolloReactCommon.QueryResult<LiturgySearchQuery, LiturgySearchQueryVariables>;
 export const LoginUserDocument = gql`
     mutation loginUser($email: String!, $password: String!) {
   loginUser(email: $email, password: $password) {
@@ -1845,6 +1937,48 @@ export function usePageContentLazyQuery(baseOptions?: ApolloReactHooks.LazyQuery
 export type PageContentQueryHookResult = ReturnType<typeof usePageContentQuery>;
 export type PageContentLazyQueryHookResult = ReturnType<typeof usePageContentLazyQuery>;
 export type PageContentQueryResult = ApolloReactCommon.QueryResult<PageContentQuery, PageContentQueryVariables>;
+export const PrayerSearchDocument = gql`
+    query prayerSearch($title: String, $occasion: String, $keywords: [String]) {
+  prayerSearch(filter: {textContains: $title, occasion: $occasion, keywords: $keywords}) {
+    _id
+    _type
+    title
+    content
+    keywords {
+      _id
+      name
+    }
+  }
+}
+    `;
+
+/**
+ * __usePrayerSearchQuery__
+ *
+ * To run a query within a React component, call `usePrayerSearchQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePrayerSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePrayerSearchQuery({
+ *   variables: {
+ *      title: // value for 'title'
+ *      occasion: // value for 'occasion'
+ *      keywords: // value for 'keywords'
+ *   },
+ * });
+ */
+export function usePrayerSearchQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PrayerSearchQuery, PrayerSearchQueryVariables>) {
+        return ApolloReactHooks.useQuery<PrayerSearchQuery, PrayerSearchQueryVariables>(PrayerSearchDocument, baseOptions);
+      }
+export function usePrayerSearchLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PrayerSearchQuery, PrayerSearchQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<PrayerSearchQuery, PrayerSearchQueryVariables>(PrayerSearchDocument, baseOptions);
+        }
+export type PrayerSearchQueryHookResult = ReturnType<typeof usePrayerSearchQuery>;
+export type PrayerSearchLazyQueryHookResult = ReturnType<typeof usePrayerSearchLazyQuery>;
+export type PrayerSearchQueryResult = ApolloReactCommon.QueryResult<PrayerSearchQuery, PrayerSearchQueryVariables>;
 export const RemoveShortListItemDocument = gql`
     mutation removeShortListItem($hymn: ID!) {
   removeShortListItem(hymn: $hymn) {

@@ -110,6 +110,12 @@ export const resolvers: Resolvers = {
     },
     async search(_parent, args, context) {
       return context.models.hymn.search(args.filter);
+    },
+    async prayerSearch(_parent, args, context) {
+      return context.models.prayer.search(args.filter);
+    },
+    async liturgySearch(_parent, args, context) {
+      return context.models.liturgy.search(args.filter);
     }
   },
   Mutation: {

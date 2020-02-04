@@ -3,19 +3,21 @@ import sanity from './sanity';
 
 const allResourcesQuery = ['*']
   .concat([
-    `[_type in ["hymn", "prayer", "liturgy"] && (title match $search || keywords[]->name match $search)][0...10]{
+    '[_type in ["hymn", "prayer", "liturgy"] && (title match $search || keywords[]->name match $search)]',
+    '[!(_id in path("drafts.**"))]',
+    `{
       _id, _type, title, lyrics, content[0..1], keywords[]->{_id, name}
-    }`,
-    '[!(_id in path("drafts.**"))]'
+    }`
   ])
   .join('|');
 
 const freeResourcesQuery = ['*']
   .concat([
-    `[_type in ["prayer", "liturgy"] && (title match $search || keywords[]->name match $search)][0...10]{
+    '[_type in ["prayer", "liturgy"] && (title match $search || keywords[]->name match $search)]',
+    '[!(_id in path("drafts.**"))]',
+    `{
         _id, _type, title, lyrics, content[0..1], keywords[]->{_id, name}
-      }`,
-    '[!(_id in path("drafts.**"))]'
+      }`
   ])
   .join('|');
 
@@ -32,10 +34,10 @@ export async function textSearch(
   search: string
 ): Promise<SearchResult[]> {
   if (user) {
-    return searchAllResources(search);
+    return searchAllResources(`${search}*`);
   }
 
-  return searchFreeResources(search);
+  return searchFreeResources(`${search}*`);
 }
 
 export async function main(): Promise<Main> {

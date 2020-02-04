@@ -90,8 +90,8 @@ PrayerById.propTypes = {
 //         {data.prayerPagination.items.map(({_id, title}) => (
 //           <li key={_id}>
 //             <Link
-//               as={`/pray/${_id}/${kebabCase(title)}`}
-//               href="/pray/[id]/[name]"
+//               as={`/prayer/${_id}/${kebabCase(title)}`}
+//               href="/prayer/[id]/[name]"
 //             >
 //               {title}
 //             </Link>

@@ -35,9 +35,9 @@ const SearchResultList: FC<SearchResult> = props => {
           }}
         >
           {content
-            .map(item => item.children)
+            .map((item: any) => item.children)
             .flat()
-            .map(child => (child ? child.text : ''))
+            .map((child: any) => (child ? child.text : ''))
             .join(' ')}
         </Styled.div>
       )}
@@ -50,7 +50,7 @@ const SearchResultList: FC<SearchResult> = props => {
           listStyle: 'none'
         }}
       >
-        {keywords.map(keyword => {
+        {keywords?.map(keyword => {
           const {as, href, children} = keywordLinkProps(keyword);
           return (
             <Box key={keyword._id}>

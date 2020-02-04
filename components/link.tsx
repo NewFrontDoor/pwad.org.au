@@ -65,8 +65,8 @@ export function liturgyLinkProps({_id, title}: Liturgy): LinkProps {
 
 export function prayerLinkProps({_id, title}: Prayer): LinkProps {
   return {
-    as: `/pray/${_id}/${String(kebabCase(title))}`,
-    href: '/pray/[id]/[name]',
+    as: `/prayer/${_id}/${String(kebabCase(title))}`,
+    href: '/prayer/[id]/[name]',
     children: title
   };
 }

@@ -400,6 +400,8 @@ export type Query = {
   menuItems?: Maybe<Array<Maybe<MenuItem>>>,
   textSearch?: Maybe<Array<Maybe<SearchResult>>>,
   search?: Maybe<Array<Maybe<SearchResult>>>,
+  prayerSearch?: Maybe<Array<Maybe<Prayer>>>,
+  liturgySearch?: Maybe<Array<Maybe<Liturgy>>>,
   pageContentOne?: Maybe<PageContent>,
   authorById?: Maybe<Author>,
   hymnById?: Maybe<Hymn>,
@@ -419,6 +421,16 @@ export type QueryTextSearchArgs = {
 
 
 export type QuerySearchArgs = {
+  filter: SearchInput
+};
+
+
+export type QueryPrayerSearchArgs = {
+  filter: SearchInput
+};
+
+
+export type QueryLiturgySearchArgs = {
   filter: SearchInput
 };
 
@@ -1012,6 +1024,8 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   menuItems?: Resolver<Maybe<Array<Maybe<ResolversTypes['MenuItem']>>>, ParentType, ContextType>,
   textSearch?: Resolver<Maybe<Array<Maybe<ResolversTypes['SearchResult']>>>, ParentType, ContextType, RequireFields<QueryTextSearchArgs, 'filter'>>,
   search?: Resolver<Maybe<Array<Maybe<ResolversTypes['SearchResult']>>>, ParentType, ContextType, RequireFields<QuerySearchArgs, 'filter'>>,
+  prayerSearch?: Resolver<Maybe<Array<Maybe<ResolversTypes['Prayer']>>>, ParentType, ContextType, RequireFields<QueryPrayerSearchArgs, 'filter'>>,
+  liturgySearch?: Resolver<Maybe<Array<Maybe<ResolversTypes['Liturgy']>>>, ParentType, ContextType, RequireFields<QueryLiturgySearchArgs, 'filter'>>,
   pageContentOne?: Resolver<Maybe<ResolversTypes['PageContent']>, ParentType, ContextType, RequireFields<QueryPageContentOneArgs, 'filter'>>,
   authorById?: Resolver<Maybe<ResolversTypes['Author']>, ParentType, ContextType, RequireFields<QueryAuthorByIdArgs, 'id'>>,
   hymnById?: Resolver<Maybe<ResolversTypes['Hymn']>, ParentType, ContextType, RequireFields<QueryHymnByIdArgs, 'id'>>,

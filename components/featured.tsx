@@ -10,7 +10,7 @@ const Featured: FC = () => (
       <Link href="/liturgy">
         <Card>Worship</Card>
       </Link>
-      <Link href="/pray">
+      <Link href="/prayer">
         <Card>Pray</Card>
       </Link>
       <Link href="/hymn">

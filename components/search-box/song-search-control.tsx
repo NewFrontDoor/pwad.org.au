@@ -6,7 +6,7 @@ import {useResponsiveValue} from '@theme-ui/match-media';
 import {Styled, Button, Grid, Box} from 'theme-ui';
 import {Formik, Form, Field} from 'formik';
 import {TextField} from '../form';
-import {useAdvancedSearchQuery, EnumHymnBook} from '../queries';
+import {useAdvancedSearchQuery, AdvancedSearchQueryVariables} from '../queries';
 import SearchResult from './search-result';
 import SearchMetreInput from './search-metre-input';
 import SearchTuneInput from './search-tune-input';
@@ -15,13 +15,7 @@ import SearchOccasionInput from './search-occasion-input';
 import SearchKeywordInput from './search-keyword-input';
 
 type AdvancedSearchProps = {
-  search: {
-    book?: EnumHymnBook;
-    keywords?: string[];
-    occasion?: string;
-    title?: string;
-    tunes?: string[];
-  };
+  search: AdvancedSearchQueryVariables;
 };
 
 type State = AdvancedSearchProps['search'] & {

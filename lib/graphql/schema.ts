@@ -8,6 +8,8 @@ export const schema = gql`
     menuItems: [MenuItem]
     textSearch(filter: FilterInput!): [SearchResult]
     search(filter: SearchInput!): [SearchResult]
+    prayerSearch(filter: SearchInput!): [Prayer]
+    liturgySearch(filter: SearchInput!): [Liturgy]
 
     pageContentOne(filter: FilterInput!): PageContent
 

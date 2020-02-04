@@ -6,7 +6,7 @@ import {useQuery} from '@apollo/react-hooks';
 import {Styled, Box, Flex, Button} from 'theme-ui';
 import {Formik, Form, Field} from 'formik';
 import {TextField} from '../form';
-import {useAdvancedSearchQuery} from '../queries';
+import {usePrayerSearchQuery, PrayerSearchQueryVariables} from '../queries';
 import SearchResult from './search-result';
 import SearchOccasionInput from './search-occasion-input';
 import SearchKeywordInput from './search-keyword-input';
@@ -46,8 +46,12 @@ function reducer(state, action) {
   }
 }
 
-function AdvancedSearch({search}) {
-  const {loading, error, data} = useAdvancedSearchQuery({
+type AdvancedSearchProps = {
+  search: PrayerSearchQueryVariables;
+};
+
+const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
+  const {loading, error, data} = usePrayerSearchQuery({
     variables: search
   });
 
@@ -59,14 +63,14 @@ function AdvancedSearch({search}) {
     return `Error! ${error.message}`;
   }
 
-  if (data.search.length > 0) {
-    return data.search.map(result => (
+  if (data?.prayerSearch?.length > 0) {
+    return data.prayerSearch.map(result => (
       <SearchResult key={result._id} {...result} />
     ));
   }
 
   return <Styled.p variant="prose">No results found...</Styled.p>;
-}
+};
 
 AdvancedSearch.propTypes = {
   search: PropTypes.object.isRequired
@@ -90,7 +94,7 @@ const SearchBox: FC = () => {
       >
         <Form>
           <Flex>
-            <Box grow={1} width="50%" sx={{flexDirection: ['column', 'row']}}>
+            <Box grow={1} sx={{flexDirection: ['column', 'row'], width: '50%'}}>
               <Box marginBottom="1em">
                 <TextField label="Title" name="title" />
               </Box>
