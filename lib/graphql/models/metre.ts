@@ -1,5 +1,5 @@
-import {Metre, FilterInput, MetreSortBy} from '../_gen-types';
-import sanity from './_sanity';
+import {Metre, FilterInput, MetreSortBy} from '../gen-types';
+import sanity from './sanity';
 
 export async function findMany(
   filter?: FilterInput,

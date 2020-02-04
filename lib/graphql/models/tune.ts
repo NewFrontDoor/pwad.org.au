@@ -1,5 +1,5 @@
-import {Tune, FilterInput, TuneSortBy} from '../_gen-types';
-import sanity from './_sanity';
+import {Tune, FilterInput, TuneSortBy} from '../gen-types';
+import sanity from './sanity';
 
 export async function findMany(
   filter?: FilterInput,

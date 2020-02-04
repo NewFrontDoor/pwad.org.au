@@ -1,5 +1,5 @@
-import {OccasionGroupedById} from '../_gen-types';
-import sanity from './_sanity';
+import {OccasionGroupedById} from '../gen-types';
+import sanity from './sanity';
 
 export async function findAll(): Promise<OccasionGroupedById[]> {
   const query = ['*'].concat([

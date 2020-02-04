@@ -1,20 +1,19 @@
-import microCors from 'micro-cors';
 import {NextApiRequest} from 'next';
 import {ApolloServer} from 'apollo-server-micro';
-import auth0 from '../_auth0';
-import * as prayerModel from './models/_prayer';
-import * as resourceModel from './models/_resource';
-import * as userModel from './models/_user';
-import * as pageContentModel from './models/_page-content';
-import * as liturgyModel from './models/_liturgy';
-import * as authorModel from './models/_author';
-import * as hymnModel from './models/_hymn';
-import * as metreModel from './models/_metre';
-import * as tuneModel from './models/_tune';
-import * as occasionModel from './models/_occasion';
-import {schema} from './_schema';
-import {resolvers} from './_resolvers';
-import {User} from './_gen-types';
+import auth0 from '../auth0';
+import * as prayerModel from './models/prayer';
+import * as resourceModel from './models/resource';
+import * as userModel from './models/user';
+import * as pageContentModel from './models/page-content';
+import * as liturgyModel from './models/liturgy';
+import * as authorModel from './models/author';
+import * as hymnModel from './models/hymn';
+import * as metreModel from './models/metre';
+import * as tuneModel from './models/tune';
+import * as occasionModel from './models/occasion';
+import {schema} from './schema';
+import {resolvers} from './resolvers';
+import {User} from './gen-types';
 
 export type Context = {
   user: Promise<User>;
@@ -83,18 +82,8 @@ async function getUserContext(req: NextApiRequest): Promise<User | null> {
   return null;
 }
 
-const cors = microCors();
-
-const apolloServer = new ApolloServer({
+export default new ApolloServer({
   typeDefs: schema,
   resolvers,
   context
 });
-
-export const config = {
-  api: {
-    bodyParser: false
-  }
-};
-
-export default cors(apolloServer.createHandler({path: '/api/graphql'}));

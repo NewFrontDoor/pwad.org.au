@@ -1,6 +1,6 @@
-schema: ./pages/api/graphql/_schema.ts
+schema: ./lib/graphql/schema.ts
 generates:
-  ./pages/api/graphql/_gen-types.ts:
+  ./lib/graphql/gen-types.ts:
     config:
       defaultMapper: any
       contextType: ./#Context

@@ -1,5 +1,5 @@
-import {Author} from '../_gen-types';
-import sanity from './_sanity';
+import {Author} from '../gen-types';
+import sanity from './sanity';
 
 export async function getById(id: string): Promise<Author[]> {
   return sanity.fetch(

@@ -1,6 +1,6 @@
 import nanoid from 'nanoid';
-import {User, ShortList} from '../_gen-types';
-import sanity from './_sanity';
+import {User, ShortList} from '../gen-types';
+import sanity from './sanity';
 
 export async function getById(id: string): Promise<User> {
   return sanity.fetch(
