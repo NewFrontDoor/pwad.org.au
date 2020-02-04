@@ -30,7 +30,14 @@ export async function findOrCreate(
   );
 
   if (isEmptyObject(result)) {
-    return sanity.create({
+    // Note: auth0 stores ids with the connection source
+    // eg; google-oauth2|100281011955389911902
+    // sanity doesn't like some of the characters
+    // so we just use the right hand side
+    const [, _id] = user.sub.split('|');
+
+    return sanity.createIfNotExists({
+      _id,
       _type: 'user',
       name: {
         first: user.given_name,
