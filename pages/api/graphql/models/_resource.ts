@@ -1,5 +1,5 @@
 import {User, SearchResult, Main, MenuItem} from '../_gen-types';
-import sanity from './sanity';
+import sanity from './_sanity';
 
 const allResourcesQuery = ['*']
   .concat([
