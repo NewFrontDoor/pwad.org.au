@@ -44,23 +44,30 @@ const SearchResultList: FC<SearchResult> = props => {
       <Flex
         as="ul"
         padding="0"
-        gutterWidth="md"
         sx={{
-          flexDirection: ['column', 'column', 'row'],
+          flexWrap: 'wrap',
           listStyle: 'none'
         }}
       >
         {keywords?.map(keyword => {
           const {as, href, children} = keywordLinkProps(keyword);
           return (
-            <Box key={keyword._id}>
-              <Styled.p noMargins appearance="prose">
-                <NextLink passHref as={as} href={href}>
-                  <Button as="a" sx={{fontSize: 0}}>
-                    {children}
-                  </Button>
-                </NextLink>
-              </Styled.p>
+            <Box
+              key={keyword._id}
+              as="li"
+              sx={{
+                marginRight: 2,
+                marginBottom: 2,
+                '&:last-child': {
+                  marginRight: 0
+                }
+              }}
+            >
+              <NextLink passHref as={as} href={href}>
+                <Button as="a" sx={{fontSize: 0}}>
+                  {children}
+                </Button>
+              </NextLink>
             </Box>
           );
         })}
