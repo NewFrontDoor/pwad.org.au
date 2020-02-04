@@ -1,6 +1,6 @@
 import upperFirst from 'lodash/upperFirst';
-import books from '../../../lib/books';
-import {Resolvers, ShortList, Hymn, Maybe} from './_gen-types';
+import books from '../books';
+import {Resolvers, ShortList, Hymn, Maybe} from './gen-types';
 
 type SanityType =
   | 'User'
