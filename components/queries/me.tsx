@@ -14,19 +14,19 @@ export default gql`
         last
       }
       shortlist {
-        ... on Hymn {
+        ... on Document {
           _id
+          _type
+        }
+        ... on Hymn {
           title
           hymnNumber
         }
         ... on Prayer {
-          _id
+          title
         }
         ... on Liturgy {
-          _id
-        }
-        ... on Scripture {
-          _id
+          title
         }
       }
     }

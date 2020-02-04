@@ -121,12 +121,12 @@ export const resolvers: Resolvers = {
   Mutation: {
     async addShortListItem(_parent, args, context): Promise<ShortList[]> {
       const user = await context.user;
-      return context.models.user.addShortListItem(user._id, args.hymn);
+      return context.models.user.addShortListItem(user._id, args.item);
     },
     async removeShortListItem(_parent, args, context): Promise<ShortList[]> {
       const user = await context.user;
-      const hymnIndex = user.shortlist.findIndex(({_id}) => args.hymn === _id);
-      return context.models.user.removeShortListItem(user._id, hymnIndex);
+      const itemIndex = user.shortlist.findIndex(({_id}) => args.item === _id);
+      return context.models.user.removeShortListItem(user._id, itemIndex);
     }
   },
   Document: {

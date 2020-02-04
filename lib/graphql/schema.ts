@@ -46,8 +46,8 @@ export const schema = gql`
   }
 
   type Mutation {
-    addShortListItem(hymn: ID!): [ShortList]
-    removeShortListItem(hymn: ID!): [ShortList]
+    addShortListItem(item: ID!): [ShortList]
+    removeShortListItem(item: ID!): [ShortList]
     changeFreeAccount(hasFreeAccount: Boolean!): User
 
     createUser(

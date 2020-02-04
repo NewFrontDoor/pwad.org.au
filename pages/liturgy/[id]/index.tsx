@@ -90,7 +90,7 @@ const Liturgy: NextPage<LiturgyProps> = ({id}) => {
           </Box>
           <Box sx={{width: '100%'}}>
             <Text as="h2">
-              <ShortListButton hymn={data.liturgyById} />
+              <ShortListButton itemId={data.liturgyById._id} />
               {title}
             </Text>
             <BlockContent blocks={content} />

@@ -1,12 +1,21 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  mutation removeShortListItem($hymn: ID!) {
-    removeShortListItem(hymn: $hymn) {
-      ... on Hymn {
+  mutation removeShortListItem($item: ID!) {
+    removeShortListItem(item: $item) {
+      ... on Document {
         _id
+        _type
+      }
+      ... on Hymn {
         title
         hymnNumber
+      }
+      ... on Liturgy {
+        title
+      }
+      ... on Prayer {
+        title
       }
     }
   }

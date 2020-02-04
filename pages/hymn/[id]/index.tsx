@@ -119,7 +119,7 @@ const Song: NextPage<SongProps> = ({id}) => {
         </Box>
         <Box sx={{width: '100%'}}>
           <Styled.h2>
-            <ShortListButton hymn={data?.hymnById} />
+            <ShortListButton itemId={data?.hymnById._id} />
             {hymnNumber}. {title}
           </Styled.h2>
           <BlockContent blocks={content} />

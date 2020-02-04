@@ -8,15 +8,14 @@ import {
   useMeQuery,
   useRemoveShortListItemMutation,
   useAddShortListItemMutation,
-  MeDocument,
-  ShortList
+  MeDocument
 } from './queries';
 
 type ShortListButtonProps = {
-  hymn: ShortList;
+  itemId: string;
 };
 
-const ShortListButton: FC<ShortListButtonProps> = ({hymn}) => {
+const ShortListButton: FC<ShortListButtonProps> = ({itemId}) => {
   const {loading, data} = useMeQuery();
 
   const [addShortlistItem] = useAddShortListItemMutation({
@@ -56,7 +55,7 @@ const ShortListButton: FC<ShortListButtonProps> = ({hymn}) => {
   }
 
   if (data?.me) {
-    const shortlisted = some(data.me.shortlist, {_id: hymn?._id});
+    const shortlisted = some(data.me.shortlist, {_id: itemId});
     const label = shortlisted ? 'Remove from Short List' : 'Add to Short List';
 
     return (
@@ -71,11 +70,11 @@ const ShortListButton: FC<ShortListButtonProps> = ({hymn}) => {
           // TODO: optomistic ui
           if (shortlisted) {
             removeShortlistItem({
-              variables: {hymn: hymn._id}
+              variables: {item: itemId}
             });
           } else {
             addShortlistItem({
-              variables: {hymn: hymn._id}
+              variables: {item: itemId}
             });
           }
         }}
@@ -89,10 +88,7 @@ const ShortListButton: FC<ShortListButtonProps> = ({hymn}) => {
 };
 
 ShortListButton.propTypes = {
-  // @ts-ignore
-  hymn: PropTypes.shape({
-    _id: PropTypes.string.isRequired
-  }).isRequired
+  itemId: PropTypes.string.isRequired
 };
 
 export default ShortListButton;

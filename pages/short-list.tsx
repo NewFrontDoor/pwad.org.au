@@ -5,7 +5,7 @@ import {Text} from 'theme-ui';
 import withApollo from '../lib/with-apollo-client';
 import PageLayout from '../components/page-layout';
 import ContentWrap from '../components/content-wrap';
-import Link, {hymnLinkProps} from '../components/link';
+import Link, {linkProps} from '../components/link';
 import ShortListButton from '../components/shortlist-button';
 
 import {useMeQuery} from '../components/queries';
@@ -23,10 +23,10 @@ const ShortList: NextPage = () => {
 
         {data?.me && (
           <Text as="ul" appearance="prose">
-            {data.me.shortlist.map(hymn => (
-              <li key={hymn._id}>
-                <ShortListButton hymn={hymn} />{' '}
-                <Link {...hymnLinkProps(hymn)} />
+            {data.me.shortlist.map(item => (
+              <li key={item._id}>
+                <ShortListButton itemId={item._id} />{' '}
+                <Link {...linkProps(item)} />
               </li>
             ))}
           </Text>

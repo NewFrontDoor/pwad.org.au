@@ -285,12 +285,12 @@ export type Mutation = {
 
 
 export type MutationAddShortListItemArgs = {
-  hymn: Scalars['ID']
+  item: Scalars['ID']
 };
 
 
 export type MutationRemoveShortListItemArgs = {
-  hymn: Scalars['ID']
+  item: Scalars['ID']
 };
 
 
@@ -942,8 +942,8 @@ export type MetreResolvers<ContextType = Context, ParentType extends ResolversPa
 };
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  addShortListItem?: Resolver<Maybe<Array<Maybe<ResolversTypes['ShortList']>>>, ParentType, ContextType, RequireFields<MutationAddShortListItemArgs, 'hymn'>>,
-  removeShortListItem?: Resolver<Maybe<Array<Maybe<ResolversTypes['ShortList']>>>, ParentType, ContextType, RequireFields<MutationRemoveShortListItemArgs, 'hymn'>>,
+  addShortListItem?: Resolver<Maybe<Array<Maybe<ResolversTypes['ShortList']>>>, ParentType, ContextType, RequireFields<MutationAddShortListItemArgs, 'item'>>,
+  removeShortListItem?: Resolver<Maybe<Array<Maybe<ResolversTypes['ShortList']>>>, ParentType, ContextType, RequireFields<MutationRemoveShortListItemArgs, 'item'>>,
   changeFreeAccount?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationChangeFreeAccountArgs, 'hasFreeAccount'>>,
   createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'firstName' | 'lastName' | 'email' | 'password' | 'confirmPassword'>>,
   loginUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'email' | 'password'>>,

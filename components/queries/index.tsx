@@ -285,12 +285,12 @@ export type Mutation = {
 
 
 export type MutationAddShortListItemArgs = {
-  hymn: Scalars['ID']
+  item: Scalars['ID']
 };
 
 
 export type MutationRemoveShortListItemArgs = {
-  hymn: Scalars['ID']
+  item: Scalars['ID']
 };
 
 
@@ -589,7 +589,7 @@ export type User = Document & {
 };
 
 export type AddShortListItemMutationVariables = {
-  hymn: Scalars['ID']
+  item: Scalars['ID']
 };
 
 
@@ -597,8 +597,17 @@ export type AddShortListItemMutation = (
   { __typename?: 'Mutation' }
   & { addShortListItem: Maybe<Array<Maybe<(
     { __typename?: 'Hymn' }
-    & Pick<Hymn, '_id' | 'title' | 'hymnNumber'>
-  ) | { __typename?: 'Prayer' } | { __typename?: 'Liturgy' } | { __typename?: 'Scripture' }>>> }
+    & Pick<Hymn, '_id' | '_type' | 'title' | 'hymnNumber'>
+  ) | (
+    { __typename?: 'Prayer' }
+    & Pick<Prayer, '_id' | '_type' | 'title'>
+  ) | (
+    { __typename?: 'Liturgy' }
+    & Pick<Liturgy, '_id' | '_type' | 'title'>
+  ) | (
+    { __typename?: 'Scripture' }
+    & Pick<Scripture, '_id' | '_type'>
+  )>>> }
 );
 
 export type AdvancedSearchQueryVariables = {
@@ -980,16 +989,16 @@ export type MeQuery = (
       & Pick<Name, 'first' | 'last'>
     )>, shortlist: Maybe<Array<Maybe<(
       { __typename?: 'Hymn' }
-      & Pick<Hymn, '_id' | 'title' | 'hymnNumber'>
+      & Pick<Hymn, '_id' | '_type' | 'title' | 'hymnNumber'>
     ) | (
       { __typename?: 'Prayer' }
-      & Pick<Prayer, '_id'>
+      & Pick<Prayer, '_id' | '_type' | 'title'>
     ) | (
       { __typename?: 'Liturgy' }
-      & Pick<Liturgy, '_id'>
+      & Pick<Liturgy, '_id' | '_type' | 'title'>
     ) | (
       { __typename?: 'Scripture' }
-      & Pick<Scripture, '_id'>
+      & Pick<Scripture, '_id' | '_type'>
     )>>> }
   )> }
 );
@@ -1027,7 +1036,7 @@ export type PrayerSearchQuery = (
 );
 
 export type RemoveShortListItemMutationVariables = {
-  hymn: Scalars['ID']
+  item: Scalars['ID']
 };
 
 
@@ -1035,8 +1044,17 @@ export type RemoveShortListItemMutation = (
   { __typename?: 'Mutation' }
   & { removeShortListItem: Maybe<Array<Maybe<(
     { __typename?: 'Hymn' }
-    & Pick<Hymn, '_id' | 'title' | 'hymnNumber'>
-  ) | { __typename?: 'Prayer' } | { __typename?: 'Liturgy' } | { __typename?: 'Scripture' }>>> }
+    & Pick<Hymn, '_id' | '_type' | 'title' | 'hymnNumber'>
+  ) | (
+    { __typename?: 'Prayer' }
+    & Pick<Prayer, '_id' | '_type' | 'title'>
+  ) | (
+    { __typename?: 'Liturgy' }
+    & Pick<Liturgy, '_id' | '_type' | 'title'>
+  ) | (
+    { __typename?: 'Scripture' }
+    & Pick<Scripture, '_id' | '_type'>
+  )>>> }
 );
 
 export type TextSearchQueryVariables = {
@@ -1075,12 +1093,21 @@ export type TextSearchQuery = (
 
 
 export const AddShortListItemDocument = gql`
-    mutation addShortListItem($hymn: ID!) {
-  addShortListItem(hymn: $hymn) {
-    ... on Hymn {
+    mutation addShortListItem($item: ID!) {
+  addShortListItem(item: $item) {
+    ... on Document {
       _id
+      _type
+    }
+    ... on Hymn {
       title
       hymnNumber
+    }
+    ... on Liturgy {
+      title
+    }
+    ... on Prayer {
+      title
     }
   }
 }
@@ -1100,7 +1127,7 @@ export type AddShortListItemMutationFn = ApolloReactCommon.MutationFunction<AddS
  * @example
  * const [addShortListItemMutation, { data, loading, error }] = useAddShortListItemMutation({
  *   variables: {
- *      hymn: // value for 'hymn'
+ *      item: // value for 'item'
  *   },
  * });
  */
@@ -1859,19 +1886,19 @@ export const MeDocument = gql`
       last
     }
     shortlist {
-      ... on Hymn {
+      ... on Document {
         _id
+        _type
+      }
+      ... on Hymn {
         title
         hymnNumber
       }
       ... on Prayer {
-        _id
+        title
       }
       ... on Liturgy {
-        _id
-      }
-      ... on Scripture {
-        _id
+        title
       }
     }
   }
@@ -1980,12 +2007,21 @@ export type PrayerSearchQueryHookResult = ReturnType<typeof usePrayerSearchQuery
 export type PrayerSearchLazyQueryHookResult = ReturnType<typeof usePrayerSearchLazyQuery>;
 export type PrayerSearchQueryResult = ApolloReactCommon.QueryResult<PrayerSearchQuery, PrayerSearchQueryVariables>;
 export const RemoveShortListItemDocument = gql`
-    mutation removeShortListItem($hymn: ID!) {
-  removeShortListItem(hymn: $hymn) {
-    ... on Hymn {
+    mutation removeShortListItem($item: ID!) {
+  removeShortListItem(item: $item) {
+    ... on Document {
       _id
+      _type
+    }
+    ... on Hymn {
       title
       hymnNumber
+    }
+    ... on Liturgy {
+      title
+    }
+    ... on Prayer {
+      title
     }
   }
 }
@@ -2005,7 +2041,7 @@ export type RemoveShortListItemMutationFn = ApolloReactCommon.MutationFunction<R
  * @example
  * const [removeShortListItemMutation, { data, loading, error }] = useRemoveShortListItemMutation({
  *   variables: {
- *      hymn: // value for 'hymn'
+ *      item: // value for 'item'
  *   },
  * });
  */
