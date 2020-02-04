@@ -143,7 +143,7 @@ Song.getInitialProps = async (context: WithApolloPageContext) => {
       redirect('/my-account', context);
     }
   } else {
-    redirect('/sign-in', context);
+    redirect('/api/login', context);
   }
 
   if (Array.isArray(id)) {

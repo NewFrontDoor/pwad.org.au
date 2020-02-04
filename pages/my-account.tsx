@@ -62,7 +62,7 @@ MyAccount.getInitialProps = async (context: WithApolloPageContext) => {
   }
 
   const currentURL = buildUrl(context.req);
-  const url = new URL('/sign-in', currentURL);
+  const url = new URL('/api/login', currentURL);
 
   url.searchParams.set('r', currentURL.href);
 
