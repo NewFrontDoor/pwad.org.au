@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import {FC} from 'react';
+import {FC, useState} from 'react';
 import PropTypes from 'prop-types';
 import {jsx, Styled, Text, Flex} from 'theme-ui';
 import {useResponsiveValue} from '@theme-ui/match-media';
@@ -11,21 +11,25 @@ import NavLink from './nav-link';
 type NavCollapseProps = MenuItem;
 
 const NavCollapse: FC<NavCollapseProps> = ({text, childpages}) => {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <>
-      <Styled.p variant="prose" sx={{color: 'gray.4'}}>
+      <Styled.p variant="prose" sx={{color: 'gray.4'}} onClick={() => setIsOpen(!isOpen)}>
         {text}
       </Styled.p>
       <Flex
-        css={{
+        sx={{
           flexBasis: 0,
-          flexDirection: 'column'
+          flexDirection: 'column',
+          transition: 'max-height 0.5s ease',
+          height: 'auto',
+          maxHeight: [isOpen ? '500px' : 0, '500px']
         }}
       >
         <Text
           as="ul"
           appearance="prose"
-          css={{
+          sx={{
             padding: 0,
             listStyle: 'none'
           }}

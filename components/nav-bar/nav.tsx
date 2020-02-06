@@ -17,7 +17,8 @@ const NavMenuItem: FC = props => (
       letterSpacing: '1px',
       textTransform: 'uppercase',
       marginLeft: '1rem',
-      marginRight: '1rem'
+      marginRight: '1rem',
+      color: 'inherit'
     }}
     {...props}
   />
@@ -35,11 +36,11 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
   return (
     <Flex
       as="ul"
-      padding={0}
-      justifyContent="between"
-      margin="1rem"
       sx={{
         flex: '1 0 0%',
+        padding: 0,
+        justifyContent: 'space-between',
+        margin: '1rem',
         flexDirection: ['column', 'column', 'row'],
         listStyle: 'none'
       }}
@@ -53,13 +54,13 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
             marginRight: '1rem'
           }}
         >
-          <Button variant="transparent" onClick={onClose}>
+          <Button variant="transparent" sx={{padding: 0}} onClick={onClose}>
             <X role="img" />
           </Button>
         </NavMenuItem>
       )}
       <NavMenuItem as="li" fontWeight="bold">
-        <Link href="/" onClick={onClose}>
+        <Link href="/">
           Home
         </Link>
       </NavMenuItem>

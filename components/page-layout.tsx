@@ -37,8 +37,8 @@ const PageLayout: FC<PageLayoutProps> = ({children}) => {
           />
         </Head>
         <GlobalStyles />
+        <BannerImage image={bannerImage} />
         <Box
-          marginTop="1rem"
           sx={{
             display: 'flex',
             flexDirection: 'column',
@@ -59,7 +59,6 @@ const PageLayout: FC<PageLayoutProps> = ({children}) => {
               flex: '1 1 auto'
             }}
           >
-            <BannerImage image={bannerImage} />
             {data && isBrowser && <NavBar menuItems={data.main.menuItems} />}
             {children}
           </Box>

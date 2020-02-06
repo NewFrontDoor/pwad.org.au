@@ -28,8 +28,11 @@ const PrayerById: FC<PrayerByIdProps> = ({id}) => {
       {error && `Error! ${error.message}`}
       {data?.prayerById && (
         <Flex
-          gutterWidth="xxl"
-          sx={{flexDirection: ['column-reverse', 'column-reverse', 'row']}}
+          sx={{
+            flexDirection: ['column-reverse', 'column-reverse', 'row'],
+            // TODO: What should this value actually be?
+            gap: '2em'
+          }}
         >
           <Box>
             {author && (

@@ -19,23 +19,25 @@ const Index: NextPage = () => {
 
   return (
     <PageLayout>
-      <Grid columns={[1, '1fr 5fr']}>
+      <Grid columns={['1fr 3fr', '1fr 5fr']}>
         <Box
           sx={{
-            maxWidth: ['10em', '20em']
+            gridRow: ['1/2', '1/3'],
+            maxWidth: ['10em', '20em'],
+            alignItems: 'middle'
           }}
         >
           <Logo />
         </Box>
-        <Box>
-          <Styled.h1
-            sx={{
-              fontWeight: 'bold'
-            }}
-          >
-            {data.main.heading}
-          </Styled.h1>
-          <Styled.h2>{data.main.subheading}</Styled.h2>
+        <Styled.h1
+          sx={{
+            gridRow: '1/2',
+            fontWeight: 'bold'
+          }}
+        >
+          {data.main.heading}
+        </Styled.h1>
+        <Box sx={{gridColumn: ['1/3', '2/3'], gridRow: [null, '2/3']}}>
           <BlockContent blocks={data.main.blurb} />
         </Box>
       </Grid>
