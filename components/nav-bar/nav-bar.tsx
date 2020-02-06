@@ -2,7 +2,7 @@
 import {FC, useState, useEffect} from 'react';
 import PropTypes from 'prop-types';
 import Router from 'next/router';
-import {jsx, Flex, Box, Styled, Button} from 'theme-ui';
+import {jsx, Flex, Box, Styled, Button, useThemeUI} from 'theme-ui';
 import {useResponsiveValue} from '@theme-ui/match-media';
 import {motion} from 'framer-motion';
 import {Can} from '../ability-context';
@@ -16,7 +16,7 @@ import NavItems from './nav-items';
 
 const mobileOverlayVariants = {
   open: {height: '100vh'},
-  closed: {height: '1rem'}
+  closed: {height: 0}
 };
 
 const desktopOverlayVariants = {
@@ -32,6 +32,7 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
   const isMedium = useResponsiveValue([false, true]);
   const [selectedMenu, setSelectedMenu] = useState(null);
   const [isOpen, toggleOpen] = useToggle(false);
+  const {theme} = useThemeUI();
 
   useEffect(() => {
     const handleRouteChange = (): void => toggleOpen(false);
@@ -63,44 +64,39 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
             position: 'absolute',
             top: 0,
             height: 0,
-            paddingTop: '1rem',
             width: '100%',
-            overflow: isOpen ? 'scroll' : 'hidden'
+            overflow: isOpen ? 'scroll' : 'hidden',
+            background: theme.colors.background
           }}
         >
-          <Box
-            sx={{
-              bg: 'background'
-            }}
-          >
-            {isMedium ? (
-              menuItems && (
-                <Flex
-                  as="ul"
-                  marginX={[4, 'auto']}
-                  sx={{
-                    width: ['auto', '75%']
-                  }}
-                >
-                  <NavItems selectedMenu={selectedMenu} menuItems={menuItems} />
-                </Flex>
-              )
-            ) : (
-              <Nav onClose={toggleOpen}>
-                {menuItems && (
-                  <NavItems selectedMenu={selectedMenu} menuItems={menuItems} />
-                )}
-              </Nav>
-            )}
-          </Box>
+          {isMedium ? (
+            menuItems && (
+              <Flex
+                as="ul"
+                sx={{
+                  marginX: [4, 'auto'],
+                  width: ['auto', '75%']
+                }}
+              >
+                <NavItems selectedMenu={selectedMenu} menuItems={menuItems} />
+              </Flex>
+            )
+          ) : (
+            <Nav onClose={() => toggleOpen(false)}>
+              {menuItems && (
+                <NavItems selectedMenu={selectedMenu} menuItems={menuItems} />
+              )}
+            </Nav>
+          )}
         </motion.div>
       </NavOverlay>
       <Flex
         as="nav"
-        marginX="auto"
-        alignItems="center"
-        justifyContent="between"
         sx={{
+          marginX: 'auto',
+          marginTop: '1rem',
+          alignItems: 'center',
+          justifyContent: 'space-between',
           width: '100%'
         }}
       >
@@ -137,7 +133,6 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
             <Button
               variant="transparent"
               css={{
-                backgroundColor: 'white',
                 letterSpacing: 'inherit',
                 textTransform: 'inherit',
                 fontWeight: 'inherit',
@@ -148,10 +143,10 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
               }}
               onClick={toggleOpen}
             >
-              Menu
+              MENU
             </Button>
             <Can I="read" a="my-account">
-              <Link href="/my-account">My account</Link>
+              <Link href="/my-account">MY ACCOUNT</Link>
             </Can>
           </>
         )}
