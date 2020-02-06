@@ -108,6 +108,14 @@ export const resolvers: Resolvers = {
         args.limit
       );
     },
+    async keywordMany(_parent, args, context) {
+      return context.models.keyword.findMany(
+        args.filter,
+        args.sort,
+        args.skip,
+        args.limit
+      );
+    },
     async search(_parent, args, context) {
       return context.models.hymn.search(args.filter);
     },

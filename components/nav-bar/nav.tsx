@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import {FC, ReactNode} from 'react';
 import PropTypes from 'prop-types';
-import {jsx, Button, Flex, Text} from 'theme-ui';
+import {jsx, Styled, Button, Flex} from 'theme-ui';
 import {useResponsiveValue} from '@theme-ui/match-media';
 import {X} from 'react-feather';
 import Link from '../link';
@@ -10,8 +10,8 @@ import {Can} from '../ability-context';
 import UserAvatar from './user-avatar';
 
 const NavMenuItem: FC = props => (
-  <Text
-    css={{
+  <Styled.li
+    sx={{
       display: 'flex',
       alignItems: 'center',
       letterSpacing: '1px',
@@ -45,7 +45,6 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
     >
       {!isMedium && (
         <NavMenuItem
-          as="li"
           sx={{
             position: 'absolute',
             right: 0,
@@ -57,7 +56,7 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
           </Button>
         </NavMenuItem>
       )}
-      <NavMenuItem as="li" fontWeight="bold">
+      <NavMenuItem>
         <Link variant="nav" href="/">
           Home
         </Link>
@@ -67,28 +66,28 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
       <Can I="manage" a="my-account">
         {() => (
           <>
-            <NavMenuItem as="li" fontWeight="bold">
+            <NavMenuItem>
               <Link variant="nav" href="/short-list">
                 Short list ({data.me.shortlist.length})
               </Link>
             </NavMenuItem>
-            <NavMenuItem as="li">
+            <NavMenuItem>
               <UserAvatar />
             </NavMenuItem>
             <div>
               <Can I="read" a="keystone">
-                <NavMenuItem as="li" fontWeight="bold">
+                <NavMenuItem>
                   <Link variant="nav" href="/keystone" isInternal={false}>
                     Admin
                   </Link>
                 </NavMenuItem>
               </Can>
-              <NavMenuItem as="li" fontWeight="bold">
+              <NavMenuItem>
                 <Link variant="nav" href="/my-account">
                   My account
                 </Link>
               </NavMenuItem>
-              <NavMenuItem as="li" fontWeight="bold">
+              <NavMenuItem>
                 <Link variant="nav" href="/api/logout">
                   Log out
                 </Link>
@@ -100,12 +99,12 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
       <Can not I="manage" a="my-account">
         {() => (
           <>
-            <NavMenuItem as="li" fontWeight="bold">
+            <NavMenuItem>
               <Link variant="nav" href="/api/login">
                 Log in
               </Link>
             </NavMenuItem>
-            <NavMenuItem as="li" fontWeight="bold">
+            <NavMenuItem>
               <Link variant="nav" href="/api/login">
                 Create account
               </Link>
