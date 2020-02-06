@@ -76,7 +76,9 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
               <Flex
                 as="ul"
                 sx={{
-                  justifyContent: 'space-evenly',
+                  width: '75%',
+                  margin: 'auto',
+                  justifyContent: 'space-between',
                   flex: '1 0 0%',
                   flexDirection: ['column', 'column', 'row'],
                   listStyle: 'none',
@@ -90,7 +92,7 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
                       display: 'flex',
                       alignItems: 'center',
                       letterSpacing: '1px',
-                      textTransform: 'uppercase'
+                      textTransform: 'uppercase',
                     }}
                   >
                     <Button
