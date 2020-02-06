@@ -7,6 +7,8 @@ import {useResponsiveValue} from '@theme-ui/match-media';
 import {motion} from 'framer-motion';
 import {Can} from '../ability-context';
 
+import {DarkTheme} from '../theme';
+
 import {MenuItem} from '../queries';
 import Link from '../link';
 import useToggle from '../use-toggle';
@@ -50,46 +52,56 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
 
   return (
     <>
-      <NavOverlay onClickOutside={() => toggleOpen(false)}>
-        <motion.div
-          animate={isOpen ? 'open' : 'closed'}
-          variants={isMedium ? desktopOverlayVariants : mobileOverlayVariants}
-          transition={{
-            type: 'spring',
-            damping: 40,
-            stiffness: 400
-          }}
-          css={{
-            zIndex: 1,
-            position: 'absolute',
-            top: 0,
-            height: 0,
-            width: '100%',
-            overflow: isOpen ? 'scroll' : 'hidden',
-            background: theme.colors.background
-          }}
-        >
-          {isMedium ? (
-            menuItems && (
-              <Flex
-                as="ul"
-                sx={{
-                  marginX: [4, 'auto'],
-                  width: ['auto', '75%']
-                }}
-              >
-                <NavItems selectedMenu={selectedMenu} menuItems={menuItems} />
-              </Flex>
-            )
-          ) : (
-            <Nav onClose={() => toggleOpen(false)}>
-              {menuItems && (
-                <NavItems selectedMenu={selectedMenu} menuItems={menuItems} />
+      <DarkTheme>
+        <NavOverlay onClickOutside={() => toggleOpen(false)}>
+          <motion.div
+            animate={isOpen ? 'open' : 'closed'}
+            variants={isMedium ? desktopOverlayVariants : mobileOverlayVariants}
+            transition={{
+              type: 'spring',
+              damping: 40,
+              stiffness: 400
+            }}
+            css={{
+              zIndex: 1,
+              position: 'absolute',
+              top: 0,
+              height: 0,
+              width: '100%',
+              overflow: isOpen ? 'scroll' : 'hidden',
+              background: theme.colors.background
+            }}
+          >
+            <Box sx={{color: 'text'}}>
+              {isMedium ? (
+                menuItems && (
+                  <Flex
+                    as="ul"
+                    sx={{
+                      marginX: [4, 'auto'],
+                      width: ['auto', '75%']
+                    }}
+                  >
+                    <NavItems
+                      selectedMenu={selectedMenu}
+                      menuItems={menuItems}
+                    />
+                  </Flex>
+                )
+              ) : (
+                <Nav onClose={() => toggleOpen(false)}>
+                  {menuItems && (
+                    <NavItems
+                      selectedMenu={selectedMenu}
+                      menuItems={menuItems}
+                    />
+                  )}
+                </Nav>
               )}
-            </Nav>
-          )}
-        </motion.div>
-      </NavOverlay>
+            </Box>
+          </motion.div>
+        </NavOverlay>
+      </DarkTheme>
       <Flex
         as="nav"
         sx={{
@@ -97,7 +109,8 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
           marginTop: '1rem',
           alignItems: 'center',
           justifyContent: 'space-between',
-          width: '100%'
+          width: '100%',
+          color: 'primary'
         }}
       >
         {isMedium ? (
@@ -107,9 +120,7 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
                 key={_key}
                 sx={{
                   display: 'flex',
-                  alignItems: 'center',
-                  letterSpacing: '1px',
-                  textTransform: 'uppercase'
+                  alignItems: 'center'
                 }}
               >
                 <Button
@@ -146,12 +157,7 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
               Menu
             </Button>
             <Can I="read" a="my-account">
-              <Link
-                href="/my-account"
-                css={{
-                  textTransform: 'uppercase'
-                }}
-              >
+              <Link variant="nav" href="/my-account">
                 My account
               </Link>
             </Can>

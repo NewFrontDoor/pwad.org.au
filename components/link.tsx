@@ -3,7 +3,16 @@ import PropTypes from 'prop-types';
 import NextLink from 'next/link';
 import {Link as ThemeUiLink} from 'theme-ui';
 import kebabCase from 'lodash/kebabCase';
-import {Author, Hymn, Prayer, Keyword, Liturgy, SearchResult} from './queries';
+import {
+  Author,
+  Hymn,
+  Prayer,
+  Keyword,
+  Liturgy,
+  Document,
+  Asset,
+  PageContent
+} from './queries';
 
 type LinkProps = {
   as?: string;
@@ -79,7 +88,23 @@ export function keywordLinkProps({_id, name}: Keyword): LinkProps {
   };
 }
 
-export function linkProps(props: SearchResult): LinkProps {
+export function pageContentLinkProps({_id, title}: PageContent): LinkProps {
+  return {
+    as: `/content/${_id}`,
+    href: '/content/[page]',
+    children: title
+  };
+}
+
+export function assetLinkProps({file, name}: Asset): LinkProps {
+  return {
+    isInternal: false,
+    href: file,
+    children: name
+  };
+}
+
+export function linkProps(props: Document): LinkProps {
   switch (props._type) {
     case 'hymn':
       return hymnLinkProps(props);
@@ -92,6 +117,12 @@ export function linkProps(props: SearchResult): LinkProps {
 
     case 'liturgy':
       return liturgyLinkProps(props);
+
+    case 'pageContent':
+      return pageContentLinkProps(props);
+
+    case 'asset':
+      return assetLinkProps(props);
 
     default:
       return {};
