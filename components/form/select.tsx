@@ -28,8 +28,7 @@ const SearchInput: FC<Props> = props => {
     },
     menu(provided: Record<string, string>) {
       return {
-        ...provided,
-        zIndex: theme.zIndex_100
+        ...provided
       };
     }
   };

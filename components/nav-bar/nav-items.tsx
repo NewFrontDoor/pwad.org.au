@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import {jsx, Styled, Text, Flex} from 'theme-ui';
 import {useResponsiveValue} from '@theme-ui/match-media';
 import {motion} from 'framer-motion';
+import useToggle from '../use-toggle';
 
 import {MenuItem} from '../queries';
 import NavLink from './nav-link';
@@ -11,10 +12,10 @@ import NavLink from './nav-link';
 type NavCollapseProps = MenuItem;
 
 const NavCollapse: FC<NavCollapseProps> = ({text, childpages}) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, toggleOpen] = useToggle(false);
   return (
     <>
-      <Styled.p variant="prose" sx={{color: 'gray.4'}} onClick={() => setIsOpen(!isOpen)}>
+      <Styled.p variant="prose" sx={{color: 'gray.4'}} onClick={() => toggleOpen()}>
         {text}
       </Styled.p>
       <Flex
