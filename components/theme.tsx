@@ -164,6 +164,20 @@ const theme = {
       }
     }
   },
+  links: {
+    bold: {
+      fontWeight: 'bold'
+    },
+    nav: {
+      color: 'inherit',
+      textTransform: 'uppercase',
+      letterSpacing: '1px',
+      textDecoration: 'none',
+      '&:hover': {
+        textDecoration: 'underline'
+      }
+    }
+  },
   cards: {
     primary: {
       padding: 3,
@@ -270,3 +284,26 @@ const theme = {
 };
 
 export default theme;
+
+export const darkTheme = {
+  ...theme,
+  colors: {
+    ...theme.colors,
+    primary: theme.colors.gray[4],
+    transparent: 'transparent',
+    black: '#000',
+    white: '#fff',
+    text: theme.colors.gray[4]
+  },
+  styles: {
+    ...theme.styles,
+    footer: {
+      bg: 'background',
+      color: 'gray.4'
+    }
+  }
+};
+
+export const DarkTheme: FC = props => (
+  <ThemeProvider {...props} theme={darkTheme} />
+);
