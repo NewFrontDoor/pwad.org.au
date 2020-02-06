@@ -134,7 +134,7 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
               variant="transparent"
               css={{
                 letterSpacing: 'inherit',
-                textTransform: 'inherit',
+                textTransform: 'uppercase',
                 fontWeight: 'inherit',
                 margin: '0',
                 padding: '0',
@@ -143,10 +143,17 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
               }}
               onClick={toggleOpen}
             >
-              MENU
+              Menu
             </Button>
             <Can I="read" a="my-account">
-              <Link href="/my-account">MY ACCOUNT</Link>
+              <Link
+                href="/my-account"
+                css={{
+                  textTransform: 'uppercase'
+                }}
+              >
+                My account
+              </Link>
             </Can>
           </>
         )}
