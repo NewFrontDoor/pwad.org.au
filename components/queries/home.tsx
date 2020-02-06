@@ -13,6 +13,7 @@ export default gql`
         childpages {
           ... on PageContent {
             _id
+            _type
             title
           }
         }

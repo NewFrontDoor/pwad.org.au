@@ -15,7 +15,6 @@ const NavMenuItem: FC = props => (
       display: 'flex',
       alignItems: 'center',
       letterSpacing: '1px',
-      textTransform: 'uppercase',
       marginLeft: '1rem',
       marginRight: '1rem'
     }}
@@ -35,11 +34,11 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
   return (
     <Flex
       as="ul"
-      padding={0}
-      justifyContent="between"
-      margin="1rem"
       sx={{
         flex: '1 0 0%',
+        padding: 0,
+        justifyContent: 'space-between',
+        margin: '1rem',
         flexDirection: ['column', 'column', 'row'],
         listStyle: 'none'
       }}
@@ -53,13 +52,13 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
             marginRight: '1rem'
           }}
         >
-          <Button variant="transparent" onClick={onClose}>
+          <Button variant="transparent" sx={{padding: 0}} onClick={onClose}>
             <X role="img" />
           </Button>
         </NavMenuItem>
       )}
       <NavMenuItem as="li" fontWeight="bold">
-        <Link href="/" onClick={onClose}>
+        <Link variant="nav" href="/">
           Home
         </Link>
       </NavMenuItem>
@@ -69,7 +68,7 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
         {() => (
           <>
             <NavMenuItem as="li" fontWeight="bold">
-              <Link href="/short-list">
+              <Link variant="nav" href="/short-list">
                 Short list ({data.me.shortlist.length})
               </Link>
             </NavMenuItem>
@@ -79,16 +78,20 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
             <div>
               <Can I="read" a="keystone">
                 <NavMenuItem as="li" fontWeight="bold">
-                  <Link href="/keystone" isInternal={false}>
+                  <Link variant="nav" href="/keystone" isInternal={false}>
                     Admin
                   </Link>
                 </NavMenuItem>
               </Can>
               <NavMenuItem as="li" fontWeight="bold">
-                <Link href="/my-account">My account</Link>
+                <Link variant="nav" href="/my-account">
+                  My account
+                </Link>
               </NavMenuItem>
               <NavMenuItem as="li" fontWeight="bold">
-                <Link href="/api/logout">Log out</Link>
+                <Link variant="nav" href="/api/logout">
+                  Log out
+                </Link>
               </NavMenuItem>
             </div>
           </>
@@ -98,10 +101,14 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
         {() => (
           <>
             <NavMenuItem as="li" fontWeight="bold">
-              <Link href="/api/login">Log in</Link>
+              <Link variant="nav" href="/api/login">
+                Log in
+              </Link>
             </NavMenuItem>
             <NavMenuItem as="li" fontWeight="bold">
-              <Link href="/api/login">Create account</Link>
+              <Link variant="nav" href="/api/login">
+                Create account
+              </Link>
             </NavMenuItem>
           </>
         )}

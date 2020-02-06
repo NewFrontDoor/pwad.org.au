@@ -52,9 +52,12 @@ const Liturgy: NextPage<LiturgyProps> = ({id}) => {
       {error && `Error! ${error.message}`}
       {data?.liturgyById && (
         <Flex
-          gutterWidth="xxl"
-          sx={{flexDirection: ['column-reverse', 'column-reverse', 'row']}}
-        >
+        sx={{
+          flexDirection: ['column-reverse', 'column-reverse', 'row'],
+          // TODO: What should this value actually be?
+          gap: '2em'
+        }}
+      >
           <Box>
             {files?.length > 0 && (
               <>

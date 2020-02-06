@@ -54,8 +54,11 @@ const Song: NextPage<SongProps> = ({id}) => {
         Public Worship and Aids to Devotion Committee Website
       </Styled.h1>
       <Flex
-        gutterWidth="xxl"
-        sx={{flexDirection: ['column-reverse', 'column-reverse', 'row']}}
+        sx={{
+          flexDirection: ['column-reverse', 'column-reverse', 'row'],
+          // TODO: What should this value actually be?
+          gap: '2em'
+        }}
       >
         <Box>
           {files.length > 0 && (

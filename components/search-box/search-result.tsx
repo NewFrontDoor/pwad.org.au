@@ -43,8 +43,8 @@ const SearchResultList: FC<SearchResult> = props => {
       )}
       <Flex
         as="ul"
-        padding="0"
         sx={{
+          padding: 0,
           flexWrap: 'wrap',
           listStyle: 'none'
         }}

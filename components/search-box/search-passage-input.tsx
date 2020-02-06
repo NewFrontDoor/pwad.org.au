@@ -2,7 +2,7 @@ import React, {FC, useState} from 'react';
 import PropTypes from 'prop-types';
 import {Label} from 'theme-ui';
 import {useField} from 'formik';
-import Select from '../form/select';
+import Select from 'react-select';
 import options from '../../lib/books';
 
 type SearchInput = {

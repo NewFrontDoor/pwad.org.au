@@ -915,7 +915,7 @@ export type HomeQuery = (
       & Pick<MenuItem, '_key' | 'text'>
       & { childpages: Maybe<Array<Maybe<(
         { __typename?: 'PageContent' }
-        & Pick<PageContent, '_id' | 'title'>
+        & Pick<PageContent, '_id' | '_type' | 'title'>
       ) | { __typename?: 'Hymn' } | { __typename?: 'Prayer' } | { __typename?: 'Liturgy' } | { __typename?: 'Scripture' } | { __typename?: 'Asset' }>>> }
     )>>> }
   )> }
@@ -1758,6 +1758,7 @@ export const HomeDocument = gql`
       childpages {
         ... on PageContent {
           _id
+          _type
           title
         }
       }

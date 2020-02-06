@@ -4,49 +4,40 @@ import PropTypes from 'prop-types';
 import {jsx, Styled, Text, Flex} from 'theme-ui';
 import {useResponsiveValue} from '@theme-ui/match-media';
 import {motion} from 'framer-motion';
+import useToggle from '../use-toggle';
 
 import {MenuItem} from '../queries';
-import NavLink from './nav-link';
+import Link, {linkProps} from '../link';
 
 type NavCollapseProps = MenuItem;
 
 const NavCollapse: FC<NavCollapseProps> = ({text, childpages}) => {
+  const [isOpen, toggleOpen] = useToggle(false);
   return (
     <>
-      <Styled.p variant="prose" sx={{color: 'gray.4'}}>
+      <Styled.p variant="prose" onClick={() => toggleOpen()}>
         {text}
       </Styled.p>
       <Flex
-        css={{
+        sx={{
           flexBasis: 0,
-          flexDirection: 'column'
+          flexDirection: 'column',
+          transition: 'max-height 0.5s ease',
+          height: 'auto',
+          maxHeight: [isOpen ? '500px' : 0, '500px']
         }}
       >
         <Text
           as="ul"
           appearance="prose"
-          css={{
+          sx={{
             padding: 0,
             listStyle: 'none'
           }}
         >
           {childpages.map(item => (
-            <Text
-              key={item._id}
-              sx={{
-                letterSpacing: '1px',
-                textTransform: 'uppercase'
-              }}
-            >
-              <NavLink
-                {...item}
-                sx={{
-                  color: 'gray.4',
-                  '&:hover': {
-                    color: 'gray.2'
-                  }
-                }}
-              />
+            <Text key={item._id} as="li">
+              <Link {...linkProps(item)} variant="nav" />
             </Text>
           ))}
         </Text>
@@ -101,7 +92,6 @@ const NavItems: FC<NavItemsProps> = ({selectedMenu, menuItems}) => {
         >
           <Text
             css={{
-              fontWeight: 'bold',
               letterSpacing: '1px',
               textTransform: 'uppercase'
             }}
