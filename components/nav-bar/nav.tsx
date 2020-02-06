@@ -78,7 +78,11 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
             <div>
               <Can I="read" a="keystone">
                 <NavMenuItem as="li" fontWeight="bold">
-                  <Link variant="nav" href="/keystone" isInternal={false}>
+                  <Link
+                    variant="nav"
+                    href="https://pwad.sanity.studio/"
+                    isInternal={false}
+                  >
                     Admin
                   </Link>
                 </NavMenuItem>
