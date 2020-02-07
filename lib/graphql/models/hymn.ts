@@ -50,7 +50,7 @@ export async function getById(id: string): Promise<Hymn> {
     wordsCopyright->{
       name
     },
-    "alternateTunes": *[_type=="tune" && metre._ref == ^.tune->metre._ref]{
+    "alternateTunes": *[_type=="tune" && references(^.tune->metre._ref) && _id!=^.tune->_id]{
       _id,
       _type,
       title,
