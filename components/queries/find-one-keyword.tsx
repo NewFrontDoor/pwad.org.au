@@ -6,15 +6,18 @@ export default gql`
       name
       hymns {
         _id
+        _type
         title
         hymnNumber
       }
       prayers {
         _id
+        _type
         title
       }
       liturgies {
         _id
+        _type
         title
       }
     }

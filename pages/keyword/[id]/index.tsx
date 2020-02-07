@@ -25,6 +25,8 @@ const Keyword: NextPage<KeywordProps> = ({id}) => {
 
   const {name, hymns, prayers, liturgies} = data?.keywordById ?? {};
 
+  console.log(data?.keywordById);
+
   return (
     <PageLayout>
       <Text as="h1" fontWeight="extraBold">
@@ -33,10 +35,10 @@ const Keyword: NextPage<KeywordProps> = ({id}) => {
       <ContentWrap>
         {loading && 'Loading...'}
         {error && `Error! ${error.message}`}
-        {data.keywordById && (
+        {data?.keywordById && (
           <>
             <Text as="h2">{name}</Text>
-            {hymns.length > 0 && (
+            {hymns?.length > 0 && (
               <>
                 <Text as="h3">Hymns</Text>
                 <Text as="ul">
@@ -48,7 +50,7 @@ const Keyword: NextPage<KeywordProps> = ({id}) => {
                 </Text>
               </>
             )}
-            {prayers.length > 0 && (
+            {prayers?.length > 0 && (
               <>
                 <Text as="h3">Prayers</Text>
                 <Text as="ul">
@@ -60,7 +62,7 @@ const Keyword: NextPage<KeywordProps> = ({id}) => {
                 </Text>
               </>
             )}
-            {liturgies.length > 0 && (
+            {liturgies?.length > 0 && (
               <>
                 <Text as="h3">Liturgy</Text>
                 <Text as="ul">
