@@ -22,12 +22,12 @@ type Session = Stripe.Event.Data.Object & {
   payment_intent?: string;
 };
 
-const sanityQuery = '*[_type == "user" && email == $email]';
+const sanityQuery = '*[_type == "user" && email == $emailData]';
 
 async function handleCheckoutSession(session: Session): Promise<void> {
   const {customer_email: email, payment_intent: paymentIntent} = session;
   const [user] = await management.getUsersByEmail(email);
-
+  console.log(email + '- checkoutsession');
   await management.updateAppMetadata(
     {id: user.user_id},
     {
@@ -38,9 +38,12 @@ async function handleCheckoutSession(session: Session): Promise<void> {
 
 async function handleSanityPatch(session: Session): Promise<void> {
   const {customer_email: email} = session;
+  const params = {emailData: email};
+  console.log(email + '- sanity session');
   const docId = await client
-    .fetch(sanityQuery, email)
+    .fetch(sanityQuery, params)
     .then(result => result[0]._id);
+  console.log(docId);
   await client
     .patch(docId)
     .set({hasPaidAccount: true})
