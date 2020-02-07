@@ -816,13 +816,13 @@ export type FindOneKeywordQuery = (
     & Pick<Keyword, 'name'>
     & { hymns: Maybe<Array<Maybe<(
       { __typename?: 'Hymn' }
-      & Pick<Hymn, '_id' | 'title' | 'hymnNumber'>
+      & Pick<Hymn, '_id' | '_type' | 'title' | 'hymnNumber'>
     )>>>, prayers: Maybe<Array<Maybe<(
       { __typename?: 'Prayer' }
-      & Pick<Prayer, '_id' | 'title'>
+      & Pick<Prayer, '_id' | '_type' | 'title'>
     )>>>, liturgies: Maybe<Array<Maybe<(
       { __typename?: 'Liturgy' }
-      & Pick<Liturgy, '_id' | 'title'>
+      & Pick<Liturgy, '_id' | '_type' | 'title'>
     )>>> }
   )> }
 );
@@ -1549,15 +1549,18 @@ export const FindOneKeywordDocument = gql`
     name
     hymns {
       _id
+      _type
       title
       hymnNumber
     }
     prayers {
       _id
+      _type
       title
     }
     liturgies {
       _id
+      _type
       title
     }
   }
