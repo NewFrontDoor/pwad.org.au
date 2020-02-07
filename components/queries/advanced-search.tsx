@@ -6,7 +6,7 @@ export default gql`
     $tune: String
     $metres: [String]
     $occasion: String
-    $keywords: [String]
+    $keyword: String
     $book: EnumHymnBook
   ) {
     search(
@@ -15,7 +15,7 @@ export default gql`
         book: $book
         tune: $tune
         occasion: $occasion
-        keywords: $keywords
+        keyword: $keyword
         _operators: {metre: {in: $metres}}
       }
     ) {

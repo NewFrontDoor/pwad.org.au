@@ -549,7 +549,7 @@ export type SearchInput = {
   book?: Maybe<EnumHymnBook>,
   occasion?: Maybe<Scalars['String']>,
   tune?: Maybe<Scalars['String']>,
-  keywords?: Maybe<Array<Maybe<Scalars['String']>>>,
+  keyword?: Maybe<Scalars['String']>,
   _operators?: Maybe<SearchInputOperator>,
 };
 
@@ -623,7 +623,7 @@ export type AdvancedSearchQueryVariables = {
   tune?: Maybe<Scalars['String']>,
   metres?: Maybe<Array<Maybe<Scalars['String']>>>,
   occasion?: Maybe<Scalars['String']>,
-  keywords?: Maybe<Array<Maybe<Scalars['String']>>>,
+  keyword?: Maybe<Scalars['String']>,
   book?: Maybe<EnumHymnBook>
 };
 
@@ -952,7 +952,7 @@ export type HomeQuery = (
 export type LiturgySearchQueryVariables = {
   title?: Maybe<Scalars['String']>,
   occasion?: Maybe<Scalars['String']>,
-  keywords?: Maybe<Array<Maybe<Scalars['String']>>>
+  keyword?: Maybe<Scalars['String']>
 };
 
 
@@ -1047,7 +1047,7 @@ export type PageContentQuery = (
 export type PrayerSearchQueryVariables = {
   title?: Maybe<Scalars['String']>,
   occasion?: Maybe<Scalars['String']>,
-  keywords?: Maybe<Array<Maybe<Scalars['String']>>>
+  keyword?: Maybe<Scalars['String']>
 };
 
 
@@ -1169,8 +1169,8 @@ export type AddShortListItemMutationHookResult = ReturnType<typeof useAddShortLi
 export type AddShortListItemMutationResult = ApolloReactCommon.MutationResult<AddShortListItemMutation>;
 export type AddShortListItemMutationOptions = ApolloReactCommon.BaseMutationOptions<AddShortListItemMutation, AddShortListItemMutationVariables>;
 export const AdvancedSearchDocument = gql`
-    query advancedSearch($title: String, $tune: String, $metres: [String], $occasion: String, $keywords: [String], $book: EnumHymnBook) {
-  search(filter: {textContains: $title, book: $book, tune: $tune, occasion: $occasion, keywords: $keywords, _operators: {metre: {in: $metres}}}) {
+    query advancedSearch($title: String, $tune: String, $metres: [String], $occasion: String, $keyword: String, $book: EnumHymnBook) {
+  search(filter: {textContains: $title, book: $book, tune: $tune, occasion: $occasion, keyword: $keyword, _operators: {metre: {in: $metres}}}) {
     ... on Document {
       _id
       _type
@@ -1219,7 +1219,7 @@ export const AdvancedSearchDocument = gql`
  *      tune: // value for 'tune'
  *      metres: // value for 'metres'
  *      occasion: // value for 'occasion'
- *      keywords: // value for 'keywords'
+ *      keyword: // value for 'keyword'
  *      book: // value for 'book'
  *   },
  * });
@@ -1872,8 +1872,8 @@ export type HomeQueryHookResult = ReturnType<typeof useHomeQuery>;
 export type HomeLazyQueryHookResult = ReturnType<typeof useHomeLazyQuery>;
 export type HomeQueryResult = ApolloReactCommon.QueryResult<HomeQuery, HomeQueryVariables>;
 export const LiturgySearchDocument = gql`
-    query liturgySearch($title: String, $occasion: String, $keywords: [String]) {
-  liturgySearch(filter: {textContains: $title, occasion: $occasion, keywords: $keywords}) {
+    query liturgySearch($title: String, $occasion: String, $keyword: String) {
+  liturgySearch(filter: {textContains: $title, occasion: $occasion, keyword: $keyword}) {
     _id
     _type
     title
@@ -1900,7 +1900,7 @@ export const LiturgySearchDocument = gql`
  *   variables: {
  *      title: // value for 'title'
  *      occasion: // value for 'occasion'
- *      keywords: // value for 'keywords'
+ *      keyword: // value for 'keyword'
  *   },
  * });
  */
@@ -2049,8 +2049,8 @@ export type PageContentQueryHookResult = ReturnType<typeof usePageContentQuery>;
 export type PageContentLazyQueryHookResult = ReturnType<typeof usePageContentLazyQuery>;
 export type PageContentQueryResult = ApolloReactCommon.QueryResult<PageContentQuery, PageContentQueryVariables>;
 export const PrayerSearchDocument = gql`
-    query prayerSearch($title: String, $occasion: String, $keywords: [String]) {
-  prayerSearch(filter: {textContains: $title, occasion: $occasion, keywords: $keywords}) {
+    query prayerSearch($title: String, $occasion: String, $keyword: String) {
+  prayerSearch(filter: {textContains: $title, occasion: $occasion, keyword: $keyword}) {
     _id
     _type
     title
@@ -2077,7 +2077,7 @@ export const PrayerSearchDocument = gql`
  *   variables: {
  *      title: // value for 'title'
  *      occasion: // value for 'occasion'
- *      keywords: // value for 'keywords'
+ *      keyword: // value for 'keyword'
  *   },
  * });
  */

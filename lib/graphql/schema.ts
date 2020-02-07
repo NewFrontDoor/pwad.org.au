@@ -87,7 +87,7 @@ export const schema = gql`
     book: EnumHymnBook
     occasion: String
     tune: String
-    keywords: [String]
+    keyword: String
     _operators: SearchInputOperator
   }
 

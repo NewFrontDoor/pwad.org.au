@@ -42,7 +42,7 @@ const initialState = {
 };
 
 function reducer(state: State, action: Action): State {
-  let keywords: string[];
+  let keyword: string;
   let metres: string[];
   let tune: string;
   let book: string;
@@ -67,7 +67,7 @@ function reducer(state: State, action: Action): State {
       }
 
       if (action.fields.keyword) {
-        keywords = [action.fields.keyword.value];
+        keyword = action.fields.keyword.value;
       }
 
       return {
@@ -79,7 +79,7 @@ function reducer(state: State, action: Action): State {
             book,
             tune,
             metres,
-            keywords
+            keyword
           },
           identity
         ),

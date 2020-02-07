@@ -66,7 +66,7 @@ export async function getById(id: string): Promise<Hymn> {
 export async function search({
   book,
   tune,
-  keywords,
+  keyword,
   occasion,
   textContains,
   _operators
@@ -75,7 +75,8 @@ export async function search({
   let query = ['*'].concat(['[_type == "hymn"]']);
 
   if (book) {
-    query = query.concat(`[book == "${book}"]`);
+    variables.book = book;
+    query = query.concat('[book == $book]');
   }
 
   if (textContains) {
@@ -87,7 +88,17 @@ export async function search({
 
   if (occasion) {
     variables.occasion = occasion;
-    query = query.concat(['[occasion == $occasion]']);
+    query = query.concat(['[references($occasion)]']);
+  }
+
+  if (tune) {
+    variables.tune = tune;
+    query = query.concat(['[references($tune)]']);
+  }
+
+  if (keyword) {
+    variables.keywords = keyword;
+    query = query.concat(['[references($keywords)]']);
   }
 
   if (_operators?.metre?.in) {
@@ -98,6 +109,8 @@ export async function search({
   query = query.concat([
     '{_id, _type, title, content[0...1], keywords[]->{_id,name}}'
   ]);
+
+  console.log(variables);
 
   return sanity.fetch(query.join('|'), variables);
 }

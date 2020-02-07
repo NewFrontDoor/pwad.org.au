@@ -549,7 +549,7 @@ export type SearchInput = {
   book?: Maybe<EnumHymnBook>,
   occasion?: Maybe<Scalars['String']>,
   tune?: Maybe<Scalars['String']>,
-  keywords?: Maybe<Array<Maybe<Scalars['String']>>>,
+  keyword?: Maybe<Scalars['String']>,
   _operators?: Maybe<SearchInputOperator>,
 };
 
