@@ -16,7 +16,9 @@ export default gql`
       }
       files {
         _id
-        file
+        name
+        size
+        url
       }
     }
   }

@@ -8,7 +8,13 @@ export async function getById(id: string): Promise<Hymn> {
         `[_type == "hymn" && _id == $id][0]{
     _id,
     author->{_id,name,dates},
-    file->{_id,_type,file,name},
+    file->{
+      _id,
+      _type,
+      name,
+      size,
+      url
+    },
     hymnNumber,
     content,
     title,
@@ -36,8 +42,9 @@ export async function getById(id: string): Promise<Hymn> {
       file->{
         _id,
         _type,
-        file,
-        name
+        name,
+        size,
+        url
       }
     },
     wordsCopyright->{
@@ -50,8 +57,9 @@ export async function getById(id: string): Promise<Hymn> {
       file->{
         _id,
         _type,
-        file,
-        name
+        name,
+        size,
+        url
       }
     }
   }`

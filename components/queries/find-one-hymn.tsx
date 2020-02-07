@@ -24,6 +24,8 @@ export default gql`
           _id
           _type
           name
+          size
+          url
         }
       }
       tune {
@@ -42,12 +44,16 @@ export default gql`
           _id
           _type
           name
+          size
+          url
         }
       }
       files {
         _id
         _type
         name
+        size
+        url
       }
     }
   }

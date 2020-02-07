@@ -24,6 +24,8 @@ export type Asset = Document & {
   _updatedAt?: Maybe<Scalars['Date']>,
   name?: Maybe<Scalars['String']>,
   file?: Maybe<Scalars['String']>,
+  size?: Maybe<Scalars['Int']>,
+  url?: Maybe<Scalars['String']>,
 };
 
 export type Author = Document & {
@@ -683,13 +685,13 @@ export type ResolversTypes = {
   JSON: ResolverTypeWrapper<any>,
   Liturgy: ResolverTypeWrapper<any>,
   Asset: ResolverTypeWrapper<any>,
+  Int: ResolverTypeWrapper<any>,
   Keyword: ResolverTypeWrapper<any>,
   Prayer: ResolverTypeWrapper<any>,
   Occasion: ResolverTypeWrapper<any>,
   Copyright: ResolverTypeWrapper<any>,
   Category: ResolverTypeWrapper<any>,
   Scripture: ResolverTypeWrapper<any>,
-  Int: ResolverTypeWrapper<any>,
   Tune: ResolverTypeWrapper<any>,
   Metre: ResolverTypeWrapper<any>,
   Main: ResolverTypeWrapper<any>,
@@ -733,13 +735,13 @@ export type ResolversParentTypes = {
   JSON: any,
   Liturgy: any,
   Asset: any,
+  Int: any,
   Keyword: any,
   Prayer: any,
   Occasion: any,
   Copyright: any,
   Category: any,
   Scripture: any,
-  Int: any,
   Tune: any,
   Metre: any,
   Main: any,
@@ -775,6 +777,8 @@ export type AssetResolvers<ContextType = Context, ParentType extends ResolversPa
   _updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>,
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   file?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  size?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
+  url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn,
 };
 

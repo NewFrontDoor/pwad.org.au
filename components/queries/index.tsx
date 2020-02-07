@@ -24,6 +24,8 @@ export type Asset = Document & {
   _updatedAt?: Maybe<Scalars['Date']>,
   name?: Maybe<Scalars['String']>,
   file?: Maybe<Scalars['String']>,
+  size?: Maybe<Scalars['Int']>,
+  url?: Maybe<Scalars['String']>,
 };
 
 export type Author = Document & {
@@ -779,7 +781,7 @@ export type FindOneHymnQuery = (
       & Pick<Tune, '_id' | '_type' | 'title'>
       & { file: Maybe<(
         { __typename?: 'Asset' }
-        & Pick<Asset, '_id' | '_type' | 'name'>
+        & Pick<Asset, '_id' | '_type' | 'name' | 'size' | 'url'>
       )> }
     )>>>, tune: Maybe<(
       { __typename?: 'Tune' }
@@ -795,11 +797,11 @@ export type FindOneHymnQuery = (
         & Pick<Metre, 'metre'>
       )>, file: Maybe<(
         { __typename?: 'Asset' }
-        & Pick<Asset, '_id' | '_type' | 'name'>
+        & Pick<Asset, '_id' | '_type' | 'name' | 'size' | 'url'>
       )> }
     )>, files: Maybe<Array<Maybe<(
       { __typename?: 'Asset' }
-      & Pick<Asset, '_id' | '_type' | 'name'>
+      & Pick<Asset, '_id' | '_type' | 'name' | 'size' | 'url'>
     )>>> }
   )> }
 );
@@ -845,7 +847,7 @@ export type FindOneLiturgyQuery = (
       & Pick<Copyright, 'name'>
     )>, files: Maybe<Array<Maybe<(
       { __typename?: 'Asset' }
-      & Pick<Asset, '_id' | 'file'>
+      & Pick<Asset, '_id' | 'name' | 'size' | 'url'>
     )>>> }
   )> }
 );
@@ -1489,6 +1491,8 @@ export const FindOneHymnDocument = gql`
         _id
         _type
         name
+        size
+        url
       }
     }
     tune {
@@ -1507,12 +1511,16 @@ export const FindOneHymnDocument = gql`
         _id
         _type
         name
+        size
+        url
       }
     }
     files {
       _id
       _type
       name
+      size
+      url
     }
   }
 }
@@ -1608,7 +1616,9 @@ export const FindOneLiturgyDocument = gql`
     }
     files {
       _id
-      file
+      name
+      size
+      url
     }
   }
 }

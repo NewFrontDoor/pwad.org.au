@@ -407,6 +407,8 @@ export const schema = gql`
     _updatedAt: Date
     name: String
     file: String
+    size: Int
+    url: String
   }
 
   union ResourceType = Asset | RelativeUrl | ExternalUrl | PageContent
