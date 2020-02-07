@@ -25,8 +25,6 @@ const Keyword: NextPage<KeywordProps> = ({id}) => {
 
   const {name, hymns, prayers, liturgies} = data?.keywordById ?? {};
 
-  console.log(data?.keywordById);
-
   return (
     <PageLayout>
       <Text as="h1" fontWeight="extraBold">

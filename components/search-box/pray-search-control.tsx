@@ -16,7 +16,7 @@ const initialState = {
 };
 
 function reducer(state, action) {
-  let keywords;
+  let keyword;
   let occasion;
 
   switch (action.type) {
@@ -26,7 +26,7 @@ function reducer(state, action) {
       }
 
       if (action.fields.keyword) {
-        keywords = [action.fields.keyword.value];
+        keyword = action.fields.keyword.value;
       }
 
       return {
@@ -35,7 +35,7 @@ function reducer(state, action) {
             ...state,
             ...action.fields,
             occasion,
-            keywords
+            keyword
           },
           identity
         ),

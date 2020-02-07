@@ -110,7 +110,5 @@ export async function search({
     '{_id, _type, title, content[0...1], keywords[]->{_id,name}}'
   ]);
 
-  console.log(variables);
-
   return sanity.fetch(query.join('|'), variables);
 }
