@@ -77,6 +77,9 @@ export const resolvers: Resolvers = {
     async hymnById(_parent, args, context) {
       return context.models.hymn.getById(args.id);
     },
+    async scriptureById(_parent, args, context) {
+      return context.models.scripture.getById(args.id);
+    },
     async textSearch(_parent, args, context) {
       const user = await context.user;
       const {search} = args.filter;

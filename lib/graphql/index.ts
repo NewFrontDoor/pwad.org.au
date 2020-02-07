@@ -12,6 +12,7 @@ import * as metreModel from './models/metre';
 import * as tuneModel from './models/tune';
 import * as occasionModel from './models/occasion';
 import * as keywordModel from './models/keyword';
+import * as scriptureModel from './models/scripture';
 import {schema} from './schema';
 import {resolvers} from './resolvers';
 import {User} from './gen-types';
@@ -30,6 +31,7 @@ export type Context = {
     tune: typeof tuneModel;
     occasion: typeof occasionModel;
     keyword: typeof keywordModel;
+    scripture: typeof scriptureModel;
   };
 };
 
@@ -46,7 +48,8 @@ function context({req}: {req: NextApiRequest}): Context {
       metre: metreModel,
       tune: tuneModel,
       occasion: occasionModel,
-      keyword: keywordModel
+      keyword: keywordModel,
+      scripture: scriptureModel
     },
     user: getUserContext(req)
   };

@@ -11,7 +11,8 @@ import {
   Liturgy,
   Document,
   Asset,
-  PageContent
+  PageContent,
+  Scripture
 } from './queries';
 
 type LinkProps = {
@@ -96,6 +97,14 @@ export function pageContentLinkProps({_id, title}: PageContent): LinkProps {
   };
 }
 
+export function scriptureLinkProps({_id, title}: Scripture): LinkProps {
+  return {
+    as: `/scripture/${_id}`,
+    href: '/scripture/[id]',
+    children: title
+  };
+}
+
 export function assetLinkProps({file, name}: Asset): LinkProps {
   return {
     isInternal: false,
@@ -123,6 +132,9 @@ export function linkProps(props: Document): LinkProps {
 
     case 'asset':
       return assetLinkProps(props);
+
+    case 'scripture':
+      return scriptureLinkProps(props);
 
     default:
       return {};

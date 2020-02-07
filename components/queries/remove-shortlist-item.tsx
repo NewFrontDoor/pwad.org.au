@@ -17,6 +17,9 @@ export default gql`
       ... on Prayer {
         title
       }
+      ... on Scripture {
+        title
+      }
     }
   }
 `;

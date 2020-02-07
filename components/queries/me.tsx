@@ -28,6 +28,9 @@ export default gql`
         ... on Liturgy {
           title
         }
+        ... on Scripture {
+          title
+        }
       }
     }
   }

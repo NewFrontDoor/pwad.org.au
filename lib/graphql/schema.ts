@@ -26,6 +26,7 @@ export const schema = gql`
     ): [Keyword]
 
     liturgyById(id: ID!): Liturgy
+    scriptureById(id: ID!): Scripture
 
     tuneMany(
       filter: FilterInput

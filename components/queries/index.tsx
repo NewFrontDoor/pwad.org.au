@@ -408,6 +408,7 @@ export type Query = {
   keywordById?: Maybe<Keyword>,
   keywordMany?: Maybe<Array<Maybe<Keyword>>>,
   liturgyById?: Maybe<Liturgy>,
+  scriptureById?: Maybe<Scripture>,
   tuneMany?: Maybe<Array<Maybe<Tune>>>,
   metreMany?: Maybe<Array<Maybe<Metre>>>,
   prayerById?: Maybe<Prayer>,
@@ -464,6 +465,11 @@ export type QueryKeywordManyArgs = {
 
 
 export type QueryLiturgyByIdArgs = {
+  id: Scalars['ID']
+};
+
+
+export type QueryScriptureByIdArgs = {
   id: Scalars['ID']
 };
 
@@ -606,7 +612,7 @@ export type AddShortListItemMutation = (
     & Pick<Liturgy, '_id' | '_type' | 'title'>
   ) | (
     { __typename?: 'Scripture' }
-    & Pick<Scripture, '_id' | '_type'>
+    & Pick<Scripture, '_id' | '_type' | 'title'>
   )>>> }
 );
 
@@ -855,6 +861,19 @@ export type FindOnePrayerQuery = (
   )> }
 );
 
+export type FindOneScriptureQueryVariables = {
+  id: Scalars['ID']
+};
+
+
+export type FindOneScriptureQuery = (
+  { __typename?: 'Query' }
+  & { scriptureById: Maybe<(
+    { __typename?: 'Scripture' }
+    & Pick<Scripture, '_id' | 'title' | 'content'>
+  )> }
+);
+
 export type FindPrayerContentsQueryVariables = {
   page: Scalars['Int']
 };
@@ -998,7 +1017,7 @@ export type MeQuery = (
       & Pick<Liturgy, '_id' | '_type' | 'title'>
     ) | (
       { __typename?: 'Scripture' }
-      & Pick<Scripture, '_id' | '_type'>
+      & Pick<Scripture, '_id' | '_type' | 'title'>
     )>>> }
   )> }
 );
@@ -1053,7 +1072,7 @@ export type RemoveShortListItemMutation = (
     & Pick<Liturgy, '_id' | '_type' | 'title'>
   ) | (
     { __typename?: 'Scripture' }
-    & Pick<Scripture, '_id' | '_type'>
+    & Pick<Scripture, '_id' | '_type' | 'title'>
   )>>> }
 );
 
@@ -1107,6 +1126,9 @@ export const AddShortListItemDocument = gql`
       title
     }
     ... on Prayer {
+      title
+    }
+    ... on Scripture {
       title
     }
   }
@@ -1634,6 +1656,41 @@ export function useFindOnePrayerLazyQuery(baseOptions?: ApolloReactHooks.LazyQue
 export type FindOnePrayerQueryHookResult = ReturnType<typeof useFindOnePrayerQuery>;
 export type FindOnePrayerLazyQueryHookResult = ReturnType<typeof useFindOnePrayerLazyQuery>;
 export type FindOnePrayerQueryResult = ApolloReactCommon.QueryResult<FindOnePrayerQuery, FindOnePrayerQueryVariables>;
+export const FindOneScriptureDocument = gql`
+    query findOneScripture($id: ID!) {
+  scriptureById(id: $id) {
+    _id
+    title
+    content
+  }
+}
+    `;
+
+/**
+ * __useFindOneScriptureQuery__
+ *
+ * To run a query within a React component, call `useFindOneScriptureQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFindOneScriptureQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFindOneScriptureQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFindOneScriptureQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FindOneScriptureQuery, FindOneScriptureQueryVariables>) {
+        return ApolloReactHooks.useQuery<FindOneScriptureQuery, FindOneScriptureQueryVariables>(FindOneScriptureDocument, baseOptions);
+      }
+export function useFindOneScriptureLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FindOneScriptureQuery, FindOneScriptureQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<FindOneScriptureQuery, FindOneScriptureQueryVariables>(FindOneScriptureDocument, baseOptions);
+        }
+export type FindOneScriptureQueryHookResult = ReturnType<typeof useFindOneScriptureQuery>;
+export type FindOneScriptureLazyQueryHookResult = ReturnType<typeof useFindOneScriptureLazyQuery>;
+export type FindOneScriptureQueryResult = ApolloReactCommon.QueryResult<FindOneScriptureQuery, FindOneScriptureQueryVariables>;
 export const FindPrayerContentsDocument = gql`
     query findPrayerContents($page: Int!) {
   prayerPagination(page: $page, perPage: 20) {
@@ -1901,6 +1958,9 @@ export const MeDocument = gql`
       ... on Liturgy {
         title
       }
+      ... on Scripture {
+        title
+      }
     }
   }
 }
@@ -2022,6 +2082,9 @@ export const RemoveShortListItemDocument = gql`
       title
     }
     ... on Prayer {
+      title
+    }
+    ... on Scripture {
       title
     }
   }

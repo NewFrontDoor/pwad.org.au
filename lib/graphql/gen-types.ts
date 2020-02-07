@@ -408,6 +408,7 @@ export type Query = {
   keywordById?: Maybe<Keyword>,
   keywordMany?: Maybe<Array<Maybe<Keyword>>>,
   liturgyById?: Maybe<Liturgy>,
+  scriptureById?: Maybe<Scripture>,
   tuneMany?: Maybe<Array<Maybe<Tune>>>,
   metreMany?: Maybe<Array<Maybe<Metre>>>,
   prayerById?: Maybe<Prayer>,
@@ -464,6 +465,11 @@ export type QueryKeywordManyArgs = {
 
 
 export type QueryLiturgyByIdArgs = {
+  id: Scalars['ID']
+};
+
+
+export type QueryScriptureByIdArgs = {
   id: Scalars['ID']
 };
 
@@ -1032,6 +1038,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   keywordById?: Resolver<Maybe<ResolversTypes['Keyword']>, ParentType, ContextType, RequireFields<QueryKeywordByIdArgs, 'id'>>,
   keywordMany?: Resolver<Maybe<Array<Maybe<ResolversTypes['Keyword']>>>, ParentType, ContextType, QueryKeywordManyArgs>,
   liturgyById?: Resolver<Maybe<ResolversTypes['Liturgy']>, ParentType, ContextType, RequireFields<QueryLiturgyByIdArgs, 'id'>>,
+  scriptureById?: Resolver<Maybe<ResolversTypes['Scripture']>, ParentType, ContextType, RequireFields<QueryScriptureByIdArgs, 'id'>>,
   tuneMany?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tune']>>>, ParentType, ContextType, QueryTuneManyArgs>,
   metreMany?: Resolver<Maybe<Array<Maybe<ResolversTypes['Metre']>>>, ParentType, ContextType, QueryMetreManyArgs>,
   prayerById?: Resolver<Maybe<ResolversTypes['Prayer']>, ParentType, ContextType, RequireFields<QueryPrayerByIdArgs, 'id'>>,
