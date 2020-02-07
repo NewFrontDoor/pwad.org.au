@@ -3,12 +3,10 @@ const del = require('del');
 const dargs = require('dargs');
 const flatten = require('lodash/flatten');
 const {series, src, dest, parallel} = require('gulp');
-const nodemon = require('gulp-nodemon');
 const gulpExeca = require('gulp-execa');
 const responsive = require('gulp-responsive');
 const execa = require('execa');
 const dotenv = require('dotenv');
-const waitForLocalhost = require('wait-for-localhost');
 
 const now = require('./now.json');
 
@@ -20,30 +18,6 @@ let pinoColada;
 
 function task(...args) {
   return gulpExeca.task(flatten(args).join(' '));
-}
-
-async function server(done) {
-  await waitForLocalhost({port: 27017, useGet: true});
-  nodemon({
-    script: './app.js',
-    ignore: ['.next', 'data', 'node_modules', 'pages', 'components', 'tmp'],
-    env,
-    stdout: false,
-    readable: false,
-    done
-  }).on('readable', function() {
-    if (pinoColada) {
-      pinoColada.kill();
-    }
-
-    pinoColada = execa('pino-colada');
-
-    pinoColada.stdout.pipe(process.stdout);
-    pinoColada.stderr.pipe(process.stderr);
-
-    this.stdout.pipe(pinoColada.stdin);
-    this.stderr.pipe(pinoColada.stdin);
-  });
 }
 
 const mongo = task(
