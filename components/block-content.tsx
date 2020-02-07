@@ -29,6 +29,33 @@ InternalLink.propTypes = {
   children: PropTypes.node.isRequired
 };
 
+type ExternalLinkProps = {
+  mark: {
+    blank?: boolean;
+    href?: string;
+  };
+  children: ReactNode;
+};
+
+const ExternalLink: FC<ExternalLinkProps> = ({children, mark}) => {
+  const {blank, href} = mark;
+  return blank ? (
+    <a href={href} target="_blank" rel="noopener noreferrer">
+      {children}
+    </a>
+  ) : (
+    <a href={href}>{children}</a>
+  );
+};
+
+ExternalLink.propTypes = {
+  mark: PropTypes.shape({
+    blank: PropTypes.bool,
+    href: PropTypes.string.isRequired
+  }).isRequired,
+  children: PropTypes.node.isRequired
+};
+
 type ImageProps = {
   node: {
     asset?: any;
@@ -53,7 +80,8 @@ const serializers = {
     img: Image
   },
   marks: {
-    internalLink: InternalLink
+    internalLink: InternalLink,
+    externalLink: ExternalLink
   }
 };
 

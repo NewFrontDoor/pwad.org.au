@@ -2,6 +2,7 @@ import {buffer} from 'micro';
 import {NextApiRequest, NextApiResponse} from 'next';
 import Stripe from 'stripe';
 import {ManagementClient} from 'auth0';
+import client from '../../../lib/graphql/models/sanity';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_TOKEN, {
   apiVersion: '2019-12-03',
@@ -21,6 +22,8 @@ type Session = Stripe.Event.Data.Object & {
   payment_intent?: string;
 };
 
+const sanityQuery = '*[_type == "user" && email == $email]';
+
 async function handleCheckoutSession(session: Session): Promise<void> {
   const {customer_email: email, payment_intent: paymentIntent} = session;
   const [user] = await management.getUsersByEmail(email);
@@ -31,6 +34,20 @@ async function handleCheckoutSession(session: Session): Promise<void> {
       paymentIntent
     }
   );
+}
+
+async function handleSanityPatch(session: Session): Promise<void> {
+  const {customer_email: email} = session;
+  const docId = await client
+    .fetch(sanityQuery, email)
+    .then(result => result[0]._id);
+  await client
+    .patch(docId)
+    .set({hasPaidAccount: true})
+    .commit()
+    .catch(error => {
+      console.error('Oh no, the update failed:', error.message);
+    });
 }
 
 async function webhook(
@@ -54,6 +71,7 @@ async function webhook(
     const session = event.data.object;
 
     await handleCheckoutSession(session);
+    await handleSanityPatch(session);
   }
 
   res.json({received: true});
