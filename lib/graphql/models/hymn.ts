@@ -97,8 +97,8 @@ export async function search({
   }
 
   if (keyword) {
-    variables.keywords = keyword;
-    query = query.concat(['[references($keywords)]']);
+    variables.keyword = keyword;
+    query = query.concat(['[references($keyword)]']);
   }
 
   if (_operators?.metre?.in) {

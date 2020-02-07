@@ -15,7 +15,7 @@ export async function getById(id: string): Promise<Prayer> {
 }
 
 export async function search({
-  keywords,
+  keyword,
   occasion,
   textContains,
   _operators
@@ -33,6 +33,11 @@ export async function search({
   if (occasion) {
     variables.occasion = occasion;
     query = query.concat(['[occasion == $occasion]']);
+  }
+
+  if (keyword) {
+    variables.keyword = keyword;
+    query = query.concat(['[references($keyword)]']);
   }
 
   query = query.concat([
