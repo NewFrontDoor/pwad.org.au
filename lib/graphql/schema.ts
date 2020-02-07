@@ -86,15 +86,16 @@ export const schema = gql`
     textContains: String
     book: EnumHymnBook
     occasion: String
+    tune: String
     keywords: [String]
     _operators: SearchInputOperator
   }
 
   input SearchInputOperator {
-    tune: TuneIn
+    metre: MetreIn
   }
 
-  input TuneIn {
+  input MetreIn {
     in: [String]
   }
 
@@ -262,6 +263,7 @@ export const schema = gql`
     hymnNumber: Int
     content: JSON
     tune: Tune
+    alternateTunes: [Tune]
     book: String
     chapter: Int
     chapterVerse: String
@@ -388,7 +390,7 @@ export const schema = gql`
     title: String
     metre: Metre
     composer: Author
-    files: [Asset]
+    file: Asset
     musicCopyright: Copyright
   }
 

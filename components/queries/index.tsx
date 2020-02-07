@@ -174,6 +174,7 @@ export type Hymn = Document & {
   hymnNumber?: Maybe<Scalars['Int']>,
   content?: Maybe<Scalars['JSON']>,
   tune?: Maybe<Tune>,
+  alternateTunes?: Maybe<Array<Maybe<Tune>>>,
   book?: Maybe<Scalars['String']>,
   chapter?: Maybe<Scalars['Int']>,
   chapterVerse?: Maybe<Scalars['String']>,
@@ -265,6 +266,10 @@ export type Metre = Document & {
   _updatedAt?: Maybe<Scalars['Date']>,
   metre?: Maybe<Scalars['String']>,
   tunes?: Maybe<Array<Maybe<Tune>>>,
+};
+
+export type MetreIn = {
+  in?: Maybe<Array<Maybe<Scalars['String']>>>,
 };
 
 export enum MetreSortBy {
@@ -543,12 +548,13 @@ export type SearchInput = {
   textContains?: Maybe<Scalars['String']>,
   book?: Maybe<EnumHymnBook>,
   occasion?: Maybe<Scalars['String']>,
+  tune?: Maybe<Scalars['String']>,
   keywords?: Maybe<Array<Maybe<Scalars['String']>>>,
   _operators?: Maybe<SearchInputOperator>,
 };
 
 export type SearchInputOperator = {
-  tune?: Maybe<TuneIn>,
+  metre?: Maybe<MetreIn>,
 };
 
 export type SearchResult = Hymn | Prayer | Liturgy | Scripture;
@@ -565,12 +571,8 @@ export type Tune = Document & {
   title?: Maybe<Scalars['String']>,
   metre?: Maybe<Metre>,
   composer?: Maybe<Author>,
-  files?: Maybe<Array<Maybe<Asset>>>,
+  file?: Maybe<Asset>,
   musicCopyright?: Maybe<Copyright>,
-};
-
-export type TuneIn = {
-  in?: Maybe<Array<Maybe<Scalars['String']>>>,
 };
 
 export enum TuneSortBy {
@@ -618,7 +620,8 @@ export type AddShortListItemMutation = (
 
 export type AdvancedSearchQueryVariables = {
   title?: Maybe<Scalars['String']>,
-  tunes?: Maybe<Array<Maybe<Scalars['String']>>>,
+  tune?: Maybe<Scalars['String']>,
+  metres?: Maybe<Array<Maybe<Scalars['String']>>>,
   occasion?: Maybe<Scalars['String']>,
   keywords?: Maybe<Array<Maybe<Scalars['String']>>>,
   book?: Maybe<EnumHymnBook>
@@ -717,10 +720,6 @@ export type FindMetreQuery = (
   & { metreMany: Maybe<Array<Maybe<(
     { __typename?: 'Metre' }
     & Pick<Metre, '_id' | 'metre'>
-    & { tunes: Maybe<Array<Maybe<(
-      { __typename?: 'Tune' }
-      & Pick<Tune, '_id'>
-    )>>> }
   )>>> }
 );
 
@@ -775,7 +774,14 @@ export type FindOneHymnQuery = (
     )>, author: Maybe<(
       { __typename?: 'Author' }
       & Pick<Author, '_id' | 'dates' | 'name'>
-    )>, tune: Maybe<(
+    )>, alternateTunes: Maybe<Array<Maybe<(
+      { __typename?: 'Tune' }
+      & Pick<Tune, '_id' | '_type' | 'title'>
+      & { file: Maybe<(
+        { __typename?: 'Asset' }
+        & Pick<Asset, '_id' | '_type' | 'name'>
+      )> }
+    )>>>, tune: Maybe<(
       { __typename?: 'Tune' }
       & Pick<Tune, 'title'>
       & { musicCopyright: Maybe<(
@@ -787,10 +793,13 @@ export type FindOneHymnQuery = (
       )>, metre: Maybe<(
         { __typename?: 'Metre' }
         & Pick<Metre, 'metre'>
+      )>, file: Maybe<(
+        { __typename?: 'Asset' }
+        & Pick<Asset, '_id' | '_type' | 'name'>
       )> }
     )>, files: Maybe<Array<Maybe<(
       { __typename?: 'Asset' }
-      & Pick<Asset, '_id' | 'file'>
+      & Pick<Asset, '_id' | '_type' | 'name'>
     )>>> }
   )> }
 );
@@ -1160,8 +1169,8 @@ export type AddShortListItemMutationHookResult = ReturnType<typeof useAddShortLi
 export type AddShortListItemMutationResult = ApolloReactCommon.MutationResult<AddShortListItemMutation>;
 export type AddShortListItemMutationOptions = ApolloReactCommon.BaseMutationOptions<AddShortListItemMutation, AddShortListItemMutationVariables>;
 export const AdvancedSearchDocument = gql`
-    query advancedSearch($title: String, $tunes: [String], $occasion: String, $keywords: [String], $book: EnumHymnBook) {
-  search(filter: {textContains: $title, book: $book, occasion: $occasion, keywords: $keywords, _operators: {tune: {in: $tunes}}}) {
+    query advancedSearch($title: String, $tune: String, $metres: [String], $occasion: String, $keywords: [String], $book: EnumHymnBook) {
+  search(filter: {textContains: $title, book: $book, tune: $tune, occasion: $occasion, keywords: $keywords, _operators: {metre: {in: $metres}}}) {
     ... on Document {
       _id
       _type
@@ -1207,7 +1216,8 @@ export const AdvancedSearchDocument = gql`
  * const { data, loading, error } = useAdvancedSearchQuery({
  *   variables: {
  *      title: // value for 'title'
- *      tunes: // value for 'tunes'
+ *      tune: // value for 'tune'
+ *      metres: // value for 'metres'
  *      occasion: // value for 'occasion'
  *      keywords: // value for 'keywords'
  *      book: // value for 'book'
@@ -1341,9 +1351,6 @@ export const FindMetreDocument = gql`
   metreMany(filter: {textContains: $metre}, limit: $limit, skip: $skip, sort: metre_ASC) {
     _id
     metre
-    tunes {
-      _id
-    }
   }
 }
     `;
@@ -1474,6 +1481,16 @@ export const FindOneHymnDocument = gql`
       dates
       name
     }
+    alternateTunes {
+      _id
+      _type
+      title
+      file {
+        _id
+        _type
+        name
+      }
+    }
     tune {
       title
       musicCopyright {
@@ -1486,10 +1503,16 @@ export const FindOneHymnDocument = gql`
       metre {
         metre
       }
+      file {
+        _id
+        _type
+        name
+      }
     }
     files {
       _id
-      file
+      _type
+      name
     }
   }
 }

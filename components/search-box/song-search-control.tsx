@@ -27,7 +27,7 @@ type State = AdvancedSearchProps['search'] & {
 type Action = {
   type: 'search';
   fields: {
-    hymnMetres?: unknown[];
+    hymnMetres?: Array<{value: string}>;
     passage?: {value: string};
     occasion?: {value: string};
     tune?: {value: string};
@@ -43,14 +43,15 @@ const initialState = {
 
 function reducer(state: State, action: Action): State {
   let keywords: string[];
-  let tunes: string[];
+  let metres: string[];
+  let tune: string;
   let book: string;
   let occasion: string;
 
   switch (action.type) {
     case 'search':
       if (action.fields.hymnMetres && action.fields.hymnMetres.length > 0) {
-        tunes = action.fields.hymnMetres.flatMap(({tunes}) => tunes);
+        metres = action.fields.hymnMetres.map(metre => metre.value);
       }
 
       if (action.fields.passage) {
@@ -62,11 +63,7 @@ function reducer(state: State, action: Action): State {
       }
 
       if (action.fields.tune) {
-        if (tunes) {
-          tunes.push(action.fields.tune.value);
-        } else {
-          tunes = [action.fields.tune.value];
-        }
+        tune = action.fields.tune.value;
       }
 
       if (action.fields.keyword) {
@@ -80,7 +77,8 @@ function reducer(state: State, action: Action): State {
             ...action.fields,
             occasion,
             book,
-            tunes,
+            tune,
+            metres,
             keywords
           },
           identity

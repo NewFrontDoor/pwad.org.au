@@ -10,9 +10,6 @@ export default gql`
     ) {
       _id
       metre
-      tunes {
-        _id
-      }
     }
   }
 `;

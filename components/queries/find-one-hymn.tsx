@@ -16,6 +16,16 @@ export default gql`
         dates
         name
       }
+      alternateTunes {
+        _id
+        _type
+        title
+        file {
+          _id
+          _type
+          name
+        }
+      }
       tune {
         title
         musicCopyright {
@@ -28,10 +38,16 @@ export default gql`
         metre {
           metre
         }
+        file {
+          _id
+          _type
+          name
+        }
       }
       files {
         _id
-        file
+        _type
+        name
       }
     }
   }

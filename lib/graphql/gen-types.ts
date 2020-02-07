@@ -174,6 +174,7 @@ export type Hymn = Document & {
   hymnNumber?: Maybe<Scalars['Int']>,
   content?: Maybe<Scalars['JSON']>,
   tune?: Maybe<Tune>,
+  alternateTunes?: Maybe<Array<Maybe<Tune>>>,
   book?: Maybe<Scalars['String']>,
   chapter?: Maybe<Scalars['Int']>,
   chapterVerse?: Maybe<Scalars['String']>,
@@ -265,6 +266,10 @@ export type Metre = Document & {
   _updatedAt?: Maybe<Scalars['Date']>,
   metre?: Maybe<Scalars['String']>,
   tunes?: Maybe<Array<Maybe<Tune>>>,
+};
+
+export type MetreIn = {
+  in?: Maybe<Array<Maybe<Scalars['String']>>>,
 };
 
 export enum MetreSortBy {
@@ -543,12 +548,13 @@ export type SearchInput = {
   textContains?: Maybe<Scalars['String']>,
   book?: Maybe<EnumHymnBook>,
   occasion?: Maybe<Scalars['String']>,
+  tune?: Maybe<Scalars['String']>,
   keywords?: Maybe<Array<Maybe<Scalars['String']>>>,
   _operators?: Maybe<SearchInputOperator>,
 };
 
 export type SearchInputOperator = {
-  tune?: Maybe<TuneIn>,
+  metre?: Maybe<MetreIn>,
 };
 
 export type SearchResult = Hymn | Prayer | Liturgy | Scripture;
@@ -565,12 +571,8 @@ export type Tune = Document & {
   title?: Maybe<Scalars['String']>,
   metre?: Maybe<Metre>,
   composer?: Maybe<Author>,
-  files?: Maybe<Array<Maybe<Asset>>>,
+  file?: Maybe<Asset>,
   musicCopyright?: Maybe<Copyright>,
-};
-
-export type TuneIn = {
-  in?: Maybe<Array<Maybe<Scalars['String']>>>,
 };
 
 export enum TuneSortBy {
@@ -703,7 +705,7 @@ export type ResolversTypes = {
   SearchInput: ResolverTypeWrapper<any>,
   EnumHymnBook: ResolverTypeWrapper<any>,
   SearchInputOperator: ResolverTypeWrapper<any>,
-  TuneIn: ResolverTypeWrapper<any>,
+  MetreIn: ResolverTypeWrapper<any>,
   KeywordSortBy: ResolverTypeWrapper<any>,
   TuneSortBy: ResolverTypeWrapper<any>,
   MetreSortBy: ResolverTypeWrapper<any>,
@@ -753,7 +755,7 @@ export type ResolversParentTypes = {
   SearchInput: any,
   EnumHymnBook: any,
   SearchInputOperator: any,
-  TuneIn: any,
+  MetreIn: any,
   KeywordSortBy: any,
   TuneSortBy: any,
   MetreSortBy: any,
@@ -855,6 +857,7 @@ export type HymnResolvers<ContextType = Context, ParentType extends ResolversPar
   hymnNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
   content?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>,
   tune?: Resolver<Maybe<ResolversTypes['Tune']>, ParentType, ContextType>,
+  alternateTunes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tune']>>>, ParentType, ContextType>,
   book?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   chapter?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
   chapterVerse?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
@@ -1103,7 +1106,7 @@ export type TuneResolvers<ContextType = Context, ParentType extends ResolversPar
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   metre?: Resolver<Maybe<ResolversTypes['Metre']>, ParentType, ContextType>,
   composer?: Resolver<Maybe<ResolversTypes['Author']>, ParentType, ContextType>,
-  files?: Resolver<Maybe<Array<Maybe<ResolversTypes['Asset']>>>, ParentType, ContextType>,
+  file?: Resolver<Maybe<ResolversTypes['Asset']>, ParentType, ContextType>,
   musicCopyright?: Resolver<Maybe<ResolversTypes['Copyright']>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn,
 };

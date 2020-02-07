@@ -13,7 +13,7 @@ import {defineAbilitiesFor} from '../../../lib/abilities';
 
 import BlockContent from '../../../components/block-content';
 import PageLayout from '../../../components/page-layout';
-import Link, {authorLinkProps} from '../../../components/link';
+import Link, {authorLinkProps, assetLinkProps} from '../../../components/link';
 import ShortListButton from '../../../components/shortlist-button';
 import {Author, useFindOneHymnQuery} from '../../../components/queries';
 
@@ -43,10 +43,28 @@ type SongProps = {
 
 const Song: NextPage<SongProps> = ({id}) => {
   const {data} = useFindOneHymnQuery({variables: {id}});
-  const {author, hymnNumber, content, title, tune, copyright, scripture} =
-    data?.hymnById ?? {};
+  const {
+    author,
+    hymnNumber,
+    content,
+    title,
+    tune,
+    alternateTunes,
+    copyright,
+    scripture
+  } = data?.hymnById ?? {};
 
-  const files = [];
+  let files = data?.hymnById?.files || [];
+
+  if (tune?.file) {
+    files = files.concat(tune.file);
+  }
+
+  if (alternateTunes) {
+    files = files.concat(alternateTunes.map(x => x.file));
+  }
+
+  files = files.filter(Boolean);
 
   return (
     <PageLayout>
@@ -65,12 +83,10 @@ const Song: NextPage<SongProps> = ({id}) => {
             <>
               <Styled.h3>Files</Styled.h3>
               <Styled.ul>
-                {files.map(({_id, file}) => (
-                  <li key={_id}>
-                    <Link href={file.url} isInternal={false}>
-                      {file.filename}
-                    </Link>{' '}
-                    ({prettyBytes(file.size)})
+                {files.map(file => (
+                  <li key={file._id}>
+                    <Link {...assetLinkProps(file)} />(
+                    {prettyBytes(file.size || 0)})
                   </li>
                 ))}
               </Styled.ul>

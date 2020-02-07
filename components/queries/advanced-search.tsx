@@ -3,7 +3,8 @@ import gql from 'graphql-tag';
 export default gql`
   query advancedSearch(
     $title: String
-    $tunes: [String]
+    $tune: String
+    $metres: [String]
     $occasion: String
     $keywords: [String]
     $book: EnumHymnBook
@@ -12,9 +13,10 @@ export default gql`
       filter: {
         textContains: $title
         book: $book
+        tune: $tune
         occasion: $occasion
         keywords: $keywords
-        _operators: {tune: {in: $tunes}}
+        _operators: {metre: {in: $metres}}
       }
     ) {
       ... on Document {

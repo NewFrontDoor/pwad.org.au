@@ -37,10 +37,9 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
     options = [];
   } else {
     options =
-      data?.metreMany.map(({_id, metre, tunes}) => ({
+      data?.metreMany.map(({_id, metre}) => ({
         label: metre,
-        value: _id,
-        tunes: tunes?.map(({_id}) => _id) ?? []
+        value: _id
       })) ?? [];
   }
 

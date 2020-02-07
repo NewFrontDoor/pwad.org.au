@@ -23,9 +23,7 @@ export async function findMany(
     query = query.concat(['[metre match $filter]']);
   }
 
-  query = query.concat([
-    '{_id, metre, "tunes": *[_type=="tune" && references(^._id)]{_id,title}}'
-  ]);
+  query = query.concat(['{_id, metre}']);
 
   return sanity.fetch(query.join('|'), {filter: `${filter.textContains}*`});
 }

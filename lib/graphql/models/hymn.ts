@@ -8,6 +8,7 @@ export async function getById(id: string): Promise<Hymn> {
         `[_type == "hymn" && _id == $id][0]{
     _id,
     author->{_id,name,dates},
+    file->{_id,_type,file,name},
     hymnNumber,
     content,
     title,
@@ -15,11 +16,44 @@ export async function getById(id: string): Promise<Hymn> {
     chapter,
     chapterVerse,
     tune->{
-      title,metre->{metre},
-      musicCopyright->{name},
-      composer->{_id,name,dates}
+      title,
+      metre->{
+        _id,
+        _type,
+        metre
+      },
+      musicCopyright->{
+        _id,
+        _type,
+        name
+      },
+      composer->{
+        _id,
+        _type,
+        name,
+        dates
+      },
+      file->{
+        _id,
+        _type,
+        file,
+        name
+      }
     },
-    wordsCopyright->{name},
+    wordsCopyright->{
+      name
+    },
+    "alternateTunes": *[_type=="tune" && metre._ref == ^.tune->metre._ref]{
+      _id,
+      _type,
+      title,
+      file->{
+        _id,
+        _type,
+        file,
+        name
+      }
+    }
   }`
       ])
       .join('|'),
@@ -31,6 +65,7 @@ export async function getById(id: string): Promise<Hymn> {
 
 export async function search({
   book,
+  tune,
   keywords,
   occasion,
   textContains,
@@ -53,6 +88,11 @@ export async function search({
   if (occasion) {
     variables.occasion = occasion;
     query = query.concat(['[occasion == $occasion]']);
+  }
+
+  if (_operators?.metre?.in) {
+    variables.metres = _operators.metre.in;
+    query = query.concat(['[tune->metre._ref in $metres]']);
   }
 
   query = query.concat([
