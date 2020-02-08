@@ -72,6 +72,45 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
               background: theme.colors.background
             }}
           >
+            {isMedium && (
+              <Flex
+                as="ul"
+                sx={{
+                  width: '75%',
+                  margin: 'auto',
+                  justifyContent: 'space-between',
+                  flex: '1 0 0%',
+                  flexDirection: ['column', 'column', 'row'],
+                  listStyle: 'none',
+                  padding: 0
+                }}
+              >
+                {menuItems.map(({_key, text}) => (
+                  <Styled.li
+                    key={_key}
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      letterSpacing: '1px',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    <Button
+                      variant="transparent"
+                      sx={{
+                        letterSpacing: '1px',
+                        textTransform: 'uppercase'
+                      }}
+                      onClick={() => {
+                        setSelectedMenu(text);
+                      }}
+                    >
+                      {text}
+                    </Button>
+                  </Styled.li>
+                ))}
+              </Flex>
+            )}
             <Box sx={{color: 'text'}}>
               {isMedium ? (
                 menuItems && (
