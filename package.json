@@ -23,13 +23,13 @@
   },
   "homepage": "https://github.com/Vision100IT/pwad.org.au#readme",
   "devDependencies": {
-    "@graphql-codegen/add": "^1.11.2",
-    "@graphql-codegen/cli": "^1.11.2",
-    "@graphql-codegen/fragment-matcher": "^1.11.2",
-    "@graphql-codegen/typescript": "^1.11.2",
-    "@graphql-codegen/typescript-operations": "^1.11.2",
-    "@graphql-codegen/typescript-react-apollo": "^1.11.2",
-    "@graphql-codegen/typescript-resolvers": "^1.11.2",
+    "@graphql-codegen/add": "^1.12.2",
+    "@graphql-codegen/cli": "^1.12.2",
+    "@graphql-codegen/fragment-matcher": "^1.12.2",
+    "@graphql-codegen/typescript": "^1.12.2",
+    "@graphql-codegen/typescript-operations": "^1.12.2",
+    "@graphql-codegen/typescript-react-apollo": "^1.12.2",
+    "@graphql-codegen/typescript-resolvers": "^1.12.2",
     "@types/auth0": "^2.20.0",
     "@types/lodash": "^4.14.149",
     "@types/react": "^16.9.19",
@@ -119,7 +119,10 @@
     "prettier": true,
     "overrides": [
       {
-        "files": ["**/*.ts", "**/*.tsx"],
+        "files": [
+          "**/*.ts",
+          "**/*.tsx"
+        ],
         "extends": [
           "xo-react",
           "xo-typescript/space"

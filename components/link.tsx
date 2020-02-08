@@ -61,7 +61,7 @@ export function authorLinkProps({_id, name, dates}: Author): LinkProps {
   return {
     as: `/author/${_id}/${String(kebabCase(name))}`,
     href: '/author/[id]/[name]',
-    children: `${name} ${dates && `(${dates})`}`
+    children: dates ? `${name} (${dates})` : name
   };
 }
 
