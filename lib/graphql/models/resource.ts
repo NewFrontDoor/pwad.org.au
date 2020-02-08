@@ -6,7 +6,7 @@ const allResourcesQuery = ['*']
     '[_type in ["hymn", "prayer", "liturgy"] && (title match $search || keywords[]->name match $search)]',
     '[!(_id in path("drafts.**"))]',
     `{
-      _id, _type, title, lyrics, content[0..1], keywords[]->{_id, name}
+      _id, _type, title, lyrics, hymnNumber, content[0..1], keywords[]->{_id, name}
     }`
   ])
   .join('|');

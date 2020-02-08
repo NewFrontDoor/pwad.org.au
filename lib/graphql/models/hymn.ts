@@ -115,7 +115,7 @@ export async function search({
   }
 
   query = query.concat([
-    '{_id, _type, title, content[0...1], keywords[]->{_id,name}}'
+    '{_id, _type, title, hymnNumber, content[0...1], keywords[]->{_id,name}}'
   ]);
 
   return sanity.fetch(query.join('|'), variables);

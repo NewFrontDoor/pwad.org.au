@@ -4,9 +4,13 @@ import {jsx, Flex, Box, Styled, Button} from 'theme-ui';
 import PropTypes from 'prop-types';
 import NextLink from 'next/link';
 import kebabCase from 'lodash/kebabCase';
-import {SearchResult} from '../queries';
+import {Hymn, SearchResult} from '../queries';
 import Link, {keywordLinkProps} from '../link';
 import ShortListButton from '../shortlist-button';
+
+function isHymn(result: SearchResult): result is Hymn {
+  return result._type === 'hymn';
+}
 
 const SearchResultList: FC<SearchResult> = props => {
   const {_id, _type, title, keywords, content} = props;
@@ -22,7 +26,7 @@ const SearchResultList: FC<SearchResult> = props => {
           as={`/${_type}/${_id}/${String(kebabCase(title))}`}
           href={`/${_type}/[id]/[name]`}
         >
-          {title}
+          {isHymn(props) ? `${props.hymnNumber}. ${title}` : title}
         </Link>{' '}
       </Styled.h4>
       {content && (
@@ -82,12 +86,14 @@ SearchResultList.propTypes = {
   _type: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   content: PropTypes.any,
-  keywords: PropTypes.any
+  keywords: PropTypes.any,
+  hymnNumber: PropTypes.number
 };
 
 SearchResultList.defaultProps = {
   content: null,
-  keywords: []
+  keywords: [],
+  hymnNumber: undefined
 };
 
 export default SearchResultList;

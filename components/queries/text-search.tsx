@@ -10,6 +10,7 @@ export default gql`
       ... on Hymn {
         title
         content
+        hymnNumber
         keywords {
           _id
           name

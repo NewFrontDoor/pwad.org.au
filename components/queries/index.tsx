@@ -634,7 +634,7 @@ export type AdvancedSearchQuery = (
   { __typename?: 'Query' }
   & { search: Maybe<Array<Maybe<(
     { __typename?: 'Hymn' }
-    & Pick<Hymn, '_id' | '_type' | 'title' | 'content'>
+    & Pick<Hymn, '_id' | '_type' | 'title' | 'content' | 'hymnNumber'>
     & { keywords: Maybe<Array<Maybe<(
       { __typename?: 'Keyword' }
       & Pick<Keyword, '_id' | 'name'>
@@ -1096,7 +1096,7 @@ export type TextSearchQuery = (
   { __typename?: 'Query' }
   & { textSearch: Maybe<Array<Maybe<(
     { __typename?: 'Hymn' }
-    & Pick<Hymn, '_id' | '_type' | 'title' | 'content'>
+    & Pick<Hymn, '_id' | '_type' | 'title' | 'content' | 'hymnNumber'>
     & { keywords: Maybe<Array<Maybe<(
       { __typename?: 'Keyword' }
       & Pick<Keyword, '_id' | 'name'>
@@ -1180,6 +1180,7 @@ export const AdvancedSearchDocument = gql`
     ... on Hymn {
       title
       content
+      hymnNumber
       keywords {
         _id
         name
@@ -2161,6 +2162,7 @@ export const TextSearchDocument = gql`
     ... on Hymn {
       title
       content
+      hymnNumber
       keywords {
         _id
         name

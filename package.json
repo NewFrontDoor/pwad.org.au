@@ -107,10 +107,7 @@
   },
   "browserslist": {
     "production": [
-      "last 1 version",
-      "> 1%",
-      "node 8",
-      "not dead"
+      "defaults"
     ],
     "development": [
       "last 1 chrome version",
@@ -120,16 +117,14 @@
   "xo": {
     "space": true,
     "prettier": true,
-    "extends": [
-      "xo-react",
-      "xo-typescript/space"
-    ],
-    "extensions": [
-      "ts",
-      "tsx",
-      "js"
-    ],
     "overrides": [
+      {
+        "files": ["**/*.ts", "**/*.tsx"],
+        "extends": [
+          "xo-react",
+          "xo-typescript/space"
+        ]
+      },
       {
         "files": "components/**/*.tsx",
         "envs": [
