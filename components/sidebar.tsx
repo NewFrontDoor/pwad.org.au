@@ -26,7 +26,7 @@ Composer.defaultProps = {
   name: undefined
 };
 
-const SidebarFiles: FC<{file: string; files: Array; alternateTunes: Array}> = ({
+export const SidebarFiles: FC<{file: string; files: Array; alternateTunes: Array}> = ({
   file,
   files: fileList,
   alternateTunes
@@ -70,11 +70,11 @@ SidebarFiles.propTypes = {
 
 SidebarFiles.defaultProps = {
   alternateTunes: [],
-  file: null,
+  file: undefined,
   files: []
 };
 
-const SidebarAuthor: FC<Author> = props => {
+export const SidebarAuthor: FC<Author> = props => {
   return (
     <>
       <Styled.h3>Hymn Author</Styled.h3>
@@ -85,7 +85,7 @@ const SidebarAuthor: FC<Author> = props => {
   );
 };
 
-const SidebarScripture: FC<{scripture: string}> = ({scripture}) => {
+export const SidebarScripture: FC<{scripture: string}> = ({scripture}) => {
   return (
     <>
       <Styled.h3>Scripture</Styled.h3>
@@ -99,10 +99,10 @@ SidebarScripture.propTypes = {
 };
 
 SidebarScripture.defaultProps = {
-  scripture: null
+  scripture: undefined
 };
 
-const SidebarTune: FC<Tune> = ({composer, metre}) => {
+export const SidebarTune: FC<Tune> = ({composer, metre}) => {
   return (
     <>
       <Styled.h3>Tune Composer</Styled.h3>
@@ -125,11 +125,11 @@ SidebarTune.propTypes = {
 };
 
 SidebarTune.defaultProps = {
-  composer: null,
+  composer: undefined,
   metre: {}
 };
 
-const SidebarCopyright: FC<Copyright> = ({name}) => {
+export const SidebarCopyright: FC<Copyright> = ({name}) => {
   return (
     <>
       <Styled.h3>Copyright (words)</Styled.h3>
@@ -143,14 +143,14 @@ SidebarCopyright.propTypes = {
 };
 
 SidebarCopyright.defaultProps = {
-  name: 'Public Domain'
+  name: undefined
 };
 
-const SidebarMusicCopyright: FC<Tune> = ({musicCopyright}) => {
+export const SidebarMusicCopyright: FC<Tune> = props => {
   return (
     <>
       <Styled.h3>Copyright (music)</Styled.h3>
-      <Styled.p>{musicCopyright.name || '-'}</Styled.p>
+      <Styled.p>{props?.musicCopyright.name || '-'}</Styled.p>
     </>
   );
 };
@@ -162,27 +162,19 @@ SidebarMusicCopyright.propTypes = {
 };
 
 SidebarMusicCopyright.defaultProps = {
-  musicCopyright: {}
+  musicCopyright: undefined
 };
 
-const Sidebar = ({children}) => {
+const Sidebar: FC = ({children}) => {
   return <Box sx={{marginRight: '40px'}}>{children}</Box>;
 };
 
 Sidebar.propTypes = {
-  children: PropTypes.any
+  children: PropTypes.node
 };
 
 Sidebar.defaultProps = {
-  children: null
+  children: undefined
 };
 
 export default Sidebar;
-export {
-  SidebarAuthor,
-  SidebarCopyright,
-  SidebarFiles,
-  SidebarMusicCopyright,
-  SidebarScripture,
-  SidebarTune
-};
