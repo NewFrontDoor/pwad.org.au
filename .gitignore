@@ -1,5 +1,6 @@
 node_modules
 coverage
+config.json
 .next
 .nyc_output
 out
@@ -19,3 +20,5 @@ yarn-error.log*
 # secrets shh...
 .env*
 !.env.example
+
+.now

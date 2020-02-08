@@ -2,19 +2,33 @@ const {pipeline} = require('stream');
 const del = require('del');
 const dargs = require('dargs');
 const flatten = require('lodash/flatten');
-const {series, src, dest, parallel} = require('gulp');
+const {series, src, dest} = require('gulp');
+const execa = require('execa');
+const {Password} = require('enquirer');
 const gulpExeca = require('gulp-execa');
 const responsive = require('gulp-responsive');
-const execa = require('execa');
-const dotenv = require('dotenv');
+const {ManagementClient} = require('auth0');
+const Conf = require('conf');
 
+const {
+  loadKdbx,
+  saveKdbx,
+  readEntriesFromKdbx,
+  writeEntriesToKdbx
+} = require('./keypass');
 const now = require('./now.json');
 
-const config = dotenv.config();
+const config = new Conf({
+  cwd: '.',
+  defaults: {
+    keypassFile: 'path to your keybase file'
+  }
+});
 
-const env = Object.assign(now.env, config.parsed);
-
-let pinoColada;
+const prompt = new Password({
+  name: 'password',
+  message: 'What is the keybase password?'
+});
 
 function task(...args) {
   return gulpExeca.task(flatten(args).join(' '));
@@ -30,7 +44,6 @@ const mongo = task(
 );
 
 const x1 = {suffix: '@1x'};
-
 const x2 = {suffix: '@2x'};
 
 const mobileImageWidth = 512;
@@ -115,10 +128,80 @@ function cleanImages() {
   return del('static/banners');
 }
 
+async function setupEnv() {
+  const keypassFile = config.get('keypassFile');
+  console.log(keypassFile);
+  const password = await prompt.run();
+  const db = await loadKdbx({
+    password,
+    keypassFile
+  });
+  return readEntriesFromKdbx(db);
+}
+
+async function updateEnv() {
+  const keypassFile = config.get('keypassFile');
+  const password = await prompt.run();
+  const db = await loadKdbx({
+    password,
+    keypassFile
+  });
+  await writeEntriesToKdbx(db);
+  await saveKdbx({
+    db,
+    keypassFile
+  });
+}
+
+function isSecret(value) {
+  return value.startsWith('@');
+}
+
+async function updateNowEnv() {
+  const {env} = now;
+
+  for await (const [key, secret] of Object.entries(env)) {
+    if (isSecret(secret)) {
+      const newKey = secret.replace('@', '');
+      const newValue = config.parsed[key];
+      console.log(secret, newValue);
+
+      await execa('now', ['secrets', 'add', newKey, newValue]);
+    }
+  }
+}
+
+async function copyAppMetadata() {
+  const management = new ManagementClient({
+    domain: process.env.AUTH0_DOMAIN,
+    clientId: process.env.AUTH0_CLIENT_ID,
+    clientSecret: process.env.AUTH0_CLIENT_SECRET,
+    scope: 'read:users update:users update:users_app_metadata'
+  });
+
+  const email = '';
+
+  const users = await management.getUsersByEmail(email);
+
+  const dbUser = users.find(user => user.user_id.startsWith('auth0'));
+  const googleUser = users.find(user =>
+    user.user_id.startsWith('google-oauth2')
+  );
+
+  console.log({dbUser, googleUser});
+
+  if (dbUser.app_metadata) {
+    await management.updateAppMetadata(
+      {id: googleUser.user_id},
+      dbUser.app_metadata
+    );
+  }
+}
+
 const prodDump = task(
   'mongodump',
   dargs({
-    uri: env.MONGO_URI
+    uri: process.env.MONGO_URI
   })
 );
 
@@ -144,8 +227,9 @@ exports.devRestore = devRestore;
 
 exports.prodcopy = series(prodDump, devRestore);
 
-exports.compose = parallel(mongo, server);
-
 exports.images = series(cleanImages, images);
 
-exports.default = server;
+exports.copyAppMetadata = copyAppMetadata;
+exports.updateNowEnv = updateNowEnv;
+exports.setupEnv = series(setupEnv);
+exports.updateEnv = series(updateEnv);
