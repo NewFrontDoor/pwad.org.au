@@ -132,10 +132,7 @@
         ]
       },
       {
-        "files": [
-          "src/**/*.tsx",
-          "src/**/*.ts"
-        ],
+        "files": "src/**/*.tsx",
         "envs": [
           "browser"
         ]
