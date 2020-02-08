@@ -36,7 +36,7 @@ const Song: NextPage<SongProps> = ({id}) => {
           gap: '2em'
         }}
       >
-        <Sidebar {...data?.hymnById} data={data} />
+        <Box>{data?.hymnById && <Sidebar {...data.hymnById} />}</Box>
         <Box sx={{width: '100%'}}>
           <Styled.h2>
             <ShortListButton itemId={data?.hymnById._id} />

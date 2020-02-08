@@ -1,10 +1,10 @@
 /** @jsx jsx */
-import {FC} from 'react';
-import {jsx, Box, Styled} from 'theme-ui';
+import React, {FC} from 'react';
+import {jsx, Styled} from 'theme-ui';
 import PropTypes from 'prop-types';
 import prettyBytes from 'pretty-bytes';
 import Link, {authorLinkProps, assetLinkProps} from './link';
-import {Author} from './queries';
+import {Author, SearchResult} from './queries';
 
 const Composer: FC<Author> = props => {
   if (props.name) {
@@ -26,25 +26,15 @@ Composer.defaultProps = {
   name: undefined
 };
 
-type SidebarProps = {
-  files?: Array;
-  author?: any;
-  scripture?: String;
-  tune?: Object;
-  alternateTunes?: Array;
-  copyright?: Object;
-  data?: Object;
-};
-
-const Sidebar: FC<SidebarProps> = ({
+const Sidebar: FC<SearchResult> = ({
   author,
   scripture,
   tune,
   copyright,
   alternateTunes,
-  data
+  files: fileList
 }) => {
-  let files = data?.hymnById?.files || [];
+  let files = fileList || [];
 
   if (tune?.file) {
     files = files.concat(tune.file);
@@ -57,7 +47,7 @@ const Sidebar: FC<SidebarProps> = ({
   files = files.filter(Boolean);
 
   return (
-    <Box>
+    <>
       {files.length > 0 && (
         <>
           <Styled.h3>Files</Styled.h3>
@@ -119,7 +109,7 @@ const Sidebar: FC<SidebarProps> = ({
           <Styled.p>{tune.musicCopyright.name || '-'}</Styled.p>
         </>
       )}
-    </Box>
+    </>
   );
 };
 
@@ -128,7 +118,6 @@ Sidebar.propTypes = {
   author: PropTypes.object,
   scripture: PropTypes.string,
   alternateTunes: PropTypes.array,
-  data: PropTypes.object,
   tune: PropTypes.shape({
     file: PropTypes.string,
     composer: PropTypes.string,
@@ -145,7 +134,6 @@ Sidebar.defaultProps = {
   author: {},
   scripture: null,
   alternateTunes: [],
-  data: {},
   tune: {},
   copyright: {}
 };
