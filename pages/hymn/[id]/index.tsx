@@ -37,7 +37,18 @@ const Song: NextPage<SongProps> = ({id}) => {
         }}
       >
         <Box sx={{marginRight: '40px'}}>
-          {data?.hymnById && <Sidebar {...data.hymnById} />}
+        <Sidebar>
+          {data?.hymnById && (
+            <>
+              {files.length > 0 && <SidebarFiles files={files} />}
+              {author && <SidebarAuthor {...author} />}
+              {scripture && <SidebarScripture scripture={scripture} />}
+              {tune && <SidebarTune {...tune} />}
+              {copyright && <SidebarCopyright {...copyright} />}
+              {tune?.musicCopyright && <SidebarMusicCopyright {...tune} />}
+            </>
+          )}
+        </Sidebar>
         </Box>
         <Box>
           <Styled.h2>
