@@ -7,6 +7,7 @@ export default gql`
       title
       hymnNumber
       copyright {
+        _id
         name
       }
       content
@@ -29,8 +30,10 @@ export default gql`
         }
       }
       tune {
+        _id
         title
         musicCopyright {
+          _id
           name
         }
         composer {
@@ -38,6 +41,7 @@ export default gql`
           name
         }
         metre {
+          _id
           metre
         }
         file {

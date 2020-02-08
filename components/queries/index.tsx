@@ -772,7 +772,7 @@ export type FindOneHymnQuery = (
     & Pick<Hymn, '_id' | 'title' | 'hymnNumber' | 'content' | 'scripture'>
     & { copyright: Maybe<(
       { __typename?: 'Copyright' }
-      & Pick<Copyright, 'name'>
+      & Pick<Copyright, '_id' | 'name'>
     )>, author: Maybe<(
       { __typename?: 'Author' }
       & Pick<Author, '_id' | 'dates' | 'name'>
@@ -785,16 +785,16 @@ export type FindOneHymnQuery = (
       )> }
     )>>>, tune: Maybe<(
       { __typename?: 'Tune' }
-      & Pick<Tune, 'title'>
+      & Pick<Tune, '_id' | 'title'>
       & { musicCopyright: Maybe<(
         { __typename?: 'Copyright' }
-        & Pick<Copyright, 'name'>
+        & Pick<Copyright, '_id' | 'name'>
       )>, composer: Maybe<(
         { __typename?: 'Author' }
         & Pick<Author, '_id' | 'name'>
       )>, metre: Maybe<(
         { __typename?: 'Metre' }
-        & Pick<Metre, 'metre'>
+        & Pick<Metre, '_id' | 'metre'>
       )>, file: Maybe<(
         { __typename?: 'Asset' }
         & Pick<Asset, '_id' | '_type' | 'name' | 'size' | 'url'>
@@ -1475,6 +1475,7 @@ export const FindOneHymnDocument = gql`
     title
     hymnNumber
     copyright {
+      _id
       name
     }
     content
@@ -1497,8 +1498,10 @@ export const FindOneHymnDocument = gql`
       }
     }
     tune {
+      _id
       title
       musicCopyright {
+        _id
         name
       }
       composer {
@@ -1506,6 +1509,7 @@ export const FindOneHymnDocument = gql`
         name
       }
       metre {
+        _id
         metre
       }
       file {

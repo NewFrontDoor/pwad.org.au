@@ -22,6 +22,7 @@ export async function getById(id: string): Promise<Hymn> {
     chapter,
     chapterVerse,
     tune->{
+      _id,
       title,
       metre->{
         _id,
@@ -48,6 +49,7 @@ export async function getById(id: string): Promise<Hymn> {
       }
     },
     wordsCopyright->{
+      _id,
       name
     },
     "alternateTunes": *[_type=="tune" && references(^.tune->metre._ref) && _id!=^.tune->_id && !references('5d135379071bee16c4d7f422')]{

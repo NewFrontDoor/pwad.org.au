@@ -1,10 +1,10 @@
 /** @jsx jsx */
-import React, {FC} from 'react';
+import {FC} from 'react';
 import {jsx, Box, Styled} from 'theme-ui';
 import PropTypes from 'prop-types';
 import prettyBytes from 'pretty-bytes';
 import Link, {authorLinkProps, assetLinkProps} from './link';
-import {Author, Tune, Copyright} from './queries';
+import {Asset, Author, Tune, Copyright} from './queries';
 
 const Composer: FC<Author> = props => {
   if (props.name) {
@@ -45,14 +45,10 @@ export const SidebarFiles: FC<{files: Asset[]}> = ({files}) => (
 );
 
 SidebarFiles.propTypes = {
-  alternateTunes: PropTypes.array,
-  file: PropTypes.string,
   files: PropTypes.array
 };
 
 SidebarFiles.defaultProps = {
-  alternateTunes: [],
-  file: undefined,
   files: []
 };
 
@@ -102,10 +98,8 @@ export const SidebarTune: FC<Tune> = ({composer, metre}) => (
 );
 
 SidebarTune.propTypes = {
-  composer: PropTypes.object,
-  metre: PropTypes.shape({
-    metre: PropTypes.string
-  })
+  composer: PropTypes.any,
+  metre: PropTypes.any
 };
 
 SidebarTune.defaultProps = {
@@ -134,16 +128,6 @@ export const SidebarMusicCopyright: FC<Tune> = props => (
     <Styled.p>{props?.musicCopyright.name || '-'}</Styled.p>
   </>
 );
-
-SidebarMusicCopyright.propTypes = {
-  musicCopyright: PropTypes.shape({
-    name: PropTypes.string
-  })
-};
-
-SidebarMusicCopyright.defaultProps = {
-  musicCopyright: undefined
-};
 
 const Sidebar: FC = ({children}) => (
   <Box sx={{marginRight: '40px'}}>{children}</Box>
