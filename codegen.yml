@@ -8,8 +8,8 @@ generates:
       - add: /* eslint-disable */
       - typescript
       - typescript-resolvers
-  ./components/queries/index.tsx:
-    documents: ./components/queries/*.tsx
+  ./src/components/queries/index.tsx:
+    documents: ./src/components/queries/*.tsx
     plugins:
       - add: /* eslint-disable */
       - typescript
