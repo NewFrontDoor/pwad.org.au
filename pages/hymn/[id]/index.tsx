@@ -33,11 +33,13 @@ const Song: NextPage<SongProps> = ({id}) => {
         sx={{
           flexDirection: ['column-reverse', 'column-reverse', 'row'],
           // TODO: What should this value actually be?
-          gap: '2em'
+          justifyContent: 'flex-start'
         }}
       >
-        <Box>{data?.hymnById && <Sidebar {...data.hymnById} />}</Box>
-        <Box sx={{width: '100%'}}>
+        <Box sx={{marginRight: '40px'}}>
+          {data?.hymnById && <Sidebar {...data.hymnById} />}
+        </Box>
+        <Box>
           <Styled.h2>
             <ShortListButton itemId={data?.hymnById._id} />
             {hymnNumber}. {title}
