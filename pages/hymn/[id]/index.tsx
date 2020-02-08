@@ -14,7 +14,14 @@ import BlockContent from '../../../components/block-content';
 import PageLayout from '../../../components/page-layout';
 import ShortListButton from '../../../components/shortlist-button';
 import {useFindOneHymnQuery} from '../../../components/queries';
-import Sidebar from '../../../components/sidebar';
+import Sidebar, {
+  SidebarAuthor,
+  SidebarCopyright,
+  SidebarFiles,
+  SidebarMusicCopyright,
+  SidebarScripture,
+  SidebarTune
+} from '../../../components/sidebar';
 
 type SongProps = {
   id: string;
@@ -22,7 +29,28 @@ type SongProps = {
 
 const Song: NextPage<SongProps> = ({id}) => {
   const {data} = useFindOneHymnQuery({variables: {id}});
-  const {hymnNumber, content, title} = data?.hymnById ?? {};
+  const {
+    author,
+    hymnNumber,
+    content,
+    title,
+    tune,
+    alternateTunes,
+    copyright,
+    scripture
+  } = data?.hymnById ?? {};
+
+  let files = data?.hymnById?.files || [];
+
+  if (tune?.file) {
+    files = files.concat(tune.file);
+  }
+
+  if (alternateTunes) {
+    files = files.concat(alternateTunes.map(x => x.file));
+  }
+
+  files = files.filter(Boolean);
 
   return (
     <PageLayout>
@@ -37,18 +65,18 @@ const Song: NextPage<SongProps> = ({id}) => {
         }}
       >
         <Box sx={{marginRight: '40px'}}>
-        <Sidebar>
-          {data?.hymnById && (
-            <>
-              {files.length > 0 && <SidebarFiles files={files} />}
-              {author && <SidebarAuthor {...author} />}
-              {scripture && <SidebarScripture scripture={scripture} />}
-              {tune && <SidebarTune {...tune} />}
-              {copyright && <SidebarCopyright {...copyright} />}
-              {tune?.musicCopyright && <SidebarMusicCopyright {...tune} />}
-            </>
-          )}
-        </Sidebar>
+          <Sidebar>
+            {data?.hymnById && (
+              <>
+                {files.length > 0 && <SidebarFiles files={files} />}
+                {author && <SidebarAuthor {...author} />}
+                {scripture && <SidebarScripture scripture={scripture} />}
+                {tune && <SidebarTune {...tune} />}
+                {copyright && <SidebarCopyright {...copyright} />}
+                {tune?.musicCopyright && <SidebarMusicCopyright {...tune} />}
+              </>
+            )}
+          </Sidebar>
         </Box>
         <Box>
           <Styled.h2>

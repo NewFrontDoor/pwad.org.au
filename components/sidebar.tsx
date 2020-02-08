@@ -26,41 +26,23 @@ Composer.defaultProps = {
   name: undefined
 };
 
-export const SidebarFiles: FC<{
-  file: string;
-  files: Array;
-  alternateTunes: Array;
-}> = ({file, files: fileList, alternateTunes}) => {
-  let files = fileList || [];
-
-  if (file) {
-    files = files.concat(file);
-  }
-
-  if (alternateTunes) {
-    files = files.concat(alternateTunes.map(x => x.file));
-  }
-
-  files = files.filter(Boolean);
-
-  return (
-    <>
-      <Styled.h3>Files</Styled.h3>
-      <Styled.ul
-        sx={{
-          listStyle: 'none',
-          padding: 0
-        }}
-      >
-        {files.map(file => (
-          <li key={file._id}>
-            <Link {...assetLinkProps(file)} /> ({prettyBytes(file.size || 0)})
-          </li>
-        ))}
-      </Styled.ul>
-    </>
-  );
-};
+export const SidebarFiles: FC<{files: Asset[]}> = ({files}) => (
+  <>
+    <Styled.h3>Files</Styled.h3>
+    <Styled.ul
+      sx={{
+        listStyle: 'none',
+        padding: 0
+      }}
+    >
+      {files.map(file => (
+        <li key={file._id}>
+          <Link {...assetLinkProps(file)} /> ({prettyBytes(file.size || 0)})
+        </li>
+      ))}
+    </Styled.ul>
+  </>
+);
 
 SidebarFiles.propTypes = {
   alternateTunes: PropTypes.array,
@@ -74,16 +56,14 @@ SidebarFiles.defaultProps = {
   files: []
 };
 
-export const SidebarAuthor: FC<Author> = props => {
-  return (
-    <>
-      <Styled.h3>Hymn Author</Styled.h3>
-      <Styled.p>
-        <Link {...authorLinkProps(props)} />
-      </Styled.p>
-    </>
-  );
-};
+export const SidebarAuthor: FC<Author> = props => (
+  <>
+    <Styled.h3>Hymn Author</Styled.h3>
+    <Styled.p>
+      <Link {...authorLinkProps(props)} />
+    </Styled.p>
+  </>
+);
 
 SidebarAuthor.propTypes = {
   name: PropTypes.string
@@ -93,14 +73,12 @@ SidebarAuthor.defaultProps = {
   name: undefined
 };
 
-export const SidebarScripture: FC<{scripture: string}> = ({scripture}) => {
-  return (
-    <>
-      <Styled.h3>Scripture</Styled.h3>
-      <Styled.p>{scripture}</Styled.p>
-    </>
-  );
-};
+export const SidebarScripture: FC<{scripture: string}> = ({scripture}) => (
+  <>
+    <Styled.h3>Scripture</Styled.h3>
+    <Styled.p>{scripture}</Styled.p>
+  </>
+);
 
 SidebarScripture.propTypes = {
   scripture: PropTypes.string
@@ -110,20 +88,18 @@ SidebarScripture.defaultProps = {
   scripture: undefined
 };
 
-export const SidebarTune: FC<Tune> = ({composer, metre}) => {
-  return (
-    <>
-      <Styled.h3>Tune Composer</Styled.h3>
-      <Composer {...composer} />
-      {metre && (
-        <>
-          <Styled.h3>Metre</Styled.h3>
-          <Styled.p>{metre.metre}</Styled.p>
-        </>
-      )}
-    </>
-  );
-};
+export const SidebarTune: FC<Tune> = ({composer, metre}) => (
+  <>
+    <Styled.h3>Tune Composer</Styled.h3>
+    <Composer {...composer} />
+    {metre && (
+      <>
+        <Styled.h3>Metre</Styled.h3>
+        <Styled.p>{metre.metre}</Styled.p>
+      </>
+    )}
+  </>
+);
 
 SidebarTune.propTypes = {
   composer: PropTypes.object,
@@ -134,17 +110,15 @@ SidebarTune.propTypes = {
 
 SidebarTune.defaultProps = {
   composer: undefined,
-  metre: {}
+  metre: undefined
 };
 
-export const SidebarCopyright: FC<Copyright> = ({name}) => {
-  return (
-    <>
-      <Styled.h3>Copyright (words)</Styled.h3>
-      <Styled.p>{name || '-'}</Styled.p>
-    </>
-  );
-};
+export const SidebarCopyright: FC<Copyright> = ({name}) => (
+  <>
+    <Styled.h3>Copyright (words)</Styled.h3>
+    <Styled.p>{name || '-'}</Styled.p>
+  </>
+);
 
 SidebarCopyright.propTypes = {
   name: PropTypes.string
@@ -154,14 +128,12 @@ SidebarCopyright.defaultProps = {
   name: undefined
 };
 
-export const SidebarMusicCopyright: FC<Tune> = props => {
-  return (
-    <>
-      <Styled.h3>Copyright (music)</Styled.h3>
-      <Styled.p>{props?.musicCopyright.name || '-'}</Styled.p>
-    </>
-  );
-};
+export const SidebarMusicCopyright: FC<Tune> = props => (
+  <>
+    <Styled.h3>Copyright (music)</Styled.h3>
+    <Styled.p>{props?.musicCopyright.name || '-'}</Styled.p>
+  </>
+);
 
 SidebarMusicCopyright.propTypes = {
   musicCopyright: PropTypes.shape({
@@ -173,9 +145,9 @@ SidebarMusicCopyright.defaultProps = {
   musicCopyright: undefined
 };
 
-const Sidebar: FC = ({children}) => {
-  return <Box sx={{marginRight: '40px'}}>{children}</Box>;
-};
+const Sidebar: FC = ({children}) => (
+  <Box sx={{marginRight: '40px'}}>{children}</Box>
+);
 
 Sidebar.propTypes = {
   children: PropTypes.node
