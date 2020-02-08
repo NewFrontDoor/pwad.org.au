@@ -1,8 +1,9 @@
-import React, {FC} from 'react';
+/** @jsx jsx */
+import {FC} from 'react';
 import {NextPage} from 'next';
 import PropTypes from 'prop-types';
 import prettyBytes from 'pretty-bytes';
-import {Styled, Flex, Box} from 'theme-ui';
+import {jsx, Styled, Flex, Box} from 'theme-ui';
 
 import redirect from '../../../lib/redirect';
 import checkLoggedIn from '../../../lib/check-logged-in';
@@ -82,10 +83,15 @@ const Song: NextPage<SongProps> = ({id}) => {
           {files.length > 0 && (
             <>
               <Styled.h3>Files</Styled.h3>
-              <Styled.ul>
+              <Styled.ul
+                sx={{
+                  listStyle: 'none',
+                  padding: 0
+                }}
+              >
                 {files.map(file => (
                   <li key={file._id}>
-                    <Link {...assetLinkProps(file)} />(
+                    <Link {...assetLinkProps(file)} /> (
                     {prettyBytes(file.size || 0)})
                   </li>
                 ))}
