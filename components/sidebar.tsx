@@ -31,16 +31,31 @@ type SidebarProps = {
   author?: any;
   scripture?: String;
   tune?: Object;
+  alternateTunes?: Array;
   copyright?: Object;
+  data?: Object;
 };
 
 const Sidebar: FC<SidebarProps> = ({
-  files,
   author,
   scripture,
   tune,
-  copyright
+  copyright,
+  alternateTunes,
+  data
 }) => {
+  let files = data?.hymnById?.files || [];
+
+  if (tune?.file) {
+    files = files.concat(tune.file);
+  }
+
+  if (alternateTunes) {
+    files = files.concat(alternateTunes.map(x => x.file));
+  }
+
+  files = files.filter(Boolean);
+
   return (
     <Box>
       {files.length > 0 && (
@@ -112,7 +127,10 @@ Sidebar.propTypes = {
   files: PropTypes.array,
   author: PropTypes.object,
   scripture: PropTypes.string,
+  alternateTunes: PropTypes.array,
+  data: PropTypes.object,
   tune: PropTypes.shape({
+    file: PropTypes.string,
     composer: PropTypes.string,
     metre: PropTypes.object,
     musicCopyright: PropTypes.object
@@ -126,6 +144,8 @@ Sidebar.defaultProps = {
   files: [],
   author: {},
   scripture: null,
+  alternateTunes: [],
+  data: {},
   tune: {},
   copyright: {}
 };

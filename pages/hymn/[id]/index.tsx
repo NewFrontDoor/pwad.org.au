@@ -1,8 +1,6 @@
 /** @jsx jsx */
-import {FC} from 'react';
 import {NextPage} from 'next';
 import PropTypes from 'prop-types';
-import prettyBytes from 'pretty-bytes';
 import {jsx, Styled, Flex, Box} from 'theme-ui';
 
 import redirect from '../../../lib/redirect';
@@ -14,29 +12,9 @@ import {defineAbilitiesFor} from '../../../lib/abilities';
 
 import BlockContent from '../../../components/block-content';
 import PageLayout from '../../../components/page-layout';
-import Link, {authorLinkProps, assetLinkProps} from '../../../components/link';
 import ShortListButton from '../../../components/shortlist-button';
-import {Author, useFindOneHymnQuery} from '../../../components/queries';
-
-const Composer: FC<Author> = props => {
-  if (props.name) {
-    return (
-      <Styled.p>
-        <Link {...authorLinkProps(props)} />
-      </Styled.p>
-    );
-  }
-
-  return <Styled.p>No Composer</Styled.p>;
-};
-
-Composer.propTypes = {
-  name: PropTypes.string
-};
-
-Composer.defaultProps = {
-  name: undefined
-};
+import {useFindOneHymnQuery} from '../../../components/queries';
+import Sidebar from '../../../components/sidebar';
 
 type SongProps = {
   id: string;
@@ -44,28 +22,7 @@ type SongProps = {
 
 const Song: NextPage<SongProps> = ({id}) => {
   const {data} = useFindOneHymnQuery({variables: {id}});
-  const {
-    author,
-    hymnNumber,
-    content,
-    title,
-    tune,
-    alternateTunes,
-    copyright,
-    scripture
-  } = data?.hymnById ?? {};
-
-  let files = data?.hymnById?.files || [];
-
-  if (tune?.file) {
-    files = files.concat(tune.file);
-  }
-
-  if (alternateTunes) {
-    files = files.concat(alternateTunes.map(x => x.file));
-  }
-
-  files = files.filter(Boolean);
+  const {hymnNumber, content, title} = data?.hymnById ?? {};
 
   return (
     <PageLayout>
@@ -79,69 +36,7 @@ const Song: NextPage<SongProps> = ({id}) => {
           gap: '2em'
         }}
       >
-        <Box>
-          {files.length > 0 && (
-            <>
-              <Styled.h3>Files</Styled.h3>
-              <Styled.ul
-                sx={{
-                  listStyle: 'none',
-                  padding: 0
-                }}
-              >
-                {files.map(file => (
-                  <li key={file._id}>
-                    <Link {...assetLinkProps(file)} /> (
-                    {prettyBytes(file.size || 0)})
-                  </li>
-                ))}
-              </Styled.ul>
-            </>
-          )}
-
-          {author && (
-            <>
-              <Styled.h3>Hymn Author</Styled.h3>
-              <Styled.p>
-                <Link {...authorLinkProps(author)} />
-              </Styled.p>
-            </>
-          )}
-
-          {scripture && (
-            <>
-              <Styled.h3>Scripture</Styled.h3>
-              <Styled.p>{scripture}</Styled.p>
-            </>
-          )}
-
-          {tune && (
-            <>
-              <Styled.h3>Tune Composer</Styled.h3>
-              <Composer {...tune.composer} />
-              {tune.metre && (
-                <>
-                  <Styled.h3>Metre</Styled.h3>
-                  <Styled.p>{tune.metre.metre}</Styled.p>
-                </>
-              )}
-            </>
-          )}
-
-          {copyright && (
-            <>
-              <Styled.h3>Copyright (words)</Styled.h3>
-              <Styled.p>{copyright.name || '-'}</Styled.p>
-            </>
-          )}
-
-          {tune?.musicCopyright && (
-            <>
-              <Styled.h3>Copyright (music)</Styled.h3>
-              <Styled.p>{tune.musicCopyright.name || '-'}</Styled.p>
-            </>
-          )}
-        </Box>
+        <Sidebar {...data?.hymnById} data={data} />
         <Box sx={{width: '100%'}}>
           <Styled.h2>
             <ShortListButton itemId={data?.hymnById._id} />
