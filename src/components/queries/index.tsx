@@ -844,7 +844,7 @@ export type FindOneLiturgyQuery = (
       & Pick<Author, '_id' | 'dates' | 'name'>
     )>, copyright: Maybe<(
       { __typename?: 'Copyright' }
-      & Pick<Copyright, 'name'>
+      & Pick<Copyright, '_id' | 'name'>
     )>, files: Maybe<Array<Maybe<(
       { __typename?: 'Asset' }
       & Pick<Asset, '_id' | 'name' | 'size' | 'url'>
@@ -867,7 +867,7 @@ export type FindOnePrayerQuery = (
       & Pick<Author, '_id' | 'name' | 'dates'>
     )>, copyright: Maybe<(
       { __typename?: 'Copyright' }
-      & Pick<Copyright, 'name'>
+      & Pick<Copyright, '_id' | 'name'>
     )> }
   )> }
 );
@@ -1617,6 +1617,7 @@ export const FindOneLiturgyDocument = gql`
     }
     content
     copyright {
+      _id
       name
     }
     files {
@@ -1666,6 +1667,7 @@ export const FindOnePrayerDocument = gql`
     title
     content
     copyright {
+      _id
       name
     }
   }

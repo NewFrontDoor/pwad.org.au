@@ -9,12 +9,13 @@ import Featured from '../components/featured';
 import SearchControl from '../components/search-box/search-control';
 import BlockContent from '../components/block-content';
 import Logo from '../components/logo';
+import Loading from '../components/loading';
 
 const Index: NextPage = () => {
   const {loading, data} = useHomeQuery();
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <Loading />;
   }
 
   return (

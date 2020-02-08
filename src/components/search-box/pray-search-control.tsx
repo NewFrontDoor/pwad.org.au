@@ -2,11 +2,11 @@ import React, {FC, useReducer} from 'react';
 import PropTypes from 'prop-types';
 import identity from 'lodash/identity';
 import pickBy from 'lodash/pickBy';
-import {useQuery} from '@apollo/react-hooks';
 import {Styled, Box, Flex, Button} from 'theme-ui';
 import {Formik, Form, Field} from 'formik';
 import {TextField} from '../form';
 import {usePrayerSearchQuery, PrayerSearchQueryVariables} from '../queries';
+import Loading from '../loading';
 import SearchResult from './search-result';
 import SearchOccasionInput from './search-occasion-input';
 import SearchKeywordInput from './search-keyword-input';
@@ -15,7 +15,16 @@ const initialState = {
   showSearchResults: false
 };
 
-function reducer(state, action) {
+type State = {
+  showSearchResults: boolean;
+};
+
+type Action = {
+  type: 'search';
+  fields: any;
+};
+
+function reducer(state: State, action: Action): State {
   let keyword;
   let occasion;
 
@@ -56,7 +65,7 @@ const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
   });
 
   if (loading) {
-    return 'Loading...';
+    return <Loading />;
   }
 
   if (error) {

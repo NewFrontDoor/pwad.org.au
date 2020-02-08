@@ -5,6 +5,7 @@ import {Text, Flex, Box} from 'theme-ui';
 
 import withApollo from '../../../../lib/with-apollo-client';
 
+import Loading from '../../../components/loading';
 import PageLayout from '../../../components/page-layout';
 import Sidebar, {
   SidebarCopyright,
@@ -27,7 +28,7 @@ const PrayerById: FC<PrayerByIdProps> = ({id}) => {
 
   return (
     <>
-      {loading && 'Loading...'}
+      <Loading isLoading={loading} />
       {error && `Error! ${error.message}`}
       {data?.prayerById && (
         <Flex

@@ -7,6 +7,7 @@ import {TextField} from '../form';
 
 import {useCreateUserMutation} from '../queries';
 import redirect from '../../../lib/redirect';
+import Loading from '../loading';
 import GoogleButton from './google-button';
 
 const validationSchema = object().shape({
@@ -79,7 +80,7 @@ const CreateAccountForm: FC<CreateAccountFormProps> = ({redirectPath}) => {
           onSubmit={handleCreateUser(createAccount)}
         >
           <Form noValidate>
-            {loading && 'Loading...'}
+            <Loading isLoading={loading} />
             {error?.graphQLErrors.map(({message}) => (
               <p key={message}>{message}</p>
             ))}

@@ -7,6 +7,7 @@ import {Styled, Button, Grid, Box} from 'theme-ui';
 import {Formik, Form, Field} from 'formik';
 import {TextField} from '../form';
 import {useAdvancedSearchQuery, AdvancedSearchQueryVariables} from '../queries';
+import Loading from '../loading';
 import SearchResult from './search-result';
 import SearchMetreInput from './search-metre-input';
 import SearchTuneInput from './search-tune-input';
@@ -96,7 +97,7 @@ const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
   });
 
   if (loading) {
-    return 'Loading...';
+    return <Loading />;
   }
 
   if (error) {

@@ -5,6 +5,7 @@ import {Text} from 'theme-ui';
 
 import withApollo from '../../../../lib/with-apollo-client';
 
+import Loading from '../../../components/loading';
 import PageLayout from '../../../components/page-layout';
 import ContentWrap from '../../../components/content-wrap';
 import Link, {
@@ -31,7 +32,7 @@ const Keyword: NextPage<KeywordProps> = ({id}) => {
         Public Worship and Aids to Devotion Committee Website
       </Text>
       <ContentWrap>
-        {loading && 'Loading...'}
+        <Loading isLoading={loading} />
         {error && `Error! ${error.message}`}
         {data?.keywordById && (
           <>

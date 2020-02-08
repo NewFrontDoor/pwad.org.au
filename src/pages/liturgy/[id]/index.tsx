@@ -10,31 +10,11 @@ import Sidebar, {
 
 import withApollo from '../../../../lib/with-apollo-client';
 
+import Loading from '../../../components/loading';
 import PageLayout from '../../../components/page-layout';
-import Link, {authorLinkProps} from '../../../components/link';
 import BlockContent from '../../../components/block-content';
 import ShortListButton from '../../../components/shortlist-button';
-import {useFindOneLiturgyQuery, Author} from '../../../components/queries';
-
-const Composer: FC<Author> = props => {
-  if (props.name) {
-    return (
-      <Text>
-        <Link {...authorLinkProps(props)} />
-      </Text>
-    );
-  }
-
-  return <Text>No Composer</Text>;
-};
-
-Composer.propTypes = {
-  name: PropTypes.string
-};
-
-Composer.defaultProps = {
-  name: undefined
-};
+import {useFindOneLiturgyQuery} from '../../../components/queries';
 
 type LiturgyProps = {
   id: string;
@@ -53,7 +33,7 @@ const Liturgy: NextPage<LiturgyProps> = ({id}) => {
       <Text as="h1" fontWeight="extraBold">
         Public Worship and Aids to Devotion Committee Website
       </Text>
-      {loading && 'Loading...'}
+      <Loading isLoading={loading} />
       {error && `Error! ${error.message}`}
       {data?.liturgyById && (
         <Flex

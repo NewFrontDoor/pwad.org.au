@@ -4,6 +4,7 @@ import {Grid, Box, Styled, Button} from 'theme-ui';
 import {Formik, Form} from 'formik';
 import {TextField} from '../form';
 import {useTextSearchQuery} from '../queries';
+import Loading from '../loading';
 import SearchResult from './search-result';
 
 const initialState = {
@@ -44,7 +45,7 @@ const TextSearch: FC<TextSearchProps> = ({search}) => {
   });
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <Loading />;
   }
 
   if (error) {

@@ -12,6 +12,7 @@ export default gql`
       title
       content
       copyright {
+        _id
         name
       }
     }

@@ -5,6 +5,7 @@ import {Text, Box} from 'theme-ui';
 
 import withApollo from '../../../lib/with-apollo-client';
 
+import Loading from '../../components/loading';
 import PageLayout from '../../components/page-layout';
 import BlockContent from '../../components/block-content';
 import ShortListButton from '../../components/shortlist-button';
@@ -23,7 +24,7 @@ const ScriptureById: FC<ScriptureByIdProps> = ({id}) => {
 
   return (
     <>
-      {loading && 'Loading...'}
+      <Loading isLoading={loading} />
       {error && `Error! ${error.message}`}
       {data?.scriptureById && (
         <Box sx={{width: '100%'}}>

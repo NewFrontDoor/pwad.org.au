@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import {Styled, Box, ThemeProvider} from 'theme-ui';
 import {TypeScale, TypeStyle, ColorPalette} from '@theme-ui/style-guide';
+import Loading from '../components/loading';
 
 import theme from '../components/theme';
 
@@ -16,6 +17,7 @@ const StyleGuide: FC = () => (
         lineHeight="heading"
       />
       <TypeStyle fontFamily="body" fontWeight="body" lineHeight="body" />
+      <Loading />
     </Box>
   </ThemeProvider>
 );
