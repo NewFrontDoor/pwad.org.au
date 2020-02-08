@@ -6,7 +6,10 @@ import {Text, Flex, Box} from 'theme-ui';
 import withApollo from '../../../lib/with-apollo-client';
 
 import PageLayout from '../../../components/page-layout';
-import Link, {authorLinkProps} from '../../../components/link';
+import Sidebar, {
+  SidebarCopyright,
+  SidebarAuthor
+} from '../../../components/sidebar';
 import BlockContent from '../../../components/block-content';
 import ShortListButton from '../../../components/shortlist-button';
 import {useFindOnePrayerQuery} from '../../../components/queries';
@@ -34,23 +37,14 @@ const PrayerById: FC<PrayerByIdProps> = ({id}) => {
             gap: '2em'
           }}
         >
-          <Box>
-            {author && (
+          <Sidebar>
+            {data?.prayerById && (
               <>
-                <Text as="h3">Hymn Author</Text>
-                <Text>
-                  <Link {...authorLinkProps(author)} />
-                </Text>
+                {author && <SidebarAuthor {...author} />}
+                {copyright && <SidebarCopyright {...copyright} />}
               </>
             )}
-
-            {copyright && (
-              <>
-                <Text as="h3">Copyright</Text>
-                <Text>{copyright.name || '-'}</Text>
-              </>
-            )}
-          </Box>
+          </Sidebar>
           <Box sx={{width: '100%'}}>
             <Text as="h2">
               <ShortListButton itemId={data.prayerById._id} />

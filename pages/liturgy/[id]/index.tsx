@@ -1,8 +1,12 @@
 import React, {FC} from 'react';
 import {NextPage} from 'next';
 import PropTypes from 'prop-types';
-import prettyBytes from 'pretty-bytes';
 import {Text, Flex, Box} from 'theme-ui';
+import Sidebar, {
+  SidebarAuthor,
+  SidebarCopyright,
+  SidebarFiles
+} from '../../../components/sidebar';
 
 import withApollo from '../../../lib/with-apollo-client';
 
@@ -41,7 +45,8 @@ const Liturgy: NextPage<LiturgyProps> = ({id}) => {
     variables: {id}
   });
 
-  const {author, files, content, title, copyright} = data?.liturgyById ?? {};
+  const {author, content, title, copyright} = data?.liturgyById ?? {};
+  const files = data?.liturgyById?.files || [];
 
   return (
     <PageLayout>
@@ -52,45 +57,21 @@ const Liturgy: NextPage<LiturgyProps> = ({id}) => {
       {error && `Error! ${error.message}`}
       {data?.liturgyById && (
         <Flex
-        sx={{
-          flexDirection: ['column-reverse', 'column-reverse', 'row'],
-          // TODO: What should this value actually be?
-          gap: '2em'
-        }}
-      >
-          <Box>
-            {files?.length > 0 && (
+          sx={{
+            flexDirection: ['column-reverse', 'column-reverse', 'row'],
+            // TODO: What should this value actually be?
+            gap: '2em'
+          }}
+        >
+          <Sidebar>
+            {data?.liturgyById && (
               <>
-                <Text as="h3">Files</Text>
-                <Text as="ul">
-                  {files?.map(({_id, file}) => (
-                    <li key={_id}>
-                      <Link href={file.url} isInternal={false}>
-                        {file.filename}
-                      </Link>{' '}
-                      ({prettyBytes(file.size)})
-                    </li>
-                  ))}
-                </Text>
+                {files.length > 0 && <SidebarFiles files={files} />}
+                {author && <SidebarAuthor {...author} />}
+                {copyright && <SidebarCopyright {...copyright} />}
               </>
             )}
-
-            {author && (
-              <>
-                <Text as="h3">Hymn Author</Text>
-                <Text>
-                  <Link {...authorLinkProps(author)} />
-                </Text>
-              </>
-            )}
-
-            {copyright && (
-              <>
-                <Text as="h3">Copyright</Text>
-                <Text>{copyright.name || '-'}</Text>
-              </>
-            )}
-          </Box>
+          </Sidebar>
           <Box sx={{width: '100%'}}>
             <Text as="h2">
               <ShortListButton itemId={data.liturgyById._id} />
