@@ -1,5 +1,5 @@
 import microCors from 'micro-cors';
-import graphql from '../../lib/graphql';
+import graphql from '../../../lib/graphql';
 
 const cors = microCors();
 

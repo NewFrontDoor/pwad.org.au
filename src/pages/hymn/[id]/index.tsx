@@ -3,13 +3,13 @@ import {NextPage} from 'next';
 import PropTypes from 'prop-types';
 import {jsx, Styled, Flex, Box} from 'theme-ui';
 
-import redirect from '../../../lib/redirect';
-import checkLoggedIn from '../../../lib/check-logged-in';
+import redirect from '../../../../lib/redirect';
 import withApollo, {
   WithApolloPageContext
-} from '../../../lib/with-apollo-client';
-import {defineAbilitiesFor} from '../../../lib/abilities';
+} from '../../../../lib/with-apollo-client';
+import {defineAbilitiesFor} from '../../../../lib/abilities';
 
+import checkLoggedIn from '../../../check-logged-in';
 import BlockContent from '../../../components/block-content';
 import PageLayout from '../../../components/page-layout';
 import ShortListButton from '../../../components/shortlist-button';

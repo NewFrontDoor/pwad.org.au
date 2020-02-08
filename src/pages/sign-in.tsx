@@ -3,10 +3,10 @@ import {NextPage} from 'next';
 import PropType from 'prop-types';
 import {Text} from 'theme-ui';
 
-import redirect, {buildUrl} from '../lib/redirect';
-import checkLoggedIn from '../lib/check-logged-in';
-import withApollo, {WithApolloPageContext} from '../lib/with-apollo-client';
+import redirect, {buildUrl} from '../../lib/redirect';
+import withApollo, {WithApolloPageContext} from '../../lib/with-apollo-client';
 
+import checkLoggedIn from '../check-logged-in';
 import PageLayout from '../components/page-layout';
 import Link from '../components/link';
 import {SignInForm} from '../components/account';

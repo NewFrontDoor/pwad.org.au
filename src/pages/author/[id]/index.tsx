@@ -3,7 +3,7 @@ import {NextPage} from 'next';
 import PropTypes from 'prop-types';
 import {Text} from 'theme-ui';
 
-import withApollo from '../../../lib/with-apollo-client';
+import withApollo from '../../../../lib/with-apollo-client';
 
 import {useFindOneAuthorQuery} from '../../../components/queries';
 import PageLayout from '../../../components/page-layout';

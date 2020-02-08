@@ -8,7 +8,7 @@ import Sidebar, {
   SidebarFiles
 } from '../../../components/sidebar';
 
-import withApollo from '../../../lib/with-apollo-client';
+import withApollo from '../../../../lib/with-apollo-client';
 
 import PageLayout from '../../../components/page-layout';
 import Link, {authorLinkProps} from '../../../components/link';

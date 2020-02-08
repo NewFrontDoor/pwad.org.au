@@ -4,7 +4,7 @@ import {NextPage} from 'next';
 import {Text} from 'theme-ui';
 import BlockContent from '../../../components/block-content';
 
-import withApollo from '../../../lib/with-apollo-client';
+import withApollo from '../../../../lib/with-apollo-client';
 import {usePageContentQuery} from '../../../components/queries';
 
 import PageLayout from '../../../components/page-layout';

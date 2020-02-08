@@ -1,5 +1,5 @@
-import {MeDocument, MeQuery, User} from '../components/queries';
-import {TApolloClient} from './with-apollo-client';
+import {TApolloClient} from '../lib/with-apollo-client';
+import {MeDocument, MeQuery, User} from './components/queries';
 
 type LoggedInUser = {
   loggedInUser: {

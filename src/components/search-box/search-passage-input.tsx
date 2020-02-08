@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Label} from 'theme-ui';
 import {useField} from 'formik';
 import Select from 'react-select';
-import options from '../../lib/books';
+import options from '../../../lib/books';
 
 type SearchInput = {
   name: string;

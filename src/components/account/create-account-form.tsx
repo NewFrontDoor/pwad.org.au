@@ -6,7 +6,7 @@ import {Formik, Form} from 'formik';
 import {TextField} from '../form';
 
 import {useCreateUserMutation} from '../queries';
-import redirect from '../../lib/redirect';
+import redirect from '../../../lib/redirect';
 import GoogleButton from './google-button';
 
 const validationSchema = object().shape({

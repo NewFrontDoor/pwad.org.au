@@ -2,7 +2,7 @@ import React, {FC} from 'react';
 import {normalize} from 'polished';
 import {css, useThemeUI} from 'theme-ui';
 import {Global} from '@emotion/core';
-import {cabin, cabinBold, cabinExtraBold} from '../lib/constants';
+import {cabin, cabinBold, cabinExtraBold} from '../../lib/constants';
 
 const GlobalStyles: FC = () => {
   const {theme} = useThemeUI();

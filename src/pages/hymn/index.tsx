@@ -2,11 +2,13 @@ import React from 'react';
 import {NextPage} from 'next';
 import {Styled} from 'theme-ui';
 
-import redirect from '../../lib/redirect';
-import checkLoggedIn from '../../lib/check-logged-in';
-import withApollo, {WithApolloPageContext} from '../../lib/with-apollo-client';
-import {defineAbilitiesFor} from '../../lib/abilities';
+import redirect from '../../../lib/redirect';
+import withApollo, {
+  WithApolloPageContext
+} from '../../../lib/with-apollo-client';
+import {defineAbilitiesFor} from '../../../lib/abilities';
 
+import checkLoggedIn from '../../check-logged-in';
 import PageLayout from '../../components/page-layout';
 import SongSearchControl from '../../components/search-box/song-search-control';
 

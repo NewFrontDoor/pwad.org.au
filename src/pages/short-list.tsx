@@ -2,7 +2,7 @@ import React from 'react';
 import {NextPage} from 'next';
 import {Text} from 'theme-ui';
 
-import withApollo from '../lib/with-apollo-client';
+import withApollo from '../../lib/with-apollo-client';
 import PageLayout from '../components/page-layout';
 import ContentWrap from '../components/content-wrap';
 import Link, {linkProps} from '../components/link';

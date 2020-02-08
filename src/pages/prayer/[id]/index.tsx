@@ -3,7 +3,7 @@ import {NextPage} from 'next';
 import PropTypes from 'prop-types';
 import {Text, Flex, Box} from 'theme-ui';
 
-import withApollo from '../../../lib/with-apollo-client';
+import withApollo from '../../../../lib/with-apollo-client';
 
 import PageLayout from '../../../components/page-layout';
 import Sidebar, {

@@ -2,7 +2,7 @@ import React, {FC, createContext, useContext} from 'react';
 import PropTypes from 'prop-types';
 import {Ability} from '@casl/ability';
 import {createContextualCan} from '@casl/react';
-import {defineAbilitiesFor} from '../lib/abilities';
+import {defineAbilitiesFor} from '../../lib/abilities';
 import {useMeQuery} from './queries';
 
 const ability = new Ability([]);

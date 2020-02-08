@@ -2,7 +2,7 @@ import React from 'react';
 import {NextPage} from 'next';
 import {Styled} from 'theme-ui';
 
-import withApollo from '../../lib/with-apollo-client';
+import withApollo from '../../../lib/with-apollo-client';
 import PageLayout from '../../components/page-layout';
 import PraySearchControl from '../../components/search-box/pray-search-control';
 

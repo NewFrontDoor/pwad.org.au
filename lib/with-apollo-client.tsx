@@ -14,7 +14,7 @@ import {
 import {createHttpLink} from 'apollo-link-http';
 import {setContext} from 'apollo-link-context';
 import fetch from 'isomorphic-unfetch';
-import {AbilityProvider} from '../components/ability-context';
+import {AbilityProvider} from '../src/components/ability-context';
 import introspectionQueryResultData from './fragment-types.json';
 
 export type TApolloClient = ApolloClient<NormalizedCacheObject>;

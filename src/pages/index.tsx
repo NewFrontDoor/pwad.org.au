@@ -2,7 +2,7 @@ import React from 'react';
 import {NextPage} from 'next';
 import {Styled, Box, Grid} from 'theme-ui';
 
-import withApollo from '../lib/with-apollo-client';
+import withApollo from '../../lib/with-apollo-client';
 import {useHomeQuery} from '../components/queries';
 import PageLayout from '../components/page-layout';
 import Featured from '../components/featured';
