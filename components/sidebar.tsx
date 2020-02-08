@@ -26,11 +26,11 @@ Composer.defaultProps = {
   name: undefined
 };
 
-export const SidebarFiles: FC<{file: string; files: Array; alternateTunes: Array}> = ({
-  file,
-  files: fileList,
-  alternateTunes
-}) => {
+export const SidebarFiles: FC<{
+  file: string;
+  files: Array;
+  alternateTunes: Array;
+}> = ({file, files: fileList, alternateTunes}) => {
   let files = fileList || [];
 
   if (file) {
@@ -83,6 +83,14 @@ export const SidebarAuthor: FC<Author> = props => {
       </Styled.p>
     </>
   );
+};
+
+SidebarAuthor.propTypes = {
+  name: PropTypes.string
+};
+
+SidebarAuthor.defaultProps = {
+  name: undefined
 };
 
 export const SidebarScripture: FC<{scripture: string}> = ({scripture}) => {
