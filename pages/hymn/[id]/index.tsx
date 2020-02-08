@@ -64,20 +64,19 @@ const Song: NextPage<SongProps> = ({id}) => {
           justifyContent: 'flex-start'
         }}
       >
-        <Box sx={{marginRight: '40px'}}>
-          <Sidebar>
-            {data?.hymnById && (
-              <>
-                {files.length > 0 && <SidebarFiles files={files} />}
-                {author && <SidebarAuthor {...author} />}
-                {scripture && <SidebarScripture scripture={scripture} />}
-                {tune && <SidebarTune {...tune} />}
-                {copyright && <SidebarCopyright {...copyright} />}
-                {tune?.musicCopyright && <SidebarMusicCopyright {...tune} />}
-              </>
-            )}
-          </Sidebar>
-        </Box>
+        <Sidebar>
+          {data?.hymnById && (
+            <>
+              {files.length > 0 && <SidebarFiles files={files} />}
+              {author && <SidebarAuthor {...author} />}
+              {scripture && <SidebarScripture scripture={scripture} />}
+              {tune && <SidebarTune {...tune} />}
+              {copyright && <SidebarCopyright {...copyright} />}
+              {tune?.musicCopyright && <SidebarMusicCopyright {...tune} />}
+            </>
+          )}
+        </Sidebar>
+
         <Box>
           <Styled.h2>
             <ShortListButton itemId={data?.hymnById._id} />
