@@ -27,7 +27,7 @@ const Footer: FC<FooterProps> = ({menuItems}) => {
           }}
         >
           {menuItems && (
-            <Grid columns={[1, 2, 5]}>
+            <Grid columns={[1, 2, '1fr 2fr 2fr 1fr']}>
               {menuItems.map(menu => (
                 <Box key={menu._key}>
                   {menu.text && (

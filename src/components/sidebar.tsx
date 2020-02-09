@@ -6,6 +6,17 @@ import prettyBytes from 'pretty-bytes';
 import Link, {authorLinkProps, assetLinkProps} from './link';
 import {Asset, Author, Tune, Copyright} from './queries';
 
+/* _Function Index_
+-Composer (used within SidebarTune)
+-SidebarFiles
+-SidebarAuthor
+-SidebarScripture
+-SidebarTune
+-SidebarCopyright
+-SidebarMusicCopyright
+-Sidebar (wrapper)
+*/
+
 const Composer: FC<Author> = props => {
   if (props.name) {
     return (
