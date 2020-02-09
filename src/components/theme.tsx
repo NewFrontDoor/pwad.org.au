@@ -1,6 +1,5 @@
 import React, {FC} from 'react';
 import {ThemeProvider} from 'theme-ui';
-import { nonExecutableDefinitionMessage } from 'graphql/validation/rules/ExecutableDefinitions';
 
 const theme = {
   breakpoints: ['40em', '52em', '64em'],
