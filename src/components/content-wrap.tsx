@@ -6,7 +6,7 @@ const ContentWrap: FC = props => {
     <Box
       marginX={[4, 'auto']}
       sx={{
-        width: ['auto', '35em']
+        width: ['auto', '50em']
       }}
       {...props}
     />

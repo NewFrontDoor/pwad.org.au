@@ -6,6 +6,9 @@ export default gql`
       _id
       title
       content
+      hasToc
+      slug
+      subtitle
     }
   }
 `;

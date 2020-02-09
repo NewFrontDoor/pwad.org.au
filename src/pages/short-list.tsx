@@ -1,6 +1,6 @@
 import React from 'react';
 import {NextPage} from 'next';
-import {Text} from 'theme-ui';
+import {Text, Styled} from 'theme-ui';
 
 import withApollo from '../../lib/with-apollo-client';
 import PageLayout from '../components/page-layout';
@@ -15,14 +15,14 @@ const ShortList: NextPage = () => {
 
   return (
     <PageLayout>
-      <Text as="h1" fontWeight="extraBold">
+      <Styled.h1>
         Public Worship and Aids to Devotion Committee Website
-      </Text>
+      </Styled.h1>
       <ContentWrap>
-        <Text as="h2">My Short List</Text>
+        <Styled.h2>My Short List</Styled.h2>
 
         {data?.me && (
-          <Text as="ul" appearance="prose">
+          <Text variant="listFlat" as="ul">
             {data.me.shortlist.map(item => (
               <li key={item._id}>
                 <ShortListButton itemId={item._id} />{' '}
