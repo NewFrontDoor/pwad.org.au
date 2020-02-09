@@ -279,6 +279,10 @@ const theme = {
     },
     img: {
       maxWidth: '100%'
+    },
+    ul: {
+      listStyle: 'disc',
+      paddingInlineStart: '20px'
     }
   }
 };
