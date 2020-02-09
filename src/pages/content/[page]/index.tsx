@@ -25,7 +25,7 @@ const Content: NextPage<ContentProps> = ({page}) => {
       <ContentWrap>
         {data && <Text as="h2">{data.pageContentOne.title}</Text>}
         {hasSubtitle && <Text as="h3">{data.pageContentOne.subtitle}</Text>}
-        {hasToc && <Toc headings={deriveToc(headings)} />}
+        {hasToc && <Toc headings={deriveToc(data.pageContentOne.content)} />}
         {data && <BlockContent blocks={data.pageContentOne.content} />}
       </ContentWrap>
     </PageLayout>

@@ -26,4 +26,8 @@ Toc.propTypes = {
   headings: PropTypes.array.isRequired
 };
 
+export function deriveToc(content): Array {
+  content.map(block => (block.style === 'h2' ? block.children[0].text : null));
+}
+
 export default Toc;
