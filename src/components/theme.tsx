@@ -186,6 +186,16 @@ const theme = {
       boxShadow: '0 0 8px rgba(0, 0, 0, 0.125)'
     }
   },
+  text: {
+    listStandard: {
+      listStyle: 'disc',
+      paddingInlineStart: '20px'
+    },
+    listFlat: {
+      listStyle: 'none',
+      paddingInlineStart: '0'
+    }
+  },
   styles: {
     root: {
       fontFamily: 'body',
