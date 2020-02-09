@@ -31,10 +31,10 @@ const Footer: FC<FooterProps> = ({menuItems}) => {
               {menuItems.map(menu => (
                 <Box key={menu._key}>
                   {menu.text && (
-                    <Styled.p variant="prose">{menu.text}</Styled.p>
+                    <Styled.p>{menu.text}</Styled.p>
                   )}
                   {menu.childpages && (
-                    <Styled.ul variant="prose">
+                    <Styled.ul>
                       {menu.childpages.map(item => (
                         <li key={item._id}>
                           <Link {...linkProps(item)} />
