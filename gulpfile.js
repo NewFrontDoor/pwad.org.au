@@ -1,22 +1,24 @@
-const {pipeline} = require('stream');
-const del = require('del');
-const dargs = require('dargs');
-const flatten = require('lodash/flatten');
-const {series, src, dest} = require('gulp');
-const execa = require('execa');
-const {Password} = require('enquirer');
-const gulpExeca = require('gulp-execa');
-const responsive = require('gulp-responsive');
+const {promisify} = require('util');
+let {pipeline} = require('stream');
 const {ManagementClient} = require('auth0');
+const {Password} = require('enquirer');
+const {series, src, dest} = require('gulp');
+const concat = require('gulp-concat');
 const Conf = require('conf');
+const dargs = require('dargs');
+const del = require('del');
+const dotenv = require('dotenv');
+const File = require('vinyl');
+const flatten = require('lodash/flatten');
+const gulpExeca = require('gulp-execa');
+const PluginError = require('plugin-error');
+const responsive = require('gulp-responsive');
+const through = require('through2');
 
-const {
-  loadKdbx,
-  saveKdbx,
-  readEntriesFromKdbx,
-  writeEntriesToKdbx
-} = require('./keypass');
+const {loadKdbx, readEnvEntries} = require('./keypass');
 const now = require('./now.json');
+
+pipeline = promisify(pipeline);
 
 const config = new Conf({
   cwd: '.',
@@ -110,7 +112,7 @@ const banners = [
   grayscale(retina(landscape(desktop)))
 ];
 
-function images(done) {
+function images() {
   return pipeline(
     src('./assets/**/*.jpg'),
     responsive({
@@ -119,8 +121,7 @@ function images(done) {
       'banners/brown-wooden-church-pew.jpg': banners,
       'banners/church-under-blue-sky.jpg': banners
     }),
-    dest('static'),
-    done
+    dest('static')
   );
 }
 
@@ -130,45 +131,67 @@ function cleanImages() {
 
 async function setupEnv() {
   const keypassFile = config.get('keypassFile');
-  console.log(keypassFile);
   const password = await prompt.run();
-  const db = await loadKdbx({
-    password,
-    keypassFile
-  });
-  return readEntriesFromKdbx(db);
-}
 
-async function updateEnv() {
-  const keypassFile = config.get('keypassFile');
-  const password = await prompt.run();
-  const db = await loadKdbx({
-    password,
-    keypassFile
-  });
-  await writeEntriesToKdbx(db);
-  await saveKdbx({
-    db,
-    keypassFile
-  });
+  return pipeline(
+    src(keypassFile),
+    loadKdbx(password),
+    await readEnvEntries(),
+    concat('.env'),
+    dest('.')
+  );
 }
 
 function isSecret(value) {
   return value.startsWith('@');
 }
 
-async function updateNowEnv() {
-  const {env} = now;
+function parseEnv() {
+  return through.obj(function(file, _, cb) {
+    if (file.isBuffer()) {
+      const env = dotenv.parse(file.contents);
+      for (const [key, secret] of Object.entries(now.env)) {
+        if (isSecret(secret)) {
+          const newKey = secret.replace('@', '');
+          const newValue = env[key];
 
-  for await (const [key, secret] of Object.entries(env)) {
-    if (isSecret(secret)) {
-      const newKey = secret.replace('@', '');
-      const newValue = config.parsed[key];
-      console.log(secret, newValue);
-
-      await execa('now', ['secrets', 'add', newKey, newValue]);
+          if (newValue) {
+            this.push(
+              new File({
+                path: newKey,
+                contents: Buffer.from(newValue)
+              })
+            );
+          }
+        }
+      }
+    } else {
+      this.emit(
+        'error',
+        new PluginError('parse-env', 'env file was not found')
+      );
     }
-  }
+
+    cb();
+  });
+}
+
+function replaceSecret() {
+  return through.obj(async function(file, _, cb) {
+    try {
+      await gulpExeca.exec(`now secrets remove --yes ${file.path}`, {
+        reject: false
+      });
+      await gulpExeca.exec(`now secrets add ${file.path} "${file.contents}"`);
+      cb();
+    } catch (error) {
+      cb(error);
+    }
+  });
+}
+
+function updateNowEnv() {
+  return pipeline(src('.env'), parseEnv(), replaceSecret());
 }
 
 async function copyAppMetadata() {
@@ -230,6 +253,5 @@ exports.prodcopy = series(prodDump, devRestore);
 exports.images = series(cleanImages, images);
 
 exports.copyAppMetadata = copyAppMetadata;
-exports.updateNowEnv = updateNowEnv;
+exports.updateNowEnv = series(setupEnv, updateNowEnv);
 exports.setupEnv = series(setupEnv);
-exports.updateEnv = series(updateEnv);
