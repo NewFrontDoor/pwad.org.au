@@ -72,7 +72,7 @@
     "@casl/ability": "^3.4.0",
     "@casl/react": "^1.0.4",
     "@emotion/core": "^10.0.27",
-    "@newfrontdoor/audio-player": "^0.1.6",
+    "@newfrontdoor/audio-player": "^0.1.8",
     "@next/bundle-analyzer": "^9.2.1",
     "@sanity/block-content-to-react": "^2.0.7",
     "@sanity/client": "^0.147.3",
