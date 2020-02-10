@@ -20,7 +20,9 @@ import Sidebar, {
   SidebarFiles,
   SidebarMusicCopyright,
   SidebarScripture,
-  SidebarTune
+  SidebarTuneComposer,
+  SidebarTune,
+  SidebarAlternateTunes
 } from '../../../components/sidebar';
 
 type SongProps = {
@@ -41,15 +43,6 @@ const Song: NextPage<SongProps> = ({id}) => {
   } = data?.hymnById ?? {};
 
   let files = data?.hymnById?.files || [];
-
-  if (tune?.file) {
-    files = files.concat(tune.file);
-  }
-
-  if (alternateTunes) {
-    files = files.concat(alternateTunes.map(x => x.file));
-  }
-
   files = files.filter(Boolean);
 
   return (
@@ -67,12 +60,14 @@ const Song: NextPage<SongProps> = ({id}) => {
         <Sidebar>
           {data?.hymnById && (
             <>
-              {files.length > 0 && <SidebarFiles files={files} />}
+              {tune && <SidebarTune {...tune} />}
+              {alternateTunes && <SidebarAlternateTunes tunes={alternateTunes} />}
               {author && <SidebarAuthor {...author} />}
               {scripture && <SidebarScripture scripture={scripture} />}
-              {tune && <SidebarTune {...tune} />}
+              {tune && <SidebarTuneComposer {...tune} />}
               {copyright && <SidebarCopyright {...copyright} />}
               {tune?.musicCopyright && <SidebarMusicCopyright {...tune} />}
+              {files.length > 0 && <SidebarFiles files={files} />}
             </>
           )}
         </Sidebar>

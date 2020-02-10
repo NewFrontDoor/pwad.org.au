@@ -1,10 +1,13 @@
 /** @jsx jsx */
-import {FC} from 'react';
+import {FC, useState, useRef, useEffect} from 'react';
 import {jsx, Box, Styled} from 'theme-ui';
 import PropTypes from 'prop-types';
 import prettyBytes from 'pretty-bytes';
+import {PlayCircle, StopCircle} from 'react-feather';
+import dynamic from 'next/dynamic';
 import Link, {authorLinkProps, assetLinkProps} from './link';
 import {Asset, Author, Tune, Copyright} from './queries';
+import useToggle from './use-toggle';
 
 /* _Function Index_
 -Composer (used within SidebarTune)
@@ -37,23 +40,33 @@ Composer.defaultProps = {
   name: undefined
 };
 
-export const SidebarFiles: FC<{files: Asset[]}> = ({files}) => (
-  <>
-    <Styled.h3>Files</Styled.h3>
-    <Styled.ul
-      sx={{
-        listStyle: 'none',
-        padding: 0
-      }}
-    >
-      {files.map(file => (
-        <li key={file._id}>
-          <Link {...assetLinkProps(file)} /> ({prettyBytes(file.size || 0)})
-        </li>
-      ))}
-    </Styled.ul>
-  </>
-);
+export const SidebarFiles: FC<{files: Asset[]}> = ({files}) => {
+  const [fileExpand, fileToggle] = useToggle(false);
+  return (
+    <>
+      <Styled.h3>Files</Styled.h3>
+      <Styled.ul
+        sx={{
+          listStyle: 'none',
+          padding: 0,
+          maxHeight: fileExpand ? 'auto' : '100px',
+          overflow: 'scroll'
+        }}
+      >
+        {files.map(file => (
+          <li key={file._id}>
+            <Link {...assetLinkProps(file)} /> ({prettyBytes(file.size || 0)})
+          </li>
+        ))}
+      </Styled.ul>
+      {files.length > 4 && (
+        <button type="button" onClick={() => fileToggle()}>
+          {fileExpand ? 'Collapse' : 'Expand'} files list
+        </button>
+      )}
+    </>
+  );
+};
 
 SidebarFiles.propTypes = {
   files: PropTypes.array
@@ -61,6 +74,107 @@ SidebarFiles.propTypes = {
 
 SidebarFiles.defaultProps = {
   files: []
+};
+
+export const SidebarTune: FC<Tune> = ({_id, title}) => {
+  const [playing, togglePlaying] = useToggle(false);
+  return (
+    <>
+      <Styled.h3>Tune</Styled.h3>
+      <Styled.ul
+        sx={{
+          listStyle: 'none',
+          padding: 0
+        }}
+      >
+        <li key={_id}>
+          <span
+            sx={{verticalAlign: 'text-top', paddingRight: '3px'}}
+            onClick={() => togglePlaying()}
+          >
+            {playing ? <StopCircle size={18} /> : <PlayCircle size={18} />}
+          </span>
+          {title}
+        </li>
+      </Styled.ul>
+    </>
+  );
+};
+
+SidebarTune.propTypes = {
+  _id: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired
+};
+
+export const SidebarAlternateTunes: FC<{tunes: Asset[]}> = ({tunes}) => {
+  const [tuneExpand, tuneToggle] = useToggle(false);
+  const [playing, setPlaying] = useState(null);
+  const soundContainer = useRef(null);
+  const loadedSound = useRef(null);
+  const [audio, setElement] = useState(null);
+
+  useEffect(() => {
+    setElement(soundContainer.current);
+  }, [soundContainer]);
+
+  function handleMedia(tune) {
+    if (playing === tune._id) {
+      audio.stop();
+      setPlaying(null);
+    } else {
+      setPlaying(tune._id);
+      loadedSound.current = tune.file.url;
+      audio.play();
+    }
+  }
+
+  return (
+    <>
+      <Styled.h3>Alternate Tunes</Styled.h3>
+      <audio
+        ref={soundContainer}
+        src={loadedSound.current}
+        onPlay={() => console.log('playing')}
+      />
+      <Styled.ul
+        sx={{
+          listStyle: 'none',
+          padding: 0,
+          maxHeight: tuneExpand ? 'auto' : '100px',
+          overflow: 'scroll'
+        }}
+      >
+        {tunes.map(tune => (
+          <li key={tune._id}>
+            <span
+              sx={{verticalAlign: 'text-top', paddingRight: '3px'}}
+              onClick={() => handleMedia(tune)}
+            >
+              {playing === tune._id ? (
+                <StopCircle size={18} />
+              ) : (
+                <PlayCircle size={18} />
+              )}
+            </span>
+            {tune.title}
+          </li>
+        ))}
+      </Styled.ul>
+      {tunes.length > 4 && (
+        <button type="button" onClick={() => tuneToggle()}>
+          {tuneExpand ? 'Collapse' : 'Expand'} tune list
+        </button>
+      )}
+    </>
+  );
+};
+
+SidebarAlternateTunes.propTypes = {
+  tunes: PropTypes.array
+};
+
+SidebarAlternateTunes.defaultProps = {
+  tunes: []
 };
 
 export const SidebarAuthor: FC<Author> = props => (
@@ -95,7 +209,7 @@ SidebarScripture.defaultProps = {
   scripture: undefined
 };
 
-export const SidebarTune: FC<Tune> = ({composer, metre}) => (
+export const SidebarTuneComposer: FC<Tune> = ({composer, metre}) => (
   <>
     <Styled.h3>Tune Composer</Styled.h3>
     <Composer {...composer} />
@@ -108,12 +222,12 @@ export const SidebarTune: FC<Tune> = ({composer, metre}) => (
   </>
 );
 
-SidebarTune.propTypes = {
+SidebarTuneComposer.propTypes = {
   composer: PropTypes.any,
   metre: PropTypes.any
 };
 
-SidebarTune.defaultProps = {
+SidebarTuneComposer.defaultProps = {
   composer: undefined,
   metre: undefined
 };
