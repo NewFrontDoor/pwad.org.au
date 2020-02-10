@@ -182,7 +182,7 @@ function replaceSecret() {
       await gulpExeca.exec(`now secrets remove --yes ${file.path}`, {
         reject: false
       });
-      await gulpExeca.exec(`now secrets add ${file.path} "${file.contents}"`);
+      await gulpExeca.exec(`now secrets add ${file.path} ${file.contents}`);
       cb();
     } catch (error) {
       cb(error);
