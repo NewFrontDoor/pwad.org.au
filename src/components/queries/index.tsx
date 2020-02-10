@@ -1045,7 +1045,7 @@ export type PageContentQuery = (
   { __typename?: 'Query' }
   & { pageContentOne: Maybe<(
     { __typename?: 'PageContent' }
-    & Pick<PageContent, '_id' | 'title' | 'subtitle' | 'content' | 'hasToc' | 'slug'>
+    & Pick<PageContent, '_id' | 'title' | 'content' | 'hasToc' | 'slug' | 'subtitle'>
   )> }
 );
 
@@ -2041,10 +2041,10 @@ export const PageContentDocument = gql`
   pageContentOne(filter: {id: $page}) {
     _id
     title
-    subtitle
     content
     hasToc
     slug
+    subtitle
   }
 }
     `;
