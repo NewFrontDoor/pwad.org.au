@@ -5,8 +5,7 @@ export async function getById(id: string): Promise<Liturgy> {
   return sanity.fetch(
     ['*']
       .concat([
-        '[_type == "liturgy" && _id == $id]',
-        '[!(_id in path("drafts.**"))][0]',
+        '[_type == "liturgy" && _id == $id][0]',
         '{_id, _type, title, files->{_id,_type,name,size,url}, author->{_id,name,dates}, content, keywords[]->{_id, name}, categories[]->{_id, name}}'
       ])
       .join('|'),

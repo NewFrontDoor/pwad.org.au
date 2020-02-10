@@ -4,7 +4,6 @@ import sanity from './sanity';
 const allResourcesQuery = ['*']
   .concat([
     '[_type in ["hymn", "prayer", "liturgy"] && (title match $search || keywords[]->name match $search)]',
-    '[!(_id in path("drafts.**"))]',
     `{
       _id, _type, title, lyrics, hymnNumber, content[0..1], keywords[]->{_id, name}
     }`
@@ -14,7 +13,6 @@ const allResourcesQuery = ['*']
 const freeResourcesQuery = ['*']
   .concat([
     '[_type in ["prayer", "liturgy"] && (title match $search || keywords[]->name match $search)]',
-    '[!(_id in path("drafts.**"))]',
     `{
         _id, _type, title, lyrics, content[0..1], keywords[]->{_id, name}
       }`
@@ -45,7 +43,6 @@ export async function main(): Promise<Main> {
     ['*']
       .concat([
         '[_type == "main"][0]',
-        '[!(_id in path("drafts.**"))]',
         '{_type,blurb,heading,subheading,"menuItems":menuitems[] {...,_type,childpages[]->{_type,_id,title}}}'
       ])
       .join('|')
@@ -57,7 +54,6 @@ export async function menuItems(): Promise<MenuItem[]> {
     ['*']
       .concat([
         '[_type == "main"]',
-        '[!(_id in path("drafts.**"))]',
         '[0].menuitems[] {...,_type,childpages[]->{_type,_id,title}}'
       ])
       .join('|')
