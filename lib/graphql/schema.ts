@@ -430,6 +430,9 @@ export const schema = gql`
     _type: String
     _updatedAt: Date
     title: String
+    subtitle: String
+    slug: String
+    hasToc: Boolean
     content: JSON
   }
 

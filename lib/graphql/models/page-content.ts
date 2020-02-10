@@ -7,7 +7,11 @@ export async function getById(pageId: string): Promise<PageContent> {
       .concat([
         '[_type=="pageContent" && _id==$pageId][0]',
         `{
-            _id,title,content[] {
+            _id,
+            title,
+            hasToc,
+            "slug": slug.current,
+            content[] {
               ...,markDefs[] {
                 ...,_type == 'internalLink' => {
                   reference-> {

@@ -1,20 +1,23 @@
 /** @jsx jsx */
-import React, {FC} from 'react';
+import {FC} from 'react';
 import PropTypes from 'prop-types';
 import {jsx} from 'theme-ui';
+import GithubSlugger from 'github-slugger';
 
 type TocProps = {
-  headings?: Array;
+  blocks?: any[];
 };
 
-const Toc: FC<TocProps> = ({headings}) => {
+const Toc: FC<TocProps> = ({blocks}) => {
+  const headings = deriveToc(blocks);
+
   return (
     <div>
       <h2>Contents:</h2>
       <ul>
         {headings.map(item => (
           <li key={item.slug}>
-            <a href={item.slug}>{item.name}</a>
+            <a href={`#${item.slug}`}>{item.name}</a>
           </li>
         ))}
       </ul>
@@ -23,11 +26,22 @@ const Toc: FC<TocProps> = ({headings}) => {
 };
 
 Toc.propTypes = {
-  headings: PropTypes.array.isRequired
+  blocks: PropTypes.array.isRequired
 };
 
-export function deriveToc(content): Array {
-  content.map(block => (block.style === 'h2' ? block.children[0].text : null));
+export function deriveToc(content): any[] {
+  const toc = [];
+  const slugger = new GithubSlugger();
+
+  for (const block of content) {
+    if (block.style === 'h2') {
+      const name = block.children.map(child => child.text).join(' ');
+      const slug = slugger.slug(name);
+      toc.push({slug, name});
+    }
+  }
+
+  return toc;
 }
 
 export default Toc;

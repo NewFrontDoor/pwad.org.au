@@ -366,6 +366,9 @@ export type PageContent = Document & {
   _type?: Maybe<Scalars['String']>,
   _updatedAt?: Maybe<Scalars['Date']>,
   title?: Maybe<Scalars['String']>,
+  subtitle?: Maybe<Scalars['String']>,
+  slug?: Maybe<Scalars['String']>,
+  hasToc?: Maybe<Scalars['Boolean']>,
   content?: Maybe<Scalars['JSON']>,
 };
 
@@ -996,6 +999,9 @@ export type PageContentResolvers<ContextType = Context, ParentType extends Resol
   _type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   _updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>,
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  subtitle?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  hasToc?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
   content?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };

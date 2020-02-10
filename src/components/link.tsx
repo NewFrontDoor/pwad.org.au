@@ -113,7 +113,9 @@ export function assetLinkProps({url, name}: Asset): LinkProps {
   };
 }
 
-export function linkProps(props: Document): LinkProps {
+export function linkProps(
+  props: Hymn | Author | Prayer | Liturgy | PageContent | Asset | Scripture
+): LinkProps {
   switch (props._type) {
     case 'hymn':
       return hymnLinkProps(props);
@@ -137,6 +139,6 @@ export function linkProps(props: Document): LinkProps {
       return scriptureLinkProps(props);
 
     default:
-      return {};
+      return props;
   }
 }

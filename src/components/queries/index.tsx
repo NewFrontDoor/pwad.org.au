@@ -366,6 +366,9 @@ export type PageContent = Document & {
   _type?: Maybe<Scalars['String']>,
   _updatedAt?: Maybe<Scalars['Date']>,
   title?: Maybe<Scalars['String']>,
+  subtitle?: Maybe<Scalars['String']>,
+  slug?: Maybe<Scalars['String']>,
+  hasToc?: Maybe<Scalars['Boolean']>,
   content?: Maybe<Scalars['JSON']>,
 };
 
@@ -1042,7 +1045,7 @@ export type PageContentQuery = (
   { __typename?: 'Query' }
   & { pageContentOne: Maybe<(
     { __typename?: 'PageContent' }
-    & Pick<PageContent, '_id' | 'title' | 'content'>
+    & Pick<PageContent, '_id' | 'title' | 'subtitle' | 'content' | 'hasToc' | 'slug'>
   )> }
 );
 
@@ -2038,7 +2041,10 @@ export const PageContentDocument = gql`
   pageContentOne(filter: {id: $page}) {
     _id
     title
+    subtitle
     content
+    hasToc
+    slug
   }
 }
     `;
