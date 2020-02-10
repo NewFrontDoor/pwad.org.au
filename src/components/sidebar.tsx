@@ -4,7 +4,7 @@ import {jsx, Box, Styled} from 'theme-ui';
 import PropTypes from 'prop-types';
 import prettyBytes from 'pretty-bytes';
 import {PlayCircle, StopCircle} from 'react-feather';
-import {StyledPlayer} from '@newfrontdoor/audio-player';
+import {DefaultPlayer} from '@newfrontdoor/audio-player';
 import Link, {authorLinkProps, assetLinkProps} from './link';
 import {Asset, Author, Tune, Copyright} from './queries';
 import useToggle from './use-toggle';
@@ -110,6 +110,14 @@ export const SidebarAlternateTunes: FC<{tunes: Asset[]}> = ({tunes}) => {
   const [tuneExpand, tuneToggle] = useToggle(false);
   const [playing, setPlaying] = useState(null);
   const [tune, setTune] = useState(null);
+  const [audioPlayer, setAudioPlayer] = useState(null);
+
+  useEffect(() => {
+    if (audioPlayer) {
+      audioPlayer.load();
+      audioPlayer.play();
+    }
+  }, [audioPlayer, tune]);
 
   function handleMedia(tune) {
     if (playing === tune) {
@@ -124,7 +132,7 @@ export const SidebarAlternateTunes: FC<{tunes: Asset[]}> = ({tunes}) => {
   return (
     <>
       <Styled.h3>Alternate Tunes</Styled.h3>
-      <StyledPlayer playOnLoad audio={tune} />
+      <DefaultPlayer setAudioPlayer={setAudioPlayer} src={tune} />
       <Styled.ul
         sx={{
           listStyle: 'none',
