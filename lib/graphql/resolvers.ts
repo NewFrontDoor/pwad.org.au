@@ -81,10 +81,7 @@ export const resolvers: Resolvers = {
       return context.models.scripture.getById(args.id);
     },
     async keywordById(_parent, args, context) {
-      return context.models.keyword.getById(args.id).then(x => {
-        console.log(x);
-        return x;
-      });
+      return context.models.keyword.getById(args.id);
     },
     async textSearch(_parent, args, context) {
       const user = await context.user;

@@ -1,8 +1,5 @@
 {
   "version": 2,
-  "alias": [
-    "pwad.now.sh"
-  ],
   "env": {
     "HOST": "pwad.now.sh",
     "HOST_URL": "https://pwad.now.sh",
