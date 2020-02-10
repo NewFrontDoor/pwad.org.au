@@ -4,7 +4,7 @@ import {jsx, Box, Styled} from 'theme-ui';
 import PropTypes from 'prop-types';
 import prettyBytes from 'pretty-bytes';
 import {PlayCircle, StopCircle} from 'react-feather';
-import dynamic from 'next/dynamic';
+import {DefaultPlayer} from '@newfrontdoor/audio-player';
 import Link, {authorLinkProps, assetLinkProps} from './link';
 import {Asset, Author, Tune, Copyright} from './queries';
 import useToggle from './use-toggle';
@@ -109,32 +109,26 @@ SidebarTune.propTypes = {
 export const SidebarAlternateTunes: FC<{tunes: Asset[]}> = ({tunes}) => {
   const [tuneExpand, tuneToggle] = useToggle(false);
   const [playing, setPlaying] = useState(null);
-  const soundContainer = useRef(null);
-  const loadedSound = useRef(null);
-  const [audio, setElement] = useState(null);
-
-  useEffect(() => {
-    setElement(soundContainer.current);
-  }, [soundContainer]);
+  const [soundContainer, setSoundContainer] = useState(null);
+  const loadedTune = useRef(null);
 
   function handleMedia(tune) {
-    if (playing === tune._id) {
-      audio.stop();
+    if (playing === tune) {
+      soundContainer.pause();
       setPlaying(null);
     } else {
-      setPlaying(tune._id);
-      loadedSound.current = tune.file.url;
-      audio.play();
+      loadedTune.current = tune.file.url;
+      setPlaying(tune);
+      soundContainer.play();
     }
   }
 
   return (
     <>
       <Styled.h3>Alternate Tunes</Styled.h3>
-      <audio
-        ref={soundContainer}
-        src={loadedSound.current}
-        onPlay={() => console.log('playing')}
+      <DefaultPlayer
+        src={loadedTune.current}
+        setAudioPlayer={setSoundContainer}
       />
       <Styled.ul
         sx={{
@@ -150,7 +144,7 @@ export const SidebarAlternateTunes: FC<{tunes: Asset[]}> = ({tunes}) => {
               sx={{verticalAlign: 'text-top', paddingRight: '3px'}}
               onClick={() => handleMedia(tune)}
             >
-              {playing === tune._id ? (
+              {playing === tune ? (
                 <StopCircle size={18} />
               ) : (
                 <PlayCircle size={18} />
