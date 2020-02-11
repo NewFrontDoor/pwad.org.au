@@ -1,42 +1,16 @@
-import React, {FC, useReducer} from 'react';
+import React, {FC, useCallback} from 'react';
 import PropTypes from 'prop-types';
+import {useRouter} from 'next/router';
+import isEmpty from 'lodash/isEmpty';
 import {Grid, Box, Styled, Button} from 'theme-ui';
 import {Formik, Form} from 'formik';
 import {TextField} from '../form';
-import {useTextSearchQuery} from '../queries';
+import {useTextSearchQuery, TextSearchQueryVariables} from '../queries';
 import Loading from '../loading';
 import SearchResult from './search-result';
 
-const initialState = {
-  showSearchResults: false
-};
-
-type State = {
-  showSearchResults: boolean;
-};
-
-type Action = {
-  type: 'search';
-  fields: any;
-};
-
-function reducer(state: State, action: Action): State {
-  switch (action.type) {
-    case 'search':
-      return {
-        ...state,
-        ...action.fields,
-        showSearchResults: true
-      };
-    default:
-      throw new Error(`Action type ${String(action.type)} does not exist`);
-  }
-}
-
 type TextSearchProps = {
-  search: {
-    search?: string;
-  };
+  search: TextSearchQueryVariables;
 };
 
 const TextSearch: FC<TextSearchProps> = ({search}) => {
@@ -70,9 +44,26 @@ TextSearch.propTypes = {
 };
 
 const SearchBox: FC = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const router = useRouter();
+  const handleSubmit = useCallback(
+    (query: TextSearchQueryVariables) => {
+      router.push(
+        {
+          pathname: router.pathname,
+          query
+        },
+        router.pathname
+      );
+    },
+    [router]
+  );
 
-  const {showSearchResults, ...search} = state;
+  const showSearchResults = !isEmpty(router.query);
+  let initialValues: TextSearchQueryVariables = {search: ''};
+
+  if (showSearchResults) {
+    initialValues = router.query;
+  }
 
   return (
     <>
@@ -82,12 +73,7 @@ const SearchBox: FC = () => {
         using the search box below. Advanced search will allow you to refine
         your criteria on data available in the resource.
       </Styled.p>
-      <Formik
-        initialValues={{
-          search: ''
-        }}
-        onSubmit={fields => dispatch({type: 'search', fields})}
-      >
+      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         <Form>
           <Grid marginBottom="1em" columns={[1, 'auto min-content']}>
             <Box marginEnd="auto">
@@ -106,7 +92,7 @@ const SearchBox: FC = () => {
           </Grid>
         </Form>
       </Formik>
-      {showSearchResults && <TextSearch search={search} />}
+      {showSearchResults && <TextSearch search={router.query} />}
     </>
   );
 };
