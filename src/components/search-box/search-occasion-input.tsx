@@ -1,5 +1,6 @@
 import React, {FC} from 'react';
 import PropTypes from 'prop-types';
+import find from 'lodash/find';
 import Select from 'react-select';
 import {Label} from 'theme-ui';
 import {useField} from 'formik';
@@ -26,6 +27,15 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
       })) ?? [];
   }
 
+  let {value} = field;
+
+  if (value) {
+    value = find(
+      options.flatMap(option => option.options),
+      value
+    );
+  }
+
   return (
     <Label sx={{flexDirection: 'column'}}>
       <span>{label}</span>
@@ -33,7 +43,7 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
         isClearable
         isSearchable
         isLoading={loading}
-        value={field.value}
+        value={value}
         options={options}
         onChange={value => helpers.setValue(value)}
       />

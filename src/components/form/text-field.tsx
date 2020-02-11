@@ -19,7 +19,7 @@ const FormField: FC<FormFieldProps> = ({label, isLabelHidden, ...props}) => {
   return (
     <Label sx={{flexDirection: 'column'}}>
       {!isLabelHidden && <span>{label}</span>}
-      <Input {...field} {...props} />
+      <Input {...field} />
       {meta.touched && meta.error ? (
         <div className="error">{meta.error}</div>
       ) : null}
@@ -29,17 +29,10 @@ const FormField: FC<FormFieldProps> = ({label, isLabelHidden, ...props}) => {
 
 FormField.propTypes = {
   label: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  type: PropTypes.string,
-  value: PropTypes.string,
-  placeholder: PropTypes.string,
   isLabelHidden: PropTypes.bool
 };
 
 FormField.defaultProps = {
-  type: undefined,
-  value: undefined,
-  placeholder: undefined,
   isLabelHidden: false
 };
 
