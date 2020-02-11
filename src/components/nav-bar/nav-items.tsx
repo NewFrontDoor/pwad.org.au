@@ -35,11 +35,14 @@ const NavCollapse: FC<NavCollapseProps> = ({text, childpages}) => {
             listStyle: 'none'
           }}
         >
-          {childpages.map(item => (
-            <Text key={item._id} as="li">
-              <Link {...linkProps(item)} variant="nav" />
-            </Text>
-          ))}
+          {childpages.map(item => {
+            console.log(item)
+            return (
+              <Text key={item._id} as="li">
+                <Link {...linkProps(item)} variant="nav" />
+              </Text>
+            );
+          })}
         </Text>
       </Flex>
     </>

@@ -15,6 +15,9 @@ export default gql`
             _id
             _type
             title
+            name?
+            url?
+            alternateText?
           }
         }
       }
