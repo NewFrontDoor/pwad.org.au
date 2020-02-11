@@ -1,7 +1,7 @@
-import React, {FC, useReducer} from 'react';
+import React, {FC, useCallback} from 'react';
 import PropTypes from 'prop-types';
-import identity from 'lodash/identity';
-import pickBy from 'lodash/pickBy';
+import {useRouter} from 'next/router';
+import isEmpty from 'lodash/isEmpty';
 import {Box, Flex, Styled, Button} from 'theme-ui';
 import {Formik, Form, Field} from 'formik';
 import {TextField} from '../form';
@@ -10,52 +10,6 @@ import Loading from '../loading';
 import SearchResult from './search-result';
 import SearchOccasionInput from './search-occasion-input';
 import SearchKeywordInput from './search-keyword-input';
-
-const initialState = {
-  showSearchResults: false,
-  showHowToSearch: false,
-  showAdvancedSeach: false
-};
-
-type State = {
-  showSearchResults: boolean;
-};
-
-type Action = {
-  type: 'search';
-  fields: any;
-};
-
-function reducer(state: State, action: Action): State {
-  let keyword;
-  let occasion;
-
-  switch (action.type) {
-    case 'search':
-      if (action.fields.occasion) {
-        occasion = action.fields.occasion.value;
-      }
-
-      if (action.fields.keyword) {
-        keyword = action.fields.keyword.value;
-      }
-
-      return {
-        ...pickBy(
-          {
-            ...state,
-            ...action.fields,
-            occasion,
-            keyword
-          },
-          identity
-        ),
-        showSearchResults: true
-      };
-    default:
-      throw new Error(`Action type ${action.type} does not exist`);
-  }
-}
 
 type AdvancedSearchProps = {
   search: LiturgySearchQueryVariables;
@@ -87,21 +41,51 @@ AdvancedSearch.propTypes = {
   search: PropTypes.object.isRequired
 };
 
-const SearchBox: FC = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
+type SearchFields = {
+  title?: string;
+  occasion?: {
+    value: string;
+  };
+  keyword?: {
+    value: string;
+  };
+};
 
-  const {showSearchResults, ...search} = state;
+const SearchBox: FC = () => {
+  const router = useRouter();
+  const handleSubmit = useCallback(
+    ({occasion, keyword, title}: SearchFields) => {
+      const query: LiturgySearchQueryVariables = {title};
+
+      if (occasion) {
+        query.occasion = occasion.value;
+      }
+
+      if (keyword) {
+        query.keyword = keyword.value;
+      }
+
+      router.push(
+        {
+          pathname: router.pathname,
+          query
+        },
+        router.pathname
+      );
+    },
+    [router]
+  );
+
+  const showSearchResults = !isEmpty(router.query);
+  let initialValues: SearchFields = {title: '', occasion: null, keyword: null};
+
+  if (showSearchResults) {
+    initialValues = router.query;
+  }
 
   return (
     <>
-      <Formik
-        initialValues={{
-          title: '',
-          occasion: null,
-          keyword: null
-        }}
-        onSubmit={fields => dispatch({type: 'search', fields})}
-      >
+      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         <Form>
           <Flex>
             <Box grow={1} sx={{flexDirection: ['column', 'row'], width: '50%'}}>
@@ -127,7 +111,7 @@ const SearchBox: FC = () => {
           </Flex>
         </Form>
       </Formik>
-      {showSearchResults && <AdvancedSearch search={search} />}
+      {showSearchResults && <AdvancedSearch search={router.query} />}
     </>
   );
 };

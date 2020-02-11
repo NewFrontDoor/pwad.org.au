@@ -1,12 +1,16 @@
-import React, {FC, useReducer} from 'react';
+import React, {FC, useCallback} from 'react';
 import PropTypes from 'prop-types';
-import identity from 'lodash/identity';
-import pickBy from 'lodash/pickBy';
+import {useRouter} from 'next/router';
+import isEmpty from 'lodash/isEmpty';
 import {useResponsiveValue} from '@theme-ui/match-media';
 import {Styled, Button, Grid, Box} from 'theme-ui';
 import {Formik, Form, Field} from 'formik';
 import {TextField} from '../form';
-import {useAdvancedSearchQuery, AdvancedSearchQueryVariables} from '../queries';
+import {
+  useAdvancedSearchQuery,
+  AdvancedSearchQueryVariables,
+  EnumHymnBook
+} from '../queries';
 import Loading from '../loading';
 import SearchResult from './search-result';
 import SearchMetreInput from './search-metre-input';
@@ -18,79 +22,6 @@ import SearchKeywordInput from './search-keyword-input';
 type AdvancedSearchProps = {
   search: AdvancedSearchQueryVariables;
 };
-
-type State = AdvancedSearchProps['search'] & {
-  showSearchResults?: boolean;
-  showHowToSearch?: boolean;
-  showAdvancedSeach?: boolean;
-};
-
-type Action = {
-  type: 'search';
-  fields: {
-    hymnMetres?: Array<{value: string}>;
-    passage?: {value: string};
-    occasion?: {value: string};
-    tune?: {value: string};
-    keyword?: {value: string};
-  };
-};
-
-const initialState = {
-  showSearchResults: false,
-  showHowToSearch: false,
-  showAdvancedSeach: false
-};
-
-function reducer(state: State, action: Action): State {
-  let keyword: string;
-  let metres: string[];
-  let tune: string;
-  let book: string;
-  let occasion: string;
-
-  switch (action.type) {
-    case 'search':
-      if (action.fields.hymnMetres && action.fields.hymnMetres.length > 0) {
-        metres = action.fields.hymnMetres.map(metre => metre.value);
-      }
-
-      if (action.fields.passage) {
-        book = action.fields.passage.value;
-      }
-
-      if (action.fields.occasion) {
-        occasion = action.fields.occasion.value;
-      }
-
-      if (action.fields.tune) {
-        tune = action.fields.tune.value;
-      }
-
-      if (action.fields.keyword) {
-        keyword = action.fields.keyword.value;
-      }
-
-      return {
-        ...pickBy(
-          {
-            ...state,
-            ...action.fields,
-            occasion,
-            book,
-            tune,
-            metres,
-            keyword
-          },
-          identity
-        ),
-        showSearchResults: true
-      };
-    default:
-      throw new Error(`Action type ${String(action.type)} does not exist`);
-  }
-}
-
 const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
   const {loading, error, data} = useAdvancedSearchQuery({
     variables: search
@@ -117,26 +48,78 @@ AdvancedSearch.propTypes = {
   search: PropTypes.any.isRequired
 };
 
+type SearchFields = {
+  title?: string;
+  hymnMetres?: Array<{value: string}>;
+  occasion?: {
+    value: string;
+  };
+  keyword?: {
+    value: string;
+  };
+  tune?: {
+    value: string;
+  };
+  passage?: {
+    value: EnumHymnBook;
+  };
+};
+
 const SearchBox: FC = () => {
   const isMedium = useResponsiveValue([false, true]);
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const router = useRouter();
+  const handleSubmit = useCallback(
+    ({occasion, keyword, title, hymnMetres, tune, passage}: SearchFields) => {
+      const query: AdvancedSearchQueryVariables = {title};
 
-  const {showSearchResults, ...search} = state;
+      if (hymnMetres && hymnMetres.length > 0) {
+        query.metres = hymnMetres.map(metre => metre.value);
+      }
+
+      if (passage) {
+        query.book = passage.value;
+      }
+
+      if (occasion) {
+        query.occasion = occasion.value;
+      }
+
+      if (tune) {
+        query.tune = tune.value;
+      }
+
+      if (keyword) {
+        query.keyword = keyword.value;
+      }
+
+      router.push(
+        {
+          pathname: router.pathname,
+          query
+        },
+        router.pathname
+      );
+    },
+    [router]
+  );
+
+  const showSearchResults = !isEmpty(router.query);
+  let initialValues: SearchFields = {
+    hymnMetres: [],
+    title: '',
+    occasion: null,
+    keyword: null,
+    tune: null,
+    passage: null
+  };
+
+  if (showSearchResults) {
+    initialValues = router.query;
+  }
 
   return (
     <>
-      <Formik
-        initialValues={{
-          hymnMetres: [],
-          search: '',
-          title: '',
-          occasion: null,
-          keyword: null,
-          tune: null,
-          passage: null
-        }}
-        onSubmit={fields => dispatch({type: 'search', fields})}
-      >
+      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
         <Form>
           <Grid columns={[1, 2]}>
             <Box>
@@ -188,7 +171,7 @@ const SearchBox: FC = () => {
           </Grid>
         </Form>
       </Formik>
-      {showSearchResults && <AdvancedSearch search={search} />}
+      {showSearchResults && <AdvancedSearch search={router.query} />}
     </>
   );
 };
