@@ -5,7 +5,7 @@ import GithubSlugger from 'github-slugger';
 import SanityBlockContent from '@sanity/block-content-to-react';
 import getVideoId from 'get-video-id';
 import Vimeo from '@u-wave/react-vimeo';
-import Youtube from 'react-youtube';
+import Youtube from '@u-wave/react-youtube';
 import Link, {linkProps} from './link';
 
 const slugger = new GithubSlugger();
@@ -66,11 +66,11 @@ const Video = ({node}) => {
     const video = getVideoId(url || null);
 
     if (video.service === 'youtube') {
-      return <Youtube videoId={video.id} />;
+      return <Youtube modestBranding annotations={false} videoId={video.id} />;
     }
 
     if (video.service === 'vimeo') {
-      return <Vimeo video={video.id} />;
+      return <Vimeo showTitle={false} showByline={false} video={video.id} />;
     }
   }
 };
