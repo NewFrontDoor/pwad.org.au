@@ -1,5 +1,6 @@
 import React, {FC, useState, useCallback} from 'react';
 import PropTypes from 'prop-types';
+import intersectionBy from 'lodash/intersectionBy';
 import Select from 'react-select';
 import {Label} from 'theme-ui';
 import {useField} from 'formik';
@@ -43,6 +44,12 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
       })) ?? [];
   }
 
+  let value = intersectionBy(options, field.value, 'value');
+
+  if (value.length === 0) {
+    value = field.value;
+  }
+
   return (
     <Label sx={{flexDirection: 'column'}}>
       <span>{label}</span>
@@ -51,7 +58,7 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
         isClearable
         isSearchable
         isLoading={loading}
-        value={field.value}
+        value={value}
         inputValue={searchTerm}
         options={options}
         onChange={value => helpers.setValue(value)}

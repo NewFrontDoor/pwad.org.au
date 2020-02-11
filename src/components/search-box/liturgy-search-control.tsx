@@ -10,6 +10,7 @@ import Loading from '../loading';
 import SearchResult from './search-result';
 import SearchOccasionInput from './search-occasion-input';
 import SearchKeywordInput from './search-keyword-input';
+import initialSelectValue from './initial-select-value';
 
 type AdvancedSearchProps = {
   search: LiturgySearchQueryVariables;
@@ -80,7 +81,11 @@ const SearchBox: FC = () => {
   let initialValues: SearchFields = {title: '', occasion: null, keyword: null};
 
   if (showSearchResults) {
-    initialValues = router.query;
+    initialValues = {
+      ...router.query,
+      occasion: initialSelectValue(router.query.occasion).shift(),
+      keyword: initialSelectValue(router.query.keyword).shift()
+    };
   }
 
   return (

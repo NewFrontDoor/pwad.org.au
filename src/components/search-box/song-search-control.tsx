@@ -18,6 +18,7 @@ import SearchTuneInput from './search-tune-input';
 import SearchPassageInput from './search-passage-input';
 import SearchOccasionInput from './search-occasion-input';
 import SearchKeywordInput from './search-keyword-input';
+import initialSelectValue from './initial-select-value';
 
 type AdvancedSearchProps = {
   search: AdvancedSearchQueryVariables;
@@ -50,7 +51,7 @@ AdvancedSearch.propTypes = {
 
 type SearchFields = {
   title?: string;
-  hymnMetres?: Array<{value: string}>;
+  metres?: Array<{value: string}>;
   occasion?: {
     value: string;
   };
@@ -60,7 +61,7 @@ type SearchFields = {
   tune?: {
     value: string;
   };
-  passage?: {
+  book?: {
     value: EnumHymnBook;
   };
 };
@@ -69,15 +70,15 @@ const SearchBox: FC = () => {
   const isMedium = useResponsiveValue([false, true]);
   const router = useRouter();
   const handleSubmit = useCallback(
-    ({occasion, keyword, title, hymnMetres, tune, passage}: SearchFields) => {
+    ({occasion, keyword, title, metres, tune, book}: SearchFields) => {
       const query: AdvancedSearchQueryVariables = {title};
 
-      if (hymnMetres && hymnMetres.length > 0) {
-        query.metres = hymnMetres.map(metre => metre.value);
+      if (metres && metres.length > 0) {
+        query.metres = metres.map(metre => metre.value);
       }
 
-      if (passage) {
-        query.book = passage.value;
+      if (book) {
+        query.book = book.value;
       }
 
       if (occasion) {
@@ -105,16 +106,23 @@ const SearchBox: FC = () => {
 
   const showSearchResults = !isEmpty(router.query);
   let initialValues: SearchFields = {
-    hymnMetres: [],
+    metres: [],
     title: '',
     occasion: null,
     keyword: null,
     tune: null,
-    passage: null
+    book: null
   };
 
   if (showSearchResults) {
-    initialValues = router.query;
+    initialValues = {
+      ...router.query,
+      metres: initialSelectValue(router.query.metres),
+      occasion: initialSelectValue(router.query.occasion).shift(),
+      keyword: initialSelectValue(router.query.keyword).shift(),
+      tune: initialSelectValue(router.query.tune).shift(),
+      book: initialSelectValue<EnumHymnBook>(router.query.book).shift()
+    };
   }
 
   return (
@@ -127,17 +135,13 @@ const SearchBox: FC = () => {
                 <TextField label="Title" name="title" />
               </Box>
               <Box marginBottom="1em">
-                <Field
-                  as={SearchMetreInput}
-                  label="Hymn Metre"
-                  name="hymnMetres"
-                />
+                <Field as={SearchMetreInput} label="Hymn Metre" name="metres" />
               </Box>
               <Box marginBottom="1em">
                 <Field as={SearchTuneInput} label="Tune" name="tune" />
               </Box>
               <Box marginBottom="1em">
-                <Field as={SearchPassageInput} label="Passage" name="passage" />
+                <Field as={SearchPassageInput} label="Passage" name="book" />
               </Box>
               <Box marginBottom="1em">
                 <Field
