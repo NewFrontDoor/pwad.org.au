@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import {Styled} from 'theme-ui';
 import GithubSlugger from 'github-slugger';
 import SanityBlockContent from '@sanity/block-content-to-react';
+import getVideoId from 'get-video-id';
+import Vimeo from '@u-wave/react-vimeo';
+import Youtube from 'react-youtube';
 import Link, {linkProps} from './link';
 
 const slugger = new GithubSlugger();
@@ -57,6 +60,21 @@ type SerializerProps = {
   };
 };
 
+const Video = ({node}) => {
+  const {url} = node;
+  if (url) {
+    const video = getVideoId(url || null);
+
+    if (video.service === 'youtube') {
+      return <Youtube videoId={video.id} />;
+    }
+
+    if (video.service === 'vimeo') {
+      return <Vimeo video={video.id} />;
+    }
+  }
+};
+
 const serializers = {
   types: {
     block(props: SerializerProps) {
@@ -85,7 +103,8 @@ const serializers = {
           return <Styled.p variant="prose" {...props} />;
       }
     },
-    img: Image
+    img: Image,
+    video: Video
   },
   marks: {
     internalLink: InternalLink

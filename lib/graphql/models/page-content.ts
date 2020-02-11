@@ -12,13 +12,15 @@ export async function getById(pageId: string): Promise<PageContent> {
             hasToc,
             "slug": slug.current,
             content[] {
-              ...,markDefs[] {
+              ...,
+              markDefs[] {
                 ...,_type == 'internalLink' => {
                   reference-> {
                     _id,_type
                   }
                 }
-              }
+              },
+              "asset": asset->
             }
           }`
       ])
