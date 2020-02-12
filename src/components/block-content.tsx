@@ -6,7 +6,7 @@ import SanityBlockContent from '@sanity/block-content-to-react';
 import getVideoId from 'get-video-id';
 import Vimeo from '@u-wave/react-vimeo';
 import Youtube from '@u-wave/react-youtube';
-import Link, {linkProps} from './link';
+import Link, {linkProps, externalLinkProps} from './link';
 
 const slugger = new GithubSlugger();
 
@@ -31,6 +31,31 @@ InternalLink.propTypes = {
       _id: PropTypes.string.isRequired,
       _type: PropTypes.string.isRequired
     }).isRequired
+  }).isRequired,
+  children: PropTypes.node.isRequired
+};
+
+type ExternalLinkProps = {
+  mark: {
+    _key: string;
+    _type: string;
+    blank: boolean;
+    href: string;
+  };
+  children: ReactNode;
+};
+
+const ExternalLink: FC<ExternalLinkProps> = ({children, mark}) => {
+  const reference = {...mark, children: children[0]};
+  return <Link {...externalLinkProps(reference)} />;
+};
+
+ExternalLink.propTypes = {
+  mark: PropTypes.shape({
+    _key: PropTypes.string.isRequired,
+    _type: PropTypes.string.isRequired,
+    blank: PropTypes.bool,
+    href: PropTypes.string.isRequired
   }).isRequired,
   children: PropTypes.node.isRequired
 };
@@ -107,7 +132,8 @@ const serializers = {
     video: Video
   },
   marks: {
-    internalLink: InternalLink
+    internalLink: InternalLink,
+    link: ExternalLink
   }
 };
 
