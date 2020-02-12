@@ -13,12 +13,14 @@ export default class MyDocument extends Document {
           />
           <meta httpEquiv="x-ua-compatible" content="ie=edge" />
           <link rel="shortcut icon" href="/static/favicon.ico" />
-          <script async id="stripe-js" src="https://js.stripe.com/v3/" />
+          <link rel="dns-prefetch" href="https://m.stripe.com" />
+          <link rel="dns-prefetch" href="https://m.stripe.network" />
         </Head>
         <body>
           <Main />
           <div id="modal" />
           <NextScript />
+          <script async id="stripe-js" src="https://js.stripe.com/v3/" />
         </body>
       </html>
     );
