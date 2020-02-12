@@ -220,6 +220,7 @@ export const schema = gql`
   }
 
   type ChildPage {
+    _id: ID!
     childPage: ChildPageReference
     alternateText: String
   }

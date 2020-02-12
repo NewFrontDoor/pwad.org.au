@@ -56,6 +56,7 @@ export type Category = Document & {
 
 export type ChildPage = {
    __typename?: 'ChildPage',
+  _id: Scalars['ID'],
   childPage?: Maybe<ChildPageReference>,
   alternateText?: Maybe<Scalars['String']>,
 };
@@ -820,6 +821,7 @@ export type CategoryResolvers<ContextType = Context, ParentType extends Resolver
 };
 
 export type ChildPageResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ChildPage'] = ResolversParentTypes['ChildPage']> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
   childPage?: Resolver<Maybe<ResolversTypes['ChildPageReference']>, ParentType, ContextType>,
   alternateText?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,

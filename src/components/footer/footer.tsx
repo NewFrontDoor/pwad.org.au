@@ -2,7 +2,7 @@
 import {FC} from 'react';
 import {jsx, Styled, Box, Grid} from 'theme-ui';
 import PropTypes from 'prop-types';
-import Link, {linkProps} from '../link';
+import Link, {childPageLinkProps} from '../link';
 import {MenuItem} from '../queries';
 import {DarkTheme} from '../theme';
 
@@ -35,12 +35,7 @@ const Footer: FC<FooterProps> = ({menuItems}) => {
                     <Styled.ul>
                       {menu.childpages.map(item => (
                         <li key={item._id}>
-                          <Link
-                            {...linkProps({
-                              ...item,
-                              ...item.childPage
-                            })}
-                          />
+                          <Link {...childPageLinkProps(item)} />
                         </li>
                       ))}
                     </Styled.ul>

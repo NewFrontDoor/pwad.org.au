@@ -43,7 +43,28 @@ export async function main(): Promise<Main> {
     ['*']
       .concat([
         '[_type == "main"][0]',
-        '{_type,blurb,heading,subheading,"menuItems":menuitems[] {...,_type,childpages[]{_type,alternateText,childPage->{_type,_id,title,name,url}}}}'
+        `{
+          _type,
+          blurb,
+          heading,
+          subheading,
+          "menuItems":menuitems[] {
+            ...,
+            _type,
+            childpages[]{
+              "_id": childPage->_id,
+              _type,
+              alternateText,
+              childPage->{
+                _id,
+                _type,
+                title,
+                name,
+                url
+              }
+            }
+          }
+        }`
       ])
       .join('|')
   );
@@ -54,7 +75,22 @@ export async function menuItems(): Promise<MenuItem[]> {
     ['*']
       .concat([
         '[_type == "main"]',
-        '[0].menuitems[] {...,_type,childpages[]{_type,alternateText,childPage->{_type,_id,title,name,url}}}'
+        `[0].menuitems[] {
+          ...,
+          _type,
+          childpages[]{
+            "_id": childPage->_id,
+            _type,
+            alternateText,
+            childPage->{
+              _id,
+              _type,
+              title,
+              name,
+              url
+            }
+          }
+        }`
       ])
       .join('|')
   );

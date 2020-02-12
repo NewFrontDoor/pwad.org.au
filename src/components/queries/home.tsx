@@ -11,6 +11,7 @@ export default gql`
         _key
         text
         childpages {
+          _id
           alternateText
           childPage {
             ... on PageContent {

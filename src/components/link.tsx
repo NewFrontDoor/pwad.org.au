@@ -9,10 +9,10 @@ import {
   Prayer,
   Keyword,
   Liturgy,
-  Document,
   Asset,
   PageContent,
-  Scripture
+  Scripture,
+  ChildPage
 } from './queries';
 
 type LinkProps = {
@@ -105,11 +105,11 @@ export function scriptureLinkProps({_id, title}: Scripture): LinkProps {
   };
 }
 
-export function assetLinkProps({url, name, alternateText}: Asset): LinkProps {
+export function assetLinkProps({url, name}: Asset): LinkProps {
   return {
     isInternal: false,
     href: url,
-    children: alternateText || name
+    children: name
   };
 }
 
@@ -141,4 +141,17 @@ export function linkProps(
     default:
       return props;
   }
+}
+
+export function childPageLinkProps({
+  alternateText,
+  childPage
+}: ChildPage): LinkProps {
+  const props = linkProps(childPage);
+
+  if (alternateText) {
+    props.children = alternateText;
+  }
+
+  return props;
 }

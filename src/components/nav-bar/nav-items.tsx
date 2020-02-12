@@ -7,7 +7,7 @@ import {motion} from 'framer-motion';
 import useToggle from '../use-toggle';
 
 import {MenuItem} from '../queries';
-import Link, {linkProps} from '../link';
+import Link, {childPageLinkProps} from '../link';
 
 type NavCollapseProps = MenuItem;
 
@@ -38,13 +38,7 @@ const NavCollapse: FC<NavCollapseProps> = ({text, childpages}) => {
           {childpages.map(item => {
             return (
               <Text key={item._id} as="li">
-                <Link
-                  {...linkProps({
-                    ...item,
-                    ...item.childPage
-                  })}
-                  variant="nav"
-                />
+                <Link {...childPageLinkProps(item)} variant="nav" />
               </Text>
             );
           })}

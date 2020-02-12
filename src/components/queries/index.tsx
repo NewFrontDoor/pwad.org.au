@@ -56,6 +56,7 @@ export type Category = Document & {
 
 export type ChildPage = {
    __typename?: 'ChildPage',
+  _id: Scalars['ID'],
   childPage?: Maybe<ChildPageReference>,
   alternateText?: Maybe<Scalars['String']>,
 };
@@ -954,7 +955,7 @@ export type HomeQuery = (
       & Pick<MenuItem, '_key' | 'text'>
       & { childpages: Maybe<Array<Maybe<(
         { __typename?: 'ChildPage' }
-        & Pick<ChildPage, 'alternateText'>
+        & Pick<ChildPage, '_id' | 'alternateText'>
         & { childPage: Maybe<(
           { __typename?: 'PageContent' }
           & Pick<PageContent, '_id' | '_type' | 'title'>
@@ -1872,6 +1873,7 @@ export const HomeDocument = gql`
       _key
       text
       childpages {
+        _id
         alternateText
         childPage {
           ... on PageContent {
