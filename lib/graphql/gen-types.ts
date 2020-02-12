@@ -54,6 +54,12 @@ export type Category = Document & {
   parent?: Maybe<Category>,
 };
 
+export type ChildPage = {
+   __typename?: 'ChildPage',
+  childPage?: Maybe<ChildPageReference>,
+  alternateText?: Maybe<Scalars['String']>,
+};
+
 export type ChildPageReference = PageContent | Hymn | Prayer | Liturgy | Scripture | Asset;
 
 export type Copyright = Document & {
@@ -256,7 +262,7 @@ export type MenuItem = {
    __typename?: 'MenuItem',
   _key?: Maybe<Scalars['String']>,
   text?: Maybe<Scalars['String']>,
-  childpages?: Maybe<Array<Maybe<ChildPageReference>>>,
+  childpages?: Maybe<Array<Maybe<ChildPage>>>,
 };
 
 export type Metre = Document & {
@@ -703,6 +709,7 @@ export type ResolversTypes = {
   ExternalUrl: ResolverTypeWrapper<any>,
   RelativeUrl: ResolverTypeWrapper<any>,
   MenuItem: ResolverTypeWrapper<any>,
+  ChildPage: ResolverTypeWrapper<any>,
   ChildPageReference: ResolverTypeWrapper<any>,
   OccasionGroupedById: ResolverTypeWrapper<any>,
   FilterInput: ResolverTypeWrapper<any>,
@@ -753,6 +760,7 @@ export type ResolversParentTypes = {
   ExternalUrl: any,
   RelativeUrl: any,
   MenuItem: any,
+  ChildPage: any,
   ChildPageReference: any,
   OccasionGroupedById: any,
   FilterInput: any,
@@ -808,6 +816,12 @@ export type CategoryResolvers<ContextType = Context, ParentType extends Resolver
   _updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>,
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   parent?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
+};
+
+export type ChildPageResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ChildPage'] = ResolversParentTypes['ChildPage']> = {
+  childPage?: Resolver<Maybe<ResolversTypes['ChildPageReference']>, ParentType, ContextType>,
+  alternateText?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
@@ -942,7 +956,7 @@ export type MenuResolvers<ContextType = Context, ParentType extends ResolversPar
 export type MenuItemResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MenuItem'] = ResolversParentTypes['MenuItem']> = {
   _key?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
-  childpages?: Resolver<Maybe<Array<Maybe<ResolversTypes['ChildPageReference']>>>, ParentType, ContextType>,
+  childpages?: Resolver<Maybe<Array<Maybe<ResolversTypes['ChildPage']>>>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
@@ -1141,6 +1155,7 @@ export type Resolvers<ContextType = Context> = {
   Asset?: AssetResolvers<ContextType>,
   Author?: AuthorResolvers<ContextType>,
   Category?: CategoryResolvers<ContextType>,
+  ChildPage?: ChildPageResolvers<ContextType>,
   ChildPageReference?: ChildPageReferenceResolvers,
   Copyright?: CopyrightResolvers<ContextType>,
   Date?: GraphQLScalarType,

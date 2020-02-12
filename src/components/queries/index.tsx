@@ -54,6 +54,12 @@ export type Category = Document & {
   parent?: Maybe<Category>,
 };
 
+export type ChildPage = {
+   __typename?: 'ChildPage',
+  childPage?: Maybe<ChildPageReference>,
+  alternateText?: Maybe<Scalars['String']>,
+};
+
 export type ChildPageReference = PageContent | Hymn | Prayer | Liturgy | Scripture | Asset;
 
 export type Copyright = Document & {
@@ -256,7 +262,7 @@ export type MenuItem = {
    __typename?: 'MenuItem',
   _key?: Maybe<Scalars['String']>,
   text?: Maybe<Scalars['String']>,
-  childpages?: Maybe<Array<Maybe<ChildPageReference>>>,
+  childpages?: Maybe<Array<Maybe<ChildPage>>>,
 };
 
 export type Metre = Document & {
@@ -947,9 +953,16 @@ export type HomeQuery = (
       { __typename?: 'MenuItem' }
       & Pick<MenuItem, '_key' | 'text'>
       & { childpages: Maybe<Array<Maybe<(
-        { __typename?: 'PageContent' }
-        & Pick<PageContent, '_id' | '_type' | 'title'>
-      ) | { __typename?: 'Hymn' } | { __typename?: 'Prayer' } | { __typename?: 'Liturgy' } | { __typename?: 'Scripture' } | { __typename?: 'Asset' }>>> }
+        { __typename?: 'ChildPage' }
+        & Pick<ChildPage, 'alternateText'>
+        & { childPage: Maybe<(
+          { __typename?: 'PageContent' }
+          & Pick<PageContent, '_id' | '_type' | 'title'>
+        ) | { __typename?: 'Hymn' } | { __typename?: 'Prayer' } | { __typename?: 'Liturgy' } | { __typename?: 'Scripture' } | (
+          { __typename?: 'Asset' }
+          & Pick<Asset, '_id' | '_type' | 'name' | 'url'>
+        )> }
+      )>>> }
     )>>> }
   )> }
 );
@@ -1859,10 +1872,19 @@ export const HomeDocument = gql`
       _key
       text
       childpages {
-        ... on PageContent {
-          _id
-          _type
-          title
+        alternateText
+        childPage {
+          ... on PageContent {
+            _id
+            _type
+            title
+          }
+          ... on Asset {
+            _id
+            _type
+            name
+            url
+          }
         }
       }
     }
