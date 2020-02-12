@@ -187,11 +187,11 @@ const theme = {
     }
   },
   text: {
-    listStandard: {
+    listDisc: {
       listStyle: 'disc',
       paddingInlineStart: '20px'
     },
-    listFlat: {
+    listNone: {
       listStyle: 'none',
       paddingInlineStart: '0'
     }

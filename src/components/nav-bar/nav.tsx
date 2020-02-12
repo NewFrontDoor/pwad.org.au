@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import {FC, ReactNode} from 'react';
 import PropTypes from 'prop-types';
-import {jsx, Styled, Button, Flex} from 'theme-ui';
+import {jsx, Styled, Button, Flex, Text} from 'theme-ui';
 import {useResponsiveValue} from '@theme-ui/match-media';
 import {X} from 'react-feather';
 import Link from '../link';
@@ -74,29 +74,31 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
             <NavMenuItem>
               <UserAvatar />
             </NavMenuItem>
-            <div>
-              <Can I="read" a="keystone">
+            <li>
+              <Text variant="listNone" as="ul">
+                <Can I="read" a="keystone">
+                  <NavMenuItem>
+                    <Link
+                      variant="nav"
+                      href="https://pwad.sanity.studio/"
+                      isInternal={false}
+                    >
+                      Admin
+                    </Link>
+                  </NavMenuItem>
+                </Can>
                 <NavMenuItem>
-                  <Link
-                    variant="nav"
-                    href="https://pwad.sanity.studio/"
-                    isInternal={false}
-                  >
-                    Admin
+                  <Link variant="nav" href="/my-account">
+                    My account
                   </Link>
                 </NavMenuItem>
-              </Can>
-              <NavMenuItem>
-                <Link variant="nav" href="/my-account">
-                  My account
-                </Link>
-              </NavMenuItem>
-              <NavMenuItem>
-                <Link variant="nav" href="/api/logout">
-                  Log out
-                </Link>
-              </NavMenuItem>
-            </div>
+                <NavMenuItem>
+                  <Link variant="nav" href="/api/logout">
+                    Log out
+                  </Link>
+                </NavMenuItem>
+              </Text>
+            </li>
           </>
         )}
       </Can>

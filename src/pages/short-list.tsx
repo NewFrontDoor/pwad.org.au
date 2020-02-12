@@ -22,7 +22,7 @@ const ShortList: NextPage = () => {
         <Styled.h2>My Short List</Styled.h2>
 
         {data?.me && (
-          <Text variant="listFlat" as="ul">
+          <Text variant="listNone" as="ul">
             {data.me.shortlist.map(item => (
               <li key={item._id}>
                 <ShortListButton itemId={item._id} />{' '}
