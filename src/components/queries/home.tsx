@@ -11,10 +11,20 @@ export default gql`
         _key
         text
         childpages {
-          ... on PageContent {
-            _id
-            _type
-            title
+          alternateText
+          childPage {
+            ... on PageContent {
+              _id
+              _type
+              title
+            }
+
+            ... on Asset {
+              _id
+              _type
+              name
+              url
+            }
           }
         }
       }

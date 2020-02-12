@@ -216,7 +216,12 @@ export const schema = gql`
   type MenuItem {
     _key: String
     text: String
-    childpages: [ChildPageReference]
+    childpages: [ChildPage]
+  }
+
+  type ChildPage {
+    childPage: ChildPageReference
+    alternateText: String
   }
 
   type Author implements Document {

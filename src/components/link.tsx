@@ -105,11 +105,11 @@ export function scriptureLinkProps({_id, title}: Scripture): LinkProps {
   };
 }
 
-export function assetLinkProps({url, name}: Asset): LinkProps {
+export function assetLinkProps({url, name, alternateText}: Asset): LinkProps {
   return {
     isInternal: false,
     href: url,
-    children: name
+    children: alternateText || name
   };
 }
 

@@ -35,11 +35,19 @@ const NavCollapse: FC<NavCollapseProps> = ({text, childpages}) => {
             listStyle: 'none'
           }}
         >
-          {childpages.map(item => (
-            <Text key={item._id} as="li">
-              <Link {...linkProps(item)} variant="nav" />
-            </Text>
-          ))}
+          {childpages.map(item => {
+            return (
+              <Text key={item._id} as="li">
+                <Link
+                  {...linkProps({
+                    ...item,
+                    ...item.childPage
+                  })}
+                  variant="nav"
+                />
+              </Text>
+            );
+          })}
         </Text>
       </Flex>
     </>
@@ -67,7 +75,6 @@ type NavItemsProps = {
 
 const NavItems: FC<NavItemsProps> = ({selectedMenu, menuItems}) => {
   const isMedium = useResponsiveValue([false, true]);
-
   /* eslint-disable react/jsx-no-useless-fragment */
   return (
     <>
