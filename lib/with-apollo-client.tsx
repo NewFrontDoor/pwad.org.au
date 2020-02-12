@@ -87,17 +87,18 @@ export default function withApollo(
       let host: URL;
 
       if (req) {
-        host = new URL(
-          `${String(req.headers['x-forwarded-proto'])}://${String(
-            req.headers['x-forwarded-host']
-          )}`
-        );
+        const reqProto = req.headers['x-forwarded-proto'];
+        const reqHost = req.headers['x-forwarded-host'];
+        if (typeof reqProto === 'string' && typeof reqHost === 'string') {
+          host = new URL(`${reqProto}://${reqHost}`);
+        } else {
+          host = new URL('http://localhost:3000');
+        }
       } else {
         host = new URL(window.location.origin);
       }
 
       const {origin} = host;
-
       const apolloClient = initApolloClient({}, {cookie, origin});
 
       context.apolloClient = apolloClient;

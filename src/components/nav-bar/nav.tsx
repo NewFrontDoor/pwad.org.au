@@ -3,6 +3,7 @@ import {FC, ReactNode} from 'react';
 import PropTypes from 'prop-types';
 import {jsx, Styled, Button, Flex, Text} from 'theme-ui';
 import {useResponsiveValue} from '@theme-ui/match-media';
+import VisuallyHidden from '@reach/visually-hidden';
 import {X} from 'react-feather';
 import Link from '../link';
 import {useMeQuery} from '../queries';
@@ -52,7 +53,8 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
           }}
         >
           <Button variant="transparent" sx={{padding: 0}} onClick={onClose}>
-            <X role="img" />
+            <VisuallyHidden>Close</VisuallyHidden>
+            <X aria-hidden role="img" />
           </Button>
         </NavMenuItem>
       )}

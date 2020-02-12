@@ -79,6 +79,8 @@
     "@emotion/core": "^10.0.27",
     "@newfrontdoor/audio-player": "^0.1.8",
     "@next/bundle-analyzer": "^9.2.1",
+    "@reach/dialog": "^0.8.2",
+    "@reach/visually-hidden": "^0.8.2",
     "@sanity/block-content-to-react": "^2.0.7",
     "@sanity/client": "^0.147.3",
     "@sanity/image-url": "^0.140.17",
@@ -146,7 +148,17 @@
         "files": "src/**/*.tsx",
         "envs": [
           "browser"
-        ]
+        ],
+        "rules": {
+          "import/no-unassigned-import": [
+            "error",
+            {
+              "allow": [
+                "**/*.css"
+              ]
+            }
+          ]
+        }
       }
     ]
   },

@@ -1,8 +1,9 @@
-import React, {FC} from 'react';
+/** @jsx jsx */
+import {FC} from 'react';
 import PropTypes from 'prop-types';
-import {Label, Input} from 'theme-ui';
+import {jsx, Label, Input} from 'theme-ui';
 import {useField} from 'formik';
-
+import VisuallyHidden from '@reach/visually-hidden';
 type FormFieldProps = {
   label: string;
   name: string;
@@ -18,7 +19,11 @@ const FormField: FC<FormFieldProps> = ({label, isLabelHidden, ...props}) => {
 
   return (
     <Label sx={{flexDirection: 'column'}}>
-      {!isLabelHidden && <span>{label}</span>}
+      {isLabelHidden ? (
+        <VisuallyHidden>{label}</VisuallyHidden>
+      ) : (
+        <span>{label}</span>
+      )}
       <Input {...field} />
       {meta.touched && meta.error ? (
         <div className="error">{meta.error}</div>
