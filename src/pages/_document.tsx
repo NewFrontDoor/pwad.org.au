@@ -13,8 +13,8 @@ export default class MyDocument extends Document {
           />
           <meta httpEquiv="x-ua-compatible" content="ie=edge" />
           <link rel="shortcut icon" href="/static/favicon.ico" />
-          <link rel="dns-prefetch" href="https://m.stripe.com" />
-          <link rel="dns-prefetch" href="https://m.stripe.network" />
+          <link rel="preconnect" href="https://m.stripe.com" />
+          <link rel="preconnect" href="https://m.stripe.network" />
         </Head>
         <body>
           <Main />
