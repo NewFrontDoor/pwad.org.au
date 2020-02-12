@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import {FC, useState, useRef, useEffect} from 'react';
+import {FC, useState, useEffect} from 'react';
 import {jsx, Box, Styled} from 'theme-ui';
 import PropTypes from 'prop-types';
 import prettyBytes from 'pretty-bytes';
@@ -76,7 +76,7 @@ SidebarFiles.defaultProps = {
   files: []
 };
 
-export const SidebarTune: FC<Tune> = ({_id, title}) => {
+export const SidebarTune: FC<Tune> = ({_id, title, file}) => {
   const [playing, togglePlaying] = useToggle(false);
   return (
     <>
@@ -88,12 +88,14 @@ export const SidebarTune: FC<Tune> = ({_id, title}) => {
         }}
       >
         <li key={_id}>
-          <span
-            sx={{verticalAlign: 'text-top', paddingRight: '3px'}}
-            onClick={() => togglePlaying()}
-          >
-            {playing ? <StopCircle size={18} /> : <PlayCircle size={18} />}
-          </span>
+          {file && (
+            <span
+              sx={{verticalAlign: 'text-top', paddingRight: '3px'}}
+              onClick={() => togglePlaying()}
+            >
+              {playing ? <StopCircle size={18} /> : <PlayCircle size={18} />}
+            </span>
+          )}
           {title}
         </li>
       </Styled.ul>
@@ -103,13 +105,18 @@ export const SidebarTune: FC<Tune> = ({_id, title}) => {
 
 SidebarTune.propTypes = {
   _id: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  file: PropTypes.any
 };
 
-export const SidebarAlternateTunes: FC<{tunes: Asset[]}> = ({tunes}) => {
+SidebarTune.defaultProps = {
+  file: undefined
+};
+
+export const SidebarAlternateTunes: FC<{tunes?: Tune[]}> = ({tunes}) => {
   const [tuneExpand, tuneToggle] = useToggle(false);
   const [playing, setPlaying] = useState(null);
-  const [tune, setTune] = useState(null);
+  const [file, setFile] = useState<Asset>(null);
   const [audioPlayer, setAudioPlayer] = useState(null);
 
   useEffect(() => {
@@ -117,22 +124,22 @@ export const SidebarAlternateTunes: FC<{tunes: Asset[]}> = ({tunes}) => {
       audioPlayer.load();
       audioPlayer.play();
     }
-  }, [audioPlayer, tune]);
+  }, [audioPlayer, file]);
 
-  function handleMedia(tune) {
+  function handleMedia(tune: Tune): void {
     if (playing === tune) {
       setPlaying(null);
-      setTune(null);
+      setFile(null);
     } else {
       setPlaying(tune);
-      setTune(tune.file.url);
+      setFile(tune.file);
     }
   }
 
   return (
     <>
       <Styled.h3>Alternate Tunes</Styled.h3>
-      <DefaultPlayer setAudioPlayer={setAudioPlayer} src={tune} />
+      {file && <DefaultPlayer setAudioPlayer={setAudioPlayer} src={file.url} />}
       <Styled.ul
         sx={{
           listStyle: 'none',

@@ -61,7 +61,9 @@ const Song: NextPage<SongProps> = ({id}) => {
           {data?.hymnById && (
             <>
               {tune && <SidebarTune {...tune} />}
-              {alternateTunes && <SidebarAlternateTunes tunes={alternateTunes} />}
+              {alternateTunes?.length > 0 && (
+                <SidebarAlternateTunes tunes={alternateTunes} />
+              )}
               {author && <SidebarAuthor {...author} />}
               {scripture && <SidebarScripture scripture={scripture} />}
               {tune && <SidebarTuneComposer {...tune} />}
