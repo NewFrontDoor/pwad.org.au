@@ -13,7 +13,7 @@ export default class MyDocument extends Document {
           />
           <meta httpEquiv="x-ua-compatible" content="ie=edge" />
           <link rel="shortcut icon" href="/static/favicon.ico" />
-          <script id="stripe-js" src="https://js.stripe.com/v3/" />
+          <script async id="stripe-js" src="https://js.stripe.com/v3/" />
         </Head>
         <body>
           <Main />
