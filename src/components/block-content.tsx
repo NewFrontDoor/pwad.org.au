@@ -46,8 +46,8 @@ type ExternalLinkProps = {
 };
 
 const ExternalLink: FC<ExternalLinkProps> = ({children, mark}) => {
-  const reference = {...mark, children: children[0]};
-  return <Link {...externalLinkProps(reference)} />;
+  const reference = {...mark, children: children[0], isInternal: false};
+  return <Link {...reference} />;
 };
 
 ExternalLink.propTypes = {

@@ -24,11 +24,6 @@ type LinkProps = {
 } & Record<string, unknown>;
 
 const Link: FC<LinkProps> = ({as, href, isInternal, blank, ...props}) => {
-  if (blank)
-    return (
-      <ThemeUiLink href={href} target="_blank" rel="noopener" {...props} />
-    );
-
   if (href && isInternal) {
     return (
       <NextLink passHref as={as} href={href}>
@@ -36,6 +31,11 @@ const Link: FC<LinkProps> = ({as, href, isInternal, blank, ...props}) => {
       </NextLink>
     );
   }
+
+  if (blank)
+    return (
+      <ThemeUiLink href={href} target="_blank" rel="noopener" {...props} />
+    );
 
   return <ThemeUiLink href={href} {...props} />;
 };
@@ -160,9 +160,5 @@ export function childPageLinkProps({
     props.children = alternateText;
   }
 
-  return props;
-}
-
-export function externalLinkProps({...props}: ChildPage): LinkProps {
   return props;
 }
