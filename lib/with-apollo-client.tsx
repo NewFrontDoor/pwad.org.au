@@ -11,7 +11,7 @@ import {
   NormalizedCacheObject,
   IntrospectionFragmentMatcher
 } from 'apollo-cache-inmemory';
-import {createHttpLink} from 'apollo-link-http';
+import {HttpLink} from 'apollo-link-http';
 import {setContext} from 'apollo-link-context';
 import fetch from 'isomorphic-unfetch';
 import {AbilityProvider} from '../src/components/ability-context';
@@ -21,11 +21,15 @@ export type TApolloClient = ApolloClient<NormalizedCacheObject>;
 
 export type WithApolloPageContext = NextPageContext & {
   apolloClient: TApolloClient;
+  ctx?: {
+    apolloClient: TApolloClient;
+  };
 };
 
 type InitialProps = {
   apolloClient?: TApolloClient;
   apolloState?: NormalizedCacheObject;
+  origin?: string;
 } & Record<string, any>;
 
 const fragmentMatcher = new IntrospectionFragmentMatcher({
@@ -39,9 +43,10 @@ export default function withApollo(
   const WithApollo: NextPage<InitialProps> = ({
     apolloClient,
     apolloState,
+    origin,
     ...pageProps
   }) => {
-    const client = apolloClient || initApolloClient(apolloState);
+    const client = apolloClient || initApolloClient(apolloState, {origin});
 
     return (
       <ApolloProvider client={client}>
@@ -57,22 +62,21 @@ export default function withApollo(
     const displayName =
       PageComponent.displayName || PageComponent.name || 'Component';
 
-    // Warn if old way of installing apollo is used
-    if (displayName === 'App') {
-      console.warn('This withApollo HOC only works with PageComponents.');
-    }
+    WithApollo.displayName = `withApollo(${displayName})`;
 
     // Set correct display name for devtools
     WithApollo.displayName = `withApollo(${displayName})`;
 
     WithApollo.propTypes = {
       apolloClient: PropTypes.any,
-      apolloState: PropTypes.any
+      apolloState: PropTypes.any,
+      origin: PropTypes.string
     };
 
     WithApollo.defaultProps = {
       apolloClient: undefined,
-      apolloState: {}
+      apolloState: {},
+      origin: undefined
     };
   }
 
@@ -80,14 +84,29 @@ export default function withApollo(
     WithApollo.getInitialProps = async (context: WithApolloPageContext) => {
       const {AppTree, res, req} = context;
       const cookie = req?.headers?.cookie;
+      let host: URL;
 
-      const apolloClient = initApolloClient({}, cookie);
+      if (req) {
+        host = new URL(
+          `${String(req.headers['x-forwarded-proto'])}://${String(
+            req.headers['x-forwarded-host']
+          )}`
+        );
+      } else {
+        host = new URL(window.location.origin);
+      }
+
+      const {origin} = host;
+
+      const apolloClient = initApolloClient({}, {cookie, origin});
 
       context.apolloClient = apolloClient;
 
-      const pageProps = PageComponent.getInitialProps
-        ? await PageComponent.getInitialProps(context)
-        : {};
+      // Run wrapped getInitialProps methods
+      let pageProps = {};
+      if (PageComponent.getInitialProps) {
+        pageProps = await PageComponent.getInitialProps(context);
+      }
 
       // Get apolloState on the server (needed for ssr)
       if (typeof window === 'undefined') {
@@ -101,9 +120,9 @@ export default function withApollo(
           try {
             // Run all GraphQL queries
             const {getDataFromTree} = await import('@apollo/react-ssr');
-            await getDataFromTree(
-              <AppTree pageProps={{...pageProps, apolloClient}} />
-            );
+
+            const props = {pageProps: {...pageProps, apolloClient, origin}};
+            await getDataFromTree(<AppTree {...props} />);
           } catch (error) {
             // Prevent Apollo Client GraphQL errors from crashing SSR.
             // Handle them in components via the data.error prop:
@@ -122,7 +141,8 @@ export default function withApollo(
 
       return {
         ...pageProps,
-        apolloState
+        apolloState,
+        origin
       };
     };
   }
@@ -132,29 +152,34 @@ export default function withApollo(
 
 let apolloClient = null;
 
+type ClientOptions = {
+  cookie?: string;
+  origin?: string;
+};
+
 function initApolloClient(
-  initialState?: NormalizedCacheObject,
-  cookie?: string
+  initialState: NormalizedCacheObject,
+  {cookie, origin}: ClientOptions
 ): TApolloClient {
   // Make sure to create a new client for every server-side request so that data
   // isn't shared between connections (which would be bad)
   if (typeof window === 'undefined') {
-    return createApolloClient(initialState, cookie);
+    return createApolloClient(initialState, {cookie, origin});
   }
 
   // Reuse client on the client-side
   if (!apolloClient) {
-    apolloClient = createApolloClient(initialState, cookie);
+    apolloClient = createApolloClient(initialState, {cookie, origin});
   }
 
   return apolloClient;
 }
 
 function createApolloClient(
-  initialState: NormalizedCacheObject = {},
-  cookie = ''
+  initialState: NormalizedCacheObject,
+  {cookie, origin}: ClientOptions
 ): TApolloClient {
-  const {href: uri} = new URL('/api/graphql', process.env.HOST_URL);
+  const {href: uri} = new URL('/api/graphql', origin);
 
   const authLink = setContext((_, {headers}) => {
     return {
@@ -165,8 +190,8 @@ function createApolloClient(
     };
   });
 
-  const httpLink = createHttpLink({
-    credentials: 'include',
+  const httpLink = new HttpLink({
+    credentials: 'same-origin',
     fetch,
     uri
   });
