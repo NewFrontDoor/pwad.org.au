@@ -6,7 +6,7 @@ import SanityBlockContent from '@sanity/block-content-to-react';
 import getVideoId from 'get-video-id';
 import Vimeo from '@u-wave/react-vimeo';
 import Youtube from '@u-wave/react-youtube';
-import Link, {linkProps, externalLinkProps} from './link';
+import Link, {linkProps} from './link';
 
 const slugger = new GithubSlugger();
 
