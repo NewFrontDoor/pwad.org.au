@@ -34,7 +34,7 @@ const Link: FC<LinkProps> = ({as, href, isInternal, blank, ...props}) => {
 
   if (blank)
     return (
-      <ThemeUiLink href={href} target="_blank" rel="noopener" {...props} />
+      <ThemeUiLink href={href} target="_blank" rel="noreferrer noopener" {...props} />
     );
 
   return <ThemeUiLink href={href} {...props} />;
