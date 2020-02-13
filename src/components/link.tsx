@@ -23,7 +23,7 @@ type LinkProps = {
   children?: ReactNode;
 } & Record<string, unknown>;
 
-const Link: FC<LinkProps> = ({as, href, isInternal, ...props}) => {
+const Link: FC<LinkProps> = ({as, href, isInternal, blank, ...props}) => {
   if (href && isInternal) {
     return (
       <NextLink passHref as={as} href={href}>
@@ -32,19 +32,26 @@ const Link: FC<LinkProps> = ({as, href, isInternal, ...props}) => {
     );
   }
 
+  if (blank)
+    return (
+      <ThemeUiLink href={href} target="_blank" rel="noreferrer noopener" {...props} />
+    );
+
   return <ThemeUiLink href={href} {...props} />;
 };
 
 Link.propTypes = {
   as: PropTypes.string,
   href: PropTypes.string,
-  isInternal: PropTypes.bool
+  isInternal: PropTypes.bool,
+  blank: PropTypes.bool
 };
 
 Link.defaultProps = {
   as: undefined,
   href: undefined,
-  isInternal: true
+  isInternal: true,
+  blank: false
 };
 
 export default Link;

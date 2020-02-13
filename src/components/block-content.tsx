@@ -35,6 +35,31 @@ InternalLink.propTypes = {
   children: PropTypes.node.isRequired
 };
 
+type ExternalLinkProps = {
+  mark: {
+    _key: string;
+    _type: string;
+    blank: boolean;
+    href: string;
+  };
+  children: ReactNode;
+};
+
+const ExternalLink: FC<ExternalLinkProps> = ({children, mark}) => {
+  const reference = {...mark, children, isInternal: false};
+  return <Link {...reference} />;
+};
+
+ExternalLink.propTypes = {
+  mark: PropTypes.shape({
+    _key: PropTypes.string.isRequired,
+    _type: PropTypes.string.isRequired,
+    blank: PropTypes.bool,
+    href: PropTypes.string.isRequired
+  }).isRequired,
+  children: PropTypes.node.isRequired
+};
+
 type ImageProps = {
   node: {
     asset?: any;
@@ -121,7 +146,8 @@ const serializers = {
     video: Video
   },
   marks: {
-    internalLink: InternalLink
+    internalLink: InternalLink,
+    link: ExternalLink
   }
 };
 
