@@ -69,7 +69,6 @@ type NavItemsProps = {
 
 const NavItems: FC<NavItemsProps> = ({selectedMenu, menuItems}) => {
   const isMedium = useResponsiveValue([false, true]);
-  /* eslint-disable react/jsx-no-useless-fragment */
   return (
     <>
       {menuItems.map(menu => (
@@ -103,7 +102,6 @@ const NavItems: FC<NavItemsProps> = ({selectedMenu, menuItems}) => {
       ))}
     </>
   );
-  /* eslint-enable react/jsx-no-useless-fragment */
 };
 
 NavItems.propTypes = {

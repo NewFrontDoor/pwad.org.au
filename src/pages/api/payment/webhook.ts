@@ -47,7 +47,7 @@ async function webhook(
     event = stripe.webhooks.constructEvent(body, signature, endpointSecret);
   } catch (error) {
     console.error(error);
-    return res.status(400).send(`Webhook Error: ${error.message}`);
+    return res.status(400).send(`Webhook Error: ${String(error.message)}`);
   }
 
   if (event.type === 'checkout.session.completed') {

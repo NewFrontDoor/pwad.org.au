@@ -11,6 +11,7 @@ export const StripeProvider: FC = ({children}) => {
   const [stripe, setStripe] = useState(null);
 
   const initializeStripe = (): void => {
+    // eslint-disable-next-line new-cap
     setStripe(window.Stripe(process.env.STRIPE_CLIENT_TOKEN));
   };
 

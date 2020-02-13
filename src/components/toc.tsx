@@ -4,8 +4,13 @@ import PropTypes from 'prop-types';
 import {jsx} from 'theme-ui';
 import GithubSlugger from 'github-slugger';
 
+type BlockContent = {
+  style: string;
+  children: any[];
+};
+
 type TocProps = {
-  blocks?: any[];
+  blocks?: BlockContent[];
 };
 
 const Toc: FC<TocProps> = ({blocks}) => {
@@ -29,13 +34,18 @@ Toc.propTypes = {
   blocks: PropTypes.array.isRequired
 };
 
-export function deriveToc(content): any[] {
+type TocItem = {
+  slug: string;
+  name: any[];
+};
+
+export function deriveToc(content: BlockContent[]): TocItem[] {
   const toc = [];
   const slugger = new GithubSlugger();
 
   for (const block of content) {
     if (block.style === 'h2') {
-      const name = block.children.map(child => child.text).join(' ');
+      const name = block.children;
       const slug = slugger.slug(name);
       toc.push({slug, name});
     }

@@ -60,19 +60,33 @@ type SerializerProps = {
   };
 };
 
-const Video = ({node}) => {
+type VideoProps = {
+  node: {
+    url?: string;
+  };
+};
+
+const Video: FC<VideoProps> = ({node}) => {
   const {url} = node;
   if (url) {
     const video = getVideoId(url || null);
 
     if (video.service === 'youtube') {
-      return <Youtube modestBranding annotations={false} videoId={video.id} />;
+      return <Youtube modestBranding annotations={false} video={video.id} />;
     }
 
     if (video.service === 'vimeo') {
       return <Vimeo showTitle={false} showByline={false} video={video.id} />;
     }
   }
+
+  return null;
+};
+
+Video.propTypes = {
+  node: PropTypes.shape({
+    url: PropTypes.string
+  }).isRequired
 };
 
 const serializers = {

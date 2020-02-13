@@ -47,11 +47,11 @@ const Button: FC<ButtonProps> = ({children, iconStart, iconEnd, ...props}) => {
             flexShrink: 0
           },
 
-          '& [role="img"]:first-child': {
+          '& [role="img"]:first-of-type': {
             marginRight: 2
           },
 
-          '& [role="img"]:last-child': {
+          '& [role="img"]:last-of-type': {
             marginLeft: 2
           },
 

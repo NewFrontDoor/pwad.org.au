@@ -1,7 +1,7 @@
-import React, {FC} from 'react';
+/** @jsx jsx */
 import {NextPage} from 'next';
 import PropTypes from 'prop-types';
-import {Text, Flex, Box} from 'theme-ui';
+import {jsx, Text, Flex, Box} from 'theme-ui';
 import Sidebar, {
   SidebarAuthor,
   SidebarCopyright,
