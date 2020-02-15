@@ -7,6 +7,7 @@ import {Formik, Form} from 'formik';
 import {TextField} from '../form';
 import {useTextSearchQuery, TextSearchQueryVariables} from '../queries';
 import Loading from '../loading';
+import ServerError from '../server-error';
 import SearchResult from './search-result';
 
 type TextSearchProps = {
@@ -23,7 +24,7 @@ const TextSearch: FC<TextSearchProps> = ({search}) => {
   }
 
   if (error) {
-    return <p>Error! {error.message}</p>;
+    return <ServerError error={error} />;
   }
 
   if (data.textSearch && data.textSearch.length > 0) {

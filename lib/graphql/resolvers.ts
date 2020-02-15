@@ -1,6 +1,6 @@
 import upperFirst from 'lodash/upperFirst';
 import books from '../books';
-import {Resolvers, ShortList, Hymn, Maybe} from './gen-types';
+import {Resolvers, ShortList, Hymn, Maybe, Document} from './gen-types';
 
 type SanityType =
   | 'User'
@@ -23,32 +23,15 @@ type SanityType =
   | 'Menu'
   | 'Resource';
 
-function resolveSanityType(parent: {_type: string}): Maybe<SanityType> {
-  switch (parent._type) {
-    case 'user':
-    case 'hymn':
-    case 'author':
-    case 'tune':
-    case 'metre':
-    case 'asset':
-    case 'copyright':
-    case 'occasion':
-    case 'prayer':
-    case 'keyword':
-    case 'category':
-    case 'liturgy':
-    case 'scripture':
-    case 'pageContent':
-    case 'externalUrl':
-    case 'relativeUrl':
-    case 'main':
-    case 'menu':
-    case 'resource':
-      return upperFirst(parent._type) as SanityType;
-    default:
-      return null;
+const resolveSanityDocument = <T extends SanityType>(
+  parent: Document
+): Maybe<T> => {
+  if (parent?._type) {
+    return upperFirst(parent._type) as T;
   }
-}
+
+  return null;
+};
 
 export const resolvers: Resolvers = {
   Query: {
@@ -95,8 +78,8 @@ export const resolvers: Resolvers = {
       return context.models.occasion.findAll();
     },
     async pageContentOne(_parent, args, context) {
-      const {id} = args.filter;
-      return context.models.pageContent.getById(id);
+      const {slug} = args.filter;
+      return context.models.pageContent.getBySlug(slug);
     },
     async metreMany(_parent, args, context) {
       return context.models.metre.findMany(
@@ -144,9 +127,7 @@ export const resolvers: Resolvers = {
     }
   },
   Document: {
-    __resolveType(parent, _context, _info) {
-      return resolveSanityType(parent);
-    }
+    __resolveType: resolveSanityDocument
   },
   Hymn: {
     scripture(parent, _context, _info) {
@@ -170,28 +151,18 @@ export const resolvers: Resolvers = {
     }
   },
   ShortList: {
-    __resolveType(parent, _context, _info) {
-      return resolveSanityType(parent);
-    }
+    __resolveType: resolveSanityDocument
   },
   SearchResult: {
-    __resolveType(parent, _context, _info) {
-      return resolveSanityType(parent);
-    }
+    __resolveType: resolveSanityDocument
   },
   FeaturedReference: {
-    __resolveType(parent, _context, _info) {
-      return resolveSanityType(parent);
-    }
+    __resolveType: resolveSanityDocument
   },
   ChildPageReference: {
-    __resolveType(parent, _context, _info) {
-      return resolveSanityType(parent);
-    }
+    __resolveType: resolveSanityDocument
   },
   ResourceType: {
-    __resolveType(parent, _context, _info) {
-      return resolveSanityType(parent);
-    }
+    __resolveType: resolveSanityDocument
   }
 };

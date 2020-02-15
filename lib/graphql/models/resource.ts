@@ -58,6 +58,7 @@ export async function main(): Promise<Main> {
               childPage->{
                 _id,
                 _type,
+                "slug": slug.current,
                 title,
                 name,
                 url

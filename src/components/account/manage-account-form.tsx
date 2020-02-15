@@ -1,6 +1,6 @@
 import React, {FC, ReactNode, useCallback} from 'react';
 import PropTypes from 'prop-types';
-import {Styled, Box, Flex, Text} from 'theme-ui';
+import {Styled, Box, Grid, Text} from 'theme-ui';
 import {Check} from 'react-feather';
 import {string, object} from 'yup';
 import {Formik, Form} from 'formik';
@@ -84,8 +84,8 @@ const AccountPaymentButton: FC<AccountPaymentButton> = ({
 
   return (
     <Button
-      primary
-      fullWidth
+      isPrimary
+      isFullWidth
       size="jumbo"
       iconStart={hasPaidAccount ? <Check role="img" /> : undefined}
       disabled={hasPaidAccount}
@@ -128,38 +128,12 @@ const ManageForm: FC<ManageFormProps> = ({hasFreeAccount, hasPaidAccount}) => {
   const [changePassword] = useChangePasswordMutation();
 
   return (
-    <Flex
-      gutterWidth="xxl"
-      sx={{
-        flexDirection: ['column-reverse', 'row-reverse']
-      }}
-    >
+    <Grid columns={[1, 2]} gap={[3, 5]}>
       <Box sx={{width: '100%'}}>
-        <Text as="h3">
-          What is included in the Liturgy and Music account option?
-        </Text>
-        <Styled.p variant="prose" as="ul">
-          <li>Search Capabilities</li>
-          <li>PowerPoint Slides</li>
-          <li>Sound Bites</li>
-          <li>Music Scores</li>
-          <li>Alternate Tunes</li>
-          <li>Author Index</li>
-          <li>Topical Index</li>
-          <li>Metre Index</li>
-          <li>Occasion Index</li>
-          <li>Year Index</li>
-        </Styled.p>
-      </Box>
-      <Box sx={{width: '100%'}}>
-        <Flex
-          sx={{
-            flexDirection: ['column-reverse', 'row']
-          }}
-        >
+        <Grid columns={[1, 2]} gap={[3, 5]}>
           <Box sx={{width: '100%'}}>
             <Button
-              fullWidth
+              isFullWidth
               iconStart={freeAccount ? <Check role="img" /> : undefined}
               disabled={hasFreeAccount || hasPaidAccount}
               size="jumbo"
@@ -177,7 +151,7 @@ const ManageForm: FC<ManageFormProps> = ({hasFreeAccount, hasPaidAccount}) => {
               this option has a once off $30 fee
             </Styled.p>
           </Box>
-        </Flex>
+        </Grid>
 
         <Formik
           validationSchema={validationSchema}
@@ -219,7 +193,24 @@ const ManageForm: FC<ManageFormProps> = ({hasFreeAccount, hasPaidAccount}) => {
           </Form>
         </Formik>
       </Box>
-    </Flex>
+      <Box sx={{width: '100%'}}>
+        <Text as="h3">
+          What is included in the Liturgy and Music account option?
+        </Text>
+        <Styled.p variant="prose" as="ul">
+          <li>Search Capabilities</li>
+          <li>PowerPoint Slides</li>
+          <li>Sound Bites</li>
+          <li>Music Scores</li>
+          <li>Alternate Tunes</li>
+          <li>Author Index</li>
+          <li>Topical Index</li>
+          <li>Metre Index</li>
+          <li>Occasion Index</li>
+          <li>Year Index</li>
+        </Styled.p>
+      </Box>
+    </Grid>
   );
 };
 

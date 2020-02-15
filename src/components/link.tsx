@@ -23,35 +23,36 @@ type LinkProps = {
   children?: ReactNode;
 } & Record<string, unknown>;
 
-const Link: FC<LinkProps> = ({as, href, isInternal, blank, ...props}) => {
+const Link: FC<LinkProps> = props => {
+  const {as, href, isInternal, isBlank, ...rest} = props;
   if (href && isInternal) {
     return (
       <NextLink passHref as={as} href={href}>
-        <ThemeUiLink {...props} />
+        <ThemeUiLink {...rest} />
       </NextLink>
     );
   }
 
-  if (blank)
-    return (
-      <ThemeUiLink href={href} target="_blank" rel="noreferrer noopener" {...props} />
-    );
+  if (isBlank) {
+    rest.target = '_blank';
+    rest.rel = 'noreferrer noopener';
+  }
 
-  return <ThemeUiLink href={href} {...props} />;
+  return <ThemeUiLink href={href} {...rest} />;
 };
 
 Link.propTypes = {
   as: PropTypes.string,
   href: PropTypes.string,
   isInternal: PropTypes.bool,
-  blank: PropTypes.bool
+  isBlank: PropTypes.bool
 };
 
 Link.defaultProps = {
   as: undefined,
   href: undefined,
   isInternal: true,
-  blank: false
+  isBlank: false
 };
 
 export default Link;
@@ -96,10 +97,10 @@ export function keywordLinkProps({_id, name}: Keyword): LinkProps {
   };
 }
 
-export function pageContentLinkProps({_id, title}: PageContent): LinkProps {
+export function pageContentLinkProps({slug, title}: PageContent): LinkProps {
   return {
-    as: `/content/${_id}`,
-    href: '/content/[page]',
+    as: `/content/${slug}`,
+    href: '/content/[slug]',
     children: title
   };
 }

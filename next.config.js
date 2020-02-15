@@ -15,10 +15,6 @@ module.exports = withBundleAnalyzer({
     STRIPE_CLIENT_TOKEN: process.env.STRIPE_CLIENT_TOKEN,
     HOST_URL
   },
-  typescript: {
-    ignoreDevErrors: true,
-    ignoreBuildErrors: true
-  },
   webpack(config) {
     config.node = {fs: 'empty'};
     return config;

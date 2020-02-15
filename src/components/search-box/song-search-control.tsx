@@ -12,6 +12,7 @@ import {
   EnumHymnBook
 } from '../queries';
 import Loading from '../loading';
+import ServerError from '../server-error';
 import SearchResult from './search-result';
 import SearchMetreInput from './search-metre-input';
 import SearchTuneInput from './search-tune-input';
@@ -33,13 +34,17 @@ const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
   }
 
   if (error) {
-    return `Error! ${error.message}`;
+    return <ServerError error={error} />;
   }
 
   if (data?.search?.length > 0) {
-    return data.search.map(result => (
-      <SearchResult key={result._id} {...result} />
-    ));
+    return (
+      <>
+        {data.search.map(result => (
+          <SearchResult key={result._id} {...result} />
+        ))}
+      </>
+    );
   }
 
   return <Styled.p variant="prose">No results found...</Styled.p>;
@@ -154,7 +159,7 @@ const SearchBox: FC = () => {
                 <Field as={SearchKeywordInput} label="Keyword" name="keyword" />
               </Box>
               <Box marginBottom="1em">
-                <Button fullWidth type="submit">
+                <Button isFullWidth type="submit">
                   Search
                 </Button>
               </Box>

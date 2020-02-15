@@ -1,11 +1,11 @@
 import {PageContent} from '../gen-types';
 import sanity from './sanity';
 
-export async function getById(pageId: string): Promise<PageContent> {
+export async function getBySlug(slug: string): Promise<PageContent> {
   return sanity.fetch(
     ['*']
       .concat([
-        '[_type=="pageContent" && _id==$pageId][0]',
+        '[_type=="pageContent" && slug.current==$slug][0]',
         `{
             _id,
             title,
@@ -25,6 +25,6 @@ export async function getById(pageId: string): Promise<PageContent> {
           }`
       ])
       .join('|'),
-    {pageId}
+    {slug}
   );
 }

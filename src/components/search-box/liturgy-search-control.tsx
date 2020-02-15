@@ -2,11 +2,13 @@ import React, {FC, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import {useRouter} from 'next/router';
 import isEmpty from 'lodash/isEmpty';
-import {Box, Flex, Styled, Button} from 'theme-ui';
+import {Box, Flex, Styled} from 'theme-ui';
 import {Formik, Form, Field} from 'formik';
 import {TextField} from '../form';
+import Button from '../button';
 import {useLiturgySearchQuery, LiturgySearchQueryVariables} from '../queries';
 import Loading from '../loading';
+import ServerError from '../server-error';
 import SearchResult from './search-result';
 import SearchOccasionInput from './search-occasion-input';
 import SearchKeywordInput from './search-keyword-input';
@@ -26,13 +28,17 @@ const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
   }
 
   if (error) {
-    return `Error! ${error.message}`;
+    return <ServerError error={error} />;
   }
 
   if (data?.liturgySearch?.length > 0) {
-    return data.liturgySearch.map(result => (
-      <SearchResult key={result._id} {...result} />
-    ));
+    return (
+      <>
+        {data.liturgySearch.map(result => (
+          <SearchResult key={result._id} {...result} />
+        ))}
+      </>
+    );
   }
 
   return <Styled.p variant="prose">No results found...</Styled.p>;
@@ -108,7 +114,7 @@ const SearchBox: FC = () => {
                 <Field as={SearchKeywordInput} label="Keyword" name="keyword" />
               </Box>
               <Box marginBottom="1em">
-                <Button fullWidth type="submit">
+                <Button isFullWidth type="submit">
                   Search
                 </Button>
               </Box>

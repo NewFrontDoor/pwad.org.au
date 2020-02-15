@@ -1,8 +1,8 @@
 /* eslint-env browser */
 
-import {IncomingMessage} from 'http';
 import {NextPageContext} from 'next';
 import Router from 'next/router';
+export {default as buildUrl} from './build-url';
 
 export default (url: string, context?: NextPageContext): void => {
   if (context?.res) {
@@ -15,11 +15,3 @@ export default (url: string, context?: NextPageContext): void => {
     Router.replace(url);
   }
 };
-
-export function buildUrl(req: IncomingMessage): URL {
-  if (req) {
-    return new URL(req.originalUrl, process.env.HOST_URL);
-  }
-
-  return new URL(window.location.href);
-}

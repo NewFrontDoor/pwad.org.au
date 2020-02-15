@@ -13,11 +13,11 @@ import ContentWrap from '../../../components/content-wrap';
 import Loading from '../../../components/loading';
 
 type ContentProps = {
-  page: string;
+  slug: string;
 };
 
-const Content: NextPage<ContentProps> = ({page}) => {
-  const {data, loading} = usePageContentQuery({variables: {page}});
+const Content: NextPage<ContentProps> = ({slug}) => {
+  const {data, loading} = usePageContentQuery({variables: {slug}});
   const hasToc = data?.pageContentOne.hasToc;
   const subtitle = data?.pageContentOne.subtitle;
 
@@ -34,16 +34,16 @@ const Content: NextPage<ContentProps> = ({page}) => {
   );
 };
 
-Content.getInitialProps = ({query: {page}}) => {
-  if (Array.isArray(page)) {
-    return {page: page[0]};
+Content.getInitialProps = ({query: {slug}}) => {
+  if (Array.isArray(slug)) {
+    return {slug: slug[0]};
   }
 
-  return {page};
+  return {slug};
 };
 
 Content.propTypes = {
-  page: PropTypes.string.isRequired
+  slug: PropTypes.string.isRequired
 };
 
 export default withApollo(Content);

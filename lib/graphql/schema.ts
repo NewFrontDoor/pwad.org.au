@@ -177,6 +177,7 @@ export const schema = gql`
 
   input FilterInput {
     id: String
+    slug: String
     search: String
     textContains: String
   }

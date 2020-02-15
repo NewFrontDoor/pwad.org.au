@@ -167,6 +167,7 @@ export type FeaturedReference = PageContent | ExternalUrl | RelativeUrl;
 
 export type FilterInput = {
   id?: Maybe<Scalars['String']>,
+  slug?: Maybe<Scalars['String']>,
   search?: Maybe<Scalars['String']>,
   textContains?: Maybe<Scalars['String']>,
 };

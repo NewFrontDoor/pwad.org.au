@@ -16,6 +16,7 @@ import {setContext} from 'apollo-link-context';
 import fetch from 'isomorphic-unfetch';
 import {AbilityProvider} from '../src/components/ability-context';
 import introspectionQueryResultData from './fragment-types.json';
+import buildUrl from './build-url';
 
 export type TApolloClient = ApolloClient<NormalizedCacheObject>;
 
@@ -87,13 +88,7 @@ export default function withApollo(
       let host: URL;
 
       if (req) {
-        const reqProto = req.headers['x-forwarded-proto'];
-        const reqHost = req.headers['x-forwarded-host'];
-        if (typeof reqProto === 'string' && typeof reqHost === 'string') {
-          host = new URL(`${reqProto}://${reqHost}`);
-        } else {
-          host = new URL('http://localhost:3000');
-        }
+        host = buildUrl(req);
       } else {
         host = new URL(window.location.origin);
       }

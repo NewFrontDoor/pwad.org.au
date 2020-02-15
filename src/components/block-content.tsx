@@ -37,16 +37,16 @@ InternalLink.propTypes = {
 
 type ExternalLinkProps = {
   mark: {
-    _key: string;
-    _type: string;
-    blank: boolean;
-    href: string;
+    _key?: string;
+    _type?: string;
+    blank?: boolean;
+    href?: string;
   };
   children: ReactNode;
 };
 
 const ExternalLink: FC<ExternalLinkProps> = ({children, mark}) => {
-  const reference = {...mark, children, isInternal: false};
+  const reference = {...mark, isBlank: mark.blank, children, isInternal: false};
   return <Link {...reference} />;
 };
 
@@ -116,7 +116,7 @@ Video.propTypes = {
 
 const serializers = {
   types: {
-    block(props: SerializerProps) {
+    block: (props: SerializerProps) => {
       switch (props.node.style) {
         case 'h2': {
           const name = props.node.children.map(child => child.text).join(' ');

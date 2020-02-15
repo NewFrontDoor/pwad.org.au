@@ -17,6 +17,7 @@ export default gql`
             ... on PageContent {
               _id
               _type
+              slug
               title
             }
 

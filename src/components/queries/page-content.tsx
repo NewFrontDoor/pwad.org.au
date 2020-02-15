@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export default gql`
-  query pageContent($page: String) {
-    pageContentOne(filter: {id: $page}) {
+  query pageContent($slug: String) {
+    pageContentOne(filter: {slug: $slug}) {
       _id
       title
       content
