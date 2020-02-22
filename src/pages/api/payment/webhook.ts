@@ -1,36 +1,31 @@
 import {buffer} from 'micro';
-import {NextApiRequest, NextApiResponse} from 'next';
 import Stripe from 'stripe';
-import {ManagementClient} from 'auth0';
+import {NextApiRequest, NextApiResponse} from 'next';
+import fromUnixTime from 'date-fns/fromUnixTime';
+import stripe from '../../../../lib/stripe';
+import * as userModel from '../../../../lib/graphql/models/user';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_TOKEN, {
-  apiVersion: '2019-12-03',
-  typescript: true
-});
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET_TOKEN;
 
-const management = new ManagementClient({
-  domain: process.env.AUTH0_DOMAIN,
-  clientId: process.env.AUTH0_CLIENT_ID,
-  clientSecret: process.env.AUTH0_CLIENT_SECRET,
-  scope: 'read:users update:users update:users_app_metadata'
-});
+async function handleInvoicePaymentSucceeded(
+  invoice: Stripe.Invoice
+): Promise<void> {
+  const {customer_email: email, customer, lines, status} = invoice;
 
-type Session = Stripe.Event.Data.Object & {
-  customer_email?: string;
-  payment_intent?: string;
-};
+  // NOTE: we're assuming an invoice will only ever have a single line item
+  const [{period}] = lines.data;
 
-async function handleCheckoutSession(session: Session): Promise<void> {
-  const {customer_email: email, payment_intent: paymentIntent} = session;
-  const [user] = await management.getUsersByEmail(email);
+  const stripeCustomerId =
+    typeof customer === 'string' ? customer : customer.id;
 
-  await management.updateAppMetadata(
-    {id: user.user_id},
-    {
-      paymentIntent
-    }
-  );
+  const invoiceStatus = String(status);
+
+  await userModel.updateSubscriptionStatus({
+    email,
+    stripeCustomerId,
+    invoiceStatus,
+    periodEndDate: fromUnixTime(period.end)
+  });
 }
 
 async function webhook(
@@ -50,10 +45,10 @@ async function webhook(
     return res.status(400).send(`Webhook Error: ${String(error.message)}`);
   }
 
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object;
+  if (event.type === 'invoice.payment_succeeded') {
+    const invoice = event.data.object;
 
-    await handleCheckoutSession(session);
+    await handleInvoicePaymentSucceeded(invoice as Stripe.Invoice);
   }
 
   res.json({received: true});

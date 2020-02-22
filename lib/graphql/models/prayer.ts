@@ -1,5 +1,5 @@
 import {Prayer, SearchInput} from '../gen-types';
-import sanity from './sanity';
+import sanity from '../../sanity';
 
 export async function getById(id: string): Promise<Prayer> {
   return sanity.fetch(

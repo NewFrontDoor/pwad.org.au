@@ -1,5 +1,5 @@
 import {PageContent} from '../gen-types';
-import sanity from './sanity';
+import sanity from '../../sanity';
 
 export async function getBySlug(slug: string): Promise<PageContent> {
   return sanity.fetch(
@@ -14,9 +14,11 @@ export async function getBySlug(slug: string): Promise<PageContent> {
             content[] {
               ...,
               markDefs[] {
-                ...,_type == 'internalLink' => {
+                ...,
+                _type == 'internalLink' => {
                   reference-> {
-                    _id,_type
+                    _id,
+                    _type
                   }
                 }
               },

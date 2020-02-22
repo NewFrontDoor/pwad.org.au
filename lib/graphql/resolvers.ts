@@ -1,6 +1,6 @@
 import upperFirst from 'lodash/upperFirst';
 import books from '../books';
-import {Resolvers, ShortList, Hymn, Maybe, Document} from './gen-types';
+import {Resolvers, Hymn, Maybe, Document} from './gen-types';
 
 type SanityType =
   | 'User'
@@ -116,11 +116,19 @@ export const resolvers: Resolvers = {
     }
   },
   Mutation: {
-    async addShortListItem(_parent, args, context): Promise<ShortList[]> {
+    async changePassword(_parent, _args, context) {
+      const user = await context.user;
+      return context.models.user.changePassword(user, context.host);
+    },
+    async stripeCheckoutSession(_parent, _args, context) {
+      const user = await context.user;
+      return context.models.stripe.createCheckoutSession(user, context.host);
+    },
+    async addShortListItem(_parent, args, context) {
       const user = await context.user;
       return context.models.user.addShortListItem(user._id, args.item);
     },
-    async removeShortListItem(_parent, args, context): Promise<ShortList[]> {
+    async removeShortListItem(_parent, args, context) {
       const user = await context.user;
       const itemIndex = user.shortlist.findIndex(({_id}) => args.item === _id);
       return context.models.user.removeShortListItem(user._id, itemIndex);

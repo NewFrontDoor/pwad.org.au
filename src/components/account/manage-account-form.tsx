@@ -1,4 +1,5 @@
 import React, {FC, ReactNode, useCallback} from 'react';
+import {useApolloClient} from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
 import {Styled, Box, Grid, Text} from 'theme-ui';
 import {Check} from 'react-feather';
@@ -7,51 +8,20 @@ import {Formik, Form} from 'formik';
 import {TextField} from '../form';
 import Button from '../button';
 import {useStripe, StripeProvider, Elements} from '../use-stripe';
-
 import {
   useChangePasswordMutation,
+  StripeCheckoutSessionDocument,
+  StripeCheckoutSessionMutation,
   useChangeFreeAccountMutation,
-  useMeQuery,
-  MeDocument
+  MeDocument,
+  User
 } from '../queries';
 
 const validationSchema = object().shape({
-  password: string()
-    .label('Password')
-    .required(),
   newPassword: string()
     .label('New password')
-    .required(),
-  confirmPassword: string()
-    .label('Confirm password')
     .required()
 });
-
-function handleChangeFreeAccount(changeFreeAccount) {
-  return () =>
-    changeFreeAccount({
-      variables: {hasFreeAccount: true},
-      optimisticResponse: {
-        __typename: 'Mutation',
-        changeFreeAccount: {
-          __typename: 'User',
-          hasFreeAccount: true
-        }
-      }
-    });
-}
-
-function handleChangePassword(changePassword) {
-  return ({password, newPassword, confirmPassword}) => {
-    changePassword({
-      variables: {
-        password,
-        newPassword,
-        confirmPassword
-      }
-    });
-  };
-}
 
 type AccountPaymentButton = {
   children: ReactNode;
@@ -63,24 +33,19 @@ const AccountPaymentButton: FC<AccountPaymentButton> = ({
   hasPaidAccount
 }) => {
   const {stripe} = useStripe();
-  const {data} = useMeQuery();
+  const client = useApolloClient();
 
   const handleAccountPayment = useCallback(async () => {
-    const successUrl = new URL(
-      '/api/callback/payment-success',
-      window.location.href
-    );
-    const cancelUrl = new URL('/my-account', window.location.href);
-
-    const session = await stripe.redirectToCheckout({
-      items: [{sku: 'sku_GBZZqHosJSdAkX', quantity: 1}],
-      successUrl: successUrl.href,
-      cancelUrl: cancelUrl.href,
-      customerEmail: data.me.email
+    const {data} = await client.mutate<StripeCheckoutSessionMutation>({
+      mutation: StripeCheckoutSessionDocument
     });
 
-    console.log(session);
-  }, [data.me.email, stripe]);
+    const {sessionId} = data.stripeCheckoutSession;
+
+    stripe.redirectToCheckout({
+      sessionId
+    });
+  }, [client, stripe]);
 
   return (
     <Button
@@ -101,12 +66,7 @@ AccountPaymentButton.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-type ManageFormProps = {
-  hasFreeAccount?: boolean;
-  hasPaidAccount?: boolean;
-};
-
-const ManageForm: FC<ManageFormProps> = ({hasFreeAccount, hasPaidAccount}) => {
+const ManageForm: FC<User> = ({hasFreeAccount, hasPaidAccount}) => {
   const freeAccount = hasFreeAccount && !hasPaidAccount;
 
   const [changeFreeAccount] = useChangeFreeAccountMutation({
@@ -127,6 +87,25 @@ const ManageForm: FC<ManageFormProps> = ({hasFreeAccount, hasPaidAccount}) => {
 
   const [changePassword] = useChangePasswordMutation();
 
+  function handleChangeFreeAccount(): void {
+    changeFreeAccount({
+      variables: {hasFreeAccount: true},
+      optimisticResponse: {
+        __typename: 'Mutation',
+        changeFreeAccount: {
+          __typename: 'User',
+          hasFreeAccount: true
+        }
+      }
+    });
+  }
+
+  async function handleChangePassword(): Promise<void> {
+    const {data} = await changePassword();
+
+    window.location.assign(data.changePassword.ticket);
+  }
+
   return (
     <Grid columns={[1, 2]} gap={[3, 5]}>
       <Box sx={{width: '100%'}}>
@@ -137,7 +116,7 @@ const ManageForm: FC<ManageFormProps> = ({hasFreeAccount, hasPaidAccount}) => {
               iconStart={freeAccount ? <Check role="img" /> : undefined}
               disabled={hasFreeAccount || hasPaidAccount}
               size="jumbo"
-              onClick={handleChangeFreeAccount(changeFreeAccount)}
+              onClick={handleChangeFreeAccount}
             >
               Liturgy only
             </Button>
@@ -148,50 +127,12 @@ const ManageForm: FC<ManageFormProps> = ({hasFreeAccount, hasPaidAccount}) => {
               Liturgy and Music
             </AccountPaymentButton>
             <Styled.p variant="prose">
-              this option has a once off $30 fee
+              this option is an Annual Subscription of $12 per year
             </Styled.p>
           </Box>
         </Grid>
 
-        <Formik
-          validationSchema={validationSchema}
-          initialValues={{
-            password: '',
-            newPassword: '',
-            confirmPassword: ''
-          }}
-          onSubmit={handleChangePassword(changePassword)}
-        >
-          <Form>
-            <Box marginBottom={3}>
-              <TextField
-                required
-                type="password"
-                label="Old password"
-                name="password"
-              />
-            </Box>
-            <Box marginBottom={3}>
-              <TextField
-                required
-                type="password"
-                label="New password"
-                name="newPassword"
-              />
-            </Box>
-            <Box marginBottom={3}>
-              <TextField
-                required
-                type="password"
-                label="Confirm password"
-                name="confirmPassword"
-              />
-            </Box>
-            <Box marginBottom={3}>
-              <Button type="submit">Change Password</Button>
-            </Box>
-          </Form>
-        </Formik>
+        <Button onClick={handleChangePassword}>Change Password</Button>
       </Box>
       <Box sx={{width: '100%'}}>
         <Text as="h3">
@@ -219,7 +160,7 @@ ManageForm.propTypes = {
   hasPaidAccount: PropTypes.bool.isRequired
 };
 
-const ManageFormProvider: FC<ManageFormProps> = props => (
+const ManageFormProvider: FC<User> = props => (
   <StripeProvider>
     <Elements>
       <ManageForm {...props} />

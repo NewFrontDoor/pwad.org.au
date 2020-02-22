@@ -1,21 +1,36 @@
 import {AbilityBuilder, Ability} from '@casl/ability';
+import {User} from './graphql/gen-types';
 
-const admin = AbilityBuilder.define(can => {
-  can('manage', 'all');
-});
+export function defineAbilitiesFor(user: User): Ability {
+  let ability: Ability;
 
-const committee = AbilityBuilder.define((can, cannot) => {
-  can('read', 'all');
-  cannot('manage', 'User');
-});
+  switch (user.role) {
+    case 'admin':
+      ability = AbilityBuilder.define((can: Ability['can']) => {
+        can('manage', 'all');
+      });
+      break;
 
-const publicUser = AbilityBuilder.define(can => {
-  can('read', 'all'); // TODO remove
-  can('manage', 'my-account');
-});
+    case 'committee':
+      ability = AbilityBuilder.define(
+        (can: Ability['can'], cannot: Ability['cannot']) => {
+          can('read', 'all');
+          can('manage', 'my-account');
+          cannot('manage', 'User');
+        }
+      );
+      break;
 
-export const ABILITIES = {admin, committee, public: publicUser};
+    default:
+      ability = AbilityBuilder.define((can: Ability['can']) => {
+        if (user.hasPaidAccount) {
+          can('read', 'Hymn');
+        }
 
-export function defineAbilitiesFor(user: any): Ability {
-  return ABILITIES[user.role] || ABILITIES.public;
+        can('manage', 'my-account');
+      });
+      break;
+  }
+
+  return ability;
 }

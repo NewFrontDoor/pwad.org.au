@@ -13,6 +13,8 @@ export default gql`
         first
         last
       }
+      periodEndDate
+      stripeCustomerId
       shortlist {
         ... on Document {
           _id

@@ -196,6 +196,14 @@ export type Hymn = Document & {
   copyright?: Maybe<Copyright>,
 };
 
+export enum InvoiceStatus {
+  Draft = 'draft',
+  Open = 'open',
+  Paid = 'paid',
+  Uncollectible = 'uncollectible',
+  Void = 'void'
+}
+
 
 export type Keyword = Document & {
    __typename?: 'Keyword',
@@ -293,9 +301,8 @@ export type Mutation = {
   removeShortListItem?: Maybe<Array<Maybe<ShortList>>>,
   changeFreeAccount?: Maybe<User>,
   createUser?: Maybe<User>,
-  loginUser?: Maybe<User>,
-  changePassword?: Maybe<User>,
-  makePayment?: Maybe<User>,
+  stripeCheckoutSession?: Maybe<StripeCheckoutSession>,
+  changePassword?: Maybe<PasswordChangeTicket>,
 };
 
 
@@ -320,25 +327,6 @@ export type MutationCreateUserArgs = {
   email: Scalars['String'],
   password: Scalars['String'],
   confirmPassword: Scalars['String']
-};
-
-
-export type MutationLoginUserArgs = {
-  email: Scalars['String'],
-  password: Scalars['String']
-};
-
-
-export type MutationChangePasswordArgs = {
-  password: Scalars['String'],
-  newPassword: Scalars['String'],
-  confirmPassword: Scalars['String']
-};
-
-
-export type MutationMakePaymentArgs = {
-  email: Scalars['String'],
-  password: Scalars['String']
 };
 
 export type Name = {
@@ -385,6 +373,11 @@ export type PageInfo = {
   currentPage: Scalars['Int'],
   itemCount: Scalars['Int'],
   perPage: Scalars['Int'],
+};
+
+export type PasswordChangeTicket = {
+   __typename?: 'PasswordChangeTicket',
+  ticket?: Maybe<Scalars['String']>,
 };
 
 export type Prayer = Document & {
@@ -574,6 +567,11 @@ export type SearchResult = Hymn | Prayer | Liturgy | Scripture;
 
 export type ShortList = Hymn | Prayer | Liturgy | Scripture;
 
+export type StripeCheckoutSession = {
+   __typename?: 'StripeCheckoutSession',
+  sessionId?: Maybe<Scalars['String']>,
+};
+
 export type Tune = Document & {
    __typename?: 'Tune',
   _createdAt?: Maybe<Scalars['Date']>,
@@ -600,6 +598,7 @@ export type User = Document & {
   _rev?: Maybe<Scalars['String']>,
   _type?: Maybe<Scalars['String']>,
   _updatedAt?: Maybe<Scalars['Date']>,
+  auth0Id?: Maybe<Scalars['String']>,
   name?: Maybe<Name>,
   email?: Maybe<Scalars['String']>,
   hasPaidAccount?: Maybe<Scalars['Boolean']>,
@@ -607,6 +606,9 @@ export type User = Document & {
   picture?: Maybe<Scalars['String']>,
   shortlist?: Maybe<Array<Maybe<ShortList>>>,
   role?: Maybe<Scalars['String']>,
+  periodEndDate?: Maybe<Scalars['Date']>,
+  invoiceStatus?: Maybe<InvoiceStatus>,
+  stripeCustomerId?: Maybe<Scalars['String']>,
 };
 
 export type AddShortListItemMutationVariables = {
@@ -670,18 +672,14 @@ export type AdvancedSearchQuery = (
   )>>> }
 );
 
-export type ChangePasswordMutationVariables = {
-  password: Scalars['String'],
-  newPassword: Scalars['String'],
-  confirmPassword: Scalars['String']
-};
+export type ChangePasswordMutationVariables = {};
 
 
 export type ChangePasswordMutation = (
   { __typename?: 'Mutation' }
   & { changePassword: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, '_updatedAt'>
+    { __typename?: 'PasswordChangeTicket' }
+    & Pick<PasswordChangeTicket, 'ticket'>
   )> }
 );
 
@@ -988,42 +986,6 @@ export type LiturgySearchQuery = (
   )>>> }
 );
 
-export type LoginUserMutationVariables = {
-  email: Scalars['String'],
-  password: Scalars['String']
-};
-
-
-export type LoginUserMutation = (
-  { __typename?: 'Mutation' }
-  & { loginUser: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, '_id' | 'hasPaidAccount' | 'hasFreeAccount' | 'picture'>
-    & { name: Maybe<(
-      { __typename?: 'Name' }
-      & Pick<Name, 'first' | 'last'>
-    )> }
-  )> }
-);
-
-export type Unnamed_1_MutationVariables = {
-  email: Scalars['String'],
-  password: Scalars['String']
-};
-
-
-export type Unnamed_1_Mutation = (
-  { __typename?: 'Mutation' }
-  & { makePayment: Maybe<(
-    { __typename?: 'User' }
-    & Pick<User, '_id' | 'hasPaidAccount' | 'hasFreeAccount' | 'picture'>
-    & { name: Maybe<(
-      { __typename?: 'Name' }
-      & Pick<Name, 'first' | 'last'>
-    )> }
-  )> }
-);
-
 export type MeQueryVariables = {};
 
 
@@ -1031,7 +993,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, '_id' | 'email' | 'role' | 'hasFreeAccount' | 'hasPaidAccount' | 'picture'>
+    & Pick<User, '_id' | 'email' | 'role' | 'hasFreeAccount' | 'hasPaidAccount' | 'picture' | 'periodEndDate' | 'stripeCustomerId'>
     & { name: Maybe<(
       { __typename?: 'Name' }
       & Pick<Name, 'first' | 'last'>
@@ -1103,6 +1065,17 @@ export type RemoveShortListItemMutation = (
     { __typename?: 'Scripture' }
     & Pick<Scripture, '_id' | '_type' | 'title'>
   )>>> }
+);
+
+export type StripeCheckoutSessionMutationVariables = {};
+
+
+export type StripeCheckoutSessionMutation = (
+  { __typename?: 'Mutation' }
+  & { stripeCheckoutSession: Maybe<(
+    { __typename?: 'StripeCheckoutSession' }
+    & Pick<StripeCheckoutSession, 'sessionId'>
+  )> }
 );
 
 export type TextSearchQueryVariables = {
@@ -1255,9 +1228,9 @@ export type AdvancedSearchQueryHookResult = ReturnType<typeof useAdvancedSearchQ
 export type AdvancedSearchLazyQueryHookResult = ReturnType<typeof useAdvancedSearchLazyQuery>;
 export type AdvancedSearchQueryResult = ApolloReactCommon.QueryResult<AdvancedSearchQuery, AdvancedSearchQueryVariables>;
 export const ChangePasswordDocument = gql`
-    mutation changePassword($password: String!, $newPassword: String!, $confirmPassword: String!) {
-  changePassword(password: $password, newPassword: $newPassword, confirmPassword: $confirmPassword) {
-    _updatedAt
+    mutation changePassword {
+  changePassword {
+    ticket
   }
 }
     `;
@@ -1276,9 +1249,6 @@ export type ChangePasswordMutationFn = ApolloReactCommon.MutationFunction<Change
  * @example
  * const [changePasswordMutation, { data, loading, error }] = useChangePasswordMutation({
  *   variables: {
- *      password: // value for 'password'
- *      newPassword: // value for 'newPassword'
- *      confirmPassword: // value for 'confirmPassword'
  *   },
  * });
  */
@@ -1962,46 +1932,6 @@ export function useLiturgySearchLazyQuery(baseOptions?: ApolloReactHooks.LazyQue
 export type LiturgySearchQueryHookResult = ReturnType<typeof useLiturgySearchQuery>;
 export type LiturgySearchLazyQueryHookResult = ReturnType<typeof useLiturgySearchLazyQuery>;
 export type LiturgySearchQueryResult = ApolloReactCommon.QueryResult<LiturgySearchQuery, LiturgySearchQueryVariables>;
-export const LoginUserDocument = gql`
-    mutation loginUser($email: String!, $password: String!) {
-  loginUser(email: $email, password: $password) {
-    _id
-    hasPaidAccount
-    hasFreeAccount
-    picture
-    name {
-      first
-      last
-    }
-  }
-}
-    `;
-export type LoginUserMutationFn = ApolloReactCommon.MutationFunction<LoginUserMutation, LoginUserMutationVariables>;
-
-/**
- * __useLoginUserMutation__
- *
- * To run a mutation, you first call `useLoginUserMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLoginUserMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [loginUserMutation, { data, loading, error }] = useLoginUserMutation({
- *   variables: {
- *      email: // value for 'email'
- *      password: // value for 'password'
- *   },
- * });
- */
-export function useLoginUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<LoginUserMutation, LoginUserMutationVariables>) {
-        return ApolloReactHooks.useMutation<LoginUserMutation, LoginUserMutationVariables>(LoginUserDocument, baseOptions);
-      }
-export type LoginUserMutationHookResult = ReturnType<typeof useLoginUserMutation>;
-export type LoginUserMutationResult = ApolloReactCommon.MutationResult<LoginUserMutation>;
-export type LoginUserMutationOptions = ApolloReactCommon.BaseMutationOptions<LoginUserMutation, LoginUserMutationVariables>;
 export const MeDocument = gql`
     query Me {
   me {
@@ -2015,6 +1945,8 @@ export const MeDocument = gql`
       first
       last
     }
+    periodEndDate
+    stripeCustomerId
     shortlist {
       ... on Document {
         _id
@@ -2190,6 +2122,37 @@ export function useRemoveShortListItemMutation(baseOptions?: ApolloReactHooks.Mu
 export type RemoveShortListItemMutationHookResult = ReturnType<typeof useRemoveShortListItemMutation>;
 export type RemoveShortListItemMutationResult = ApolloReactCommon.MutationResult<RemoveShortListItemMutation>;
 export type RemoveShortListItemMutationOptions = ApolloReactCommon.BaseMutationOptions<RemoveShortListItemMutation, RemoveShortListItemMutationVariables>;
+export const StripeCheckoutSessionDocument = gql`
+    mutation stripeCheckoutSession {
+  stripeCheckoutSession {
+    sessionId
+  }
+}
+    `;
+export type StripeCheckoutSessionMutationFn = ApolloReactCommon.MutationFunction<StripeCheckoutSessionMutation, StripeCheckoutSessionMutationVariables>;
+
+/**
+ * __useStripeCheckoutSessionMutation__
+ *
+ * To run a mutation, you first call `useStripeCheckoutSessionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useStripeCheckoutSessionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [stripeCheckoutSessionMutation, { data, loading, error }] = useStripeCheckoutSessionMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useStripeCheckoutSessionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<StripeCheckoutSessionMutation, StripeCheckoutSessionMutationVariables>) {
+        return ApolloReactHooks.useMutation<StripeCheckoutSessionMutation, StripeCheckoutSessionMutationVariables>(StripeCheckoutSessionDocument, baseOptions);
+      }
+export type StripeCheckoutSessionMutationHookResult = ReturnType<typeof useStripeCheckoutSessionMutation>;
+export type StripeCheckoutSessionMutationResult = ApolloReactCommon.MutationResult<StripeCheckoutSessionMutation>;
+export type StripeCheckoutSessionMutationOptions = ApolloReactCommon.BaseMutationOptions<StripeCheckoutSessionMutation, StripeCheckoutSessionMutationVariables>;
 export const TextSearchDocument = gql`
     query textSearch($search: String) {
   textSearch(filter: {search: $search}) {
