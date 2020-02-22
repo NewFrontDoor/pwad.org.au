@@ -95,7 +95,7 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
                   </Link>
                 </NavMenuItem>
                 <NavMenuItem>
-                  <Link variant="nav" href="/api/logout">
+                  <Link variant="nav" prefetch={false} href="/api/logout">
                     Log out
                   </Link>
                 </NavMenuItem>
