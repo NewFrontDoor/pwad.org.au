@@ -1,6 +1,12 @@
 import {Hymn, SearchInput} from '../gen-types';
-import sanity from './sanity';
+import sanity from '../../sanity';
 
+/**
+ * Fetch Hymn from sanity
+ *
+ * @param  id Hymn Id
+ * @return    Hymn
+ */
 export async function getById(id: string): Promise<Hymn> {
   return sanity.fetch(
     ['*']
@@ -73,6 +79,17 @@ export async function getById(id: string): Promise<Hymn> {
   );
 }
 
+/**
+ * Search for Hymns by Search Input
+ *
+ * @param  book         Book of the Bible
+ * @param  tune         Tune Reference
+ * @param  keyword      Keyword Reference
+ * @param  occasion     Occasion Reference
+ * @param  textContains Text search term, matchs Hymn title, content, and keyword names
+ * @param  _operators   Matches on Tunes that are referenced by the list of metres
+ * @return              Hymns as a list of Search Results
+ */
 export async function search({
   book,
   tune,

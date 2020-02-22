@@ -13,12 +13,15 @@ import * as tuneModel from './models/tune';
 import * as occasionModel from './models/occasion';
 import * as keywordModel from './models/keyword';
 import * as scriptureModel from './models/scripture';
+import * as stripeModel from './models/stripe';
 import {schema} from './schema';
 import {resolvers} from './resolvers';
 import {User} from './gen-types';
+import buildUrl from '../build-url';
 
 export type Context = {
   user: Promise<User>;
+  host: URL;
   models: {
     pageContent: typeof pageContentModel;
     resource: typeof resourceModel;
@@ -32,6 +35,7 @@ export type Context = {
     occasion: typeof occasionModel;
     keyword: typeof keywordModel;
     scripture: typeof scriptureModel;
+    stripe: typeof stripeModel;
   };
 };
 
@@ -49,8 +53,10 @@ function context({req}: {req: NextApiRequest}): Context {
       tune: tuneModel,
       occasion: occasionModel,
       keyword: keywordModel,
-      scripture: scriptureModel
+      scripture: scriptureModel,
+      stripe: stripeModel
     },
+    host: buildUrl(req),
     user: getUserContext(req)
   };
 }
@@ -60,18 +66,16 @@ async function getUserContext(req: NextApiRequest): Promise<User | null> {
 
   if (response) {
     const {user} = response;
-    let hasPaidAccount = false;
-
-    if (typeof user['https://pwad.now.sh/paymentIntent'] === 'string') {
-      hasPaidAccount = user['https://pwad.now.sh/paymentIntent'].length > 0;
-    }
 
     const {
       _id,
       name,
       email,
       role,
-      shortlist = []
+      shortlist = [],
+      periodEndDate,
+      hasPaidAccount,
+      stripeCustomerId
     } = await userModel.findOrCreate(user);
 
     return {
@@ -80,7 +84,10 @@ async function getUserContext(req: NextApiRequest): Promise<User | null> {
       name,
       email,
       shortlist,
+      periodEndDate,
       hasPaidAccount,
+      stripeCustomerId,
+      auth0Id: user.sub,
       picture: user.picture
     };
   }

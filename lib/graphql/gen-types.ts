@@ -196,6 +196,14 @@ export type Hymn = Document & {
   copyright?: Maybe<Copyright>,
 };
 
+export enum InvoiceStatus {
+  Draft = 'draft',
+  Open = 'open',
+  Paid = 'paid',
+  Uncollectible = 'uncollectible',
+  Void = 'void'
+}
+
 
 export type Keyword = Document & {
    __typename?: 'Keyword',
@@ -293,9 +301,8 @@ export type Mutation = {
   removeShortListItem?: Maybe<Array<Maybe<ShortList>>>,
   changeFreeAccount?: Maybe<User>,
   createUser?: Maybe<User>,
-  loginUser?: Maybe<User>,
-  changePassword?: Maybe<User>,
-  makePayment?: Maybe<User>,
+  stripeCheckoutSession?: Maybe<StripeCheckoutSession>,
+  changePassword?: Maybe<PasswordChangeTicket>,
 };
 
 
@@ -320,25 +327,6 @@ export type MutationCreateUserArgs = {
   email: Scalars['String'],
   password: Scalars['String'],
   confirmPassword: Scalars['String']
-};
-
-
-export type MutationLoginUserArgs = {
-  email: Scalars['String'],
-  password: Scalars['String']
-};
-
-
-export type MutationChangePasswordArgs = {
-  password: Scalars['String'],
-  newPassword: Scalars['String'],
-  confirmPassword: Scalars['String']
-};
-
-
-export type MutationMakePaymentArgs = {
-  email: Scalars['String'],
-  password: Scalars['String']
 };
 
 export type Name = {
@@ -385,6 +373,11 @@ export type PageInfo = {
   currentPage: Scalars['Int'],
   itemCount: Scalars['Int'],
   perPage: Scalars['Int'],
+};
+
+export type PasswordChangeTicket = {
+   __typename?: 'PasswordChangeTicket',
+  ticket?: Maybe<Scalars['String']>,
 };
 
 export type Prayer = Document & {
@@ -574,6 +567,11 @@ export type SearchResult = Hymn | Prayer | Liturgy | Scripture;
 
 export type ShortList = Hymn | Prayer | Liturgy | Scripture;
 
+export type StripeCheckoutSession = {
+   __typename?: 'StripeCheckoutSession',
+  sessionId?: Maybe<Scalars['String']>,
+};
+
 export type Tune = Document & {
    __typename?: 'Tune',
   _createdAt?: Maybe<Scalars['Date']>,
@@ -600,6 +598,7 @@ export type User = Document & {
   _rev?: Maybe<Scalars['String']>,
   _type?: Maybe<Scalars['String']>,
   _updatedAt?: Maybe<Scalars['Date']>,
+  auth0Id?: Maybe<Scalars['String']>,
   name?: Maybe<Name>,
   email?: Maybe<Scalars['String']>,
   hasPaidAccount?: Maybe<Scalars['Boolean']>,
@@ -607,6 +606,9 @@ export type User = Document & {
   picture?: Maybe<Scalars['String']>,
   shortlist?: Maybe<Array<Maybe<ShortList>>>,
   role?: Maybe<Scalars['String']>,
+  periodEndDate?: Maybe<Scalars['Date']>,
+  invoiceStatus?: Maybe<InvoiceStatus>,
+  stripeCustomerId?: Maybe<Scalars['String']>,
 };
 
 
@@ -705,6 +707,7 @@ export type ResolversTypes = {
   Scripture: ResolverTypeWrapper<any>,
   Tune: ResolverTypeWrapper<any>,
   Metre: ResolverTypeWrapper<any>,
+  InvoiceStatus: ResolverTypeWrapper<any>,
   Main: ResolverTypeWrapper<any>,
   FeaturedReference: ResolverTypeWrapper<any>,
   PageContent: ResolverTypeWrapper<any>,
@@ -726,6 +729,8 @@ export type ResolversTypes = {
   PrayerPagination: ResolverTypeWrapper<any>,
   PageInfo: ResolverTypeWrapper<any>,
   Mutation: ResolverTypeWrapper<{}>,
+  StripeCheckoutSession: ResolverTypeWrapper<any>,
+  PasswordChangeTicket: ResolverTypeWrapper<any>,
   Menu: ResolverTypeWrapper<any>,
   ResourceType: ResolverTypeWrapper<any>,
   Resource: ResolverTypeWrapper<any>,
@@ -756,6 +761,7 @@ export type ResolversParentTypes = {
   Scripture: any,
   Tune: any,
   Metre: any,
+  InvoiceStatus: any,
   Main: any,
   FeaturedReference: any,
   PageContent: any,
@@ -777,6 +783,8 @@ export type ResolversParentTypes = {
   PrayerPagination: any,
   PageInfo: any,
   Mutation: {},
+  StripeCheckoutSession: any,
+  PasswordChangeTicket: any,
   Menu: any,
   ResourceType: any,
   Resource: any,
@@ -979,9 +987,8 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   removeShortListItem?: Resolver<Maybe<Array<Maybe<ResolversTypes['ShortList']>>>, ParentType, ContextType, RequireFields<MutationRemoveShortListItemArgs, 'item'>>,
   changeFreeAccount?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationChangeFreeAccountArgs, 'hasFreeAccount'>>,
   createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'firstName' | 'lastName' | 'email' | 'password' | 'confirmPassword'>>,
-  loginUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationLoginUserArgs, 'email' | 'password'>>,
-  changePassword?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationChangePasswordArgs, 'password' | 'newPassword' | 'confirmPassword'>>,
-  makePayment?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationMakePaymentArgs, 'email' | 'password'>>,
+  stripeCheckoutSession?: Resolver<Maybe<ResolversTypes['StripeCheckoutSession']>, ParentType, ContextType>,
+  changePassword?: Resolver<Maybe<ResolversTypes['PasswordChangeTicket']>, ParentType, ContextType>,
 };
 
 export type NameResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Name'] = ResolversParentTypes['Name']> = {
@@ -1027,6 +1034,11 @@ export type PageInfoResolvers<ContextType = Context, ParentType extends Resolver
   currentPage?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
   itemCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
   perPage?: Resolver<ResolversTypes['Int'], ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
+};
+
+export type PasswordChangeTicketResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PasswordChangeTicket'] = ResolversParentTypes['PasswordChangeTicket']> = {
+  ticket?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
@@ -1124,6 +1136,11 @@ export type ShortListResolvers<ContextType = Context, ParentType extends Resolve
   __resolveType: TypeResolveFn<'Hymn' | 'Prayer' | 'Liturgy' | 'Scripture', ParentType, ContextType>
 };
 
+export type StripeCheckoutSessionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['StripeCheckoutSession'] = ResolversParentTypes['StripeCheckoutSession']> = {
+  sessionId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
+};
+
 export type TuneResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Tune'] = ResolversParentTypes['Tune']> = {
   _createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>,
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
@@ -1144,6 +1161,7 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
   _rev?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   _type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   _updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>,
+  auth0Id?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   name?: Resolver<Maybe<ResolversTypes['Name']>, ParentType, ContextType>,
   email?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   hasPaidAccount?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>,
@@ -1151,6 +1169,9 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
   picture?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   shortlist?: Resolver<Maybe<Array<Maybe<ResolversTypes['ShortList']>>>, ParentType, ContextType>,
   role?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  periodEndDate?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>,
+  invoiceStatus?: Resolver<Maybe<ResolversTypes['InvoiceStatus']>, ParentType, ContextType>,
+  stripeCustomerId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
@@ -1179,6 +1200,7 @@ export type Resolvers<ContextType = Context> = {
   OccasionGroupedById?: OccasionGroupedByIdResolvers<ContextType>,
   PageContent?: PageContentResolvers<ContextType>,
   PageInfo?: PageInfoResolvers<ContextType>,
+  PasswordChangeTicket?: PasswordChangeTicketResolvers<ContextType>,
   Prayer?: PrayerResolvers<ContextType>,
   PrayerPagination?: PrayerPaginationResolvers<ContextType>,
   Query?: QueryResolvers<ContextType>,
@@ -1188,6 +1210,7 @@ export type Resolvers<ContextType = Context> = {
   Scripture?: ScriptureResolvers<ContextType>,
   SearchResult?: SearchResultResolvers,
   ShortList?: ShortListResolvers,
+  StripeCheckoutSession?: StripeCheckoutSessionResolvers<ContextType>,
   Tune?: TuneResolvers<ContextType>,
   User?: UserResolvers<ContextType>,
 };

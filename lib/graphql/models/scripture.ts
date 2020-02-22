@@ -1,5 +1,5 @@
 import {Scripture} from '../gen-types';
-import sanity from './sanity';
+import sanity from '../../sanity';
 
 export async function getById(id: string): Promise<Scripture> {
   return sanity.fetch(

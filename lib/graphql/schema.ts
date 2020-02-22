@@ -59,15 +59,8 @@ export const schema = gql`
       confirmPassword: String!
     ): User
 
-    loginUser(email: String!, password: String!): User
-
-    changePassword(
-      password: String!
-      newPassword: String!
-      confirmPassword: String!
-    ): User
-
-    makePayment(email: String!, password: String!): User
+    stripeCheckoutSession: StripeCheckoutSession
+    changePassword: PasswordChangeTicket
   }
 
   scalar Date
@@ -450,12 +443,21 @@ export const schema = gql`
     last: String
   }
 
+  enum InvoiceStatus {
+    draft
+    open
+    paid
+    uncollectible
+    void
+  }
+
   type User implements Document {
     _createdAt: Date
     _id: ID!
     _rev: String
     _type: String
     _updatedAt: Date
+    auth0Id: String
     name: Name
     email: String
     hasPaidAccount: Boolean
@@ -463,6 +465,9 @@ export const schema = gql`
     picture: String
     shortlist: [ShortList]
     role: String
+    periodEndDate: Date
+    invoiceStatus: InvoiceStatus
+    stripeCustomerId: String
   }
 
   type RelativeUrl implements Document {
@@ -483,5 +488,13 @@ export const schema = gql`
     _updatedAt: Date
     title: String
     url: String
+  }
+
+  type StripeCheckoutSession {
+    sessionId: String
+  }
+
+  type PasswordChangeTicket {
+    ticket: String
   }
 `;

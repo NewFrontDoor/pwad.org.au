@@ -1,6 +1,15 @@
 import nanoid from 'nanoid';
-import {User, ShortList} from '../gen-types';
-import sanity from './sanity';
+import {ManagementClient, PasswordChangeTicketResponse} from 'auth0';
+import isAfter from 'date-fns/isAfter';
+import {User, ShortList, InvoiceStatus} from '../gen-types';
+import sanity from '../../sanity';
+
+const management = new ManagementClient({
+  domain: process.env.AUTH0_DOMAIN,
+  clientId: process.env.AUTH0_CLIENT_ID,
+  clientSecret: process.env.AUTH0_CLIENT_SECRET,
+  scope: 'create:user_tickets'
+});
 
 export async function getById(id: string): Promise<User> {
   return sanity.fetch(
@@ -8,6 +17,9 @@ export async function getById(id: string): Promise<User> {
       _id,
       name,
       email,
+      invoiceStatus,
+      periodEndDate,
+      stripeCustomerId,
       "role": permission.role,
       shortlist[]->{_id,_type,title,hymnNumber}
   }`,
@@ -18,40 +30,80 @@ export async function getById(id: string): Promise<User> {
 export async function findOrCreate(
   user: Record<string, string>
 ): Promise<User> {
-  const result = await sanity.fetch(
-    `*[_type == "user" && googleProviderId == $googleProviderId][0]{
+  let result = await sanity.fetch(
+    `*[_type == "user" && email == $email][0]{
       _id,
       name,
       email,
+      invoiceStatus,
+      periodEndDate,
+      stripeCustomerId,
       "role": permission.role,
       shortlist[]->{_id,_type,title,hymnNumber}
   }`,
-    {googleProviderId: user.sub}
+    {email: user.email}
   );
 
   if (isEmptyObject(result)) {
-    // Note: auth0 stores ids with the connection source
-    // eg; google-oauth2|100281011955389911902
-    // sanity doesn't like some of the characters
-    // so we just use the right hand side
-    const [, _id] = user.sub.split('|');
-
-    return sanity.createIfNotExists({
-      _id,
+    result = sanity.createIfNotExists({
+      _id: nanoid(),
       _type: 'user',
       name: {
         first: user.given_name,
         last: user.family_name
       },
       email: user.email,
-      googleProviderId: user.sub,
       permission: {
         role: 'public'
       }
     });
   }
 
+  result.hasPaidAccount = hasPaidAccount(result);
+
   return result;
+}
+
+type SubscriptionStatus = {
+  email: string;
+  invoiceStatus: string;
+  stripeCustomerId: string;
+  periodEndDate: Date;
+};
+
+export async function updateSubscriptionStatus({
+  email,
+  invoiceStatus,
+  stripeCustomerId,
+  periodEndDate
+}: SubscriptionStatus): Promise<void> {
+  const {_id} = await sanity.fetch(
+    `*[_type == "user" && email == $email][0]{_id}`,
+    {
+      email
+    }
+  );
+
+  await sanity
+    .patch(_id)
+    .set({
+      stripeCustomerId,
+      invoiceStatus,
+      periodEndDate: periodEndDate.toISOString()
+    })
+    .commit();
+}
+
+export async function changePassword(
+  user: User,
+  host: URL
+): Promise<PasswordChangeTicketResponse> {
+  const resultUrl = new URL('/my-account', host);
+  return management.createPasswordChangeTicket({
+    email: user.email,
+    result_url: resultUrl.href,
+    connection_id: 'con_9pRAt1nFWr5rkyyK'
+  });
 }
 
 export async function addShortListItem(
@@ -89,6 +141,14 @@ export async function removeShortListItem(
 
   const {shortlist} = await getById(id);
   return shortlist;
+}
+
+function hasPaidAccount(user: User): boolean {
+  const periodEndDate = new Date(user.periodEndDate);
+  const hasPaidInvoice = user.invoiceStatus === InvoiceStatus.Paid;
+  const isWithinInvoicePeriod = isAfter(periodEndDate, Date.now());
+
+  return hasPaidInvoice && isWithinInvoicePeriod;
 }
 
 function isEmptyObject(obj: object): boolean {
