@@ -303,6 +303,7 @@ export type Mutation = {
   createUser?: Maybe<User>,
   stripeCheckoutSession?: Maybe<StripeCheckoutSession>,
   changePassword?: Maybe<PasswordChangeTicket>,
+  cancelSubscription?: Maybe<StripeSubscription>,
 };
 
 
@@ -407,6 +408,7 @@ export type Query = {
    __typename?: 'Query',
   me?: Maybe<User>,
   main?: Maybe<Main>,
+  subscription?: Maybe<StripeSubscription>,
   occasionManyGroupById?: Maybe<Array<Maybe<OccasionGroupedById>>>,
   menuItems?: Maybe<Array<Maybe<MenuItem>>>,
   textSearch?: Maybe<Array<Maybe<SearchResult>>>,
@@ -572,6 +574,18 @@ export type StripeCheckoutSession = {
   sessionId?: Maybe<Scalars['String']>,
 };
 
+export type StripeSubscription = {
+   __typename?: 'StripeSubscription',
+  id: Scalars['ID'],
+  cancelAt?: Maybe<Scalars['Date']>,
+  canceledAt?: Maybe<Scalars['Date']>,
+  currentPeriodEnd?: Maybe<Scalars['Date']>,
+  daysUntilDue?: Maybe<Scalars['Int']>,
+  plan?: Maybe<Scalars['String']>,
+  startDate?: Maybe<Scalars['Date']>,
+  status?: Maybe<Scalars['String']>,
+};
+
 export type Tune = Document & {
    __typename?: 'Tune',
   _createdAt?: Maybe<Scalars['Date']>,
@@ -672,6 +686,17 @@ export type AdvancedSearchQuery = (
   )>>> }
 );
 
+export type CancelSubscriptionMutationVariables = {};
+
+
+export type CancelSubscriptionMutation = (
+  { __typename?: 'Mutation' }
+  & { cancelSubscription: Maybe<(
+    { __typename?: 'StripeSubscription' }
+    & Pick<StripeSubscription, 'id' | 'status' | 'startDate' | 'daysUntilDue' | 'cancelAt' | 'canceledAt' | 'currentPeriodEnd' | 'plan'>
+  )> }
+);
+
 export type ChangePasswordMutationVariables = {};
 
 
@@ -701,6 +726,17 @@ export type CreateUserMutation = (
       { __typename?: 'Name' }
       & Pick<Name, 'first' | 'last'>
     )> }
+  )> }
+);
+
+export type CurrentSubscriptionQueryVariables = {};
+
+
+export type CurrentSubscriptionQuery = (
+  { __typename?: 'Query' }
+  & { subscription: Maybe<(
+    { __typename?: 'StripeSubscription' }
+    & Pick<StripeSubscription, 'id' | 'status' | 'startDate' | 'daysUntilDue' | 'cancelAt' | 'canceledAt' | 'currentPeriodEnd' | 'plan'>
   )> }
 );
 
@@ -1227,6 +1263,44 @@ export function useAdvancedSearchLazyQuery(baseOptions?: ApolloReactHooks.LazyQu
 export type AdvancedSearchQueryHookResult = ReturnType<typeof useAdvancedSearchQuery>;
 export type AdvancedSearchLazyQueryHookResult = ReturnType<typeof useAdvancedSearchLazyQuery>;
 export type AdvancedSearchQueryResult = ApolloReactCommon.QueryResult<AdvancedSearchQuery, AdvancedSearchQueryVariables>;
+export const CancelSubscriptionDocument = gql`
+    mutation cancelSubscription {
+  cancelSubscription {
+    id
+    status
+    startDate
+    daysUntilDue
+    cancelAt
+    canceledAt
+    currentPeriodEnd
+    plan
+  }
+}
+    `;
+export type CancelSubscriptionMutationFn = ApolloReactCommon.MutationFunction<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>;
+
+/**
+ * __useCancelSubscriptionMutation__
+ *
+ * To run a mutation, you first call `useCancelSubscriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCancelSubscriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [cancelSubscriptionMutation, { data, loading, error }] = useCancelSubscriptionMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCancelSubscriptionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>) {
+        return ApolloReactHooks.useMutation<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>(CancelSubscriptionDocument, baseOptions);
+      }
+export type CancelSubscriptionMutationHookResult = ReturnType<typeof useCancelSubscriptionMutation>;
+export type CancelSubscriptionMutationResult = ApolloReactCommon.MutationResult<CancelSubscriptionMutation>;
+export type CancelSubscriptionMutationOptions = ApolloReactCommon.BaseMutationOptions<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>;
 export const ChangePasswordDocument = gql`
     mutation changePassword {
   changePassword {
@@ -1301,6 +1375,45 @@ export function useCreateUserMutation(baseOptions?: ApolloReactHooks.MutationHoo
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = ApolloReactCommon.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const CurrentSubscriptionDocument = gql`
+    query currentSubscription {
+  subscription {
+    id
+    status
+    startDate
+    daysUntilDue
+    cancelAt
+    canceledAt
+    currentPeriodEnd
+    plan
+  }
+}
+    `;
+
+/**
+ * __useCurrentSubscriptionQuery__
+ *
+ * To run a query within a React component, call `useCurrentSubscriptionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCurrentSubscriptionQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCurrentSubscriptionQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCurrentSubscriptionQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CurrentSubscriptionQuery, CurrentSubscriptionQueryVariables>) {
+        return ApolloReactHooks.useQuery<CurrentSubscriptionQuery, CurrentSubscriptionQueryVariables>(CurrentSubscriptionDocument, baseOptions);
+      }
+export function useCurrentSubscriptionLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CurrentSubscriptionQuery, CurrentSubscriptionQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<CurrentSubscriptionQuery, CurrentSubscriptionQueryVariables>(CurrentSubscriptionDocument, baseOptions);
+        }
+export type CurrentSubscriptionQueryHookResult = ReturnType<typeof useCurrentSubscriptionQuery>;
+export type CurrentSubscriptionLazyQueryHookResult = ReturnType<typeof useCurrentSubscriptionLazyQuery>;
+export type CurrentSubscriptionQueryResult = ApolloReactCommon.QueryResult<CurrentSubscriptionQuery, CurrentSubscriptionQueryVariables>;
 export const FindKeywordDocument = gql`
     query findKeyword($title: String, $skip: Int, $limit: Int) {
   keywordMany(filter: {textContains: $title}, limit: $limit, skip: $skip, sort: name_ASC) {

@@ -4,6 +4,7 @@ export const schema = gql`
   type Query {
     me: User
     main: Main
+    subscription: StripeSubscription
     occasionManyGroupById: [OccasionGroupedById]
     menuItems: [MenuItem]
     textSearch(filter: FilterInput!): [SearchResult]
@@ -61,6 +62,7 @@ export const schema = gql`
 
     stripeCheckoutSession: StripeCheckoutSession
     changePassword: PasswordChangeTicket
+    cancelSubscription: StripeSubscription
   }
 
   scalar Date
@@ -492,6 +494,17 @@ export const schema = gql`
 
   type StripeCheckoutSession {
     sessionId: String
+  }
+
+  type StripeSubscription {
+    id: ID!
+    cancelAt: Date
+    canceledAt: Date
+    currentPeriodEnd: Date
+    daysUntilDue: Int
+    plan: String
+    startDate: Date
+    status: String
   }
 
   type PasswordChangeTicket {

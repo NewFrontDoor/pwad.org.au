@@ -25,7 +25,8 @@ type LinkProps = {
 
 const Link: FC<LinkProps> = props => {
   const {as, href, isInternal, isBlank, ...rest} = props;
-  if (href && isInternal) {
+  const isNotApi = !href.startsWith('/api/');
+  if (href && isInternal && isNotApi) {
     return (
       <NextLink passHref as={as} href={href}>
         <ThemeUiLink {...rest} />

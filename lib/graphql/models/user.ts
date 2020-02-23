@@ -78,9 +78,10 @@ export async function updateSubscriptionStatus({
   periodEndDate
 }: SubscriptionStatus): Promise<void> {
   const {_id} = await sanity.fetch(
-    `*[_type == "user" && email == $email][0]{_id}`,
+    `*[_type == "user" && (email == $email || stripeCustomerId == $stripeCustomerId)]`,
     {
-      email
+      email,
+      stripeCustomerId
     }
   );
 

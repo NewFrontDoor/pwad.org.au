@@ -1,37 +1,57 @@
-import React, {FC, ReactNode, useCallback} from 'react';
+import React, {FC, useCallback} from 'react';
 import {useApolloClient} from '@apollo/react-hooks';
 import PropTypes from 'prop-types';
 import {Styled, Box, Grid, Text} from 'theme-ui';
 import {Check} from 'react-feather';
-import {string, object} from 'yup';
-import {Formik, Form} from 'formik';
-import {TextField} from '../form';
+import startCase from 'lodash/startCase';
 import Button from '../button';
+import Loading from '../loading';
 import {useStripe, StripeProvider, Elements} from '../use-stripe';
 import {
-  useChangePasswordMutation,
+  MeDocument,
+  CurrentSubscriptionDocument,
   StripeCheckoutSessionDocument,
   StripeCheckoutSessionMutation,
+  useCancelSubscriptionMutation,
   useChangeFreeAccountMutation,
-  MeDocument,
-  User
+  useChangePasswordMutation,
+  useCurrentSubscriptionQuery,
+  User,
+  StripeSubscription
 } from '../queries';
 
-const validationSchema = object().shape({
-  newPassword: string()
-    .label('New password')
-    .required()
-});
+const CancelSubscriptionButton: FC = () => {
+  const [cancelSubscription] = useCancelSubscriptionMutation({
+    update(cache, {data}) {
+      cache.writeQuery({
+        query: CurrentSubscriptionDocument,
+        data: {
+          subscription: data.cancelSubscription
+        }
+      });
+    }
+  });
 
-type AccountPaymentButton = {
-  children: ReactNode;
-  hasPaidAccount: boolean;
+  async function handleCancelSubscription(): Promise<void> {
+    // eslint-disable-next-line no-alert
+    if (window.confirm('Are you sure you want to cancel your subscription')) {
+      await cancelSubscription();
+    }
+  }
+
+  return (
+    <Button
+      isPrimary
+      isFullWidth
+      size="jumbo"
+      onClick={handleCancelSubscription}
+    >
+      Cancel Subscription
+    </Button>
+  );
 };
 
-const AccountPaymentButton: FC<AccountPaymentButton> = ({
-  children,
-  hasPaidAccount
-}) => {
+const AccountPaymentButton: FC = ({children}) => {
   const {stripe} = useStripe();
   const client = useApolloClient();
 
@@ -48,26 +68,112 @@ const AccountPaymentButton: FC<AccountPaymentButton> = ({
   }, [client, stripe]);
 
   return (
-    <Button
-      isPrimary
-      isFullWidth
-      size="jumbo"
-      iconStart={hasPaidAccount ? <Check role="img" /> : undefined}
-      disabled={hasPaidAccount}
-      onClick={handleAccountPayment}
-    >
+    <Button isPrimary isFullWidth size="jumbo" onClick={handleAccountPayment}>
       {children}
     </Button>
   );
 };
 
 AccountPaymentButton.propTypes = {
-  hasPaidAccount: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired
 };
 
+type BuySubscriptionProps = {
+  hasFreeAccount: boolean;
+  changeFreeAccount: () => void;
+};
+
+const BuySubscription: FC<BuySubscriptionProps> = ({
+  hasFreeAccount,
+  changeFreeAccount
+}) => {
+  return (
+    <>
+      <Box sx={{width: '100%'}} marginBottom={3}>
+        <Button
+          isFullWidth
+          iconStart={hasFreeAccount ? <Check role="img" /> : undefined}
+          disabled={hasFreeAccount}
+          size="jumbo"
+          onClick={changeFreeAccount}
+        >
+          Liturgy only
+        </Button>
+        <Styled.p variant="prose">this option is free to use</Styled.p>
+      </Box>
+      <Box sx={{width: '100%'}}>
+        <AccountPaymentButton>Liturgy and Music</AccountPaymentButton>
+        <Styled.p variant="prose">
+          this option is an Annual Subscription of $12 per year
+        </Styled.p>
+      </Box>
+    </>
+  );
+};
+
+BuySubscription.propTypes = {
+  hasFreeAccount: PropTypes.bool.isRequired,
+  changeFreeAccount: PropTypes.func.isRequired
+};
+
+const SubscriptionDetails: FC<StripeSubscription> = ({
+  status,
+  plan,
+  currentPeriodEnd,
+  canceledAt,
+  daysUntilDue
+}) => {
+  const active = status === 'active';
+  const canceled = status === 'canceled';
+
+  return (
+    <Box sx={{width: '100%'}} marginBottom={3}>
+      <Text as="h3">Current Subscription</Text>
+      <p>{plan}</p>
+
+      <dl>
+        <dt>Subscription status:</dt>
+        <dd>{startCase(status)}</dd>
+
+        {active && (
+          <>
+            <dt>Subscription end date:</dt>
+            <dd>{new Date(currentPeriodEnd).toLocaleDateString()}</dd>
+          </>
+        )}
+
+        {canceled && (
+          <>
+            <dt>Subscription canceled at:</dt>
+            <dd>{new Date(canceledAt).toLocaleDateString()}</dd>
+          </>
+        )}
+
+        {daysUntilDue !== null && (
+          <>
+            <dt>Days remaining:</dt>
+            <dd>{daysUntilDue}</dd>
+          </>
+        )}
+      </dl>
+
+      {active && <CancelSubscriptionButton />}
+    </Box>
+  );
+};
+
+SubscriptionDetails.propTypes = {
+  status: PropTypes.string.isRequired,
+  plan: PropTypes.string.isRequired,
+  currentPeriodEnd: PropTypes.any,
+  canceledAt: PropTypes.any,
+  daysUntilDue: PropTypes.number
+};
+
 const ManageForm: FC<User> = ({hasFreeAccount, hasPaidAccount}) => {
-  const freeAccount = hasFreeAccount && !hasPaidAccount;
+  const isFreeAccount = hasFreeAccount || !hasPaidAccount;
+
+  const {data, loading} = useCurrentSubscriptionQuery();
 
   const [changeFreeAccount] = useChangeFreeAccountMutation({
     update(cache, {data}) {
@@ -109,28 +215,20 @@ const ManageForm: FC<User> = ({hasFreeAccount, hasPaidAccount}) => {
   return (
     <Grid columns={[1, 2]} gap={[3, 5]}>
       <Box sx={{width: '100%'}}>
-        <Grid columns={[1, 2]} gap={[3, 5]}>
-          <Box sx={{width: '100%'}}>
-            <Button
-              isFullWidth
-              iconStart={freeAccount ? <Check role="img" /> : undefined}
-              disabled={hasFreeAccount || hasPaidAccount}
-              size="jumbo"
-              onClick={handleChangeFreeAccount}
-            >
-              Liturgy only
-            </Button>
-            <Styled.p variant="prose">this option is free to use</Styled.p>
-          </Box>
-          <Box sx={{width: '100%'}}>
-            <AccountPaymentButton hasPaidAccount={hasPaidAccount}>
-              Liturgy and Music
-            </AccountPaymentButton>
-            <Styled.p variant="prose">
-              this option is an Annual Subscription of $12 per year
-            </Styled.p>
-          </Box>
-        </Grid>
+        {loading ? (
+          <Loading />
+        ) : (
+          <Grid columns={[1, 2]} gap={[3, 5]}>
+            {data?.subscription ? (
+              <SubscriptionDetails {...data.subscription} />
+            ) : (
+              <BuySubscription
+                changeFreeAccount={handleChangeFreeAccount}
+                hasFreeAccount={isFreeAccount}
+              />
+            )}
+          </Grid>
+        )}
 
         <Button onClick={handleChangePassword}>Change Password</Button>
       </Box>
