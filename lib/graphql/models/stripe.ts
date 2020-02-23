@@ -57,7 +57,9 @@ export async function getUserSubscription(
 }
 
 /**
- * Cancels the current active subscription for the current user
+ * Sets the current active subscription for the current user
+ * to cancel at the subscription period end date
+ *
  * @param  user The current user
  * @return      The canceled subscription response
  */
@@ -66,7 +68,12 @@ export async function cancelSubscription(
 ): Promise<StripeSubscription> {
   const subscription = await findCurrentSubscription(user);
 
-  const deletedSubscription = await stripe.subscriptions.del(subscription.id);
+  const deletedSubscription = await stripe.subscriptions.update(
+    subscription.id,
+    {
+      cancel_at_period_end: true
+    }
+  );
 
   return subscriptionResponse(deletedSubscription);
 }
