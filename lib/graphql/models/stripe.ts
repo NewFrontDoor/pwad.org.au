@@ -84,7 +84,6 @@ function subscriptionResponse(
     plan: subscription.plan.nickname,
     status: subscription.status,
     startDate: fromUnixTime(subscription.start_date),
-    daysUntilDue: subscription.days_until_due,
     cancelAt: fromUnixTime(subscription.cancel_at),
     canceledAt: fromUnixTime(subscription.canceled_at),
     currentPeriodEnd: fromUnixTime(subscription.current_period_end)

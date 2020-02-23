@@ -6,7 +6,6 @@ export default gql`
       id
       status
       startDate
-      daysUntilDue
       cancelAt
       canceledAt
       currentPeriodEnd
