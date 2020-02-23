@@ -15,12 +15,12 @@ export default class MyDocument extends Document {
           <link rel="shortcut icon" href="/static/favicon.ico" />
           <link rel="preconnect" href="https://m.stripe.com" />
           <link rel="preconnect" href="https://m.stripe.network" />
+          <script async id="stripe-js" src="https://js.stripe.com/v3/" />
         </Head>
         <body>
           <Main />
           <div id="modal" />
           <NextScript />
-          <script async id="stripe-js" src="https://js.stripe.com/v3/" />
         </body>
       </html>
     );
