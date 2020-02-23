@@ -501,7 +501,6 @@ export const schema = gql`
     cancelAt: Date
     canceledAt: Date
     currentPeriodEnd: Date
-    daysUntilDue: Int
     plan: String
     startDate: Date
     status: String

@@ -120,8 +120,7 @@ const SubscriptionDetails: FC<StripeSubscription> = ({
   status,
   plan,
   currentPeriodEnd,
-  canceledAt,
-  daysUntilDue
+  canceledAt
 }) => {
   const active = status === 'active';
   const canceled = status === 'canceled';
@@ -148,13 +147,6 @@ const SubscriptionDetails: FC<StripeSubscription> = ({
             <dd>{new Date(canceledAt).toLocaleDateString()}</dd>
           </>
         )}
-
-        {daysUntilDue !== null && (
-          <>
-            <dt>Days remaining:</dt>
-            <dd>{daysUntilDue}</dd>
-          </>
-        )}
       </dl>
 
       {active && <CancelSubscriptionButton />}
@@ -166,8 +158,7 @@ SubscriptionDetails.propTypes = {
   status: PropTypes.string.isRequired,
   plan: PropTypes.string.isRequired,
   currentPeriodEnd: PropTypes.any,
-  canceledAt: PropTypes.any,
-  daysUntilDue: PropTypes.number
+  canceledAt: PropTypes.any
 };
 
 const ManageForm: FC<User> = ({hasFreeAccount, hasPaidAccount}) => {

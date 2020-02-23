@@ -580,7 +580,6 @@ export type StripeSubscription = {
   cancelAt?: Maybe<Scalars['Date']>,
   canceledAt?: Maybe<Scalars['Date']>,
   currentPeriodEnd?: Maybe<Scalars['Date']>,
-  daysUntilDue?: Maybe<Scalars['Int']>,
   plan?: Maybe<Scalars['String']>,
   startDate?: Maybe<Scalars['Date']>,
   status?: Maybe<Scalars['String']>,
@@ -693,7 +692,7 @@ export type CancelSubscriptionMutation = (
   { __typename?: 'Mutation' }
   & { cancelSubscription: Maybe<(
     { __typename?: 'StripeSubscription' }
-    & Pick<StripeSubscription, 'id' | 'status' | 'startDate' | 'daysUntilDue' | 'cancelAt' | 'canceledAt' | 'currentPeriodEnd' | 'plan'>
+    & Pick<StripeSubscription, 'id' | 'status' | 'startDate' | 'cancelAt' | 'canceledAt' | 'currentPeriodEnd' | 'plan'>
   )> }
 );
 
@@ -736,7 +735,7 @@ export type CurrentSubscriptionQuery = (
   { __typename?: 'Query' }
   & { subscription: Maybe<(
     { __typename?: 'StripeSubscription' }
-    & Pick<StripeSubscription, 'id' | 'status' | 'startDate' | 'daysUntilDue' | 'cancelAt' | 'canceledAt' | 'currentPeriodEnd' | 'plan'>
+    & Pick<StripeSubscription, 'id' | 'status' | 'startDate' | 'cancelAt' | 'canceledAt' | 'currentPeriodEnd' | 'plan'>
   )> }
 );
 
@@ -1269,7 +1268,6 @@ export const CancelSubscriptionDocument = gql`
     id
     status
     startDate
-    daysUntilDue
     cancelAt
     canceledAt
     currentPeriodEnd
@@ -1381,7 +1379,6 @@ export const CurrentSubscriptionDocument = gql`
     id
     status
     startDate
-    daysUntilDue
     cancelAt
     canceledAt
     currentPeriodEnd
