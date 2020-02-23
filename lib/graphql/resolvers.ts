@@ -113,6 +113,10 @@ export const resolvers: Resolvers = {
     },
     async liturgySearch(_parent, args, context) {
       return context.models.liturgy.search(args.filter);
+    },
+    async subscription(_parent, _args, context) {
+      const user = await context.user;
+      return context.models.stripe.getUserSubscription(user);
     }
   },
   Mutation: {
@@ -123,6 +127,10 @@ export const resolvers: Resolvers = {
     async stripeCheckoutSession(_parent, _args, context) {
       const user = await context.user;
       return context.models.stripe.createCheckoutSession(user, context.host);
+    },
+    async cancelSubscription(_parent, _args, context) {
+      const user = await context.user;
+      return context.models.stripe.cancelSubscription(user);
     },
     async addShortListItem(_parent, args, context) {
       const user = await context.user;

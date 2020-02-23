@@ -303,6 +303,7 @@ export type Mutation = {
   createUser?: Maybe<User>,
   stripeCheckoutSession?: Maybe<StripeCheckoutSession>,
   changePassword?: Maybe<PasswordChangeTicket>,
+  cancelSubscription?: Maybe<StripeSubscription>,
 };
 
 
@@ -407,6 +408,7 @@ export type Query = {
    __typename?: 'Query',
   me?: Maybe<User>,
   main?: Maybe<Main>,
+  subscription?: Maybe<StripeSubscription>,
   occasionManyGroupById?: Maybe<Array<Maybe<OccasionGroupedById>>>,
   menuItems?: Maybe<Array<Maybe<MenuItem>>>,
   textSearch?: Maybe<Array<Maybe<SearchResult>>>,
@@ -572,6 +574,18 @@ export type StripeCheckoutSession = {
   sessionId?: Maybe<Scalars['String']>,
 };
 
+export type StripeSubscription = {
+   __typename?: 'StripeSubscription',
+  id: Scalars['ID'],
+  cancelAt?: Maybe<Scalars['Date']>,
+  canceledAt?: Maybe<Scalars['Date']>,
+  currentPeriodEnd?: Maybe<Scalars['Date']>,
+  daysUntilDue?: Maybe<Scalars['Int']>,
+  plan?: Maybe<Scalars['String']>,
+  startDate?: Maybe<Scalars['Date']>,
+  status?: Maybe<Scalars['String']>,
+};
+
 export type Tune = Document & {
    __typename?: 'Tune',
   _createdAt?: Maybe<Scalars['Date']>,
@@ -716,6 +730,7 @@ export type ResolversTypes = {
   MenuItem: ResolverTypeWrapper<any>,
   ChildPage: ResolverTypeWrapper<any>,
   ChildPageReference: ResolverTypeWrapper<any>,
+  StripeSubscription: ResolverTypeWrapper<any>,
   OccasionGroupedById: ResolverTypeWrapper<any>,
   FilterInput: ResolverTypeWrapper<any>,
   SearchResult: ResolverTypeWrapper<any>,
@@ -770,6 +785,7 @@ export type ResolversParentTypes = {
   MenuItem: any,
   ChildPage: any,
   ChildPageReference: any,
+  StripeSubscription: any,
   OccasionGroupedById: any,
   FilterInput: any,
   SearchResult: any,
@@ -989,6 +1005,7 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'firstName' | 'lastName' | 'email' | 'password' | 'confirmPassword'>>,
   stripeCheckoutSession?: Resolver<Maybe<ResolversTypes['StripeCheckoutSession']>, ParentType, ContextType>,
   changePassword?: Resolver<Maybe<ResolversTypes['PasswordChangeTicket']>, ParentType, ContextType>,
+  cancelSubscription?: Resolver<Maybe<ResolversTypes['StripeSubscription']>, ParentType, ContextType>,
 };
 
 export type NameResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Name'] = ResolversParentTypes['Name']> = {
@@ -1068,6 +1085,7 @@ export type PrayerPaginationResolvers<ContextType = Context, ParentType extends 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>,
   main?: Resolver<Maybe<ResolversTypes['Main']>, ParentType, ContextType>,
+  subscription?: Resolver<Maybe<ResolversTypes['StripeSubscription']>, ParentType, ContextType>,
   occasionManyGroupById?: Resolver<Maybe<Array<Maybe<ResolversTypes['OccasionGroupedById']>>>, ParentType, ContextType>,
   menuItems?: Resolver<Maybe<Array<Maybe<ResolversTypes['MenuItem']>>>, ParentType, ContextType>,
   textSearch?: Resolver<Maybe<Array<Maybe<ResolversTypes['SearchResult']>>>, ParentType, ContextType, RequireFields<QueryTextSearchArgs, 'filter'>>,
@@ -1141,6 +1159,18 @@ export type StripeCheckoutSessionResolvers<ContextType = Context, ParentType ext
   __isTypeOf?: isTypeOfResolverFn<ParentType>,
 };
 
+export type StripeSubscriptionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['StripeSubscription'] = ResolversParentTypes['StripeSubscription']> = {
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
+  cancelAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>,
+  canceledAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>,
+  currentPeriodEnd?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>,
+  daysUntilDue?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>,
+  plan?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  startDate?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>,
+  status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>,
+  __isTypeOf?: isTypeOfResolverFn<ParentType>,
+};
+
 export type TuneResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Tune'] = ResolversParentTypes['Tune']> = {
   _createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>,
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>,
@@ -1211,6 +1241,7 @@ export type Resolvers<ContextType = Context> = {
   SearchResult?: SearchResultResolvers,
   ShortList?: ShortListResolvers,
   StripeCheckoutSession?: StripeCheckoutSessionResolvers<ContextType>,
+  StripeSubscription?: StripeSubscriptionResolvers<ContextType>,
   Tune?: TuneResolvers<ContextType>,
   User?: UserResolvers<ContextType>,
 };
