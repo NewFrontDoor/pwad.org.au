@@ -6,7 +6,8 @@ import {Check} from 'react-feather';
 import startCase from 'lodash/startCase';
 import Button from '../button';
 import Loading from '../loading';
-import {useStripe, StripeProvider, Elements} from '../use-stripe';
+import {loadStripe} from '@stripe/stripe-js';
+import {Elements, useStripe} from '@stripe/react-stripe-js';
 import {
   MeDocument,
   CurrentSubscriptionDocument,
@@ -52,7 +53,7 @@ const CancelSubscriptionButton: FC = () => {
 };
 
 const AccountPaymentButton: FC = ({children}) => {
-  const {stripe} = useStripe();
+  const stripe = useStripe();
   const client = useApolloClient();
 
   const handleAccountPayment = useCallback(async () => {
@@ -253,12 +254,12 @@ ManageForm.propTypes = {
   hasPaidAccount: PropTypes.bool.isRequired
 };
 
+const stripePromise = loadStripe(process.env.STRIPE_CLIENT_TOKEN);
+
 const ManageFormProvider: FC<User> = props => (
-  <StripeProvider>
-    <Elements>
-      <ManageForm {...props} />
-    </Elements>
-  </StripeProvider>
+  <Elements stripe={stripePromise}>
+    <ManageForm {...props} />
+  </Elements>
 );
 
 export default ManageFormProvider;
