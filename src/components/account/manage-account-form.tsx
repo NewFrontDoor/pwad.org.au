@@ -120,10 +120,11 @@ const SubscriptionDetails: FC<StripeSubscription> = ({
   status,
   plan,
   currentPeriodEnd,
-  canceledAt
+  canceledAt,
+  cancelAt
 }) => {
-  const active = status === 'active';
-  const canceled = status === 'canceled';
+  const canceled = status === 'canceled' || canceledAt !== null;
+  const active = !canceled;
 
   return (
     <Box sx={{width: '100%'}} marginBottom={3}>
@@ -136,15 +137,19 @@ const SubscriptionDetails: FC<StripeSubscription> = ({
 
         {active && (
           <>
-            <dt>Subscription end date:</dt>
+            <dt>Your Subscription will automatically renew on:</dt>
             <dd>{new Date(currentPeriodEnd).toLocaleDateString()}</dd>
           </>
         )}
 
         {canceled && (
           <>
-            <dt>Subscription canceled at:</dt>
+            <dt>Your Subscription was canceled on:</dt>
             <dd>{new Date(canceledAt).toLocaleDateString()}</dd>
+
+            <dt>You will no longer be charged for this service.</dt>
+            <dt>Your current service will end on:</dt>
+            <dd>{new Date(cancelAt).toLocaleDateString()}</dd>
           </>
         )}
       </dl>
@@ -158,7 +163,8 @@ SubscriptionDetails.propTypes = {
   status: PropTypes.string.isRequired,
   plan: PropTypes.string.isRequired,
   currentPeriodEnd: PropTypes.any,
-  canceledAt: PropTypes.any
+  canceledAt: PropTypes.any,
+  cancelAt: PropTypes.any
 };
 
 const ManageForm: FC<User> = ({hasFreeAccount, hasPaidAccount}) => {
@@ -208,16 +214,14 @@ const ManageForm: FC<User> = ({hasFreeAccount, hasPaidAccount}) => {
       <Box sx={{width: '100%'}}>
         {loading ? (
           <Loading />
+        ) : data?.subscription ? (
+          <SubscriptionDetails {...data.subscription} />
         ) : (
           <Grid columns={[1, 2]} gap={[3, 5]}>
-            {data?.subscription ? (
-              <SubscriptionDetails {...data.subscription} />
-            ) : (
-              <BuySubscription
-                changeFreeAccount={handleChangeFreeAccount}
-                hasFreeAccount={isFreeAccount}
-              />
-            )}
+            <BuySubscription
+              changeFreeAccount={handleChangeFreeAccount}
+              hasFreeAccount={isFreeAccount}
+            />
           </Grid>
         )}
 
