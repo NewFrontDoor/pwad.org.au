@@ -1,6 +1,7 @@
 import nanoid from 'nanoid';
 import {ManagementClient, PasswordChangeTicketResponse} from 'auth0';
 import isAfter from 'date-fns/isAfter';
+import isEmpty from 'lodash/isEmpty';
 import {User, ShortList, InvoiceStatus} from '../gen-types';
 import sanity from '../../sanity';
 
@@ -11,6 +12,11 @@ const management = new ManagementClient({
   scope: 'create:user_tickets'
 });
 
+/**
+ * Fetch User from Sanity
+ * @param  id User Id
+ * @return    User
+ */
 export async function getById(id: string): Promise<User> {
   return sanity.fetch(
     `*[_type == "user" && _id == $id][0]{
@@ -27,6 +33,12 @@ export async function getById(id: string): Promise<User> {
   );
 }
 
+/**
+ * Find the auth0 User in Sanity, and create the Sanity User if they don't exist yet
+ *
+ * @param  user auth0 User
+ * @return      Sanity User
+ */
 export async function findOrCreate(
   user: Record<string, string>
 ): Promise<User> {
@@ -44,7 +56,7 @@ export async function findOrCreate(
     {email: user.email}
   );
 
-  if (isEmptyObject(result)) {
+  if (isEmpty(result)) {
     result = sanity.createIfNotExists({
       _id: nanoid(),
       _type: 'user',
@@ -71,14 +83,24 @@ type SubscriptionStatus = {
   periodEndDate: Date;
 };
 
+/**
+ * Update the User Stripe information in Sanity
+ * @param  email            Stripe email address
+ * @param  invoiceStatus    Invoice status
+ * @param  stripeCustomerId Stripe Customer Id
+ * @param  periodEndDate    Current Subscription end date
+ */
 export async function updateSubscriptionStatus({
   email,
   invoiceStatus,
   stripeCustomerId,
   periodEndDate
 }: SubscriptionStatus): Promise<void> {
+  // NOTE: The Stripe email address can be changed by existing customers
+  // In that scenario we should use the Stripe Customer Id instead
+  // It is safe to use the Stripe email for new customers, as they cannot change it
   const {_id} = await sanity.fetch(
-    `*[_type == "user" && (email == $email || stripeCustomerId == $stripeCustomerId)]`,
+    `*[_type == "user" && (email == $email || stripeCustomerId == $stripeCustomerId)][0]`,
     {
       email,
       stripeCustomerId
@@ -95,6 +117,12 @@ export async function updateSubscriptionStatus({
     .commit();
 }
 
+/**
+ * Creates an auth0 change password ticket
+ * @param  user The current user
+ * @param  host The current host
+ * @return      The auth0 change password ticket
+ */
 export async function changePassword(
   user: User,
   host: URL
@@ -107,51 +135,66 @@ export async function changePassword(
   });
 }
 
+/**
+ * Appends the reference to the current users shortlist
+ * @param  user      The current user
+ * @param  reference The reference to add to the shortlist
+ * @return           The user with their updated shortlist
+ */
 export async function addShortListItem(
-  id: string,
-  hymnId: string
+  user: User,
+  reference: string
 ): Promise<ShortList[]> {
+  const {_id} = user;
   await sanity
-    .patch(id)
+    .patch(_id)
     .setIfMissing({shortlist: []})
     .append('shortlist', [
       {
         _key: nanoid(),
-        _ref: hymnId,
+        _ref: reference,
         _type: 'reference'
       }
     ])
     .commit();
 
-  const {shortlist} = await getById(id);
+  const {shortlist} = await getById(_id);
 
   return shortlist;
 }
 
+/**
+ * Removes the reference index from current users shortlist
+ * @param  user           The current user
+ * @param  referenceIndex The current index of the reference item
+ * @return                The user with their updated shortlist
+ */
 export async function removeShortListItem(
-  id: string,
-  hymnIndex: number
+  user: User,
+  referenceIndex: number
 ): Promise<ShortList[]> {
-  if (hymnIndex >= 0) {
+  const {_id} = user;
+  if (referenceIndex >= 0) {
     await sanity
-      .patch(id)
+      .patch(_id)
       .setIfMissing({shortlist: []})
-      .insert('replace', `shortlist[${hymnIndex}]`, [])
+      .insert('replace', `shortlist[${referenceIndex}]`, [])
       .commit();
   }
 
-  const {shortlist} = await getById(id);
+  const {shortlist} = await getById(_id);
   return shortlist;
 }
 
+/**
+ * [hasPaidAccount description]
+ * @param  user [description]
+ * @return      [description]
+ */
 function hasPaidAccount(user: User): boolean {
   const periodEndDate = new Date(user.periodEndDate);
   const hasPaidInvoice = user.invoiceStatus === InvoiceStatus.Paid;
   const isWithinInvoicePeriod = isAfter(periodEndDate, Date.now());
 
   return hasPaidInvoice && isWithinInvoicePeriod;
-}
-
-function isEmptyObject(obj: object): boolean {
-  return Object.entries(obj).length === 0 && obj.constructor === Object;
 }

@@ -134,12 +134,12 @@ export const resolvers: Resolvers = {
     },
     async addShortListItem(_parent, args, context) {
       const user = await context.user;
-      return context.models.user.addShortListItem(user._id, args.item);
+      return context.models.user.addShortListItem(user, args.item);
     },
     async removeShortListItem(_parent, args, context) {
       const user = await context.user;
       const itemIndex = user.shortlist.findIndex(({_id}) => args.item === _id);
-      return context.models.user.removeShortListItem(user._id, itemIndex);
+      return context.models.user.removeShortListItem(user, itemIndex);
     }
   },
   Document: {
