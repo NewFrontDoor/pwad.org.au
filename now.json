@@ -17,9 +17,9 @@
     "GOOGLE_OAUTH_CLIENT_ID": "847282100207-emjqgnijh0lo6c731bdh58r8s9h7asd2.apps.googleusercontent.com",
     "GOOGLE_OAUTH_CLIENT_SECRET": "@pwad-google-oauth-client-secret",
 
-    "STRIPE_CLIENT_TOKEN": "@pwad-test-stripe-client-token",
-    "STRIPE_SECRET_TOKEN": "@pwad-test-stripe-secret-token",
-    "STRIPE_WEBHOOK_SECRET_TOKEN": "@pwad-test-stripe-webhook-secret-token",
+    "STRIPE_CLIENT_TOKEN": "@pwad-live-stripe-client-token",
+    "STRIPE_SECRET_TOKEN": "@pwad-live-stripe-secret-token",
+    "STRIPE_WEBHOOK_SECRET_TOKEN": "@pwad-live-stripe-webhook-secret-token",
 
     "AUTH0_DOMAIN": "@pwad-auth0-domain",
     "AUTH0_CLIENT_ID": "@pwad-auth0-client-id",
@@ -29,7 +29,7 @@
     "env": {
       "HOST_URL": "https://pwad.now.sh",
 
-      "STRIPE_CLIENT_TOKEN": "@pwad-test-stripe-client-token"
+      "STRIPE_CLIENT_TOKEN": "@pwad-live-stripe-client-token"
     }
   }
 }
