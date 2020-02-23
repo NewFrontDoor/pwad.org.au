@@ -35,7 +35,7 @@ export async function createCheckoutSession(
     payment_method_types: ['card'],
     mode: 'subscription',
     subscription_data: {
-      items: [{plan: 'plan_GkygZGTlUFPtzV', quantity: 1}]
+      items: [{plan: 'plan_GkvSgThNOY4A5D', quantity: 1}]
     }
   });
 
