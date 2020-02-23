@@ -68,14 +68,14 @@ export async function cancelSubscription(
 ): Promise<StripeSubscription> {
   const subscription = await findCurrentSubscription(user);
 
-  const deletedSubscription = await stripe.subscriptions.update(
+  const canceledSubscription = await stripe.subscriptions.update(
     subscription.id,
     {
       cancel_at_period_end: true
     }
   );
 
-  return subscriptionResponse(deletedSubscription);
+  return subscriptionResponse(canceledSubscription);
 }
 
 /**
