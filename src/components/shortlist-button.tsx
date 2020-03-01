@@ -8,17 +8,22 @@ import {
   useMeQuery,
   useRemoveShortListItemMutation,
   useAddShortListItemMutation,
-  MeDocument
+  MeDocument,
+  ShortList
 } from './queries';
 
 type ShortListButtonProps = {
-  itemId: string;
+  item: ShortList;
 };
 
-const ShortListButton: FC<ShortListButtonProps> = ({itemId}) => {
+const ShortListButton: FC<ShortListButtonProps> = ({item}) => {
   const {loading, data} = useMeQuery();
 
   const [addShortlistItem] = useAddShortListItemMutation({
+    optimisticResponse: {
+      __typename: 'Mutation',
+      addShortListItem: [...data?.me.shortlist, item]
+    },
     update(cache, result) {
       const {addShortListItem} = result.data;
       const {me} = cache.readQuery({query: MeDocument});
@@ -35,6 +40,12 @@ const ShortListButton: FC<ShortListButtonProps> = ({itemId}) => {
   });
 
   const [removeShortlistItem] = useRemoveShortListItemMutation({
+    optimisticResponse: {
+      __typename: 'Mutation',
+      removeShortListItem: data?.me.shortlist.filter(
+        ({_id}) => _id !== item._id
+      )
+    },
     update(cache, result) {
       const {removeShortListItem} = result.data;
       const {me} = cache.readQuery({query: MeDocument});
@@ -55,7 +66,7 @@ const ShortListButton: FC<ShortListButtonProps> = ({itemId}) => {
   }
 
   if (data?.me) {
-    const shortlisted = some(data.me.shortlist, {_id: itemId});
+    const shortlisted = some(data.me.shortlist, {_id: item._id});
     const label = shortlisted ? 'Remove from Short List' : 'Add to Short List';
 
     return (
@@ -67,14 +78,13 @@ const ShortListButton: FC<ShortListButtonProps> = ({itemId}) => {
           fontSize: 1
         }}
         onClick={() => {
-          // TODO: optomistic ui
           if (shortlisted) {
             removeShortlistItem({
-              variables: {item: itemId}
+              variables: {item: item._id}
             });
           } else {
             addShortlistItem({
-              variables: {item: itemId}
+              variables: {item: item._id}
             });
           }
         }}
@@ -88,7 +98,7 @@ const ShortListButton: FC<ShortListButtonProps> = ({itemId}) => {
 };
 
 ShortListButton.propTypes = {
-  itemId: PropTypes.string.isRequired
+  item: PropTypes.any
 };
 
 export default ShortListButton;

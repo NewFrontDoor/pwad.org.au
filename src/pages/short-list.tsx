@@ -26,7 +26,7 @@ const ShortList: NextPage = () => {
           <Text variant="listNone" as="ul">
             {data.me.shortlist.map(item => (
               <li key={item._id}>
-                <ShortListButton itemId={item._id} />{' '}
+                <ShortListButton item={item} />{' '}
                 <Link
                   {...linkProps(item)}
                   onMouseOver={() => prefetchSearchResult(client, item)}

@@ -54,7 +54,7 @@ const Liturgy: NextPage<LiturgyProps> = ({id}) => {
           </Sidebar>
           <Box sx={{width: '100%'}}>
             <Text as="h2">
-              <ShortListButton itemId={data.liturgyById._id} />
+              <ShortListButton item={data.liturgyById} />
               {title}
             </Text>
             <BlockContent blocks={content} />

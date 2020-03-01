@@ -76,7 +76,7 @@ const Song: NextPage<SongProps> = ({id}) => {
 
         <Box>
           <Styled.h2>
-            <ShortListButton itemId={data?.hymnById._id} />
+            <ShortListButton item={data?.hymnById} />
             {hymnNumber}. {title}
           </Styled.h2>
           <BlockContent blocks={content} />

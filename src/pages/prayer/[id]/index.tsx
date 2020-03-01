@@ -48,7 +48,7 @@ const PrayerById: FC<PrayerByIdProps> = ({id}) => {
           </Sidebar>
           <Box sx={{width: '100%'}}>
             <Text as="h2">
-              <ShortListButton itemId={data.prayerById._id} />
+              <ShortListButton item={data.prayerById} />
               {title}
             </Text>
             {content && <BlockContent blocks={content} />}

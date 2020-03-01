@@ -24,7 +24,7 @@ const SearchResultList: FC<SearchResultListProps> = props => {
   return (
     <Box marginBottom={3}>
       <Styled.h4>
-        <ShortListButton itemId={_id} />
+        <ShortListButton item={props} />
         <Link
           sx={{
             verticalAlign: 'middle'

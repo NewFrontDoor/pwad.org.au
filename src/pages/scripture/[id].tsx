@@ -29,7 +29,7 @@ const ScriptureById: FC<ScriptureByIdProps> = ({id}) => {
       {data?.scriptureById && (
         <Box sx={{width: '100%'}}>
           <Text as="h2">
-            <ShortListButton itemId={data.scriptureById._id} />
+            <ShortListButton item={data.scriptureById} />
             {title}
           </Text>
           {content && <BlockContent blocks={content} />}
