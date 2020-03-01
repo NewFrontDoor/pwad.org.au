@@ -9,9 +9,10 @@ import Link, {linkProps} from '../components/link';
 import ShortListButton from '../components/shortlist-button';
 
 import {useMeQuery} from '../components/queries';
+import {prefetchSearchResult} from '../prefetch';
 
 const ShortList: NextPage = () => {
-  const {data} = useMeQuery();
+  const {data, client} = useMeQuery();
 
   return (
     <PageLayout>
@@ -26,7 +27,10 @@ const ShortList: NextPage = () => {
             {data.me.shortlist.map(item => (
               <li key={item._id}>
                 <ShortListButton itemId={item._id} />{' '}
-                <Link {...linkProps(item)} />
+                <Link
+                  {...linkProps(item)}
+                  onMouseOver={() => prefetchSearchResult(client, item)}
+                />
               </li>
             ))}
           </Text>

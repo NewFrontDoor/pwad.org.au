@@ -12,8 +12,14 @@ function isHymn(result: SearchResult): result is Hymn {
   return result._type === 'hymn';
 }
 
-const SearchResultList: FC<SearchResult> = props => {
-  const {_id, _type, title, keywords, content} = props;
+type SearchResultListProps = SearchResult & {
+  prefetch(): void;
+};
+
+const SearchResultList: FC<SearchResultListProps> = props => {
+  const {_id, _type, title, keywords, prefetch} = props;
+
+  const content = props.content.slice(0, 1);
 
   return (
     <Box marginBottom={3}>
@@ -25,6 +31,7 @@ const SearchResultList: FC<SearchResult> = props => {
           }}
           as={`/${_type}/${_id}/${String(kebabCase(title))}`}
           href={`/${_type}/[id]/[name]`}
+          onMouseOver={prefetch}
         >
           {isHymn(props) ? `${props.hymnNumber}. ${title}` : title}
         </Link>{' '}
@@ -87,7 +94,8 @@ SearchResultList.propTypes = {
   title: PropTypes.string.isRequired,
   content: PropTypes.any,
   keywords: PropTypes.any,
-  hymnNumber: PropTypes.number
+  hymnNumber: PropTypes.number,
+  prefetch: PropTypes.func.isRequired
 };
 
 SearchResultList.defaultProps = {

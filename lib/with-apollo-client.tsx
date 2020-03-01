@@ -5,26 +5,14 @@ import {NextPage, NextPageContext} from 'next';
 import PropTypes from 'prop-types';
 import Head from 'next/head';
 import {ApolloProvider} from '@apollo/react-hooks';
-import {ApolloClient} from 'apollo-client';
-import {
-  InMemoryCache,
-  NormalizedCacheObject,
-  IntrospectionFragmentMatcher
-} from 'apollo-cache-inmemory';
-import {HttpLink} from 'apollo-link-http';
-import {setContext} from 'apollo-link-context';
-import fetch from 'isomorphic-unfetch';
+import {NormalizedCacheObject} from 'apollo-cache-inmemory';
 import {AbilityProvider} from '../src/components/ability-context';
-import introspectionQueryResultData from './fragment-types.json';
 import buildUrl from './build-url';
-
-export type TApolloClient = ApolloClient<NormalizedCacheObject>;
+import createApolloClient, {TApolloClient} from './apollo';
 
 export type WithApolloPageContext = NextPageContext & {
+  apolloState: NormalizedCacheObject;
   apolloClient: TApolloClient;
-  ctx?: {
-    apolloClient: TApolloClient;
-  };
 };
 
 type InitialProps = {
@@ -33,10 +21,13 @@ type InitialProps = {
   origin?: string;
 } & Record<string, any>;
 
-const fragmentMatcher = new IntrospectionFragmentMatcher({
-  introspectionQueryResultData
-});
+// On the client, we store the Apollo Client in the following variable.
+// This prevents the client from reinitializing between page transitions.
+let globalApolloClient: TApolloClient = null;
 
+/**
+ * Creates a withApollo HOC that provides the apolloContext to a next.js Page.
+ */
 export default function withApollo(
   PageComponent: NextPage,
   {ssr = true} = {}
@@ -47,7 +38,15 @@ export default function withApollo(
     origin,
     ...pageProps
   }) => {
-    const client = apolloClient || initApolloClient(apolloState, {origin});
+    let client: TApolloClient;
+
+    if (apolloClient) {
+      // Happens on: getDataFromTree & next.js ssr
+      client = apolloClient;
+    } else {
+      // Happens on: next.js csr
+      client = initApolloClient(apolloState, undefined);
+    }
 
     return (
       <ApolloProvider client={client}>
@@ -58,14 +57,11 @@ export default function withApollo(
     );
   };
 
+  // Set the correct displayName in development
   if (process.env.NODE_ENV !== 'production') {
-    // Find correct display name
     const displayName =
       PageComponent.displayName || PageComponent.name || 'Component';
 
-    WithApollo.displayName = `withApollo(${displayName})`;
-
-    // Set correct display name for devtools
     WithApollo.displayName = `withApollo(${displayName})`;
 
     WithApollo.propTypes = {
@@ -84,17 +80,8 @@ export default function withApollo(
   if (ssr || PageComponent.getInitialProps) {
     WithApollo.getInitialProps = async (context: WithApolloPageContext) => {
       const {AppTree, res, req} = context;
-      const cookie = req?.headers?.cookie;
-      let host: URL;
-
-      if (req) {
-        host = buildUrl(req);
-      } else {
-        host = new URL(window.location.origin);
-      }
-
-      const {origin} = host;
-      const apolloClient = initApolloClient({}, {cookie, origin});
+      const {origin} = buildUrl(req);
+      const {apolloClient} = initOnContext(context);
 
       context.apolloClient = apolloClient;
 
@@ -109,15 +96,22 @@ export default function withApollo(
         // When redirecting, the response is finished.
         // No point in continuing to render
         if (res?.finished) {
-          return {};
+          return pageProps;
         }
 
-        if (ssr) {
+        if (ssr && AppTree) {
           try {
-            // Run all GraphQL queries
+            // Import `@apollo/react-ssr` dynamically.
+            // We don't want to have this in our client bundle.
             const {getDataFromTree} = await import('@apollo/react-ssr');
 
             const props = {pageProps: {...pageProps, apolloClient, origin}};
+
+            // Take the Next.js AppTree, determine which queries are needed to render,
+            // and fetch them. This method can be pretty slow since it renders
+            // your entire AppTree once for every query. Check out apollo fragments
+            // if you want to reduce the number of rerenders.
+            // https://www.apollographql.com/docs/react/data/fragments/
             await getDataFromTree(<AppTree {...props} />);
           } catch (error) {
             // Prevent Apollo Client GraphQL errors from crashing SSR.
@@ -138,6 +132,7 @@ export default function withApollo(
       return {
         ...pageProps,
         apolloState,
+        apolloClient: context.apolloClient,
         origin
       };
     };
@@ -146,59 +141,47 @@ export default function withApollo(
   return WithApollo;
 }
 
-let apolloClient = null;
+/**
+ * Installs the Apollo Client on NextPageContext.
+ * Useful if you want to use apolloClient
+ * inside getStaticProps, getStaticPaths or getServerSideProps
+ */
+export function initOnContext(
+  context: WithApolloPageContext
+): WithApolloPageContext {
+  // Initialize ApolloClient if not already done
+  const apolloClient =
+    context.apolloClient ||
+    initApolloClient(context.apolloState || {}, context);
 
-type ClientOptions = {
-  cookie?: string;
-  origin?: string;
-};
+  // We send the Apollo Client as a prop to the component to avoid calling initApollo() twice in the server.
+  // Otherwise, the component would have to call initApollo() again but this
+  // time without the context. Once that happens, the following code will make sure we send
+  // the prop as `null` to the browser.
+  apolloClient.toJSON = () => null;
+
+  // Add apolloClient to NextPageContext & NextAppContext.
+  // This allows us to consume the apolloClient inside our
+  // custom `getInitialProps({ apolloClient })`.
+  context.apolloClient = apolloClient;
+
+  return context;
+}
 
 function initApolloClient(
   initialState: NormalizedCacheObject,
-  {cookie, origin}: ClientOptions
+  context?: NextPageContext
 ): TApolloClient {
   // Make sure to create a new client for every server-side request so that data
   // isn't shared between connections (which would be bad)
   if (typeof window === 'undefined') {
-    return createApolloClient(initialState, {cookie, origin});
+    return createApolloClient(initialState, context);
   }
 
   // Reuse client on the client-side
-  if (!apolloClient) {
-    apolloClient = createApolloClient(initialState, {cookie, origin});
+  if (!globalApolloClient) {
+    globalApolloClient = createApolloClient(initialState, context);
   }
 
-  return apolloClient;
-}
-
-function createApolloClient(
-  initialState: NormalizedCacheObject,
-  {cookie, origin}: ClientOptions
-): TApolloClient {
-  const {href: uri} = new URL('/api/graphql', origin);
-
-  const authLink = setContext((_, {headers}) => {
-    return {
-      headers: {
-        ...headers,
-        cookie
-      }
-    };
-  });
-
-  const httpLink = new HttpLink({
-    credentials: 'same-origin',
-    fetch,
-    uri
-  });
-
-  const isBrowser = typeof window !== 'undefined';
-  return new ApolloClient({
-    connectToDevTools: isBrowser,
-    ssrMode: !isBrowser, // Disables forceFetch on the server (so queries are only run once)
-    link: authLink.concat(httpLink),
-    cache: new InMemoryCache({
-      fragmentMatcher
-    }).restore(initialState)
-  });
+  return globalApolloClient;
 }

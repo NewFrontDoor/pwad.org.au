@@ -12,13 +12,14 @@ import SearchResult from './search-result';
 import SearchOccasionInput from './search-occasion-input';
 import SearchKeywordInput from './search-keyword-input';
 import initialSelectValue from './initial-select-value';
+import {prefetchOnePrayer} from '../../prefetch';
 
 type AdvancedSearchProps = {
   search: PrayerSearchQueryVariables;
 };
 
 const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
-  const {loading, error, data} = usePrayerSearchQuery({
+  const {loading, error, data, client} = usePrayerSearchQuery({
     variables: search
   });
 
@@ -34,7 +35,15 @@ const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
     return (
       <>
         {data.prayerSearch.map(result => (
-          <SearchResult key={result._id} {...result} />
+          <SearchResult
+            {...result}
+            key={result._id}
+            prefetch={() =>
+              prefetchOnePrayer(client, {
+                id: result._id
+              })
+            }
+          />
         ))}
       </>
     );

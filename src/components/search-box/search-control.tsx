@@ -9,13 +9,14 @@ import {useTextSearchQuery, TextSearchQueryVariables} from '../queries';
 import Loading from '../loading';
 import ServerError from '../server-error';
 import SearchResult from './search-result';
+import {prefetchSearchResult} from '../../prefetch';
 
 type TextSearchProps = {
   search: TextSearchQueryVariables;
 };
 
 const TextSearch: FC<TextSearchProps> = ({search}) => {
-  const {loading, error, data} = useTextSearchQuery({
+  const {loading, error, data, client} = useTextSearchQuery({
     variables: search
   });
 
@@ -31,7 +32,11 @@ const TextSearch: FC<TextSearchProps> = ({search}) => {
     return (
       <>
         {data.textSearch.map(result => (
-          <SearchResult key={result._id} {...result} />
+          <SearchResult
+            {...result}
+            key={result._id}
+            prefetch={() => prefetchSearchResult(client, result)}
+          />
         ))}
       </>
     );

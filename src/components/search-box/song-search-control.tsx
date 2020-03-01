@@ -20,12 +20,13 @@ import SearchPassageInput from './search-passage-input';
 import SearchOccasionInput from './search-occasion-input';
 import SearchKeywordInput from './search-keyword-input';
 import initialSelectValue from './initial-select-value';
+import {prefetchOneHymn} from '../../prefetch';
 
 type AdvancedSearchProps = {
   search: AdvancedSearchQueryVariables;
 };
 const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
-  const {loading, error, data} = useAdvancedSearchQuery({
+  const {loading, error, data, client} = useAdvancedSearchQuery({
     variables: search
   });
 
@@ -41,7 +42,15 @@ const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
     return (
       <>
         {data.search.map(result => (
-          <SearchResult key={result._id} {...result} />
+          <SearchResult
+            {...result}
+            key={result._id}
+            prefetch={() =>
+              prefetchOneHymn(client, {
+                id: result._id
+              })
+            }
+          />
         ))}
       </>
     );

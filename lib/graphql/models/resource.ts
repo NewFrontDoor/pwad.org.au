@@ -31,7 +31,7 @@ export async function textSearch(
   user: User,
   search: string
 ): Promise<SearchResult[]> {
-  if (user) {
+  if (user.hasPaidAccount) {
     return searchAllResources(`${search}*`);
   }
 

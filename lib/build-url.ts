@@ -2,7 +2,7 @@
 
 import {IncomingMessage} from 'http';
 
-export default function buildUrl(req: IncomingMessage): URL {
+export default function buildUrl(req?: IncomingMessage): URL {
   let host = new URL('http://localhost:3000');
 
   if (req) {
@@ -12,7 +12,7 @@ export default function buildUrl(req: IncomingMessage): URL {
       host = new URL(`${reqProto}://${reqHost}`);
     }
   } else {
-    host = new URL(window.location.href);
+    host = new URL(window.location.origin);
   }
 
   return host;

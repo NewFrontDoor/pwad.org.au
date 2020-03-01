@@ -13,13 +13,14 @@ import SearchResult from './search-result';
 import SearchOccasionInput from './search-occasion-input';
 import SearchKeywordInput from './search-keyword-input';
 import initialSelectValue from './initial-select-value';
+import {prefetchOneLiturgy} from '../../prefetch';
 
 type AdvancedSearchProps = {
   search: LiturgySearchQueryVariables;
 };
 
 const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
-  const {loading, error, data} = useLiturgySearchQuery({
+  const {loading, error, data, client} = useLiturgySearchQuery({
     variables: search
   });
 
@@ -35,7 +36,15 @@ const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
     return (
       <>
         {data.liturgySearch.map(result => (
-          <SearchResult key={result._id} {...result} />
+          <SearchResult
+            {...result}
+            key={result._id}
+            prefetch={() =>
+              prefetchOneLiturgy(client, {
+                id: result._id
+              })
+            }
+          />
         ))}
       </>
     );

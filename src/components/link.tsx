@@ -1,4 +1,4 @@
-import React, {ReactNode, FC} from 'react';
+import React, {ReactNode, FC, HTMLProps} from 'react';
 import PropTypes from 'prop-types';
 import NextLink from 'next/link';
 import {Link as ThemeUiLink} from 'theme-ui';
@@ -20,8 +20,10 @@ type LinkProps = {
   href?: string;
   onClick?: () => void;
   isInternal?: boolean;
+  isBlank?: boolean;
   children?: ReactNode;
-} & Record<string, unknown>;
+  variant?: string;
+} & HTMLProps<HTMLAnchorElement>;
 
 const Link: FC<LinkProps> = props => {
   const {as, href, isInternal, isBlank, ...rest} = props;
