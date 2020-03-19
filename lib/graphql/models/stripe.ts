@@ -14,7 +14,7 @@ export async function createCheckoutSession(
   user: User,
   host: URL
 ): Promise<StripeCheckoutSession> {
-  const successUrl = new URL('/api/callback/payment-success', host);
+  const successUrl = new URL('/my-account', host);
   const cancelUrl = new URL('/my-account', host);
 
   const customer = user.stripeCustomerId;

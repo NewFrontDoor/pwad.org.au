@@ -1,4 +1,5 @@
-import {User, SearchResult, Main, MenuItem} from '../gen-types';
+import {Ability} from '@casl/ability';
+import {SearchResult, Main, MenuItem} from '../gen-types';
 import sanity from '../../sanity';
 
 const allResourcesQuery = ['*']
@@ -28,10 +29,10 @@ async function searchFreeResources(search: string): Promise<SearchResult[]> {
 }
 
 export async function textSearch(
-  user: User,
+  ability: Ability,
   search: string
 ): Promise<SearchResult[]> {
-  if (user.hasPaidAccount) {
+  if (ability.can('read', 'Hymn')) {
     return searchAllResources(`${search}*`);
   }
 

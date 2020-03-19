@@ -250,8 +250,13 @@ const ManageForm: FC<User> = ({hasFreeAccount, hasPaidAccount}) => {
 };
 
 ManageForm.propTypes = {
-  hasFreeAccount: PropTypes.bool.isRequired,
-  hasPaidAccount: PropTypes.bool.isRequired
+  hasFreeAccount: PropTypes.bool,
+  hasPaidAccount: PropTypes.bool
+};
+
+ManageForm.defaultProps = {
+  hasFreeAccount: false,
+  hasPaidAccount: false
 };
 
 const stripePromise = loadStripe(process.env.STRIPE_CLIENT_TOKEN);
