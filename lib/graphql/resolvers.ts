@@ -1,5 +1,6 @@
 import upperFirst from 'lodash/upperFirst';
 import books from '../books';
+import {defineAbilitiesFor} from '../abilities'
 import {Resolvers, Hymn, Maybe, Document} from './gen-types';
 
 type SanityType =
@@ -40,8 +41,7 @@ export const resolvers: Resolvers = {
         const user = await context.user;
 
         return user;
-      } catch (_) {
-        console.log(_);
+      } catch {
         return null;
       }
     },
@@ -68,8 +68,9 @@ export const resolvers: Resolvers = {
     },
     async textSearch(_parent, args, context) {
       const user = await context.user;
+      const ability = defineAbilitiesFor(user)
       const {search} = args.filter;
-      return context.models.resource.textSearch(user, search);
+      return context.models.resource.textSearch(ability, search);
     },
     async authorById(_parent, args, context) {
       return context.models.author.getById(args.id);

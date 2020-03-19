@@ -4,7 +4,7 @@ import {User} from './graphql/gen-types';
 export function defineAbilitiesFor(user: User): Ability {
   let ability: Ability;
 
-  switch (user.role) {
+  switch (user?.role) {
     case 'admin':
       ability = AbilityBuilder.define((can: Ability['can']) => {
         can('manage', 'all');
@@ -23,7 +23,7 @@ export function defineAbilitiesFor(user: User): Ability {
 
     default:
       ability = AbilityBuilder.define((can: Ability['can']) => {
-        if (user.hasPaidAccount) {
+        if (user?.hasPaidAccount) {
           can('read', 'Hymn');
         }
 

@@ -139,7 +139,13 @@ export const SidebarAlternateTunes: FC<{tunes?: Tune[]}> = ({tunes}) => {
   return (
     <>
       <Styled.h3>Alternate Tunes</Styled.h3>
-      {file && <DefaultPlayer setAudioPlayer={setAudioPlayer} src={file.url} />}
+      {file && (
+        <DefaultPlayer
+          controls
+          setAudioPlayer={setAudioPlayer}
+          src={file.url}
+        />
+      )}
       <Styled.ul
         sx={{
           listStyle: 'none',

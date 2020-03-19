@@ -1,8 +1,8 @@
 {
   "version": 2,
   "env": {
-    "HOST": "pwad.now.sh",
-    "HOST_URL": "https://pwad.now.sh",
+    "HOST": "pwad.org.au",
+    "HOST_URL": "https://www.pwad.org.au",
 
     "S3_KEY": "@s3-key",
     "S3_SECRET": "@s3-secret",
@@ -27,7 +27,7 @@
   },
   "build": {
     "env": {
-      "HOST_URL": "https://pwad.now.sh",
+      "HOST_URL": "https://www.pwad.org.au",
 
       "STRIPE_CLIENT_TOKEN": "@pwad-live-stripe-client-token"
     }

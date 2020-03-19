@@ -1,4 +1,5 @@
 import nanoid from 'nanoid';
+import md5Hex from 'md5-hex';
 import {ManagementClient, PasswordChangeTicketResponse} from 'auth0';
 import isAfter from 'date-fns/isAfter';
 import isEmpty from 'lodash/isEmpty';
@@ -58,7 +59,7 @@ export async function findOrCreate(
 
   if (isEmpty(result)) {
     result = sanity.createIfNotExists({
-      _id: nanoid(),
+      _id: md5Hex(user.email),
       _type: 'user',
       name: {
         first: user.given_name,
