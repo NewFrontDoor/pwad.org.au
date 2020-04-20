@@ -1,36 +1,33 @@
 import {AbilityBuilder, Ability} from '@casl/ability';
 import {User} from './graphql/gen-types';
 
-export function defineAbilitiesFor(user: User): Ability {
-  let ability: Ability;
+type Actions = 'manage' | 'read';
+type Subjects = 'all' | 'my-account' | 'Hymn' | 'User';
+type Abilities = [Actions, Subjects];
+type PwadAbility = Ability<Abilities>;
+
+export function defineAbilitiesFor(user: User): PwadAbility {
+  const {can, cannot, rules} = new AbilityBuilder<PwadAbility>();
 
   switch (user?.role) {
     case 'admin':
-      ability = AbilityBuilder.define((can: Ability['can']) => {
-        can('manage', 'all');
-      });
+      can('manage', 'all');
       break;
 
     case 'committee':
-      ability = AbilityBuilder.define(
-        (can: Ability['can'], cannot: Ability['cannot']) => {
-          can('read', 'all');
-          can('manage', 'my-account');
-          cannot('manage', 'User');
-        }
-      );
+      can('read', 'all');
+      can('manage', 'my-account');
+      cannot('manage', 'User');
       break;
 
     default:
-      ability = AbilityBuilder.define((can: Ability['can']) => {
-        if (user?.hasPaidAccount) {
-          can('read', 'Hymn');
-        }
+      if (user?.hasPaidAccount) {
+        can('read', 'Hymn');
+      }
 
-        can('manage', 'my-account');
-      });
+      can('manage', 'my-account');
       break;
   }
 
-  return ability;
+  return new Ability<Abilities>(rules);
 }

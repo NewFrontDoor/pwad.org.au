@@ -1,4 +1,4 @@
-import nanoid from 'nanoid';
+import {nanoid} from 'nanoid';
 import md5Hex from 'md5-hex';
 import {ManagementClient, PasswordChangeTicketResponse} from 'auth0';
 import isAfter from 'date-fns/isAfter';

@@ -1,13 +1,13 @@
-import React, {FC, createContext, useContext} from 'react';
+import React, {FC, createContext} from 'react';
 import PropTypes from 'prop-types';
 import {Ability} from '@casl/ability';
-import {createContextualCan} from '@casl/react';
+import * as casl from '@casl/react';
 import {defineAbilitiesFor} from '../../lib/abilities';
 import {useMeQuery} from './queries';
 
 const ability = new Ability([]);
 
-export const AbilityContext = createContext(ability);
+const AbilityContext = createContext(ability);
 
 export const AbilityProvider: FC = ({children}) => {
   useMeQuery({
@@ -31,7 +31,7 @@ AbilityProvider.propTypes = {
 };
 
 export function useAbility(): Ability {
-  return useContext(AbilityContext);
+  return casl.useAbility(AbilityContext);
 }
 
-export const Can = createContextualCan(AbilityContext.Consumer);
+export const Can = casl.createContextualCan(AbilityContext.Consumer);
