@@ -1,7 +1,7 @@
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_TOKEN, {
-  apiVersion: '2019-12-03',
+  apiVersion: '2020-03-02',
   typescript: true
 });
 
