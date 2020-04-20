@@ -6,80 +6,80 @@ export type Maybe<T> = T | null;
 
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string,
-  String: string,
-  Boolean: boolean,
-  Int: number,
-  Float: number,
-  Date: any,
-  JSON: any,
+  ID: string;
+  String: string;
+  Boolean: boolean;
+  Int: number;
+  Float: number;
+  Date: any;
+  JSON: any;
 };
 
 export type Asset = Document & {
-   __typename?: 'Asset',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  name?: Maybe<Scalars['String']>,
-  file?: Maybe<Scalars['String']>,
-  size?: Maybe<Scalars['Int']>,
-  url?: Maybe<Scalars['String']>,
+   __typename?: 'Asset';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  name?: Maybe<Scalars['String']>;
+  file?: Maybe<Scalars['String']>;
+  size?: Maybe<Scalars['Int']>;
+  url?: Maybe<Scalars['String']>;
 };
 
 export type Author = Document & {
-   __typename?: 'Author',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  name?: Maybe<Scalars['String']>,
-  bio?: Maybe<Scalars['JSON']>,
-  dates?: Maybe<Scalars['String']>,
-  hymns?: Maybe<Array<Maybe<Hymn>>>,
-  liturgies?: Maybe<Array<Maybe<Liturgy>>>,
-  scripture?: Maybe<Array<Maybe<Scripture>>>,
+   __typename?: 'Author';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  name?: Maybe<Scalars['String']>;
+  bio?: Maybe<Scalars['JSON']>;
+  dates?: Maybe<Scalars['String']>;
+  hymns?: Maybe<Array<Maybe<Hymn>>>;
+  liturgies?: Maybe<Array<Maybe<Liturgy>>>;
+  scripture?: Maybe<Array<Maybe<Scripture>>>;
 };
 
 export type Category = Document & {
-   __typename?: 'Category',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  title?: Maybe<Scalars['String']>,
-  parent?: Maybe<Category>,
+   __typename?: 'Category';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  parent?: Maybe<Category>;
 };
 
 export type ChildPage = {
-   __typename?: 'ChildPage',
-  _id: Scalars['ID'],
-  childPage?: Maybe<ChildPageReference>,
-  alternateText?: Maybe<Scalars['String']>,
+   __typename?: 'ChildPage';
+  _id: Scalars['ID'];
+  childPage?: Maybe<ChildPageReference>;
+  alternateText?: Maybe<Scalars['String']>;
 };
 
 export type ChildPageReference = PageContent | Hymn | Prayer | Liturgy | Scripture | Asset;
 
 export type Copyright = Document & {
-   __typename?: 'Copyright',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  name?: Maybe<Scalars['String']>,
+   __typename?: 'Copyright';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  name?: Maybe<Scalars['String']>;
 };
 
 
 export type Document = {
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
 };
 
 export enum EnumHymnBook {
@@ -153,47 +153,47 @@ export enum EnumHymnBook {
 }
 
 export type ExternalUrl = Document & {
-   __typename?: 'ExternalUrl',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  title?: Maybe<Scalars['String']>,
-  url?: Maybe<Scalars['String']>,
+   __typename?: 'ExternalUrl';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
 };
 
 export type FeaturedReference = PageContent | ExternalUrl | RelativeUrl;
 
 export type FilterInput = {
-  id?: Maybe<Scalars['String']>,
-  slug?: Maybe<Scalars['String']>,
-  search?: Maybe<Scalars['String']>,
-  textContains?: Maybe<Scalars['String']>,
+  id?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
+  search?: Maybe<Scalars['String']>;
+  textContains?: Maybe<Scalars['String']>;
 };
 
 export type Hymn = Document & {
-   __typename?: 'Hymn',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  title?: Maybe<Scalars['String']>,
-  author?: Maybe<Author>,
-  hymnNumber?: Maybe<Scalars['Int']>,
-  content?: Maybe<Scalars['JSON']>,
-  tune?: Maybe<Tune>,
-  alternateTunes?: Maybe<Array<Maybe<Tune>>>,
-  book?: Maybe<Scalars['String']>,
-  chapter?: Maybe<Scalars['Int']>,
-  chapterVerse?: Maybe<Scalars['String']>,
-  scripture?: Maybe<Scalars['String']>,
-  files?: Maybe<Array<Maybe<Asset>>>,
-  keywords?: Maybe<Array<Maybe<Keyword>>>,
-  occasions?: Maybe<Array<Maybe<Occasion>>>,
-  verses?: Maybe<Scalars['String']>,
-  copyright?: Maybe<Copyright>,
+   __typename?: 'Hymn';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  author?: Maybe<Author>;
+  hymnNumber?: Maybe<Scalars['Int']>;
+  content?: Maybe<Scalars['JSON']>;
+  tune?: Maybe<Tune>;
+  alternateTunes?: Maybe<Array<Maybe<Tune>>>;
+  book?: Maybe<Scalars['String']>;
+  chapter?: Maybe<Scalars['Int']>;
+  chapterVerse?: Maybe<Scalars['String']>;
+  scripture?: Maybe<Scalars['String']>;
+  files?: Maybe<Array<Maybe<Asset>>>;
+  keywords?: Maybe<Array<Maybe<Keyword>>>;
+  occasions?: Maybe<Array<Maybe<Occasion>>>;
+  verses?: Maybe<Scalars['String']>;
+  copyright?: Maybe<Copyright>;
 };
 
 export enum InvoiceStatus {
@@ -206,16 +206,16 @@ export enum InvoiceStatus {
 
 
 export type Keyword = Document & {
-   __typename?: 'Keyword',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  name?: Maybe<Scalars['String']>,
-  hymns?: Maybe<Array<Maybe<Hymn>>>,
-  prayers?: Maybe<Array<Maybe<Prayer>>>,
-  liturgies?: Maybe<Array<Maybe<Liturgy>>>,
+   __typename?: 'Keyword';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  name?: Maybe<Scalars['String']>;
+  hymns?: Maybe<Array<Maybe<Hymn>>>;
+  prayers?: Maybe<Array<Maybe<Prayer>>>;
+  liturgies?: Maybe<Array<Maybe<Liturgy>>>;
 };
 
 export enum KeywordSortBy {
@@ -224,70 +224,70 @@ export enum KeywordSortBy {
 }
 
 export type Liturgy = Document & {
-   __typename?: 'Liturgy',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  title?: Maybe<Scalars['String']>,
-  author?: Maybe<Author>,
-  content?: Maybe<Scalars['JSON']>,
-  note?: Maybe<Scalars['String']>,
-  files?: Maybe<Array<Maybe<Asset>>>,
-  keywords?: Maybe<Array<Maybe<Keyword>>>,
-  occasions?: Maybe<Array<Maybe<Occasion>>>,
-  copyright?: Maybe<Copyright>,
+   __typename?: 'Liturgy';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  author?: Maybe<Author>;
+  content?: Maybe<Scalars['JSON']>;
+  note?: Maybe<Scalars['String']>;
+  files?: Maybe<Array<Maybe<Asset>>>;
+  keywords?: Maybe<Array<Maybe<Keyword>>>;
+  occasions?: Maybe<Array<Maybe<Occasion>>>;
+  copyright?: Maybe<Copyright>;
 };
 
 export type Main = Document & {
-   __typename?: 'Main',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  heading?: Maybe<Scalars['String']>,
-  subheading?: Maybe<Scalars['String']>,
-  blurb?: Maybe<Scalars['JSON']>,
-  searchblurb?: Maybe<Scalars['JSON']>,
-  featured?: Maybe<Array<Maybe<FeaturedReference>>>,
-  menuItems?: Maybe<Array<Maybe<MenuItem>>>,
+   __typename?: 'Main';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  heading?: Maybe<Scalars['String']>;
+  subheading?: Maybe<Scalars['String']>;
+  blurb?: Maybe<Scalars['JSON']>;
+  searchblurb?: Maybe<Scalars['JSON']>;
+  featured?: Maybe<Array<Maybe<FeaturedReference>>>;
+  menuItems?: Maybe<Array<Maybe<MenuItem>>>;
 };
 
 export type Menu = Document & {
-   __typename?: 'Menu',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  code?: Maybe<Scalars['String']>,
-  name?: Maybe<Scalars['String']>,
-  type?: Maybe<Scalars['String']>,
-  link?: Maybe<PageContent>,
+   __typename?: 'Menu';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  code?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  link?: Maybe<PageContent>;
 };
 
 export type MenuItem = {
-   __typename?: 'MenuItem',
-  _key?: Maybe<Scalars['String']>,
-  text?: Maybe<Scalars['String']>,
-  childpages?: Maybe<Array<Maybe<ChildPage>>>,
+   __typename?: 'MenuItem';
+  _key?: Maybe<Scalars['String']>;
+  text?: Maybe<Scalars['String']>;
+  childpages?: Maybe<Array<Maybe<ChildPage>>>;
 };
 
 export type Metre = Document & {
-   __typename?: 'Metre',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  metre?: Maybe<Scalars['String']>,
-  tunes?: Maybe<Array<Maybe<Tune>>>,
+   __typename?: 'Metre';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  metre?: Maybe<Scalars['String']>;
+  tunes?: Maybe<Array<Maybe<Tune>>>;
 };
 
 export type MetreIn = {
-  in?: Maybe<Array<Maybe<Scalars['String']>>>,
+  in?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export enum MetreSortBy {
@@ -296,273 +296,273 @@ export enum MetreSortBy {
 }
 
 export type Mutation = {
-   __typename?: 'Mutation',
-  addShortListItem?: Maybe<Array<Maybe<ShortList>>>,
-  removeShortListItem?: Maybe<Array<Maybe<ShortList>>>,
-  changeFreeAccount?: Maybe<User>,
-  createUser?: Maybe<User>,
-  stripeCheckoutSession?: Maybe<StripeCheckoutSession>,
-  changePassword?: Maybe<PasswordChangeTicket>,
-  cancelSubscription?: Maybe<StripeSubscription>,
+   __typename?: 'Mutation';
+  addShortListItem?: Maybe<Array<Maybe<ShortList>>>;
+  removeShortListItem?: Maybe<Array<Maybe<ShortList>>>;
+  changeFreeAccount?: Maybe<User>;
+  createUser?: Maybe<User>;
+  stripeCheckoutSession?: Maybe<StripeCheckoutSession>;
+  changePassword?: Maybe<PasswordChangeTicket>;
+  cancelSubscription?: Maybe<StripeSubscription>;
 };
 
 
 export type MutationAddShortListItemArgs = {
-  item: Scalars['ID']
+  item: Scalars['ID'];
 };
 
 
 export type MutationRemoveShortListItemArgs = {
-  item: Scalars['ID']
+  item: Scalars['ID'];
 };
 
 
 export type MutationChangeFreeAccountArgs = {
-  hasFreeAccount: Scalars['Boolean']
+  hasFreeAccount: Scalars['Boolean'];
 };
 
 
 export type MutationCreateUserArgs = {
-  firstName: Scalars['String'],
-  lastName: Scalars['String'],
-  email: Scalars['String'],
-  password: Scalars['String'],
-  confirmPassword: Scalars['String']
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
+  confirmPassword: Scalars['String'];
 };
 
 export type Name = {
-   __typename?: 'Name',
-  first?: Maybe<Scalars['String']>,
-  last?: Maybe<Scalars['String']>,
+   __typename?: 'Name';
+  first?: Maybe<Scalars['String']>;
+  last?: Maybe<Scalars['String']>;
 };
 
 export type Occasion = Document & {
-   __typename?: 'Occasion',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  name?: Maybe<Scalars['String']>,
-  parent?: Maybe<Occasion>,
-  churchyear?: Maybe<Scalars['Boolean']>,
+   __typename?: 'Occasion';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  name?: Maybe<Scalars['String']>;
+  parent?: Maybe<Occasion>;
+  churchyear?: Maybe<Scalars['Boolean']>;
 };
 
 export type OccasionGroupedById = {
-   __typename?: 'OccasionGroupedById',
-  _id: Scalars['ID'],
-  name?: Maybe<Scalars['String']>,
-  values?: Maybe<Array<Maybe<Occasion>>>,
+   __typename?: 'OccasionGroupedById';
+  _id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  values?: Maybe<Array<Maybe<Occasion>>>;
 };
 
 export type PageContent = Document & {
-   __typename?: 'PageContent',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  title?: Maybe<Scalars['String']>,
-  subtitle?: Maybe<Scalars['String']>,
-  slug?: Maybe<Scalars['String']>,
-  hasToc?: Maybe<Scalars['Boolean']>,
-  content?: Maybe<Scalars['JSON']>,
+   __typename?: 'PageContent';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  subtitle?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
+  hasToc?: Maybe<Scalars['Boolean']>;
+  content?: Maybe<Scalars['JSON']>;
 };
 
 export type PageInfo = {
-   __typename?: 'PageInfo',
-  currentPage: Scalars['Int'],
-  itemCount: Scalars['Int'],
-  perPage: Scalars['Int'],
+   __typename?: 'PageInfo';
+  currentPage: Scalars['Int'];
+  itemCount: Scalars['Int'];
+  perPage: Scalars['Int'];
 };
 
 export type PasswordChangeTicket = {
-   __typename?: 'PasswordChangeTicket',
-  ticket?: Maybe<Scalars['String']>,
+   __typename?: 'PasswordChangeTicket';
+  ticket?: Maybe<Scalars['String']>;
 };
 
 export type Prayer = Document & {
-   __typename?: 'Prayer',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  title?: Maybe<Scalars['String']>,
-  author?: Maybe<Author>,
-  content?: Maybe<Scalars['JSON']>,
-  note?: Maybe<Scalars['String']>,
-  occasions?: Maybe<Array<Maybe<Occasion>>>,
-  copyright?: Maybe<Copyright>,
-  keywords?: Maybe<Array<Maybe<Keyword>>>,
-  categories?: Maybe<Array<Maybe<Category>>>,
+   __typename?: 'Prayer';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  author?: Maybe<Author>;
+  content?: Maybe<Scalars['JSON']>;
+  note?: Maybe<Scalars['String']>;
+  occasions?: Maybe<Array<Maybe<Occasion>>>;
+  copyright?: Maybe<Copyright>;
+  keywords?: Maybe<Array<Maybe<Keyword>>>;
+  categories?: Maybe<Array<Maybe<Category>>>;
 };
 
 export type PrayerPagination = {
-   __typename?: 'PrayerPagination',
-  pageInfo?: Maybe<PageInfo>,
-  items?: Maybe<Array<Maybe<Prayer>>>,
+   __typename?: 'PrayerPagination';
+  pageInfo?: Maybe<PageInfo>;
+  items?: Maybe<Array<Maybe<Prayer>>>;
 };
 
 export type Query = {
-   __typename?: 'Query',
-  me?: Maybe<User>,
-  main?: Maybe<Main>,
-  subscription?: Maybe<StripeSubscription>,
-  occasionManyGroupById?: Maybe<Array<Maybe<OccasionGroupedById>>>,
-  menuItems?: Maybe<Array<Maybe<MenuItem>>>,
-  textSearch?: Maybe<Array<Maybe<SearchResult>>>,
-  search?: Maybe<Array<Maybe<SearchResult>>>,
-  prayerSearch?: Maybe<Array<Maybe<Prayer>>>,
-  liturgySearch?: Maybe<Array<Maybe<Liturgy>>>,
-  pageContentOne?: Maybe<PageContent>,
-  authorById?: Maybe<Author>,
-  hymnById?: Maybe<Hymn>,
-  keywordById?: Maybe<Keyword>,
-  keywordMany?: Maybe<Array<Maybe<Keyword>>>,
-  liturgyById?: Maybe<Liturgy>,
-  scriptureById?: Maybe<Scripture>,
-  tuneMany?: Maybe<Array<Maybe<Tune>>>,
-  metreMany?: Maybe<Array<Maybe<Metre>>>,
-  prayerById?: Maybe<Prayer>,
-  prayerPagination?: Maybe<PrayerPagination>,
+   __typename?: 'Query';
+  me?: Maybe<User>;
+  main?: Maybe<Main>;
+  subscription?: Maybe<StripeSubscription>;
+  occasionManyGroupById?: Maybe<Array<Maybe<OccasionGroupedById>>>;
+  menuItems?: Maybe<Array<Maybe<MenuItem>>>;
+  textSearch?: Maybe<Array<Maybe<SearchResult>>>;
+  search?: Maybe<Array<Maybe<SearchResult>>>;
+  prayerSearch?: Maybe<Array<Maybe<Prayer>>>;
+  liturgySearch?: Maybe<Array<Maybe<Liturgy>>>;
+  pageContentOne?: Maybe<PageContent>;
+  authorById?: Maybe<Author>;
+  hymnById?: Maybe<Hymn>;
+  keywordById?: Maybe<Keyword>;
+  keywordMany?: Maybe<Array<Maybe<Keyword>>>;
+  liturgyById?: Maybe<Liturgy>;
+  scriptureById?: Maybe<Scripture>;
+  tuneMany?: Maybe<Array<Maybe<Tune>>>;
+  metreMany?: Maybe<Array<Maybe<Metre>>>;
+  prayerById?: Maybe<Prayer>;
+  prayerPagination?: Maybe<PrayerPagination>;
 };
 
 
 export type QueryTextSearchArgs = {
-  filter: FilterInput
+  filter: FilterInput;
 };
 
 
 export type QuerySearchArgs = {
-  filter: SearchInput
+  filter: SearchInput;
 };
 
 
 export type QueryPrayerSearchArgs = {
-  filter: SearchInput
+  filter: SearchInput;
 };
 
 
 export type QueryLiturgySearchArgs = {
-  filter: SearchInput
+  filter: SearchInput;
 };
 
 
 export type QueryPageContentOneArgs = {
-  filter: FilterInput
+  filter: FilterInput;
 };
 
 
 export type QueryAuthorByIdArgs = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
 export type QueryHymnByIdArgs = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
 export type QueryKeywordByIdArgs = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
 export type QueryKeywordManyArgs = {
-  filter?: Maybe<FilterInput>,
-  limit?: Maybe<Scalars['Int']>,
-  skip?: Maybe<Scalars['Int']>,
-  sort?: Maybe<KeywordSortBy>
+  filter?: Maybe<FilterInput>;
+  limit?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sort?: Maybe<KeywordSortBy>;
 };
 
 
 export type QueryLiturgyByIdArgs = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
 export type QueryScriptureByIdArgs = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
 export type QueryTuneManyArgs = {
-  filter?: Maybe<FilterInput>,
-  limit?: Maybe<Scalars['Int']>,
-  skip?: Maybe<Scalars['Int']>,
-  sort?: Maybe<TuneSortBy>
+  filter?: Maybe<FilterInput>;
+  limit?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sort?: Maybe<TuneSortBy>;
 };
 
 
 export type QueryMetreManyArgs = {
-  filter?: Maybe<FilterInput>,
-  limit?: Maybe<Scalars['Int']>,
-  skip?: Maybe<Scalars['Int']>,
-  sort?: Maybe<MetreSortBy>
+  filter?: Maybe<FilterInput>;
+  limit?: Maybe<Scalars['Int']>;
+  skip?: Maybe<Scalars['Int']>;
+  sort?: Maybe<MetreSortBy>;
 };
 
 
 export type QueryPrayerByIdArgs = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
 export type QueryPrayerPaginationArgs = {
-  page: Scalars['Int'],
-  perPage: Scalars['Int']
+  page: Scalars['Int'];
+  perPage: Scalars['Int'];
 };
 
 export type RelativeUrl = Document & {
-   __typename?: 'RelativeUrl',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  title?: Maybe<Scalars['String']>,
-  url?: Maybe<Scalars['String']>,
+   __typename?: 'RelativeUrl';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
 };
 
 export type Resource = Document & {
-   __typename?: 'Resource',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  name?: Maybe<Scalars['String']>,
-  type?: Maybe<ResourceType>,
+   __typename?: 'Resource';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  name?: Maybe<Scalars['String']>;
+  type?: Maybe<ResourceType>;
 };
 
 export type ResourceType = Asset | RelativeUrl | ExternalUrl | PageContent;
 
 export type Scripture = Document & {
-   __typename?: 'Scripture',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  title?: Maybe<Scalars['String']>,
-  content?: Maybe<Scalars['JSON']>,
-  note?: Maybe<Scalars['JSON']>,
-  translation?: Maybe<Scalars['String']>,
-  occasions?: Maybe<Array<Maybe<Occasion>>>,
-  keywords?: Maybe<Array<Maybe<Keyword>>>,
+   __typename?: 'Scripture';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  content?: Maybe<Scalars['JSON']>;
+  note?: Maybe<Scalars['JSON']>;
+  translation?: Maybe<Scalars['String']>;
+  occasions?: Maybe<Array<Maybe<Occasion>>>;
+  keywords?: Maybe<Array<Maybe<Keyword>>>;
 };
 
 export type SearchInput = {
-  textContains?: Maybe<Scalars['String']>,
-  book?: Maybe<EnumHymnBook>,
-  occasion?: Maybe<Scalars['String']>,
-  tune?: Maybe<Scalars['String']>,
-  keyword?: Maybe<Scalars['String']>,
-  _operators?: Maybe<SearchInputOperator>,
+  textContains?: Maybe<Scalars['String']>;
+  book?: Maybe<EnumHymnBook>;
+  occasion?: Maybe<Scalars['String']>;
+  tune?: Maybe<Scalars['String']>;
+  keyword?: Maybe<Scalars['String']>;
+  _operators?: Maybe<SearchInputOperator>;
 };
 
 export type SearchInputOperator = {
-  metre?: Maybe<MetreIn>,
+  metre?: Maybe<MetreIn>;
 };
 
 export type SearchResult = Hymn | Prayer | Liturgy | Scripture;
@@ -570,33 +570,33 @@ export type SearchResult = Hymn | Prayer | Liturgy | Scripture;
 export type ShortList = Hymn | Prayer | Liturgy | Scripture;
 
 export type StripeCheckoutSession = {
-   __typename?: 'StripeCheckoutSession',
-  sessionId?: Maybe<Scalars['String']>,
+   __typename?: 'StripeCheckoutSession';
+  sessionId?: Maybe<Scalars['String']>;
 };
 
 export type StripeSubscription = {
-   __typename?: 'StripeSubscription',
-  id: Scalars['ID'],
-  cancelAt?: Maybe<Scalars['Date']>,
-  canceledAt?: Maybe<Scalars['Date']>,
-  currentPeriodEnd?: Maybe<Scalars['Date']>,
-  plan?: Maybe<Scalars['String']>,
-  startDate?: Maybe<Scalars['Date']>,
-  status?: Maybe<Scalars['String']>,
+   __typename?: 'StripeSubscription';
+  id: Scalars['ID'];
+  cancelAt?: Maybe<Scalars['Date']>;
+  canceledAt?: Maybe<Scalars['Date']>;
+  currentPeriodEnd?: Maybe<Scalars['Date']>;
+  plan?: Maybe<Scalars['String']>;
+  startDate?: Maybe<Scalars['Date']>;
+  status?: Maybe<Scalars['String']>;
 };
 
 export type Tune = Document & {
-   __typename?: 'Tune',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  title?: Maybe<Scalars['String']>,
-  metre?: Maybe<Metre>,
-  composer?: Maybe<Author>,
-  file?: Maybe<Asset>,
-  musicCopyright?: Maybe<Copyright>,
+   __typename?: 'Tune';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  metre?: Maybe<Metre>;
+  composer?: Maybe<Author>;
+  file?: Maybe<Asset>;
+  musicCopyright?: Maybe<Copyright>;
 };
 
 export enum TuneSortBy {
@@ -605,33 +605,33 @@ export enum TuneSortBy {
 }
 
 export type User = Document & {
-   __typename?: 'User',
-  _createdAt?: Maybe<Scalars['Date']>,
-  _id: Scalars['ID'],
-  _rev?: Maybe<Scalars['String']>,
-  _type?: Maybe<Scalars['String']>,
-  _updatedAt?: Maybe<Scalars['Date']>,
-  auth0Id?: Maybe<Scalars['String']>,
-  name?: Maybe<Name>,
-  email?: Maybe<Scalars['String']>,
-  hasPaidAccount?: Maybe<Scalars['Boolean']>,
-  hasFreeAccount?: Maybe<Scalars['Boolean']>,
-  picture?: Maybe<Scalars['String']>,
-  shortlist?: Maybe<Array<Maybe<ShortList>>>,
-  role?: Maybe<Scalars['String']>,
-  periodEndDate?: Maybe<Scalars['Date']>,
-  invoiceStatus?: Maybe<InvoiceStatus>,
-  stripeCustomerId?: Maybe<Scalars['String']>,
+   __typename?: 'User';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  auth0Id?: Maybe<Scalars['String']>;
+  name?: Maybe<Name>;
+  email?: Maybe<Scalars['String']>;
+  hasPaidAccount?: Maybe<Scalars['Boolean']>;
+  hasFreeAccount?: Maybe<Scalars['Boolean']>;
+  picture?: Maybe<Scalars['String']>;
+  shortlist?: Maybe<Array<Maybe<ShortList>>>;
+  role?: Maybe<Scalars['String']>;
+  periodEndDate?: Maybe<Scalars['Date']>;
+  invoiceStatus?: Maybe<InvoiceStatus>;
+  stripeCustomerId?: Maybe<Scalars['String']>;
 };
 
 export type AddShortListItemMutationVariables = {
-  item: Scalars['ID']
+  item: Scalars['ID'];
 };
 
 
 export type AddShortListItemMutation = (
   { __typename?: 'Mutation' }
-  & { addShortListItem: Maybe<Array<Maybe<(
+  & { addShortListItem?: Maybe<Array<Maybe<(
     { __typename?: 'Hymn' }
     & Pick<Hymn, '_id' | '_type' | 'title' | 'hymnNumber'>
   ) | (
@@ -647,35 +647,35 @@ export type AddShortListItemMutation = (
 );
 
 export type AdvancedSearchQueryVariables = {
-  title?: Maybe<Scalars['String']>,
-  tune?: Maybe<Scalars['String']>,
-  metres?: Maybe<Array<Maybe<Scalars['String']>>>,
-  occasion?: Maybe<Scalars['String']>,
-  keyword?: Maybe<Scalars['String']>,
-  book?: Maybe<EnumHymnBook>
+  title?: Maybe<Scalars['String']>;
+  tune?: Maybe<Scalars['String']>;
+  metres?: Maybe<Array<Maybe<Scalars['String']>>>;
+  occasion?: Maybe<Scalars['String']>;
+  keyword?: Maybe<Scalars['String']>;
+  book?: Maybe<EnumHymnBook>;
 };
 
 
 export type AdvancedSearchQuery = (
   { __typename?: 'Query' }
-  & { search: Maybe<Array<Maybe<(
+  & { search?: Maybe<Array<Maybe<(
     { __typename?: 'Hymn' }
     & Pick<Hymn, '_id' | '_type' | 'title' | 'content' | 'hymnNumber'>
-    & { keywords: Maybe<Array<Maybe<(
+    & { keywords?: Maybe<Array<Maybe<(
       { __typename?: 'Keyword' }
       & Pick<Keyword, '_id' | 'name'>
     )>>> }
   ) | (
     { __typename?: 'Prayer' }
     & Pick<Prayer, '_id' | '_type' | 'title' | 'content'>
-    & { keywords: Maybe<Array<Maybe<(
+    & { keywords?: Maybe<Array<Maybe<(
       { __typename?: 'Keyword' }
       & Pick<Keyword, '_id' | 'name'>
     )>>> }
   ) | (
     { __typename?: 'Liturgy' }
     & Pick<Liturgy, '_id' | '_type' | 'title' | 'content'>
-    & { keywords: Maybe<Array<Maybe<(
+    & { keywords?: Maybe<Array<Maybe<(
       { __typename?: 'Keyword' }
       & Pick<Keyword, '_id' | 'name'>
     )>>> }
@@ -690,7 +690,7 @@ export type CancelSubscriptionMutationVariables = {};
 
 export type CancelSubscriptionMutation = (
   { __typename?: 'Mutation' }
-  & { cancelSubscription: Maybe<(
+  & { cancelSubscription?: Maybe<(
     { __typename?: 'StripeSubscription' }
     & Pick<StripeSubscription, 'id' | 'status' | 'startDate' | 'cancelAt' | 'canceledAt' | 'currentPeriodEnd' | 'plan'>
   )> }
@@ -701,27 +701,27 @@ export type ChangePasswordMutationVariables = {};
 
 export type ChangePasswordMutation = (
   { __typename?: 'Mutation' }
-  & { changePassword: Maybe<(
+  & { changePassword?: Maybe<(
     { __typename?: 'PasswordChangeTicket' }
     & Pick<PasswordChangeTicket, 'ticket'>
   )> }
 );
 
 export type CreateUserMutationVariables = {
-  firstName: Scalars['String'],
-  lastName: Scalars['String'],
-  email: Scalars['String'],
-  password: Scalars['String'],
-  confirmPassword: Scalars['String']
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
+  confirmPassword: Scalars['String'];
 };
 
 
 export type CreateUserMutation = (
   { __typename?: 'Mutation' }
-  & { createUser: Maybe<(
+  & { createUser?: Maybe<(
     { __typename?: 'User' }
     & Pick<User, '_id' | 'hasPaidAccount' | 'hasFreeAccount' | 'picture'>
-    & { name: Maybe<(
+    & { name?: Maybe<(
       { __typename?: 'Name' }
       & Pick<Name, 'first' | 'last'>
     )> }
@@ -733,37 +733,37 @@ export type CurrentSubscriptionQueryVariables = {};
 
 export type CurrentSubscriptionQuery = (
   { __typename?: 'Query' }
-  & { subscription: Maybe<(
+  & { subscription?: Maybe<(
     { __typename?: 'StripeSubscription' }
     & Pick<StripeSubscription, 'id' | 'status' | 'startDate' | 'cancelAt' | 'canceledAt' | 'currentPeriodEnd' | 'plan'>
   )> }
 );
 
 export type FindKeywordQueryVariables = {
-  title?: Maybe<Scalars['String']>,
-  skip?: Maybe<Scalars['Int']>,
-  limit?: Maybe<Scalars['Int']>
+  title?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
 };
 
 
 export type FindKeywordQuery = (
   { __typename?: 'Query' }
-  & { keywordMany: Maybe<Array<Maybe<(
+  & { keywordMany?: Maybe<Array<Maybe<(
     { __typename?: 'Keyword' }
     & Pick<Keyword, '_id' | 'name'>
   )>>> }
 );
 
 export type FindMetreQueryVariables = {
-  metre?: Maybe<Scalars['String']>,
-  skip?: Maybe<Scalars['Int']>,
-  limit?: Maybe<Scalars['Int']>
+  metre?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
 };
 
 
 export type FindMetreQuery = (
   { __typename?: 'Query' }
-  & { metreMany: Maybe<Array<Maybe<(
+  & { metreMany?: Maybe<Array<Maybe<(
     { __typename?: 'Metre' }
     & Pick<Metre, '_id' | 'metre'>
   )>>> }
@@ -774,10 +774,10 @@ export type FindOccasionQueryVariables = {};
 
 export type FindOccasionQuery = (
   { __typename?: 'Query' }
-  & { occasionManyGroupById: Maybe<Array<Maybe<(
+  & { occasionManyGroupById?: Maybe<Array<Maybe<(
     { __typename?: 'OccasionGroupedById' }
     & Pick<OccasionGroupedById, 'name'>
-    & { values: Maybe<Array<Maybe<(
+    & { values?: Maybe<Array<Maybe<(
       { __typename?: 'Occasion' }
       & Pick<Occasion, '_id' | 'name'>
     )>>> }
@@ -785,19 +785,19 @@ export type FindOccasionQuery = (
 );
 
 export type FindOneAuthorQueryVariables = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
 export type FindOneAuthorQuery = (
   { __typename?: 'Query' }
-  & { authorById: Maybe<(
+  & { authorById?: Maybe<(
     { __typename?: 'Author' }
     & Pick<Author, '_id' | '_type' | 'name' | 'dates'>
-    & { hymns: Maybe<Array<Maybe<(
+    & { hymns?: Maybe<Array<Maybe<(
       { __typename?: 'Hymn' }
       & Pick<Hymn, '_id' | '_type' | 'title' | 'hymnNumber'>
-    )>>>, liturgies: Maybe<Array<Maybe<(
+    )>>>, liturgies?: Maybe<Array<Maybe<(
       { __typename?: 'Liturgy' }
       & Pick<Liturgy, '_id' | '_type' | 'title'>
     )>>> }
@@ -805,45 +805,45 @@ export type FindOneAuthorQuery = (
 );
 
 export type FindOneHymnQueryVariables = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
 export type FindOneHymnQuery = (
   { __typename?: 'Query' }
-  & { hymnById: Maybe<(
+  & { hymnById?: Maybe<(
     { __typename?: 'Hymn' }
     & Pick<Hymn, '_id' | 'title' | 'hymnNumber' | 'content' | 'scripture'>
-    & { copyright: Maybe<(
+    & { copyright?: Maybe<(
       { __typename?: 'Copyright' }
       & Pick<Copyright, '_id' | 'name'>
-    )>, author: Maybe<(
+    )>, author?: Maybe<(
       { __typename?: 'Author' }
       & Pick<Author, '_id' | 'dates' | 'name'>
-    )>, alternateTunes: Maybe<Array<Maybe<(
+    )>, alternateTunes?: Maybe<Array<Maybe<(
       { __typename?: 'Tune' }
       & Pick<Tune, '_id' | '_type' | 'title'>
-      & { file: Maybe<(
+      & { file?: Maybe<(
         { __typename?: 'Asset' }
         & Pick<Asset, '_id' | '_type' | 'name' | 'size' | 'url'>
       )> }
-    )>>>, tune: Maybe<(
+    )>>>, tune?: Maybe<(
       { __typename?: 'Tune' }
       & Pick<Tune, '_id' | 'title'>
-      & { musicCopyright: Maybe<(
+      & { musicCopyright?: Maybe<(
         { __typename?: 'Copyright' }
         & Pick<Copyright, '_id' | 'name'>
-      )>, composer: Maybe<(
+      )>, composer?: Maybe<(
         { __typename?: 'Author' }
         & Pick<Author, '_id' | 'name'>
-      )>, metre: Maybe<(
+      )>, metre?: Maybe<(
         { __typename?: 'Metre' }
         & Pick<Metre, '_id' | 'metre'>
-      )>, file: Maybe<(
+      )>, file?: Maybe<(
         { __typename?: 'Asset' }
         & Pick<Asset, '_id' | '_type' | 'name' | 'size' | 'url'>
       )> }
-    )>, files: Maybe<Array<Maybe<(
+    )>, files?: Maybe<Array<Maybe<(
       { __typename?: 'Asset' }
       & Pick<Asset, '_id' | '_type' | 'name' | 'size' | 'url'>
     )>>> }
@@ -851,22 +851,22 @@ export type FindOneHymnQuery = (
 );
 
 export type FindOneKeywordQueryVariables = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
 export type FindOneKeywordQuery = (
   { __typename?: 'Query' }
-  & { keywordById: Maybe<(
+  & { keywordById?: Maybe<(
     { __typename?: 'Keyword' }
     & Pick<Keyword, 'name'>
-    & { hymns: Maybe<Array<Maybe<(
+    & { hymns?: Maybe<Array<Maybe<(
       { __typename?: 'Hymn' }
       & Pick<Hymn, '_id' | '_type' | 'title' | 'hymnNumber'>
-    )>>>, prayers: Maybe<Array<Maybe<(
+    )>>>, prayers?: Maybe<Array<Maybe<(
       { __typename?: 'Prayer' }
       & Pick<Prayer, '_id' | '_type' | 'title'>
-    )>>>, liturgies: Maybe<Array<Maybe<(
+    )>>>, liturgies?: Maybe<Array<Maybe<(
       { __typename?: 'Liturgy' }
       & Pick<Liturgy, '_id' | '_type' | 'title'>
     )>>> }
@@ -874,22 +874,22 @@ export type FindOneKeywordQuery = (
 );
 
 export type FindOneLiturgyQueryVariables = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
 export type FindOneLiturgyQuery = (
   { __typename?: 'Query' }
-  & { liturgyById: Maybe<(
+  & { liturgyById?: Maybe<(
     { __typename?: 'Liturgy' }
     & Pick<Liturgy, '_id' | 'title' | 'content'>
-    & { author: Maybe<(
+    & { author?: Maybe<(
       { __typename?: 'Author' }
       & Pick<Author, '_id' | 'dates' | 'name'>
-    )>, copyright: Maybe<(
+    )>, copyright?: Maybe<(
       { __typename?: 'Copyright' }
       & Pick<Copyright, '_id' | 'name'>
-    )>, files: Maybe<Array<Maybe<(
+    )>, files?: Maybe<Array<Maybe<(
       { __typename?: 'Asset' }
       & Pick<Asset, '_id' | 'name' | 'size' | 'url'>
     )>>> }
@@ -897,19 +897,19 @@ export type FindOneLiturgyQuery = (
 );
 
 export type FindOnePrayerQueryVariables = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
 export type FindOnePrayerQuery = (
   { __typename?: 'Query' }
-  & { prayerById: Maybe<(
+  & { prayerById?: Maybe<(
     { __typename?: 'Prayer' }
     & Pick<Prayer, '_id' | 'title' | 'content'>
-    & { author: Maybe<(
+    & { author?: Maybe<(
       { __typename?: 'Author' }
       & Pick<Author, '_id' | 'name' | 'dates'>
-    )>, copyright: Maybe<(
+    )>, copyright?: Maybe<(
       { __typename?: 'Copyright' }
       & Pick<Copyright, '_id' | 'name'>
     )> }
@@ -917,31 +917,31 @@ export type FindOnePrayerQuery = (
 );
 
 export type FindOneScriptureQueryVariables = {
-  id: Scalars['ID']
+  id: Scalars['ID'];
 };
 
 
 export type FindOneScriptureQuery = (
   { __typename?: 'Query' }
-  & { scriptureById: Maybe<(
+  & { scriptureById?: Maybe<(
     { __typename?: 'Scripture' }
     & Pick<Scripture, '_id' | 'title' | 'content'>
   )> }
 );
 
 export type FindPrayerContentsQueryVariables = {
-  page: Scalars['Int']
+  page: Scalars['Int'];
 };
 
 
 export type FindPrayerContentsQuery = (
   { __typename?: 'Query' }
-  & { prayerPagination: Maybe<(
+  & { prayerPagination?: Maybe<(
     { __typename?: 'PrayerPagination' }
-    & { pageInfo: Maybe<(
+    & { pageInfo?: Maybe<(
       { __typename?: 'PageInfo' }
       & Pick<PageInfo, 'currentPage' | 'itemCount' | 'perPage'>
-    )>, items: Maybe<Array<Maybe<(
+    )>, items?: Maybe<Array<Maybe<(
       { __typename?: 'Prayer' }
       & Pick<Prayer, '_id' | 'title' | 'content'>
     )>>> }
@@ -949,28 +949,28 @@ export type FindPrayerContentsQuery = (
 );
 
 export type FindTuneQueryVariables = {
-  title?: Maybe<Scalars['String']>,
-  skip?: Maybe<Scalars['Int']>,
-  limit?: Maybe<Scalars['Int']>
+  title?: Maybe<Scalars['String']>;
+  skip?: Maybe<Scalars['Int']>;
+  limit?: Maybe<Scalars['Int']>;
 };
 
 
 export type FindTuneQuery = (
   { __typename?: 'Query' }
-  & { tuneMany: Maybe<Array<Maybe<(
+  & { tuneMany?: Maybe<Array<Maybe<(
     { __typename?: 'Tune' }
     & Pick<Tune, '_id' | 'title'>
   )>>> }
 );
 
 export type ChangeFreeAccountMutationVariables = {
-  hasFreeAccount: Scalars['Boolean']
+  hasFreeAccount: Scalars['Boolean'];
 };
 
 
 export type ChangeFreeAccountMutation = (
   { __typename?: 'Mutation' }
-  & { changeFreeAccount: Maybe<(
+  & { changeFreeAccount?: Maybe<(
     { __typename: 'User' }
     & Pick<User, 'hasFreeAccount'>
   )> }
@@ -981,16 +981,16 @@ export type HomeQueryVariables = {};
 
 export type HomeQuery = (
   { __typename?: 'Query' }
-  & { main: Maybe<(
+  & { main?: Maybe<(
     { __typename?: 'Main' }
     & Pick<Main, 'heading' | 'subheading' | 'blurb' | 'searchblurb'>
-    & { menuItems: Maybe<Array<Maybe<(
+    & { menuItems?: Maybe<Array<Maybe<(
       { __typename?: 'MenuItem' }
       & Pick<MenuItem, '_key' | 'text'>
-      & { childpages: Maybe<Array<Maybe<(
+      & { childpages?: Maybe<Array<Maybe<(
         { __typename?: 'ChildPage' }
         & Pick<ChildPage, '_id' | 'alternateText'>
-        & { childPage: Maybe<(
+        & { childPage?: Maybe<(
           { __typename?: 'PageContent' }
           & Pick<PageContent, '_id' | '_type' | 'slug' | 'title'>
         ) | { __typename?: 'Hymn' } | { __typename?: 'Prayer' } | { __typename?: 'Liturgy' } | { __typename?: 'Scripture' } | (
@@ -1003,18 +1003,18 @@ export type HomeQuery = (
 );
 
 export type LiturgySearchQueryVariables = {
-  title?: Maybe<Scalars['String']>,
-  occasion?: Maybe<Scalars['String']>,
-  keyword?: Maybe<Scalars['String']>
+  title?: Maybe<Scalars['String']>;
+  occasion?: Maybe<Scalars['String']>;
+  keyword?: Maybe<Scalars['String']>;
 };
 
 
 export type LiturgySearchQuery = (
   { __typename?: 'Query' }
-  & { liturgySearch: Maybe<Array<Maybe<(
+  & { liturgySearch?: Maybe<Array<Maybe<(
     { __typename?: 'Liturgy' }
     & Pick<Liturgy, '_id' | '_type' | 'title' | 'content'>
-    & { keywords: Maybe<Array<Maybe<(
+    & { keywords?: Maybe<Array<Maybe<(
       { __typename?: 'Keyword' }
       & Pick<Keyword, '_id' | 'name'>
     )>>> }
@@ -1026,13 +1026,13 @@ export type MeQueryVariables = {};
 
 export type MeQuery = (
   { __typename?: 'Query' }
-  & { me: Maybe<(
+  & { me?: Maybe<(
     { __typename?: 'User' }
     & Pick<User, '_id' | 'email' | 'role' | 'hasFreeAccount' | 'hasPaidAccount' | 'picture' | 'periodEndDate' | 'stripeCustomerId'>
-    & { name: Maybe<(
+    & { name?: Maybe<(
       { __typename?: 'Name' }
       & Pick<Name, 'first' | 'last'>
-    )>, shortlist: Maybe<Array<Maybe<(
+    )>, shortlist?: Maybe<Array<Maybe<(
       { __typename?: 'Hymn' }
       & Pick<Hymn, '_id' | '_type' | 'title' | 'hymnNumber'>
     ) | (
@@ -1049,31 +1049,31 @@ export type MeQuery = (
 );
 
 export type PageContentQueryVariables = {
-  slug?: Maybe<Scalars['String']>
+  slug?: Maybe<Scalars['String']>;
 };
 
 
 export type PageContentQuery = (
   { __typename?: 'Query' }
-  & { pageContentOne: Maybe<(
+  & { pageContentOne?: Maybe<(
     { __typename?: 'PageContent' }
     & Pick<PageContent, '_id' | 'title' | 'content' | 'hasToc' | 'slug' | 'subtitle'>
   )> }
 );
 
 export type PrayerSearchQueryVariables = {
-  title?: Maybe<Scalars['String']>,
-  occasion?: Maybe<Scalars['String']>,
-  keyword?: Maybe<Scalars['String']>
+  title?: Maybe<Scalars['String']>;
+  occasion?: Maybe<Scalars['String']>;
+  keyword?: Maybe<Scalars['String']>;
 };
 
 
 export type PrayerSearchQuery = (
   { __typename?: 'Query' }
-  & { prayerSearch: Maybe<Array<Maybe<(
+  & { prayerSearch?: Maybe<Array<Maybe<(
     { __typename?: 'Prayer' }
     & Pick<Prayer, '_id' | '_type' | 'title' | 'content'>
-    & { keywords: Maybe<Array<Maybe<(
+    & { keywords?: Maybe<Array<Maybe<(
       { __typename?: 'Keyword' }
       & Pick<Keyword, '_id' | 'name'>
     )>>> }
@@ -1081,13 +1081,13 @@ export type PrayerSearchQuery = (
 );
 
 export type RemoveShortListItemMutationVariables = {
-  item: Scalars['ID']
+  item: Scalars['ID'];
 };
 
 
 export type RemoveShortListItemMutation = (
   { __typename?: 'Mutation' }
-  & { removeShortListItem: Maybe<Array<Maybe<(
+  & { removeShortListItem?: Maybe<Array<Maybe<(
     { __typename?: 'Hymn' }
     & Pick<Hymn, '_id' | '_type' | 'title' | 'hymnNumber'>
   ) | (
@@ -1107,37 +1107,37 @@ export type StripeCheckoutSessionMutationVariables = {};
 
 export type StripeCheckoutSessionMutation = (
   { __typename?: 'Mutation' }
-  & { stripeCheckoutSession: Maybe<(
+  & { stripeCheckoutSession?: Maybe<(
     { __typename?: 'StripeCheckoutSession' }
     & Pick<StripeCheckoutSession, 'sessionId'>
   )> }
 );
 
 export type TextSearchQueryVariables = {
-  search?: Maybe<Scalars['String']>
+  search?: Maybe<Scalars['String']>;
 };
 
 
 export type TextSearchQuery = (
   { __typename?: 'Query' }
-  & { textSearch: Maybe<Array<Maybe<(
+  & { textSearch?: Maybe<Array<Maybe<(
     { __typename?: 'Hymn' }
     & Pick<Hymn, '_id' | '_type' | 'title' | 'content' | 'hymnNumber'>
-    & { keywords: Maybe<Array<Maybe<(
+    & { keywords?: Maybe<Array<Maybe<(
       { __typename?: 'Keyword' }
       & Pick<Keyword, '_id' | 'name'>
     )>>> }
   ) | (
     { __typename?: 'Prayer' }
     & Pick<Prayer, '_id' | '_type' | 'title' | 'content'>
-    & { keywords: Maybe<Array<Maybe<(
+    & { keywords?: Maybe<Array<Maybe<(
       { __typename?: 'Keyword' }
       & Pick<Keyword, '_id' | 'name'>
     )>>> }
   ) | (
     { __typename?: 'Liturgy' }
     & Pick<Liturgy, '_id' | '_type' | 'title' | 'content'>
-    & { keywords: Maybe<Array<Maybe<(
+    & { keywords?: Maybe<Array<Maybe<(
       { __typename?: 'Keyword' }
       & Pick<Keyword, '_id' | 'name'>
     )>>> }
@@ -1236,7 +1236,7 @@ export const AdvancedSearchDocument = gql`
  * __useAdvancedSearchQuery__
  *
  * To run a query within a React component, call `useAdvancedSearchQuery` and pass it any options that fit your needs.
- * When your component renders, `useAdvancedSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useAdvancedSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1391,7 +1391,7 @@ export const CurrentSubscriptionDocument = gql`
  * __useCurrentSubscriptionQuery__
  *
  * To run a query within a React component, call `useCurrentSubscriptionQuery` and pass it any options that fit your needs.
- * When your component renders, `useCurrentSubscriptionQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useCurrentSubscriptionQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1424,7 +1424,7 @@ export const FindKeywordDocument = gql`
  * __useFindKeywordQuery__
  *
  * To run a query within a React component, call `useFindKeywordQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindKeywordQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useFindKeywordQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1460,7 +1460,7 @@ export const FindMetreDocument = gql`
  * __useFindMetreQuery__
  *
  * To run a query within a React component, call `useFindMetreQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindMetreQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useFindMetreQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1499,7 +1499,7 @@ export const FindOccasionDocument = gql`
  * __useFindOccasionQuery__
  *
  * To run a query within a React component, call `useFindOccasionQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindOccasionQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useFindOccasionQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1545,7 +1545,7 @@ export const FindOneAuthorDocument = gql`
  * __useFindOneAuthorQuery__
  *
  * To run a query within a React component, call `useFindOneAuthorQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindOneAuthorQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useFindOneAuthorQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1633,7 +1633,7 @@ export const FindOneHymnDocument = gql`
  * __useFindOneHymnQuery__
  *
  * To run a query within a React component, call `useFindOneHymnQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindOneHymnQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useFindOneHymnQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1682,7 +1682,7 @@ export const FindOneKeywordDocument = gql`
  * __useFindOneKeywordQuery__
  *
  * To run a query within a React component, call `useFindOneKeywordQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindOneKeywordQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useFindOneKeywordQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1732,7 +1732,7 @@ export const FindOneLiturgyDocument = gql`
  * __useFindOneLiturgyQuery__
  *
  * To run a query within a React component, call `useFindOneLiturgyQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindOneLiturgyQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useFindOneLiturgyQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1776,7 +1776,7 @@ export const FindOnePrayerDocument = gql`
  * __useFindOnePrayerQuery__
  *
  * To run a query within a React component, call `useFindOnePrayerQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindOnePrayerQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useFindOnePrayerQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1811,7 +1811,7 @@ export const FindOneScriptureDocument = gql`
  * __useFindOneScriptureQuery__
  *
  * To run a query within a React component, call `useFindOneScriptureQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindOneScriptureQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useFindOneScriptureQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1853,7 +1853,7 @@ export const FindPrayerContentsDocument = gql`
  * __useFindPrayerContentsQuery__
  *
  * To run a query within a React component, call `useFindPrayerContentsQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindPrayerContentsQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useFindPrayerContentsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1887,7 +1887,7 @@ export const FindTuneDocument = gql`
  * __useFindTuneQuery__
  *
  * To run a query within a React component, call `useFindTuneQuery` and pass it any options that fit your needs.
- * When your component renders, `useFindTuneQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useFindTuneQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -1980,7 +1980,7 @@ export const HomeDocument = gql`
  * __useHomeQuery__
  *
  * To run a query within a React component, call `useHomeQuery` and pass it any options that fit your needs.
- * When your component renders, `useHomeQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useHomeQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -2019,7 +2019,7 @@ export const LiturgySearchDocument = gql`
  * __useLiturgySearchQuery__
  *
  * To run a query within a React component, call `useLiturgySearchQuery` and pass it any options that fit your needs.
- * When your component renders, `useLiturgySearchQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useLiturgySearchQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -2084,7 +2084,7 @@ export const MeDocument = gql`
  * __useMeQuery__
  *
  * To run a query within a React component, call `useMeQuery` and pass it any options that fit your needs.
- * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useMeQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -2121,7 +2121,7 @@ export const PageContentDocument = gql`
  * __usePageContentQuery__
  *
  * To run a query within a React component, call `usePageContentQuery` and pass it any options that fit your needs.
- * When your component renders, `usePageContentQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `usePageContentQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -2161,7 +2161,7 @@ export const PrayerSearchDocument = gql`
  * __usePrayerSearchQuery__
  *
  * To run a query within a React component, call `usePrayerSearchQuery` and pass it any options that fit your needs.
- * When your component renders, `usePrayerSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `usePrayerSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
@@ -2303,7 +2303,7 @@ export const TextSearchDocument = gql`
  * __useTextSearchQuery__
  *
  * To run a query within a React component, call `useTextSearchQuery` and pass it any options that fit your needs.
- * When your component renders, `useTextSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * When your component renders, `useTextSearchQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;

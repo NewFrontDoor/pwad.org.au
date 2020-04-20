@@ -168,18 +168,23 @@ export const resolvers: Resolvers = {
     }
   },
   ShortList: {
+    // @ts-ignore
     __resolveType: resolveSanityDocument
   },
   SearchResult: {
+    // @ts-ignore
     __resolveType: resolveSanityDocument
   },
   FeaturedReference: {
+    // @ts-ignore
     __resolveType: resolveSanityDocument
   },
   ChildPageReference: {
+    // @ts-ignore
     __resolveType: resolveSanityDocument
   },
   ResourceType: {
+    // @ts-ignore
     __resolveType: resolveSanityDocument
   }
 };

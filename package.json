@@ -131,6 +131,9 @@
   "xo": {
     "space": true,
     "prettier": true,
+    "rules": {
+      "unicorn/string-content": "off"
+    },
     "overrides": [
       {
         "files": [

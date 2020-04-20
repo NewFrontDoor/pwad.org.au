@@ -61,8 +61,8 @@ function context({req}: {req: NextApiRequest}): Context {
   };
 }
 
-async function getUserContext(req: NextApiRequest): Promise<User | null> {
-  const response = await auth0.getSession(req);
+async function getUserContext(request: NextApiRequest): Promise<User | null> {
+  const response = await auth0.getSession(request);
 
   if (response) {
     const {user} = response;

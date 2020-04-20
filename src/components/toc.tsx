@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import {jsx} from 'theme-ui';
 import GithubSlugger from 'github-slugger';
 
+const slugger = new GithubSlugger();
+
 type BlockContent = {
   style: string;
   children: any[];
@@ -41,11 +43,10 @@ type TocItem = {
 
 export function deriveToc(content: BlockContent[]): TocItem[] {
   const toc = [];
-  const slugger = new GithubSlugger();
 
   for (const block of content) {
     if (block.style === 'h2') {
-      const name = block.children;
+      const name = block.children.map(child => child.text).join(' ');
       const slug = slugger.slug(name);
       toc.push({slug, name});
     }
