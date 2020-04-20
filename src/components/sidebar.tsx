@@ -1,10 +1,10 @@
 /** @jsx jsx */
-import {FC, useState, useEffect} from 'react';
+import {FC, useState} from 'react';
 import {jsx, Box, Styled} from 'theme-ui';
 import PropTypes from 'prop-types';
 import prettyBytes from 'pretty-bytes';
 import {PlayCircle, StopCircle} from 'react-feather';
-import {DefaultPlayer} from '@newfrontdoor/audio-player';
+import {AudioManager} from '@newfrontdoor/audio-player';
 import Link, {authorLinkProps, assetLinkProps} from './link';
 import {Asset, Author, Tune, Copyright} from './queries';
 import useToggle from './use-toggle';
@@ -77,7 +77,6 @@ SidebarFiles.defaultProps = {
 };
 
 export const SidebarTune: FC<Tune> = ({_id, title, file}) => {
-  const [playing, togglePlaying] = useToggle(false);
   return (
     <>
       <Styled.h3>Tune</Styled.h3>
@@ -88,15 +87,13 @@ export const SidebarTune: FC<Tune> = ({_id, title, file}) => {
         }}
       >
         <li key={_id}>
-          {file && (
-            <span
-              sx={{verticalAlign: 'text-top', paddingRight: '3px'}}
-              onClick={() => togglePlaying()}
-            >
-              {playing ? <StopCircle size={18} /> : <PlayCircle size={18} />}
-            </span>
+          {file ? (
+            <AudioManager.PlayButton src={file.url} variant="transparent">
+              {title}
+            </AudioManager.PlayButton>
+          ) : (
+            {title}
           )}
-          {title}
         </li>
       </Styled.ul>
     </>
@@ -114,67 +111,30 @@ SidebarTune.defaultProps = {
 };
 
 export const SidebarAlternateTunes: FC<{tunes?: Tune[]}> = ({tunes}) => {
-  const [tuneExpand, tuneToggle] = useToggle(false);
-  const [playing, setPlaying] = useState(null);
-  const [file, setFile] = useState<Asset>(null);
-  const [audioPlayer, setAudioPlayer] = useState(null);
-
-  useEffect(() => {
-    if (audioPlayer) {
-      audioPlayer.load();
-      audioPlayer.play();
-    }
-  }, [audioPlayer, file]);
-
-  function handleMedia(tune: Tune): void {
-    if (playing === tune) {
-      setPlaying(null);
-      setFile(null);
-    } else {
-      setPlaying(tune);
-      setFile(tune.file);
-    }
-  }
-
   return (
     <>
       <Styled.h3>Alternate Tunes</Styled.h3>
-      {file && (
-        <DefaultPlayer
-          controls
-          setAudioPlayer={setAudioPlayer}
-          src={file.url}
-        />
-      )}
       <Styled.ul
         sx={{
           listStyle: 'none',
-          padding: 0,
-          maxHeight: tuneExpand ? 'auto' : '100px',
-          overflow: 'scroll'
+          padding: 0
         }}
       >
         {tunes.map(tune => (
           <li key={tune._id}>
-            <span
-              sx={{verticalAlign: 'text-top', paddingRight: '3px'}}
-              onClick={() => handleMedia(tune)}
-            >
-              {playing === tune ? (
-                <StopCircle size={18} />
-              ) : (
-                <PlayCircle size={18} />
-              )}
-            </span>
-            {tune.title}
+            {tune.file ? (
+              <AudioManager.PlayButton
+                src={tune.file.url}
+                variant="transparent"
+              >
+                {tune.title}
+              </AudioManager.PlayButton>
+            ) : (
+              tune.title
+            )}
           </li>
         ))}
       </Styled.ul>
-      {tunes.length > 4 && (
-        <button type="button" onClick={() => tuneToggle()}>
-          {tuneExpand ? 'Collapse' : 'Expand'} tune list
-        </button>
-      )}
     </>
   );
 };
@@ -265,7 +225,12 @@ export const SidebarMusicCopyright: FC<Tune> = props => (
 );
 
 const Sidebar: FC = ({children}) => (
-  <Box sx={{marginRight: '40px'}}>{children}</Box>
+  <AudioManager>
+    <Box sx={{marginRight: '40px'}}>
+      <AudioManager.NativePlayer controls={false} />
+      {children}
+    </Box>
+  </AudioManager>
 );
 
 Sidebar.propTypes = {

@@ -16,10 +16,8 @@ const ShortList: NextPage = () => {
 
   return (
     <PageLayout>
-      <Styled.h1>
-        Public Worship and Aids to Devotion Committee Website
-      </Styled.h1>
       <ContentWrap>
+        <Styled.h1>Public Worship and Aids to Devotion</Styled.h1>
         <Styled.h2>My Short List</Styled.h2>
 
         {data?.me && (

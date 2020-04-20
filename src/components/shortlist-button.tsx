@@ -18,7 +18,7 @@ type ShortListButtonProps = {
 
 const ShortListButton: FC<ShortListButtonProps> = ({item}) => {
   const {loading, data} = useMeQuery();
-  const shortlist = (data?.me?.shortlist ?? [])
+  const shortlist = data?.me?.shortlist ?? [];
 
   const [addShortlistItem] = useAddShortListItemMutation({
     optimisticResponse: {
@@ -43,9 +43,7 @@ const ShortListButton: FC<ShortListButtonProps> = ({item}) => {
   const [removeShortlistItem] = useRemoveShortListItemMutation({
     optimisticResponse: {
       __typename: 'Mutation',
-      removeShortListItem: shortlist.filter(
-        ({_id}) => _id !== item?._id
-      )
+      removeShortListItem: shortlist.filter(({_id}) => _id !== item?._id)
     },
     update(cache, result) {
       const {removeShortListItem} = result.data;

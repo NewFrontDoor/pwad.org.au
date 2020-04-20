@@ -1,6 +1,6 @@
 import upperFirst from 'lodash/upperFirst';
 import books from '../books';
-import {defineAbilitiesFor} from '../abilities'
+import {defineAbilitiesFor} from '../abilities';
 import {Resolvers, Hymn, Maybe, Document} from './gen-types';
 
 type SanityType =
@@ -68,7 +68,7 @@ export const resolvers: Resolvers = {
     },
     async textSearch(_parent, args, context) {
       const user = await context.user;
-      const ability = defineAbilitiesFor(user)
+      const ability = defineAbilitiesFor(user);
       const {search} = args.filter;
       return context.models.resource.textSearch(ability, search);
     },
