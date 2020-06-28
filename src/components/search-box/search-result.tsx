@@ -13,10 +13,10 @@ function isHymn(result: SearchResult): result is Hymn {
 }
 
 type SearchResultListProps = SearchResult & {
-  prefetch(): void;
+  prefetch: () => void;
 };
 
-const SearchResultList: FC<SearchResultListProps> = props => {
+const SearchResultList: FC<SearchResultListProps> = (props) => {
   const {_id, _type, title, keywords, prefetch} = props;
 
   const content = props.content.slice(0, 1);
@@ -60,7 +60,7 @@ const SearchResultList: FC<SearchResultListProps> = props => {
           listStyle: 'none'
         }}
       >
-        {keywords?.map(keyword => {
+        {keywords?.map((keyword) => {
           const {as, href, children} = keywordLinkProps(keyword);
           return (
             <Box

@@ -7,7 +7,7 @@
     "build": "next build",
     "dev": "gulp compose",
     "start": "next dev",
-    "test": "xo --extension=js --extension=ts --extension=tsx",
+    "test": "xo",
     "prodcopy": "gulp prodcopy"
   },
   "repository": {
@@ -40,10 +40,9 @@
     "del": "^5.1.0",
     "dotenv": "^8.2.0",
     "enquirer": "^2.3.5",
-    "eslint": "^6.8.0",
     "eslint-config-xo-react": "^0.23.0",
     "eslint-plugin-react": "^7.19.0",
-    "eslint-plugin-react-hooks": "^3.0.0",
+    "eslint-plugin-react-hooks": "^4.0.0",
     "execa": "^4.0.0",
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
@@ -60,10 +59,10 @@
     "read-pkg-up": "^7.0.1",
     "through2": "^3.0.1",
     "type-fest": "^0.13.1",
-    "typescript": "^3.8.3",
+    "typescript": "^3.9.5",
     "vinyl": "^2.2.0",
     "webpack": "^4.42.1",
-    "xo": "^0.28.3"
+    "xo": "^0.32.0"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.5",

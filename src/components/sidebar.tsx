@@ -1,9 +1,8 @@
 /** @jsx jsx */
-import {FC, useState} from 'react';
+import {FC} from 'react';
 import {jsx, Box, Styled} from 'theme-ui';
 import PropTypes from 'prop-types';
 import prettyBytes from 'pretty-bytes';
-import {PlayCircle, StopCircle} from 'react-feather';
 import {AudioManager} from '@newfrontdoor/audio-player';
 import Link, {authorLinkProps, assetLinkProps} from './link';
 import {Asset, Author, Tune, Copyright} from './queries';
@@ -20,7 +19,7 @@ import useToggle from './use-toggle';
 -Sidebar (wrapper)
 */
 
-const Composer: FC<Author> = props => {
+const Composer: FC<Author> = (props) => {
   if (props.name) {
     return (
       <Styled.p>
@@ -53,7 +52,7 @@ export const SidebarFiles: FC<{files: Asset[]}> = ({files}) => {
           overflow: 'scroll'
         }}
       >
-        {files.map(file => (
+        {files.map((file) => (
           <li key={file._id}>
             <Link {...assetLinkProps(file)} /> ({prettyBytes(file.size || 0)})
           </li>
@@ -120,7 +119,7 @@ export const SidebarAlternateTunes: FC<{tunes?: Tune[]}> = ({tunes}) => {
           padding: 0
         }}
       >
-        {tunes.map(tune => (
+        {tunes.map((tune) => (
           <li key={tune._id}>
             {tune.file ? (
               <AudioManager.PlayButton
@@ -147,7 +146,7 @@ SidebarAlternateTunes.defaultProps = {
   tunes: []
 };
 
-export const SidebarAuthor: FC<Author> = props => (
+export const SidebarAuthor: FC<Author> = (props) => (
   <>
     <Styled.h3>Hymn Author</Styled.h3>
     <Styled.p>
@@ -217,7 +216,7 @@ SidebarCopyright.defaultProps = {
   name: undefined
 };
 
-export const SidebarMusicCopyright: FC<Tune> = props => (
+export const SidebarMusicCopyright: FC<Tune> = (props) => (
   <>
     <Styled.h3>Copyright (music)</Styled.h3>
     <Styled.p>{props?.musicCopyright.name || '-'}</Styled.p>

@@ -34,7 +34,7 @@ const Author: NextPage<AuthorProps> = ({id}) => {
         <>
           <Text as="h3">Hymns</Text>
           <Text as="ul">
-            {hymns.map(hymn => (
+            {hymns.map((hymn) => (
               <li key={hymn._id}>
                 <Link {...hymnLinkProps(hymn)} />
               </li>
@@ -46,7 +46,7 @@ const Author: NextPage<AuthorProps> = ({id}) => {
         <>
           <Text as="h3">Liturgies</Text>
           <Text as="ul">
-            {liturgies.map(liturgy => (
+            {liturgies.map((liturgy) => (
               <li key={liturgy._id}>
                 <Link {...liturgyLinkProps(liturgy)} />
               </li>

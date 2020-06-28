@@ -30,8 +30,8 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
         value={value}
         inputValue={searchTerm}
         options={options}
-        onChange={value => helpers.setValue(value)}
-        onInputChange={value => setSearchTerm(value)}
+        onChange={(value) => helpers.setValue(value)}
+        onInputChange={(value) => setSearchTerm(value)}
       />
     </Label>
   );

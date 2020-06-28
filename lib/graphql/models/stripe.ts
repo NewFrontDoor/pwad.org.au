@@ -113,7 +113,7 @@ async function findCurrentSubscription(
 
   // NOTE: Assuming the current subscription is the first active subscription
   return customer.subscriptions.data.find(
-    subscription => subscription.status === 'active'
+    (subscription) => subscription.status === 'active'
   );
 }
 

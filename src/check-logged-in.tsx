@@ -7,7 +7,9 @@ type LoggedInUser = {
   };
 };
 
-export default async (apolloClient: TApolloClient): Promise<LoggedInUser> => {
+async function checkLoggedIn(
+  apolloClient: TApolloClient
+): Promise<LoggedInUser> {
   try {
     const {data} = await apolloClient.query<MeQuery>({
       query: MeDocument
@@ -17,4 +19,6 @@ export default async (apolloClient: TApolloClient): Promise<LoggedInUser> => {
     console.error(error);
     return {loggedInUser: {}};
   }
-};
+}
+
+export default checkLoggedIn;

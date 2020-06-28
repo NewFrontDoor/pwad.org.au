@@ -11,7 +11,7 @@ const NavOverlay: FC<NavOverlayProps> = ({children, onClickOutside}) => {
   const target = usePortal('modal');
 
   const handleClick = useCallback(
-    event => {
+    (event) => {
       if (target.contains(event.target)) {
         return;
       }

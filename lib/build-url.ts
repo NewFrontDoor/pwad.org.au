@@ -2,14 +2,14 @@
 
 import {IncomingMessage} from 'http';
 
-export default function buildUrl(req?: IncomingMessage): URL {
+export default function buildUrl(request: IncomingMessage): URL {
   let host = new URL('http://localhost:3000');
 
-  if (req) {
-    const reqProto = req.headers['x-forwarded-proto'];
-    const reqHost = req.headers['x-forwarded-host'];
-    if (typeof reqProto === 'string' && typeof reqHost === 'string') {
-      host = new URL(`${reqProto}://${reqHost}`);
+  if (request) {
+    const requestProto = request.headers['x-forwarded-proto'];
+    const requestHost = request.headers['x-forwarded-host'];
+    if (typeof requestProto === 'string' && typeof requestHost === 'string') {
+      host = new URL(`${requestProto}://${requestHost}`);
     }
   } else {
     host = new URL(window.location.origin);

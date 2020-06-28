@@ -22,7 +22,7 @@ const Toc: FC<TocProps> = ({blocks}) => {
     <div>
       <h2>Contents:</h2>
       <ul>
-        {headings.map(item => (
+        {headings.map((item) => (
           <li key={item.slug}>
             <a href={`#${item.slug}`}>{item.name}</a>
           </li>
@@ -46,7 +46,7 @@ export function deriveToc(content: BlockContent[]): TocItem[] {
 
   for (const block of content) {
     if (block.style === 'h2') {
-      const name = block.children.map(child => child.text).join(' ');
+      const name = block.children.map((child) => child.text).join(' ');
       const slug = slugger.slug(name);
       toc.push({slug, name});
     }

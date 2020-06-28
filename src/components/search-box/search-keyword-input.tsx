@@ -19,15 +19,15 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
   });
 
   const fetchMoreKeywords = useCallback(() => {
-    fetchMore({
+    void fetchMore({
       variables: {
         skip: data?.keywordMany.length
       },
-      updateQuery: (prev, {fetchMoreResult}) => {
-        if (!fetchMoreResult) return prev;
+      updateQuery: (previous, {fetchMoreResult}) => {
+        if (!fetchMoreResult) return previous;
         return {
-          ...prev,
-          keywordMany: [...prev.keywordMany, ...fetchMoreResult.keywordMany]
+          ...previous,
+          keywordMany: [...previous.keywordMany, ...fetchMoreResult.keywordMany]
         };
       }
     });
@@ -61,9 +61,9 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
         value={value}
         inputValue={searchTerm}
         options={options}
-        onChange={value => helpers.setValue(value)}
+        onChange={(value) => helpers.setValue(value)}
         onMenuScrollToBottom={fetchMoreKeywords}
-        onInputChange={value => {
+        onInputChange={(value) => {
           setSearchTerm(value);
         }}
       />

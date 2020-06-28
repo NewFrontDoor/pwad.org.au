@@ -29,20 +29,20 @@ async function handleInvoicePaymentSucceeded(
 }
 
 async function webhook(
-  req: NextApiRequest,
-  res: NextApiResponse
+  request: NextApiRequest,
+  response: NextApiResponse
 ): Promise<void> {
-  const signature = req.headers['stripe-signature'];
+  const signature = request.headers['stripe-signature'];
 
   let event: Stripe.Event;
 
   try {
-    const body = await buffer(req);
+    const body = await buffer(request);
 
     event = stripe.webhooks.constructEvent(body, signature, endpointSecret);
   } catch (error) {
     console.error(error);
-    return res.status(400).send(`Webhook Error: ${String(error.message)}`);
+    return response.status(400).send(`Webhook Error: ${String(error.message)}`);
   }
 
   if (event.type === 'invoice.payment_succeeded') {
@@ -51,7 +51,7 @@ async function webhook(
     await handleInvoicePaymentSucceeded(invoice as Stripe.Invoice);
   }
 
-  res.json({received: true});
+  response.json({received: true});
 }
 
 export const config = {

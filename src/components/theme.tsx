@@ -318,6 +318,6 @@ export const darkTheme = {
   }
 };
 
-export const DarkTheme: FC = props => (
+export const DarkTheme: FC = (props) => (
   <ThemeProvider {...props} theme={darkTheme} />
 );

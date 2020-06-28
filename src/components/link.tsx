@@ -25,7 +25,7 @@ type LinkProps = {
   variant?: string;
 } & HTMLProps<HTMLAnchorElement>;
 
-const Link: FC<LinkProps> = props => {
+const Link: FC<LinkProps> = (props) => {
   const {as, href, isInternal, isBlank, ...rest} = props;
   const isNotApi = !href.startsWith('/api/');
   if (href && isInternal && isNotApi) {

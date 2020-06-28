@@ -5,7 +5,7 @@ type GoogleProps = {
   size?: string | number;
 } & SVGProps<SVGSVGElement>;
 
-const Google: FC<GoogleProps> = props => {
+const Google: FC<GoogleProps> = (props) => {
   const {size, ...otherProps} = props;
 
   return (

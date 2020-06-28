@@ -1,4 +1,4 @@
-export default [
+const books = [
   {
     label: '-',
     value: 'none'
@@ -268,3 +268,5 @@ export default [
     value: 'revelation'
   }
 ];
+
+export default books;

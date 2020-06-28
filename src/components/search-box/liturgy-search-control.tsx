@@ -35,7 +35,7 @@ const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
   if (data?.liturgySearch?.length > 0) {
     return (
       <>
-        {data.liturgySearch.map(result => (
+        {data.liturgySearch.map((result) => (
           <SearchResult
             {...result}
             key={result._id}
@@ -81,7 +81,7 @@ const SearchBox: FC = () => {
         query.keyword = keyword.value;
       }
 
-      router.push(
+      void router.push(
         {
           pathname: router.pathname,
           query

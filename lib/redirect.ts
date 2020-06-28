@@ -4,7 +4,7 @@ import {NextPageContext} from 'next';
 import Router from 'next/router';
 export {default as buildUrl} from './build-url';
 
-export default (url: string, context?: NextPageContext): void => {
+function redirect(url: string, context?: NextPageContext): void {
   if (context?.res) {
     // Server
     // 303: "See other"
@@ -12,6 +12,8 @@ export default (url: string, context?: NextPageContext): void => {
     context.res.end();
   } else {
     // In the browser, we just pretend like this never even happened ;)
-    Router.replace(url);
+    void Router.replace(url);
   }
-};
+}
+
+export default redirect;

@@ -12,7 +12,7 @@ async function getProjectName() {
 function loadKdbx(password) {
   const credentials = new Credentials(ProtectedValue.fromString(password));
 
-  return through.obj(async function(file, _, cb) {
+  return through.obj(async function (file, _, cb) {
     try {
       if (file.isBuffer()) {
         file.db = await Kdbx.load(file.contents.buffer, credentials);
@@ -26,7 +26,7 @@ function loadKdbx(password) {
 }
 
 async function saveKdbx() {
-  return through.obj(async function(file, _, cb) {
+  return through.obj(async function (file, _, cb) {
     try {
       if (file.db) {
         const data = await file.db.save();
@@ -48,13 +48,13 @@ async function saveKdbx() {
 async function readEnvEntries() {
   const projectName = await getProjectName();
 
-  return through.obj(function(file, _, cb) {
+  return through.obj(function (file, _, cb) {
     try {
       if (file.db) {
         const {entries} = file.db
           .getDefaultGroup()
-          .groups.find(group => group.name === 'Organisations')
-          .groups.find(group => group.name === projectName);
+          .groups.find((group) => group.name === 'Organisations')
+          .groups.find((group) => group.name === projectName);
 
         for (const {fields} of entries) {
           this.push(

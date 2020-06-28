@@ -31,7 +31,7 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
 
   if (value) {
     value = find(
-      options.flatMap(option => option.options),
+      options.flatMap((option) => option.options),
       value
     );
   }
@@ -45,7 +45,7 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
         isLoading={loading}
         value={value}
         options={options}
-        onChange={value => helpers.setValue(value)}
+        onChange={(value) => helpers.setValue(value)}
       />
     </Label>
   );

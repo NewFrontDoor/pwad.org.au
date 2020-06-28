@@ -78,11 +78,11 @@ const ShortListButton: FC<ShortListButtonProps> = ({item}) => {
         }}
         onClick={() => {
           if (shortlisted) {
-            removeShortlistItem({
+            void removeShortlistItem({
               variables: {item: item._id}
             });
           } else {
-            addShortlistItem({
+            void addShortlistItem({
               variables: {item: item._id}
             });
           }

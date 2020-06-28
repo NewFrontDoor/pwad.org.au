@@ -31,7 +31,7 @@ const TextSearch: FC<TextSearchProps> = ({search}) => {
   if (data.textSearch && data.textSearch.length > 0) {
     return (
       <>
-        {data.textSearch.map(result => (
+        {data.textSearch.map((result) => (
           <SearchResult
             {...result}
             key={result._id}
@@ -53,7 +53,7 @@ const SearchBox: FC = () => {
   const router = useRouter();
   const handleSubmit = useCallback(
     (query: TextSearchQueryVariables) => {
-      router.push(
+      void router.push(
         {
           pathname: router.pathname,
           query

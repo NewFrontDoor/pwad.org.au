@@ -63,7 +63,7 @@ const AccountPaymentButton: FC = ({children}) => {
 
     const {sessionId} = data.stripeCheckoutSession;
 
-    stripe.redirectToCheckout({
+    void stripe.redirectToCheckout({
       sessionId
     });
   }, [client, stripe]);
@@ -192,7 +192,7 @@ const ManageForm: FC<User> = ({hasFreeAccount, hasPaidAccount}) => {
   const [changePassword] = useChangePasswordMutation();
 
   function handleChangeFreeAccount(): void {
-    changeFreeAccount({
+    void changeFreeAccount({
       variables: {hasFreeAccount: true},
       optimisticResponse: {
         __typename: 'Mutation',
@@ -261,7 +261,7 @@ ManageForm.defaultProps = {
 
 const stripePromise = loadStripe(process.env.STRIPE_CLIENT_TOKEN);
 
-const ManageFormProvider: FC<User> = props => (
+const ManageFormProvider: FC<User> = (props) => (
   <Elements stripe={stripePromise}>
     <ManageForm {...props} />
   </Elements>

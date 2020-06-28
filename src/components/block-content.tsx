@@ -119,7 +119,7 @@ const serializers = {
     block: (props: SerializerProps) => {
       switch (props.node.style) {
         case 'h2': {
-          const name = props.node.children.map(child => child.text).join(' ');
+          const name = props.node.children.map((child) => child.text).join(' ');
           const slug = slugger.slug(name);
           return <Styled.h2 {...props} id={slug} />;
         }
@@ -155,7 +155,7 @@ type BlockContentProps = {
   blocks: any;
 };
 
-const BlockContent: FC<BlockContentProps> = props => (
+const BlockContent: FC<BlockContentProps> = (props) => (
   <SanityBlockContent {...props} serializers={serializers} />
 );
 

@@ -28,12 +28,12 @@ const Footer: FC<FooterProps> = ({menuItems}) => {
         >
           {menuItems && (
             <Grid columns={[1, 2, '1fr 2fr 2fr 1fr']}>
-              {menuItems.map(menu => (
+              {menuItems.map((menu) => (
                 <Box key={menu._key}>
                   {menu.text && <Styled.p>{menu.text}</Styled.p>}
                   {menu.childpages && (
                     <Styled.ul>
-                      {menu.childpages.map(item => (
+                      {menu.childpages.map((item) => (
                         <li key={item._id}>
                           <Link {...childPageLinkProps(item)} />
                         </li>

@@ -41,7 +41,7 @@ const Keyword: NextPage<KeywordProps> = ({id}) => {
               <>
                 <Text as="h3">Hymns</Text>
                 <Text as="ul">
-                  {hymns.map(hymn => (
+                  {hymns.map((hymn) => (
                     <li key={hymn._id}>
                       <Link {...hymnLinkProps(hymn)} />
                     </li>
@@ -53,7 +53,7 @@ const Keyword: NextPage<KeywordProps> = ({id}) => {
               <>
                 <Text as="h3">Prayers</Text>
                 <Text as="ul">
-                  {prayers.map(prayer => (
+                  {prayers.map((prayer) => (
                     <li key={prayer._id}>
                       <Link {...prayerLinkProps(prayer)} />
                     </li>
@@ -65,7 +65,7 @@ const Keyword: NextPage<KeywordProps> = ({id}) => {
               <>
                 <Text as="h3">Liturgy</Text>
                 <Text as="ul">
-                  {liturgies.map(liturgy => (
+                  {liturgies.map((liturgy) => (
                     <li key={liturgy._id}>
                       <Link {...liturgyLinkProps(liturgy)} />
                     </li>

@@ -11,22 +11,11 @@ import Loading from '../loading';
 import GoogleButton from './google-button';
 
 const validationSchema = object().shape({
-  firstName: string()
-    .label('First name')
-    .required(),
-  lastName: string()
-    .label('Last name')
-    .required(),
-  email: string()
-    .label('Email')
-    .email()
-    .required(),
-  password: string()
-    .label('Password')
-    .required(),
-  confirmPassword: string()
-    .label('Confirm password')
-    .required()
+  firstName: string().label('First name').required(),
+  lastName: string().label('Last name').required(),
+  email: string().label('Email').email().required(),
+  password: string().label('Password').required(),
+  confirmPassword: string().label('Confirm password').required()
 });
 
 function handleCreateUser(createAccount) {

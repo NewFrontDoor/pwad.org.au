@@ -35,7 +35,7 @@ const NavCollapse: FC<NavCollapseProps> = ({text, childpages}) => {
             listStyle: 'none'
           }}
         >
-          {childpages.map(item => {
+          {childpages.map((item) => {
             return (
               <Text key={item._id} as="li">
                 <Link {...childPageLinkProps(item)} variant="nav" />
@@ -71,7 +71,7 @@ const NavItems: FC<NavItemsProps> = ({selectedMenu, menuItems}) => {
   const isMedium = useResponsiveValue([false, true]);
   return (
     <>
-      {menuItems.map(menu => (
+      {menuItems.map((menu) => (
         <motion.li
           key={menu._key}
           css={{

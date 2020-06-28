@@ -10,7 +10,7 @@ import {useMeQuery} from '../queries';
 import {Can} from '../ability-context';
 import UserAvatar from './user-avatar';
 
-const NavMenuItem: FC = props => (
+const NavMenuItem: FC = (props) => (
   <Styled.li
     sx={{
       display: 'flex',

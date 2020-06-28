@@ -18,15 +18,15 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
     variables: {metre: searchTerm}
   });
   const fetchMoreMetres = useCallback(() => {
-    fetchMore({
+    void fetchMore({
       variables: {
         skip: data?.metreMany.length
       },
-      updateQuery: (prev, {fetchMoreResult}) => {
-        if (!fetchMoreResult) return prev;
+      updateQuery: (previous, {fetchMoreResult}) => {
+        if (!fetchMoreResult) return previous;
         return {
-          ...prev,
-          metreMany: [...prev.metreMany, ...fetchMoreResult.metreMany]
+          ...previous,
+          metreMany: [...previous.metreMany, ...fetchMoreResult.metreMany]
         };
       }
     });
@@ -61,9 +61,9 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
         value={value}
         inputValue={searchTerm}
         options={options}
-        onChange={value => helpers.setValue(value)}
+        onChange={(value) => helpers.setValue(value)}
         onMenuScrollToBottom={fetchMoreMetres}
-        onInputChange={value => setSearchTerm(value)}
+        onInputChange={(value) => setSearchTerm(value)}
       />
     </Label>
   );

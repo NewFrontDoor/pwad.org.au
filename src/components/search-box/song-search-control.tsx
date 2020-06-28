@@ -41,7 +41,7 @@ const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
   if (data?.search?.length > 0) {
     return (
       <>
-        {data.search.map(result => (
+        {data.search.map((result) => (
           <SearchResult
             {...result}
             key={result._id}
@@ -88,7 +88,7 @@ const SearchBox: FC = () => {
       const query: AdvancedSearchQueryVariables = {title};
 
       if (metres && metres.length > 0) {
-        query.metres = metres.map(metre => metre.value);
+        query.metres = metres.map((metre) => metre.value);
       }
 
       if (book) {
@@ -107,7 +107,7 @@ const SearchBox: FC = () => {
         query.keyword = keyword.value;
       }
 
-      router.push(
+      void router.push(
         {
           pathname: router.pathname,
           query

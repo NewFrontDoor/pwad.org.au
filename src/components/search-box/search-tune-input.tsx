@@ -19,15 +19,15 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
   });
 
   const fetchMoreTunes = useCallback(() => {
-    fetchMore({
+    void fetchMore({
       variables: {
         skip: data?.tuneMany.length
       },
-      updateQuery: (prev, {fetchMoreResult}) => {
-        if (!fetchMoreResult) return prev;
+      updateQuery: (previous, {fetchMoreResult}) => {
+        if (!fetchMoreResult) return previous;
         return {
-          ...prev,
-          tuneMany: [...prev.tuneMany, ...fetchMoreResult.tuneMany]
+          ...previous,
+          tuneMany: [...previous.tuneMany, ...fetchMoreResult.tuneMany]
         };
       }
     });
@@ -61,9 +61,9 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
         value={value}
         inputValue={searchTerm}
         options={options}
-        onChange={value => helpers.setValue(value)}
+        onChange={(value) => helpers.setValue(value)}
         onMenuScrollToBottom={fetchMoreTunes}
-        onInputChange={value => setSearchTerm(value)}
+        onInputChange={(value) => setSearchTerm(value)}
       />
     </Label>
   );

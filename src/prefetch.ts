@@ -18,7 +18,7 @@ export function prefetchOneLiturgy(
   client: ApolloClient<any>,
   variables: FindOneLiturgyQueryVariables
 ): void {
-  client.query<FindOneLiturgyQuery, FindOneLiturgyQueryVariables>({
+  void client.query<FindOneLiturgyQuery, FindOneLiturgyQueryVariables>({
     query: FindOneLiturgyDocument,
     variables
   });
@@ -28,7 +28,7 @@ export function prefetchOnePrayer(
   client: ApolloClient<any>,
   variables: FindOnePrayerQueryVariables
 ): void {
-  client.query<FindOnePrayerQuery, FindOnePrayerQueryVariables>({
+  void client.query<FindOnePrayerQuery, FindOnePrayerQueryVariables>({
     query: FindOnePrayerDocument,
     variables
   });
@@ -38,7 +38,7 @@ export function prefetchOneHymn(
   client: ApolloClient<any>,
   variables: FindOneHymnQueryVariables
 ): void {
-  client.query<FindOneHymnQuery, FindOneHymnQueryVariables>({
+  void client.query<FindOneHymnQuery, FindOneHymnQueryVariables>({
     query: FindOneHymnDocument,
     variables
   });

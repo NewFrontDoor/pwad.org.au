@@ -54,7 +54,7 @@ const desktopImageWidth = 1024;
 
 const mobile = {
   width: mobileImageWidth,
-  rename: rename => rename
+  rename: (rename) => rename
 };
 
 const tablet = {
@@ -98,7 +98,7 @@ const retina = ({rename, width, height, ...rest}) => ({
   rename: rename(x2)
 });
 
-const grayscale = rest => ({
+const grayscale = (rest) => ({
   ...rest,
   grayscale: true
 });
@@ -147,7 +147,7 @@ function isSecret(value) {
 }
 
 function parseEnv() {
-  return through.obj(function(file, _, cb) {
+  return through.obj(function (file, _, cb) {
     if (file.isBuffer()) {
       const env = dotenv.parse(file.contents);
       for (const [key, secret] of Object.entries(now.env)) {
@@ -177,7 +177,7 @@ function parseEnv() {
 }
 
 function replaceSecret() {
-  return through.obj(async function(file, _, cb) {
+  return through.obj(async function (file, _, cb) {
     try {
       await gulpExeca.exec(`now secrets remove --yes ${file.path}`, {
         reject: false
@@ -206,8 +206,8 @@ async function copyAppMetadata() {
 
   const users = await management.getUsersByEmail(email);
 
-  const dbUser = users.find(user => user.user_id.startsWith('auth0'));
-  const googleUser = users.find(user =>
+  const dbUser = users.find((user) => user.user_id.startsWith('auth0'));
+  const googleUser = users.find((user) =>
     user.user_id.startsWith('google-oauth2')
   );
 
