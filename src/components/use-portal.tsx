@@ -15,10 +15,10 @@ function usePortal(id: string): Element {
     if (rootNode) {
       rootNode.append(portalNode);
     } else {
-      const tempEl = document.createElement('div');
-      tempEl.setAttribute('id', id);
-      document.body.append(tempEl);
-      rootNode = tempEl;
+      const temporaryElement = document.createElement('div');
+      temporaryElement.setAttribute('id', id);
+      document.body.append(temporaryElement);
+      rootNode = temporaryElement;
     }
 
     rootNode.append(portalNode);
