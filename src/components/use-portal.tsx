@@ -1,5 +1,5 @@
 /* eslint-env browser */
-/* eslint-disable unicorn/prefer-node-append */
+/* eslint-disable unicorn/prefer-node-append, unicorn/prefer-node-remove */
 
 import {useState, useEffect, useLayoutEffect} from 'react';
 
@@ -27,7 +27,7 @@ function usePortal(id: string): Element {
     }
 
     return () => {
-      rootNode.remove();
+      rootNode.parentNode.removeChild(rootNode);
     };
   }, [id, portalNode]);
 
