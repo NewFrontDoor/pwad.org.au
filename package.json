@@ -53,6 +53,7 @@
     "husky": "^4.2.5",
     "kdbxweb": "^1.6.0",
     "lint-staged": "^10.1.6",
+    "next-transpile-modules": "^3.3.0",
     "nyc": "^15.0.1",
     "plugin-error": "^1.0.1",
     "react-testing-library": "^8.0.1",

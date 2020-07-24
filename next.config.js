@@ -1,5 +1,7 @@
 require('dotenv').config();
 const bundleAnalyzer = require('@next/bundle-analyzer');
+const transpileModules = require('next-transpile-modules');
+
 const withBundleAnalyzer = bundleAnalyzer({
   enabled: process.env.ANALYZE === 'true'
 });
@@ -10,13 +12,17 @@ if (process.env.NODE_ENV === 'production') {
   HOST_URL = process.env.HOST_URL;
 }
 
-module.exports = withBundleAnalyzer({
-  env: {
-    STRIPE_CLIENT_TOKEN: process.env.STRIPE_CLIENT_TOKEN,
-    HOST_URL
-  },
-  webpack(config) {
-    config.node = {fs: 'empty'};
-    return config;
-  }
-});
+const withTM = transpileModules(['pretty-bytes']);
+
+module.exports = withBundleAnalyzer(
+  withTM({
+    env: {
+      STRIPE_CLIENT_TOKEN: process.env.STRIPE_CLIENT_TOKEN,
+      HOST_URL
+    },
+    webpack(config) {
+      config.node = {fs: 'empty'};
+      return config;
+    }
+  })
+);
