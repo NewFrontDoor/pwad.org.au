@@ -1,4 +1,5 @@
 /* eslint-env browser */
+/* eslint-disable unicorn/prefer-node-append */
 
 import {useState, useEffect, useLayoutEffect} from 'react';
 
@@ -12,16 +13,18 @@ function usePortal(id: string): Element {
   useLayoutEffect(() => {
     let rootNode = document.querySelector(`#${id}`);
 
-    if (rootNode) {
-      rootNode.append(portalNode);
+    if (rootNode && portalNode) {
+      rootNode.appendChild(portalNode);
     } else {
       const temporaryElement = document.createElement('div');
       temporaryElement.setAttribute('id', id);
-      document.body.append(temporaryElement);
+      document.body.appendChild(temporaryElement);
       rootNode = temporaryElement;
     }
 
-    rootNode.append(portalNode);
+    if (rootNode && portalNode) {
+      rootNode.appendChild(portalNode);
+    }
 
     return () => {
       rootNode.remove();
