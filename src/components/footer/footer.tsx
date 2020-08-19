@@ -46,7 +46,7 @@ const Footer: FC<FooterProps> = ({menuItems}) => {
           )}
           <Box marginY={3}>
             <Styled.p sx={{color: 'gray.4'}}>
-              © 2007 - 2018 PWAD & the Presbyterian Church of Australia
+              © 2007 - 2020 PWAD & the Presbyterian Church of Australia
             </Styled.p>
           </Box>
         </Box>
