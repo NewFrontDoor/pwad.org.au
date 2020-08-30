@@ -86,9 +86,11 @@ export async function cancelSubscription(
 function subscriptionResponse(
   subscription: Stripe.Subscription
 ): StripeSubscription {
+  const [firstItem] = subscription?.items.data;
+
   return {
     id: subscription.id,
-    plan: subscription.plan.nickname,
+    plan: firstItem.plan.nickname,
     status: subscription.status,
     startDate: fromUnixTime(subscription.start_date),
     cancelAt: fromUnixTime(subscription.cancel_at),
@@ -106,7 +108,7 @@ async function findCurrentSubscription(
   user: User
 ): Promise<Stripe.Subscription> {
   const customer = await stripe.customers.retrieve(user.stripeCustomerId, {
-    expand: ['subscription']
+    expand: ['subscriptions']
   });
 
   assertCustomer(customer);
@@ -130,6 +132,6 @@ function assertCustomer(
   customer: Stripe.Customer | Stripe.DeletedCustomer
 ): asserts customer is Stripe.Customer {
   if (customer.deleted) {
-    throw new Error(`customer ${String(customer.id)} is deleted`);
+    throw new Error(`customer ${customer.id} is deleted`);
   }
 }

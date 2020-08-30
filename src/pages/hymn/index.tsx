@@ -1,20 +1,38 @@
-import React from 'react';
-import {NextPage} from 'next';
+import React, {useEffect} from 'react';
+import PropTypes from 'prop-types';
+import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
+import Router from 'next/router';
 import {Styled} from 'theme-ui';
 
-import redirect from '../../../lib/redirect';
-import withApollo, {
-  WithApolloPageContext
-} from '../../../lib/with-apollo-client';
+import * as resourceQuery from '../../../queries/resource';
+import {MenuItem} from '../../../queries/_types';
+
 import {defineAbilitiesFor} from '../../../lib/abilities';
 
-import checkLoggedIn from '../../check-logged-in';
+import useUser from '../../use-user';
 import PageLayout from '../../components/page-layout';
 import SongSearchControl from '../../components/search-box/song-search-control';
 
-const Rejoice: NextPage = () => {
+type RejoiceProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+const Rejoice: NextPage<RejoiceProps> = ({menuItems}) => {
+  const redirectTo = '/api/login';
+  const {loggedInUser} = useUser({
+    redirectTo
+  });
+
+  useEffect(() => {
+    if (loggedInUser.user) {
+      const ability = defineAbilitiesFor(loggedInUser.user);
+
+      if (ability.cannot('read', 'Hymn')) {
+        void Router.push('/my-account');
+      }
+    }
+  }, [loggedInUser.user]);
+
   return (
-    <PageLayout>
+    <PageLayout menuItems={menuItems}>
       <Styled.h1 fontWeight="extraBold">
         Public Worship and Aids to Devotion Committee Website
       </Styled.h1>
@@ -29,18 +47,20 @@ const Rejoice: NextPage = () => {
   );
 };
 
-Rejoice.getInitialProps = async (context: WithApolloPageContext) => {
-  const {loggedInUser} = await checkLoggedIn(context.apolloClient);
-
-  if (loggedInUser.user) {
-    const ability = defineAbilitiesFor(loggedInUser.user);
-
-    if (ability.cannot('read', 'Hymn')) {
-      redirect('/my-account', context);
-    }
-  } else {
-    redirect('/api/login', context);
-  }
+Rejoice.propTypes = {
+  menuItems: PropTypes.array
 };
 
-export default withApollo(Rejoice);
+export const getServerSideProps: GetServerSideProps<{
+  menuItems: MenuItem[];
+}> = async function () {
+  const menuItems = await resourceQuery.menuItems();
+
+  return {
+    props: {
+      menuItems
+    }
+  };
+};
+
+export default Rejoice;

@@ -1,5 +1,6 @@
-import {ApolloClient} from 'apollo-client';
+import {ApolloClient} from '@apollo/client';
 import {
+  Scripture,
   Liturgy,
   Prayer,
   Hymn,
@@ -46,7 +47,7 @@ export function prefetchOneHymn(
 
 export function prefetchSearchResult(
   client: ApolloClient<any>,
-  result: Liturgy | Prayer | Hymn
+  result: Liturgy | Prayer | Hymn | Scripture
 ): void {
   if (result.__typename === 'Liturgy') {
     prefetchOneLiturgy(client, {

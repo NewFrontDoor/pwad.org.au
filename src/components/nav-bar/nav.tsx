@@ -6,7 +6,7 @@ import {useResponsiveValue} from '@theme-ui/match-media';
 import VisuallyHidden from '@reach/visually-hidden';
 import {X} from 'react-feather';
 import Link from '../link';
-import {useMeQuery} from '../queries';
+import useUser from '../../use-user';
 import {Can} from '../ability-context';
 import UserAvatar from './user-avatar';
 
@@ -30,7 +30,7 @@ type NavProps = {
 
 const Nav: FC<NavProps> = ({onClose, children}) => {
   const isMedium = useResponsiveValue([false, true]);
-  const {data} = useMeQuery();
+  const {loggedInUser} = useUser();
 
   return (
     <Flex
@@ -70,7 +70,7 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
           <>
             <NavMenuItem>
               <Link variant="nav" href="/short-list">
-                Short list ({data.me.shortlist.length})
+                Short list ({loggedInUser?.user?.shortlist.length})
               </Link>
             </NavMenuItem>
             <NavMenuItem>

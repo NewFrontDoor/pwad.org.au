@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import Head from 'next/head';
 import {rgba} from 'polished';
 
-import {useHomeQuery} from './queries';
+import {MenuItem} from '../../queries/_types';
 import NavBar from './nav-bar/nav-bar';
 import Footer from './footer/footer';
 import BannerImage, {randomBanner} from './banner-image';
@@ -20,12 +20,11 @@ const bannerImage = randomBanner();
 const isBrowser = typeof window !== 'undefined';
 
 type PageLayoutProps = {
-  children?: ReactNode;
+  menuItems?: MenuItem[];
+  children: ReactNode;
 };
 
-const PageLayout: FC<PageLayoutProps> = ({children}) => {
-  const {data} = useHomeQuery();
-
+const PageLayout: FC<PageLayoutProps> = ({menuItems, children}) => {
   return (
     <ThemeProvider theme={theme}>
       <>
@@ -59,10 +58,10 @@ const PageLayout: FC<PageLayoutProps> = ({children}) => {
               flex: '1 1 auto'
             }}
           >
-            {data && isBrowser && <NavBar menuItems={data.main.menuItems} />}
+            {menuItems && isBrowser && <NavBar menuItems={menuItems} />}
             {children}
           </Box>
-          {data && <Footer menuItems={data.main.menuItems} />}
+          {menuItems && <Footer menuItems={menuItems} />}
         </Box>
       </>
     </ThemeProvider>
@@ -70,6 +69,7 @@ const PageLayout: FC<PageLayoutProps> = ({children}) => {
 };
 
 PageLayout.propTypes = {
+  menuItems: PropTypes.array,
   children: PropTypes.node.isRequired
 };
 

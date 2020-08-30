@@ -1,6 +1,6 @@
 import {NextApiRequest} from 'next';
-import {ApolloServer} from 'apollo-server-micro';
 import auth0 from '../auth0';
+import {HOST_URL} from '../host-url';
 import * as prayerModel from './models/prayer';
 import * as resourceModel from './models/resource';
 import * as userModel from './models/user';
@@ -14,22 +14,20 @@ import * as occasionModel from './models/occasion';
 import * as keywordModel from './models/keyword';
 import * as scriptureModel from './models/scripture';
 import * as stripeModel from './models/stripe';
-import {schema} from './schema';
-import {resolvers} from './resolvers';
+
 import {User} from './gen-types';
-import buildUrl from '../build-url';
 
 export type Context = {
-  user: Promise<User>;
   host: URL;
+  user: Promise<User>;
   models: {
-    pageContent: typeof pageContentModel;
-    resource: typeof resourceModel;
     prayer: typeof prayerModel;
+    resource: typeof resourceModel;
     user: typeof userModel;
-    hymn: typeof hymnModel;
+    pageContent: typeof pageContentModel;
     liturgy: typeof liturgyModel;
     author: typeof authorModel;
+    hymn: typeof hymnModel;
     metre: typeof metreModel;
     tune: typeof tuneModel;
     occasion: typeof occasionModel;
@@ -39,16 +37,19 @@ export type Context = {
   };
 };
 
-function context({req}: {req: NextApiRequest}): Context {
+export function context(ctx?: {req?: NextApiRequest}): Context {
+  const user = ctx?.req ? getUserContext(ctx.req) : null;
+  const host = new URL(HOST_URL);
+
   return {
     models: {
-      author: authorModel,
-      pageContent: pageContentModel,
-      resource: resourceModel,
       prayer: prayerModel,
-      hymn: hymnModel,
+      resource: resourceModel,
       user: userModel,
+      pageContent: pageContentModel,
       liturgy: liturgyModel,
+      author: authorModel,
+      hymn: hymnModel,
       metre: metreModel,
       tune: tuneModel,
       occasion: occasionModel,
@@ -56,8 +57,8 @@ function context({req}: {req: NextApiRequest}): Context {
       scripture: scriptureModel,
       stripe: stripeModel
     },
-    host: buildUrl(req),
-    user: getUserContext(req)
+    host,
+    user
   };
 }
 
@@ -94,9 +95,3 @@ async function getUserContext(request: NextApiRequest): Promise<User | null> {
 
   return null;
 }
-
-export default new ApolloServer({
-  typeDefs: schema,
-  resolvers,
-  context
-});

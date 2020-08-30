@@ -6,33 +6,27 @@ import SanityBlockContent from '@sanity/block-content-to-react';
 import getVideoId from 'get-video-id';
 import Vimeo from '@u-wave/react-vimeo';
 import Youtube from '@u-wave/react-youtube';
-import Link, {linkProps} from './link';
+import Link, {linkProps, GenLinkProps} from './link';
 
 const slugger = new GithubSlugger();
 
 type InternalLinkProps = {
   mark: {
-    reference?: {
-      _id: string;
-      _type: string;
-    };
+    reference?: GenLinkProps;
   };
-  children: ReactNode;
+  children: string;
 };
 
 const InternalLink: FC<InternalLinkProps> = ({children, mark}) => {
-  const reference = {...mark.reference, title: children};
-  return <Link {...linkProps(reference)} />;
+  const reference = {...mark.reference, title: children, children};
+  return <Link {...linkProps(reference)}>{children}</Link>;
 };
 
 InternalLink.propTypes = {
   mark: PropTypes.shape({
-    reference: PropTypes.shape({
-      _id: PropTypes.string.isRequired,
-      _type: PropTypes.string.isRequired
-    }).isRequired
-  }).isRequired,
-  children: PropTypes.node.isRequired
+    reference: PropTypes.any
+  }),
+  children: PropTypes.any
 };
 
 type ExternalLinkProps = {

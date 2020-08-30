@@ -27,7 +27,7 @@ export async function findMany(
   filter?: FilterInput,
   sort?: KeywordSortBy,
   skip = 0,
-  limit = 10
+  limit = 20
 ): Promise<Keyword[]> {
   let query = ['*'].concat('[_type=="keyword"]');
 

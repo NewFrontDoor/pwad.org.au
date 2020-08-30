@@ -45,6 +45,7 @@ export async function main(): Promise<Main> {
       .concat([
         '[_type == "main"][0]',
         `{
+          _id,
           _type,
           blurb,
           heading,

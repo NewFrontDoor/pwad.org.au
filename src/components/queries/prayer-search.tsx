@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import {gql} from '@apollo/client';
 
 export default gql`
   query prayerSearch($title: String, $occasion: String, $keyword: String) {

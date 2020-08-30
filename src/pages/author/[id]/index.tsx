@@ -1,28 +1,21 @@
 import React from 'react';
-import {NextPage} from 'next';
+import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
 import PropTypes from 'prop-types';
 import {Text} from 'theme-ui';
 
-import withApollo from '../../../../lib/with-apollo-client';
-
-import {useFindOneAuthorQuery} from '../../../components/queries';
+import * as authorQuery from '../../../../queries/author';
+import * as resourceQuery from '../../../../queries/resource';
+import {Author, MenuItem, AuthorPropTypes} from '../../../../queries/_types';
 import PageLayout from '../../../components/page-layout';
 import Link, {hymnLinkProps, liturgyLinkProps} from '../../../components/link';
 
-type AuthorProps = {
-  id: string;
-};
+type AuthorPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const Author: NextPage<AuthorProps> = ({id}) => {
-  const {data} = useFindOneAuthorQuery({
-    variables: {
-      id
-    }
-  });
-  const {name, dates, hymns, liturgies} = data?.authorById ?? {};
+const AuthorPage: NextPage<AuthorPageProps> = ({author, menuItems}) => {
+  const {name, dates, hymns, liturgies} = author;
 
   return (
-    <PageLayout>
+    <PageLayout menuItems={menuItems}>
       <Text as="h1" fontWeight="extraBold">
         Public Worship and Aids to Devotion Committee Website
       </Text>
@@ -58,16 +51,29 @@ const Author: NextPage<AuthorProps> = ({id}) => {
   );
 };
 
-Author.getInitialProps = ({query: {id}}) => {
+export const getServerSideProps: GetServerSideProps<{
+  author: Author;
+  menuItems: MenuItem[];
+}> = async function (context) {
+  let id = context.params.id;
   if (Array.isArray(id)) {
-    return {id: id[0]};
+    id = id[0];
   }
 
-  return {id};
+  const author = await authorQuery.getById(id);
+  const menuItems = await resourceQuery.menuItems();
+
+  return {
+    props: {
+      author,
+      menuItems
+    }
+  };
 };
 
-Author.propTypes = {
-  id: PropTypes.string.isRequired
+AuthorPage.propTypes = {
+  author: AuthorPropTypes,
+  menuItems: PropTypes.array
 };
 
-export default withApollo(Author);
+export default AuthorPage;

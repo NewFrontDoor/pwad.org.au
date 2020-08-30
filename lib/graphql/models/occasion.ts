@@ -12,7 +12,7 @@ export async function findAll(): Promise<OccasionGroupedById[]> {
   }`
   ]);
 
-  const result = (await sanity.fetch(query.join('|'))) as OccasionGroupedById[];
+  const result = await sanity.fetch(query.join('|'));
 
   const grouped = [];
   const emptyGroup = [];

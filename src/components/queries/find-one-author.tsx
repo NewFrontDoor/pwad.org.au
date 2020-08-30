@@ -1,7 +1,14 @@
-import gql from 'graphql-tag';
+import {gql} from '@apollo/client';
+import menuItem from './fragments/menu-item';
 
 export default gql`
   query findOneAuthor($id: ID!) {
+    main {
+      _id
+      menuItems {
+        ...menuItem
+      }
+    }
     authorById(id: $id) {
       _id
       _type
@@ -20,4 +27,5 @@ export default gql`
       }
     }
   }
+  ${menuItem}
 `;

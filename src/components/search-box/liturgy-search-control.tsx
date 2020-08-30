@@ -9,7 +9,7 @@ import Button from '../button';
 import {useLiturgySearchQuery, LiturgySearchQueryVariables} from '../queries';
 import Loading from '../loading';
 import ServerError from '../server-error';
-import SearchResult from './search-result';
+import SearchResult, {isSearchResult} from './search-result';
 import SearchOccasionInput from './search-occasion-input';
 import SearchKeywordInput from './search-keyword-input';
 import initialSelectValue from './initial-select-value';
@@ -35,17 +35,23 @@ const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
   if (data?.liturgySearch?.length > 0) {
     return (
       <>
-        {data.liturgySearch.map((result) => (
-          <SearchResult
-            {...result}
-            key={result._id}
-            prefetch={() =>
-              prefetchOneLiturgy(client, {
-                id: result._id
-              })
-            }
-          />
-        ))}
+        {data.liturgySearch.map((result) => {
+          if (isSearchResult(result)) {
+            return (
+              <SearchResult
+                {...result}
+                key={result._id}
+                prefetch={() =>
+                  prefetchOneLiturgy(client, {
+                    id: result._id
+                  })
+                }
+              />
+            );
+          }
+
+          return null;
+        })}
       </>
     );
   }

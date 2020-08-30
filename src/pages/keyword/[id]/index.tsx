@@ -1,11 +1,12 @@
 import React from 'react';
-import {NextPage} from 'next';
+import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
 import PropTypes from 'prop-types';
 import {Text} from 'theme-ui';
 
-import withApollo from '../../../../lib/with-apollo-client';
+import * as keywordQuery from '../../../../queries/keyword';
+import * as resourceQuery from '../../../../queries/resource';
+import {Keyword, MenuItem, KeyWordPropTypes} from '../../../../queries/_types';
 
-import Loading from '../../../components/loading';
 import PageLayout from '../../../components/page-layout';
 import ContentWrap from '../../../components/content-wrap';
 import Link, {
@@ -13,66 +14,53 @@ import Link, {
   prayerLinkProps,
   liturgyLinkProps
 } from '../../../components/link';
-import {useFindOneKeywordQuery} from '../../../components/queries';
 
-type KeywordProps = {
-  id: string;
-};
+type KeywordProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const Keyword: NextPage<KeywordProps> = ({id}) => {
-  const {loading, error, data} = useFindOneKeywordQuery({
-    variables: {id}
-  });
-
-  const {name, hymns, prayers, liturgies} = data?.keywordById ?? {};
+const KeywordPage: NextPage<KeywordProps> = ({keyword, menuItems}) => {
+  const {name, hymns, prayers, liturgies} = keyword;
 
   return (
-    <PageLayout>
+    <PageLayout menuItems={menuItems}>
       <Text as="h1" fontWeight="extraBold">
         Public Worship and Aids to Devotion Committee Website
       </Text>
       <ContentWrap>
-        <Loading isLoading={loading} />
-        {error && `Error! ${error.message}`}
-        {data?.keywordById && (
+        <Text as="h2">{name}</Text>
+        {hymns?.length > 0 && (
           <>
-            <Text as="h2">{name}</Text>
-            {hymns?.length > 0 && (
-              <>
-                <Text as="h3">Hymns</Text>
-                <Text as="ul">
-                  {hymns.map((hymn) => (
-                    <li key={hymn._id}>
-                      <Link {...hymnLinkProps(hymn)} />
-                    </li>
-                  ))}
-                </Text>
-              </>
-            )}
-            {prayers?.length > 0 && (
-              <>
-                <Text as="h3">Prayers</Text>
-                <Text as="ul">
-                  {prayers.map((prayer) => (
-                    <li key={prayer._id}>
-                      <Link {...prayerLinkProps(prayer)} />
-                    </li>
-                  ))}
-                </Text>
-              </>
-            )}
-            {liturgies?.length > 0 && (
-              <>
-                <Text as="h3">Liturgy</Text>
-                <Text as="ul">
-                  {liturgies.map((liturgy) => (
-                    <li key={liturgy._id}>
-                      <Link {...liturgyLinkProps(liturgy)} />
-                    </li>
-                  ))}
-                </Text>
-              </>
-            )}
+            <Text as="h3">Hymns</Text>
+            <Text as="ul">
+              {hymns.map((hymn) => (
+                <li key={hymn._id}>
+                  <Link {...hymnLinkProps(hymn)} />
+                </li>
+              ))}
+            </Text>
+          </>
+        )}
+        {prayers?.length > 0 && (
+          <>
+            <Text as="h3">Prayers</Text>
+            <Text as="ul">
+              {prayers.map((prayer) => (
+                <li key={prayer._id}>
+                  <Link {...prayerLinkProps(prayer)} />
+                </li>
+              ))}
+            </Text>
+          </>
+        )}
+        {liturgies?.length > 0 && (
+          <>
+            <Text as="h3">Liturgy</Text>
+            <Text as="ul">
+              {liturgies.map((liturgy) => (
+                <li key={liturgy._id}>
+                  <Link {...liturgyLinkProps(liturgy)} />
+                </li>
+              ))}
+            </Text>
           </>
         )}
       </ContentWrap>
@@ -80,16 +68,30 @@ const Keyword: NextPage<KeywordProps> = ({id}) => {
   );
 };
 
-Keyword.getInitialProps = ({query: {id}}) => {
+KeywordPage.propTypes = {
+  keyword: KeyWordPropTypes,
+  menuItems: PropTypes.array
+};
+
+export default KeywordPage;
+
+export const getServerSideProps: GetServerSideProps<{
+  keyword: Keyword;
+  menuItems: MenuItem[];
+}> = async function (context) {
+  let id = context.params.id;
+
   if (Array.isArray(id)) {
-    return {id: id[0]};
+    id = id[0];
   }
 
-  return {id};
-};
+  const menuItems = await resourceQuery.menuItems();
+  const keyword = await keywordQuery.getById(id);
 
-Keyword.propTypes = {
-  id: PropTypes.string.isRequired
+  return {
+    props: {
+      keyword,
+      menuItems
+    }
+  };
 };
-
-export default withApollo(Keyword);

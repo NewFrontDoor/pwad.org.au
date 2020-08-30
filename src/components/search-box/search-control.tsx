@@ -8,7 +8,7 @@ import {TextField} from '../form';
 import {useTextSearchQuery, TextSearchQueryVariables} from '../queries';
 import Loading from '../loading';
 import ServerError from '../server-error';
-import SearchResult from './search-result';
+import SearchResult, {isSearchResult} from './search-result';
 import {prefetchSearchResult} from '../../prefetch';
 
 type TextSearchProps = {
@@ -31,13 +31,19 @@ const TextSearch: FC<TextSearchProps> = ({search}) => {
   if (data.textSearch && data.textSearch.length > 0) {
     return (
       <>
-        {data.textSearch.map((result) => (
-          <SearchResult
-            {...result}
-            key={result._id}
-            prefetch={() => prefetchSearchResult(client, result)}
-          />
-        ))}
+        {data.textSearch.map((result) => {
+          if (isSearchResult(result)) {
+            return (
+              <SearchResult
+                {...result}
+                key={result._id}
+                prefetch={() => prefetchSearchResult(client, result)}
+              />
+            );
+          }
+
+          return null;
+        })}
       </>
     );
   }

@@ -1,49 +1,64 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {NextPage} from 'next';
+import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
 import {Styled} from 'theme-ui';
 import BlockContent from '../../../components/block-content';
 
-import withApollo from '../../../../lib/with-apollo-client';
-import {usePageContentQuery} from '../../../components/queries';
+import * as pageContentQuery from '../../../../queries/page-content';
+import * as resourceQuery from '../../../../queries/resource';
+import {
+  PageContent,
+  MenuItem,
+  PageContentPropTypes
+} from '../../../../queries/_types';
+
 import Toc from '../../../components/toc';
 
 import PageLayout from '../../../components/page-layout';
 import ContentWrap from '../../../components/content-wrap';
-import Loading from '../../../components/loading';
 
-type ContentProps = {
-  slug: string;
-};
+type ContentProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const Content: NextPage<ContentProps> = ({slug}) => {
-  const {data, loading} = usePageContentQuery({variables: {slug}});
-  const hasToc = data?.pageContentOne.hasToc;
-  const subtitle = data?.pageContentOne.subtitle;
+const Content: NextPage<ContentProps> = ({menuItems, pageContent}) => {
+  const hasToc = pageContent.hasToc;
+  const subtitle = pageContent.subtitle;
 
   return (
-    <PageLayout>
+    <PageLayout menuItems={menuItems}>
       <ContentWrap>
-        {loading && <Loading />}
-        {data && <Styled.h1>{data.pageContentOne.title}</Styled.h1>}
+        <Styled.h1>{pageContent.title}</Styled.h1>
         {subtitle && <Styled.h2>{subtitle}</Styled.h2>}
-        {hasToc && <Toc blocks={data.pageContentOne.content} />}
-        {data && <BlockContent blocks={data.pageContentOne.content} />}
+        {hasToc && <Toc blocks={pageContent.content} />}
+        <BlockContent blocks={pageContent.content} />
       </ContentWrap>
     </PageLayout>
   );
 };
 
-Content.getInitialProps = ({query: {slug}}) => {
+Content.propTypes = {
+  pageContent: PageContentPropTypes,
+  menuItems: PropTypes.array
+};
+
+export default Content;
+
+export const getServerSideProps: GetServerSideProps<{
+  pageContent: PageContent;
+  menuItems: MenuItem[];
+}> = async function (context) {
+  let slug = context.params.slug;
+
   if (Array.isArray(slug)) {
-    return {slug: slug[0]};
+    slug = slug[0];
   }
 
-  return {slug};
-};
+  const menuItems = await resourceQuery.menuItems();
+  const pageContent = await pageContentQuery.getBySlug(slug);
 
-Content.propTypes = {
-  slug: PropTypes.string.isRequired
+  return {
+    props: {
+      menuItems,
+      pageContent
+    }
+  };
 };
-
-export default withApollo(Content);

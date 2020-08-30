@@ -1,5 +1,12 @@
 import microCors from 'micro-cors';
-import graphql from '../../../lib/graphql';
+import {ApolloServer} from 'apollo-server-micro';
+import {schema} from '../../../lib/graphql/schema';
+import {context} from '../../../lib/graphql/context';
+
+const apolloServer = new ApolloServer({
+  schema,
+  context
+});
 
 const cors = microCors();
 
@@ -9,4 +16,4 @@ export const config = {
   }
 };
 
-export default cors(graphql.createHandler({path: '/api/graphql'}));
+export default cors(apolloServer.createHandler({path: '/api/graphql'}));

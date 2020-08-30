@@ -1,11 +1,12 @@
 import React, {FC} from 'react';
-import {NextPage} from 'next';
+import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
 import PropTypes from 'prop-types';
 import {Text, Flex, Box} from 'theme-ui';
 
-import withApollo from '../../../../lib/with-apollo-client';
+import * as prayerQuery from '../../../../queries/prayer';
+import * as resourceQuery from '../../../../queries/resource';
+import {Prayer, MenuItem, PrayerPropTypes} from '../../../../queries/_types';
 
-import Loading from '../../../components/loading';
 import PageLayout from '../../../components/page-layout';
 import Sidebar, {
   SidebarCopyright,
@@ -13,54 +14,40 @@ import Sidebar, {
 } from '../../../components/sidebar';
 import BlockContent from '../../../components/block-content';
 import ShortListButton from '../../../components/shortlist-button';
-import {useFindOnePrayerQuery} from '../../../components/queries';
 
-type PrayerByIdProps = {
-  id: string;
-};
-
-const PrayerById: FC<PrayerByIdProps> = ({id}) => {
-  const {loading, error, data} = useFindOnePrayerQuery({
-    variables: {id}
-  });
-
-  const {author, content, title, copyright} = data?.prayerById ?? {};
+const PrayerById: FC<Prayer> = (props) => {
+  const {author, content, title, copyright} = props;
 
   return (
-    <>
-      <Loading isLoading={loading} />
-      {error && `Error! ${error.message}`}
-      {data?.prayerById && (
-        <Flex
-          sx={{
-            flexDirection: ['column-reverse', 'column-reverse', 'row'],
-            // TODO: What should this value actually be?
-            gap: '2em'
-          }}
-        >
-          <Sidebar>
-            {data?.prayerById && (
-              <>
-                {author && <SidebarAuthor {...author} />}
-                {copyright && <SidebarCopyright {...copyright} />}
-              </>
-            )}
-          </Sidebar>
-          <Box sx={{width: '100%'}}>
-            <Text as="h2">
-              <ShortListButton item={data.prayerById} />
-              {title}
-            </Text>
-            {content && <BlockContent blocks={content} />}
-          </Box>
-        </Flex>
-      )}
-    </>
+    <Flex
+      sx={{
+        flexDirection: ['column-reverse', 'column-reverse', 'row'],
+        // TODO: What should this value actually be?
+        gap: '2em'
+      }}
+    >
+      <Sidebar>
+        <>
+          {author && <SidebarAuthor {...author} />}
+          {copyright && <SidebarCopyright {...copyright} />}
+        </>
+      </Sidebar>
+      <Box sx={{width: '100%'}}>
+        <Text as="h2">
+          <ShortListButton item={props} />
+          {title}
+        </Text>
+        {content && <BlockContent blocks={content} />}
+      </Box>
+    </Flex>
   );
 };
 
 PrayerById.propTypes = {
-  id: PropTypes.string.isRequired
+  author: PropTypes.any,
+  content: PropTypes.any,
+  title: PropTypes.string,
+  copyright: PropTypes.any
 };
 
 // Const Prayers: FC = () => {
@@ -70,7 +57,7 @@ PrayerById.propTypes = {
 //     variables: {page}
 //   });
 //
-//   Const firstId = get(prayerPagination, 'items.0._id');
+//   const firstId = get(prayerPagination, 'items.0._id');
 //
 //   if (loading) {
 //     return <p>Loading...</p>;
@@ -107,30 +94,44 @@ PrayerById.propTypes = {
 //   );
 // };
 
-type PrayerProps = {id: string};
+type PrayerPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const Prayer: NextPage<PrayerProps> = ({id}) => {
+const PrayerPage: NextPage<PrayerPageProps> = ({prayer, menuItems}) => {
   return (
-    <PageLayout>
+    <PageLayout menuItems={menuItems}>
       <Text as="h1" fontWeight="extraBold">
         Public Worship and Aids to Devotion Committee Website
       </Text>
-      <PrayerById id={id} />
+      <PrayerById {...prayer} />
       {/* <Prayers /> */}
     </PageLayout>
   );
 };
 
-Prayer.getInitialProps = ({query: {id}}) => {
+PrayerPage.propTypes = {
+  prayer: PrayerPropTypes,
+  menuItems: PropTypes.array
+};
+
+export default PrayerPage;
+
+export const getServerSideProps: GetServerSideProps<{
+  prayer: Prayer;
+  menuItems: MenuItem[];
+}> = async function (context) {
+  let id = context.params.id;
+
   if (Array.isArray(id)) {
-    return {id: id[0]};
+    id = id[0];
   }
 
-  return {id};
-};
+  const menuItems = await resourceQuery.menuItems();
+  const prayer = await prayerQuery.getById(id);
 
-Prayer.propTypes = {
-  id: PropTypes.string.isRequired
+  return {
+    props: {
+      prayer,
+      menuItems
+    }
+  };
 };
-
-export default withApollo(Prayer);

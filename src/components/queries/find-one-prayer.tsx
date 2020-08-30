@@ -1,7 +1,14 @@
-import gql from 'graphql-tag';
+import {gql} from '@apollo/client';
+import menuItem from './fragments/menu-item';
 
 export default gql`
   query findOnePrayer($id: ID!) {
+    main {
+      _id
+      menuItems {
+        ...menuItem
+      }
+    }
     prayerById(id: $id) {
       _id
       author {
@@ -17,4 +24,5 @@ export default gql`
       }
     }
   }
+  ${menuItem}
 `;

@@ -1,36 +1,46 @@
 import React from 'react';
-import {NextPage} from 'next';
+import PropTypes from 'prop-types';
+import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
 import {Text, Styled} from 'theme-ui';
 
-import withApollo from '../../lib/with-apollo-client';
+import * as resourceQuery from '../../queries/resource';
+import {MenuItem} from '../../queries/_types';
+import useUser from '../use-user';
 import PageLayout from '../components/page-layout';
 import ContentWrap from '../components/content-wrap';
 import Link, {linkProps} from '../components/link';
-import ShortListButton from '../components/shortlist-button';
+import ShortListButton, {isShortListItem} from '../components/shortlist-button';
 
-import {useMeQuery} from '../components/queries';
 import {prefetchSearchResult} from '../prefetch';
 
-const ShortList: NextPage = () => {
-  const {data, client} = useMeQuery();
+type ShortListProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+const ShortList: NextPage<ShortListProps> = ({menuItems}) => {
+  const {loggedInUser, client} = useUser();
 
   return (
-    <PageLayout>
+    <PageLayout menuItems={menuItems}>
       <ContentWrap>
         <Styled.h1>Public Worship and Aids to Devotion</Styled.h1>
         <Styled.h2>My Short List</Styled.h2>
 
-        {data?.me && (
+        {loggedInUser?.user && (
           <Text variant="listNone" as="ul">
-            {data.me.shortlist.map((item) => (
-              <li key={item._id}>
-                <ShortListButton item={item} />{' '}
-                <Link
-                  {...linkProps(item)}
-                  onMouseOver={() => prefetchSearchResult(client, item)}
-                />
-              </li>
-            ))}
+            {loggedInUser.user.shortlist.map((item) => {
+              if (isShortListItem(item)) {
+                return (
+                  <li key={item._id}>
+                    <ShortListButton item={item} />{' '}
+                    <Link
+                      {...linkProps(item)}
+                      onMouseOver={() => prefetchSearchResult(client, item)}
+                    />
+                  </li>
+                );
+              }
+
+              return null;
+            })}
           </Text>
         )}
       </ContentWrap>
@@ -38,4 +48,20 @@ const ShortList: NextPage = () => {
   );
 };
 
-export default withApollo(ShortList);
+ShortList.propTypes = {
+  menuItems: PropTypes.array
+};
+
+export const getServerSideProps: GetServerSideProps<{
+  menuItems: MenuItem[];
+}> = async function () {
+  const menuItems = await resourceQuery.menuItems();
+
+  return {
+    props: {
+      menuItems
+    }
+  };
+};
+
+export default ShortList;

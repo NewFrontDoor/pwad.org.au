@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import prettyBytes from 'pretty-bytes';
 import {AudioManager} from '@newfrontdoor/audio-player';
 import Link, {authorLinkProps, assetLinkProps} from './link';
-import {Asset, Author, Tune, Copyright} from './queries';
+import {Asset, Author, Tune, Copyright} from '../../queries/_types';
 import useToggle from './use-toggle';
 
 /* _Function Index_
@@ -216,12 +216,16 @@ SidebarCopyright.defaultProps = {
   name: undefined
 };
 
-export const SidebarMusicCopyright: FC<Tune> = (props) => (
+export const SidebarMusicCopyright: FC<Pick<Copyright, 'name'>> = (props) => (
   <>
     <Styled.h3>Copyright (music)</Styled.h3>
-    <Styled.p>{props?.musicCopyright.name || '-'}</Styled.p>
+    <Styled.p>{props.name || '-'}</Styled.p>
   </>
 );
+
+SidebarMusicCopyright.propTypes = {
+  name: PropTypes.string
+};
 
 const Sidebar: FC = ({children}) => (
   <AudioManager>

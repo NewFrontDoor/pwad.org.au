@@ -5,7 +5,7 @@ export async function findMany(
   filter?: FilterInput,
   sort?: TuneSortBy,
   skip = 0,
-  limit = 10
+  limit = 20
 ): Promise<Tune[]> {
   let query = ['*'].concat('[_type=="tune"]');
 

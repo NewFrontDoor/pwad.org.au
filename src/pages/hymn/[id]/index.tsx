@@ -1,19 +1,20 @@
 /** @jsx jsx */
-import {NextPage} from 'next';
+import {useEffect} from 'react';
+import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
+import Router from 'next/router';
 import PropTypes from 'prop-types';
 import {jsx, Styled, Flex, Box} from 'theme-ui';
 
-import redirect from '../../../../lib/redirect';
-import withApollo, {
-  WithApolloPageContext
-} from '../../../../lib/with-apollo-client';
-import {defineAbilitiesFor} from '../../../../lib/abilities';
+import * as hymnQuery from '../../../../queries/hymn';
+import * as resourceQuery from '../../../../queries/resource';
+import {Hymn, HymnPropTypes, MenuItem} from '../../../../queries/_types';
 
-import checkLoggedIn from '../../../check-logged-in';
+import useUser from '../../../use-user';
+import {defineAbilitiesFor} from '../../../../lib/abilities';
 import BlockContent from '../../../components/block-content';
 import PageLayout from '../../../components/page-layout';
 import ShortListButton from '../../../components/shortlist-button';
-import {useFindOneHymnQuery} from '../../../components/queries';
+
 import Sidebar, {
   SidebarAuthor,
   SidebarCopyright,
@@ -25,12 +26,24 @@ import Sidebar, {
   SidebarAlternateTunes
 } from '../../../components/sidebar';
 
-type SongProps = {
-  id: string;
-};
+type SongProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const Song: NextPage<SongProps> = ({id}) => {
-  const {data} = useFindOneHymnQuery({variables: {id}});
+const Song: NextPage<SongProps> = ({hymn, menuItems}) => {
+  const redirectTo = '/api/login';
+  const {loggedInUser} = useUser({
+    redirectTo
+  });
+
+  useEffect(() => {
+    if (loggedInUser.user) {
+      const ability = defineAbilitiesFor(loggedInUser.user);
+
+      if (ability.cannot('read', 'Hymn')) {
+        void Router.push('/my-account');
+      }
+    }
+  }, [loggedInUser.user]);
+
   const {
     author,
     hymnNumber,
@@ -40,13 +53,13 @@ const Song: NextPage<SongProps> = ({id}) => {
     alternateTunes,
     copyright,
     scripture
-  } = data?.hymnById ?? {};
+  } = hymn;
 
-  let files = data?.hymnById?.files || [];
+  let files = hymn.files || [];
   files = files.filter(Boolean);
 
   return (
-    <PageLayout>
+    <PageLayout menuItems={menuItems}>
       <Styled.h1 fontWeight="extraBold">
         Public Worship and Aids to Devotion Committee Website
       </Styled.h1>
@@ -58,25 +71,25 @@ const Song: NextPage<SongProps> = ({id}) => {
         }}
       >
         <Sidebar>
-          {data?.hymnById && (
-            <>
-              {tune && <SidebarTune {...tune} />}
-              {alternateTunes?.length > 0 && (
-                <SidebarAlternateTunes tunes={alternateTunes} />
-              )}
-              {author && <SidebarAuthor {...author} />}
-              {scripture && <SidebarScripture scripture={scripture} />}
-              {tune && <SidebarTuneComposer {...tune} />}
-              {copyright && <SidebarCopyright {...copyright} />}
-              {tune?.musicCopyright && <SidebarMusicCopyright {...tune} />}
-              {files.length > 0 && <SidebarFiles files={files} />}
-            </>
-          )}
+          <>
+            {tune && <SidebarTune {...tune} />}
+            {alternateTunes?.length > 0 && (
+              <SidebarAlternateTunes tunes={alternateTunes} />
+            )}
+            {author && <SidebarAuthor {...author} />}
+            {scripture && <SidebarScripture scripture={scripture} />}
+            {tune && <SidebarTuneComposer {...tune} />}
+            {copyright && <SidebarCopyright {...copyright} />}
+            {tune?.musicCopyright && (
+              <SidebarMusicCopyright {...tune.musicCopyright} />
+            )}
+            {files.length > 0 && <SidebarFiles files={files} />}
+          </>
         </Sidebar>
 
         <Box>
           <Styled.h2>
-            <ShortListButton item={data?.hymnById} />
+            <ShortListButton item={hymn} />
             {hymnNumber}. {title}
           </Styled.h2>
           <BlockContent blocks={content} />
@@ -86,32 +99,30 @@ const Song: NextPage<SongProps> = ({id}) => {
   );
 };
 
-Song.getInitialProps = async (context: WithApolloPageContext) => {
-  const {
-    query: {id}
-  } = context;
-
-  const {loggedInUser} = await checkLoggedIn(context.apolloClient);
-
-  if (loggedInUser.user) {
-    const ability = defineAbilitiesFor(loggedInUser.user);
-
-    if (ability.cannot('read', 'Hymn')) {
-      redirect('/my-account', context);
-    }
-  } else {
-    redirect('/api/login', context);
-  }
+export const getServerSideProps: GetServerSideProps<{
+  hymn: Hymn;
+  menuItems: MenuItem[];
+}> = async function (context) {
+  let id = context.params.id;
 
   if (Array.isArray(id)) {
-    return {id: id[0]};
+    id = id[0];
   }
 
-  return {id};
+  const menuItems = await resourceQuery.menuItems();
+  const hymn = await hymnQuery.getById(id);
+
+  return {
+    props: {
+      hymn,
+      menuItems
+    }
+  };
 };
 
 Song.propTypes = {
-  id: PropTypes.string.isRequired
+  hymn: HymnPropTypes.isRequired,
+  menuItems: PropTypes.array
 };
 
-export default withApollo(Song);
+export default Song;

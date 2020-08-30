@@ -13,7 +13,7 @@ import {
 } from '../queries';
 import Loading from '../loading';
 import ServerError from '../server-error';
-import SearchResult from './search-result';
+import SearchResult, {isSearchResult} from './search-result';
 import SearchMetreInput from './search-metre-input';
 import SearchTuneInput from './search-tune-input';
 import SearchPassageInput from './search-passage-input';
@@ -41,17 +41,23 @@ const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
   if (data?.search?.length > 0) {
     return (
       <>
-        {data.search.map((result) => (
-          <SearchResult
-            {...result}
-            key={result._id}
-            prefetch={() =>
-              prefetchOneHymn(client, {
-                id: result._id
-              })
-            }
-          />
-        ))}
+        {data.search.map((result) => {
+          if (isSearchResult(result)) {
+            return (
+              <SearchResult
+                {...result}
+                key={result._id}
+                prefetch={() =>
+                  prefetchOneHymn(client, {
+                    id: result._id
+                  })
+                }
+              />
+            );
+          }
+
+          return null;
+        })}
       </>
     );
   }

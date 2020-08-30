@@ -1,4 +1,4 @@
-import gql from 'graphql-tag';
+import {gql} from '@apollo/client';
 
 export default gql`
   query Me {
@@ -24,10 +24,10 @@ export default gql`
           title
           hymnNumber
         }
-        ... on Prayer {
+        ... on Liturgy {
           title
         }
-        ... on Liturgy {
+        ... on Prayer {
           title
         }
         ... on Scripture {

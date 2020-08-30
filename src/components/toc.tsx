@@ -3,13 +3,9 @@ import {FC} from 'react';
 import PropTypes from 'prop-types';
 import {jsx} from 'theme-ui';
 import GithubSlugger from 'github-slugger';
+import {BlockContent} from '../../queries/_types';
 
 const slugger = new GithubSlugger();
-
-type BlockContent = {
-  style: string;
-  children: any[];
-};
 
 type TocProps = {
   blocks?: BlockContent[];

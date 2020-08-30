@@ -9,7 +9,7 @@ import {Can} from '../ability-context';
 
 import {DarkTheme} from '../theme';
 
-import {MenuItem} from '../queries';
+import {MenuItem} from '../../../queries/_types';
 import Link from '../link';
 import useToggle from '../use-toggle';
 import Nav from './nav';

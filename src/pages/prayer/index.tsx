@@ -1,14 +1,19 @@
 import React from 'react';
-import {NextPage} from 'next';
+import PropTypes from 'prop-types';
+import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
 import {Styled} from 'theme-ui';
 
-import withApollo from '../../../lib/with-apollo-client';
+import * as resourceQuery from '../../../queries/resource';
+import {MenuItem} from '../../../queries/_types';
+
 import PageLayout from '../../components/page-layout';
 import PraySearchControl from '../../components/search-box/pray-search-control';
 
-const Pray: NextPage = () => {
+type PrayProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+const Pray: NextPage<PrayProps> = ({menuItems}) => {
   return (
-    <PageLayout>
+    <PageLayout menuItems={menuItems}>
       <Styled.h1 fontWeight="extraBold">
         Public Worship and Aids to Devotion Committee Website
       </Styled.h1>
@@ -23,4 +28,20 @@ const Pray: NextPage = () => {
   );
 };
 
-export default withApollo(Pray);
+export default Pray;
+
+Pray.propTypes = {
+  menuItems: PropTypes.array
+};
+
+export const getServerSideProps: GetServerSideProps<{
+  menuItems: MenuItem[];
+}> = async function () {
+  const menuItems = await resourceQuery.menuItems();
+
+  return {
+    props: {
+      menuItems
+    }
+  };
+};

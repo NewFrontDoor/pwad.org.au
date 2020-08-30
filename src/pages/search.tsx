@@ -1,15 +1,18 @@
 import React from 'react';
-import {NextPage} from 'next';
+import PropTypes from 'prop-types';
+import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
 import {Styled} from 'theme-ui';
 
-import withApollo from '../../lib/with-apollo-client';
-
+import * as resourceQuery from '../../queries/resource';
+import {MenuItem} from '../../queries/_types';
 import PageLayout from '../components/page-layout';
 import SearchControl from '../components/search-box/search-control';
 
-const Search: NextPage = () => {
+type SearchPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+const Search: NextPage<SearchPageProps> = ({menuItems}) => {
   return (
-    <PageLayout>
+    <PageLayout menuItems={menuItems}>
       <Styled.h1 fontWeight="extraBold">
         Public Worship and Aids to Devotion Committee Website
       </Styled.h1>
@@ -24,4 +27,20 @@ const Search: NextPage = () => {
   );
 };
 
-export default withApollo(Search);
+Search.propTypes = {
+  menuItems: PropTypes.array
+};
+
+export const getServerSideProps: GetServerSideProps<{
+  menuItems: MenuItem[];
+}> = async function () {
+  const menuItems = await resourceQuery.menuItems();
+
+  return {
+    props: {
+      menuItems
+    }
+  };
+};
+
+export default Search;

@@ -5,7 +5,7 @@ export async function findMany(
   filter?: FilterInput,
   sort?: MetreSortBy,
   skip = 0,
-  limit = 10
+  limit = 20
 ): Promise<Metre[]> {
   let query = ['*'].concat('[_type=="metre"]');
 

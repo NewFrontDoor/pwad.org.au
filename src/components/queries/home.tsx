@@ -1,35 +1,18 @@
-import gql from 'graphql-tag';
+import {gql} from '@apollo/client';
+import menuItem from './fragments/menu-item';
 
 export default gql`
   query Home {
     main {
+      _id
       heading
       subheading
       blurb
       searchblurb
       menuItems {
-        _key
-        text
-        childpages {
-          _id
-          alternateText
-          childPage {
-            ... on PageContent {
-              _id
-              _type
-              slug
-              title
-            }
-
-            ... on Asset {
-              _id
-              _type
-              name
-              url
-            }
-          }
-        }
+        ...menuItem
       }
     }
   }
+  ${menuItem}
 `;

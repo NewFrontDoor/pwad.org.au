@@ -1,5 +1,5 @@
 import React, {FC, useCallback} from 'react';
-import {useApolloClient} from '@apollo/react-hooks';
+import {useApolloClient} from '@apollo/client';
 import PropTypes from 'prop-types';
 import {Styled, Box, Grid, Text} from 'theme-ui';
 import {Check} from 'react-feather';
@@ -259,7 +259,7 @@ ManageForm.defaultProps = {
   hasPaidAccount: false
 };
 
-const stripePromise = loadStripe(process.env.STRIPE_CLIENT_TOKEN);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_CLIENT_TOKEN);
 
 const ManageFormProvider: FC<User> = (props) => (
   <Elements stripe={stripePromise}>

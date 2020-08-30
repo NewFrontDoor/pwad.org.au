@@ -1,71 +1,72 @@
 import React, {FC} from 'react';
-import {NextPage} from 'next';
 import PropTypes from 'prop-types';
+import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
 import {Text, Box} from 'theme-ui';
 
-import withApollo from '../../../lib/with-apollo-client';
+import * as scriptureQuery from '../../../queries/scripture';
+import * as resourceQuery from '../../../queries/resource';
+import {Scripture, MenuItem, ScripturePropTypes} from '../../../queries/_types';
 
-import Loading from '../../components/loading';
 import PageLayout from '../../components/page-layout';
 import BlockContent from '../../components/block-content';
 import ShortListButton from '../../components/shortlist-button';
-import {useFindOneScriptureQuery} from '../../components/queries';
 
-type ScriptureByIdProps = {
-  id: string;
-};
-
-const ScriptureById: FC<ScriptureByIdProps> = ({id}) => {
-  const {loading, error, data} = useFindOneScriptureQuery({
-    variables: {id}
-  });
-
-  const {content, title} = data?.scriptureById ?? {};
+const ScriptureById: FC<Scripture> = (props) => {
+  const {content, title} = props;
 
   return (
-    <>
-      <Loading isLoading={loading} />
-      {error && `Error! ${error.message}`}
-      {data?.scriptureById && (
-        <Box sx={{width: '100%'}}>
-          <Text as="h2">
-            <ShortListButton item={data.scriptureById} />
-            {title}
-          </Text>
-          {content && <BlockContent blocks={content} />}
-        </Box>
-      )}
-    </>
+    <Box sx={{width: '100%'}}>
+      <Text as="h2">
+        <ShortListButton item={props} />
+        {title}
+      </Text>
+      {content && <BlockContent blocks={content} />}
+    </Box>
   );
 };
 
 ScriptureById.propTypes = {
-  id: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  content: PropTypes.any
 };
 
-type ScriptureProps = {id: string};
+type ScriptureProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const Scripture: NextPage<ScriptureProps> = ({id}) => {
+const ScripturePage: NextPage<ScriptureProps> = ({scripture, menuItems}) => {
   return (
-    <PageLayout>
+    <PageLayout menuItems={menuItems}>
       <Text as="h1" fontWeight="extraBold">
         Public Worship and Aids to Devotion Committee Website
       </Text>
-      <ScriptureById id={id} />
+      <ScriptureById {...scripture} />
     </PageLayout>
   );
 };
 
-Scripture.getInitialProps = ({query: {id}}) => {
+ScripturePage.propTypes = {
+  scripture: ScripturePropTypes,
+  menuItems: PropTypes.array
+};
+
+export default ScripturePage;
+
+export const getServerSideProps: GetServerSideProps<{
+  scripture: Scripture;
+  menuItems: MenuItem[];
+}> = async function (context) {
+  let id = context.params.id;
+
   if (Array.isArray(id)) {
-    return {id: id[0]};
+    id = id[0];
   }
 
-  return {id};
-};
+  const menuItems = await resourceQuery.menuItems();
+  const scripture = await scriptureQuery.getById(id);
 
-Scripture.propTypes = {
-  id: PropTypes.string.isRequired
+  return {
+    props: {
+      scripture,
+      menuItems
+    }
+  };
 };
-
-export default withApollo(Scripture);

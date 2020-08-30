@@ -6,7 +6,7 @@ import {useResponsiveValue} from '@theme-ui/match-media';
 import {motion} from 'framer-motion';
 import useToggle from '../use-toggle';
 
-import {MenuItem} from '../queries';
+import {MenuItem} from '../../../queries/_types';
 import Link, {childPageLinkProps} from '../link';
 
 type NavCollapseProps = MenuItem;

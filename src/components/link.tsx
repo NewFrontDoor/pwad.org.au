@@ -1,19 +1,20 @@
-import React, {ReactNode, FC, HTMLProps} from 'react';
+import React, {FC, HTMLProps} from 'react';
 import PropTypes from 'prop-types';
 import NextLink from 'next/link';
 import {Link as ThemeUiLink} from 'theme-ui';
 import kebabCase from 'lodash/kebabCase';
+
 import {
   Author,
-  Hymn,
   Prayer,
   Keyword,
   Liturgy,
   Asset,
   PageContent,
   Scripture,
+  Hymn,
   ChildPage
-} from './queries';
+} from '../../queries/_types';
 
 type LinkProps = {
   as?: string;
@@ -21,13 +22,12 @@ type LinkProps = {
   onClick?: () => void;
   isInternal?: boolean;
   isBlank?: boolean;
-  children?: ReactNode;
   variant?: string;
 } & HTMLProps<HTMLAnchorElement>;
 
 const Link: FC<LinkProps> = (props) => {
   const {as, href, isInternal, isBlank, ...rest} = props;
-  const isNotApi = !href.startsWith('/api/');
+  const isNotApi = !href?.startsWith('/api/');
   if (href && isInternal && isNotApi) {
     return (
       <NextLink passHref as={as} href={href}>
@@ -124,9 +124,21 @@ export function assetLinkProps({url, name}: Asset): LinkProps {
   };
 }
 
-export function linkProps(
-  props: Hymn | Author | Prayer | Liturgy | PageContent | Asset | Scripture
-): LinkProps {
+export type GenLinkProps =
+  | Hymn
+  | Author
+  | Prayer
+  | Liturgy
+  | PageContent
+  | Asset
+  | Scripture
+  | {
+      _id: string;
+      _type: never;
+      children?: string | string[];
+    };
+
+export function linkProps(props: GenLinkProps): LinkProps {
   switch (props._type) {
     case 'hymn':
       return hymnLinkProps(props);
@@ -158,7 +170,7 @@ export function childPageLinkProps({
   alternateText,
   childPage
 }: ChildPage): LinkProps {
-  const props = linkProps(childPage);
+  const props = childPage ? linkProps(childPage) : {};
 
   if (alternateText) {
     props.children = alternateText;

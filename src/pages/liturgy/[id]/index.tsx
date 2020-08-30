@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import {NextPage} from 'next';
+import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
 import PropTypes from 'prop-types';
 import {jsx, Text, Flex, Box} from 'theme-ui';
 import Sidebar, {
@@ -8,73 +8,73 @@ import Sidebar, {
   SidebarFiles
 } from '../../../components/sidebar';
 
-import withApollo from '../../../../lib/with-apollo-client';
+import * as liturgyQuery from '../../../../queries/liturgy';
+import * as resourceQuery from '../../../../queries/resource';
+import {Liturgy, MenuItem, LiturgyPropTypes} from '../../../../queries/_types';
 
-import Loading from '../../../components/loading';
 import PageLayout from '../../../components/page-layout';
 import BlockContent from '../../../components/block-content';
 import ShortListButton from '../../../components/shortlist-button';
-import {useFindOneLiturgyQuery} from '../../../components/queries';
 
-type LiturgyProps = {
-  id: string;
-};
+type LiturgyProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const Liturgy: NextPage<LiturgyProps> = ({id}) => {
-  const {loading, error, data} = useFindOneLiturgyQuery({
-    variables: {id}
-  });
-
-  const {author, content, title, copyright} = data?.liturgyById ?? {};
-  const files = data?.liturgyById?.files || [];
+const LiturgyPage: NextPage<LiturgyProps> = ({menuItems, liturgy}) => {
+  const {author, content, title, copyright} = liturgy;
+  const files = liturgy?.files || [];
 
   return (
-    <PageLayout>
+    <PageLayout menuItems={menuItems}>
       <Text as="h1" fontWeight="extraBold">
         Public Worship and Aids to Devotion Committee Website
       </Text>
-      <Loading isLoading={loading} />
-      {error && `Error! ${error.message}`}
-      {data?.liturgyById && (
-        <Flex
-          sx={{
-            flexDirection: ['column-reverse', 'column-reverse', 'row'],
-            // TODO: What should this value actually be?
-            gap: '2em'
-          }}
-        >
-          <Sidebar>
-            {data?.liturgyById && (
-              <>
-                {files.length > 0 && <SidebarFiles files={files} />}
-                {author && <SidebarAuthor {...author} />}
-                {copyright && <SidebarCopyright {...copyright} />}
-              </>
-            )}
-          </Sidebar>
-          <Box sx={{width: '100%'}}>
-            <Text as="h2">
-              <ShortListButton item={data.liturgyById} />
-              {title}
-            </Text>
-            <BlockContent blocks={content} />
-          </Box>
-        </Flex>
-      )}
+      <Flex
+        sx={{
+          flexDirection: ['column-reverse', 'column-reverse', 'row'],
+          // TODO: What should this value actually be?
+          gap: '2em'
+        }}
+      >
+        <Sidebar>
+          {files.length > 0 && <SidebarFiles files={files} />}
+          {author && <SidebarAuthor {...author} />}
+          {copyright && <SidebarCopyright {...copyright} />}
+        </Sidebar>
+        <Box sx={{width: '100%'}}>
+          <Text as="h2">
+            <ShortListButton item={liturgy} />
+            {title}
+          </Text>
+          <BlockContent blocks={content} />
+        </Box>
+      </Flex>
     </PageLayout>
   );
 };
 
-Liturgy.getInitialProps = ({query: {id}}) => {
+LiturgyPage.propTypes = {
+  liturgy: LiturgyPropTypes,
+  menuItems: PropTypes.array
+};
+
+export default LiturgyPage;
+
+export const getServerSideProps: GetServerSideProps<{
+  liturgy: Liturgy;
+  menuItems: MenuItem[];
+}> = async function (context) {
+  let id = context.params.id;
+
   if (Array.isArray(id)) {
-    return {id: id[0]};
+    id = id[0];
   }
 
-  return {id};
-};
+  const menuItems = await resourceQuery.menuItems();
+  const liturgy = await liturgyQuery.getById(id);
 
-Liturgy.propTypes = {
-  id: PropTypes.string.isRequired
+  return {
+    props: {
+      liturgy,
+      menuItems
+    }
+  };
 };
-
-export default withApollo(Liturgy);

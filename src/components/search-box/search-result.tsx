@@ -3,21 +3,22 @@ import {FC} from 'react';
 import {jsx, Flex, Box, Styled, Button} from 'theme-ui';
 import PropTypes from 'prop-types';
 import NextLink from 'next/link';
-import kebabCase from 'lodash/kebabCase';
-import {Hymn, SearchResult} from '../queries';
-import Link, {keywordLinkProps} from '../link';
+import {SearchResult} from '../../../queries/_types';
+import Link, {linkProps, keywordLinkProps} from '../link';
 import ShortListButton from '../shortlist-button';
-
-function isHymn(result: SearchResult): result is Hymn {
-  return result._type === 'hymn';
-}
 
 type SearchResultListProps = SearchResult & {
   prefetch: () => void;
 };
 
+export function isSearchResult(result: unknown): result is SearchResult {
+  return ['hymn', 'prayer', 'liturgy', 'scripture'].includes(
+    (result as Partial<SearchResult>)._type
+  );
+}
+
 const SearchResultList: FC<SearchResultListProps> = (props) => {
-  const {_id, _type, title, keywords, prefetch} = props;
+  const {keywords, prefetch} = props;
 
   const content = props.content.slice(0, 1);
 
@@ -29,12 +30,9 @@ const SearchResultList: FC<SearchResultListProps> = (props) => {
           sx={{
             verticalAlign: 'middle'
           }}
-          as={`/${_type}/${_id}/${String(kebabCase(title))}`}
-          href={`/${_type}/[id]/[name]`}
+          {...linkProps(props)}
           onMouseOver={prefetch}
-        >
-          {isHymn(props) ? `${props.hymnNumber}. ${title}` : title}
-        </Link>{' '}
+        />{' '}
       </Styled.h4>
       {content && (
         <Styled.div
@@ -90,18 +88,15 @@ const SearchResultList: FC<SearchResultListProps> = (props) => {
 
 SearchResultList.propTypes = {
   _id: PropTypes.string.isRequired,
-  _type: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   content: PropTypes.any,
   keywords: PropTypes.any,
-  hymnNumber: PropTypes.number,
   prefetch: PropTypes.func.isRequired
 };
 
 SearchResultList.defaultProps = {
   content: null,
-  keywords: [],
-  hymnNumber: undefined
+  keywords: []
 };
 
 export default SearchResultList;

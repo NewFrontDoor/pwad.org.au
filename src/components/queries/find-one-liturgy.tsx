@@ -1,7 +1,14 @@
-import gql from 'graphql-tag';
+import {gql} from '@apollo/client';
+import menuItem from './fragments/menu-item';
 
 export default gql`
   query findOneLiturgy($id: ID!) {
+    main {
+      _id
+      menuItems {
+        ...menuItem
+      }
+    }
     liturgyById(id: $id) {
       _id
       title
@@ -23,4 +30,5 @@ export default gql`
       }
     }
   }
+  ${menuItem}
 `;

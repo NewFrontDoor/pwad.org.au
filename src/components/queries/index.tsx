@@ -1,9 +1,8 @@
 /* eslint-disable */
-import gql from 'graphql-tag';
-import * as ApolloReactCommon from '@apollo/react-common';
-import * as ApolloReactHooks from '@apollo/react-hooks';
+import { gql } from '@apollo/client';
+import * as Apollo from '@apollo/client';
 export type Maybe<T> = T | null;
-
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -15,397 +14,8 @@ export type Scalars = {
   JSON: any;
 };
 
-export type Asset = Document & {
-   __typename?: 'Asset';
-  _createdAt?: Maybe<Scalars['Date']>;
-  _id: Scalars['ID'];
-  _rev?: Maybe<Scalars['String']>;
-  _type?: Maybe<Scalars['String']>;
-  _updatedAt?: Maybe<Scalars['Date']>;
-  name?: Maybe<Scalars['String']>;
-  file?: Maybe<Scalars['String']>;
-  size?: Maybe<Scalars['Int']>;
-  url?: Maybe<Scalars['String']>;
-};
-
-export type Author = Document & {
-   __typename?: 'Author';
-  _createdAt?: Maybe<Scalars['Date']>;
-  _id: Scalars['ID'];
-  _rev?: Maybe<Scalars['String']>;
-  _type?: Maybe<Scalars['String']>;
-  _updatedAt?: Maybe<Scalars['Date']>;
-  name?: Maybe<Scalars['String']>;
-  bio?: Maybe<Scalars['JSON']>;
-  dates?: Maybe<Scalars['String']>;
-  hymns?: Maybe<Array<Maybe<Hymn>>>;
-  liturgies?: Maybe<Array<Maybe<Liturgy>>>;
-  scripture?: Maybe<Array<Maybe<Scripture>>>;
-};
-
-export type Category = Document & {
-   __typename?: 'Category';
-  _createdAt?: Maybe<Scalars['Date']>;
-  _id: Scalars['ID'];
-  _rev?: Maybe<Scalars['String']>;
-  _type?: Maybe<Scalars['String']>;
-  _updatedAt?: Maybe<Scalars['Date']>;
-  title?: Maybe<Scalars['String']>;
-  parent?: Maybe<Category>;
-};
-
-export type ChildPage = {
-   __typename?: 'ChildPage';
-  _id: Scalars['ID'];
-  childPage?: Maybe<ChildPageReference>;
-  alternateText?: Maybe<Scalars['String']>;
-};
-
-export type ChildPageReference = PageContent | Hymn | Prayer | Liturgy | Scripture | Asset;
-
-export type Copyright = Document & {
-   __typename?: 'Copyright';
-  _createdAt?: Maybe<Scalars['Date']>;
-  _id: Scalars['ID'];
-  _rev?: Maybe<Scalars['String']>;
-  _type?: Maybe<Scalars['String']>;
-  _updatedAt?: Maybe<Scalars['Date']>;
-  name?: Maybe<Scalars['String']>;
-};
-
-
-export type Document = {
-  _createdAt?: Maybe<Scalars['Date']>;
-  _id: Scalars['ID'];
-  _rev?: Maybe<Scalars['String']>;
-  _type?: Maybe<Scalars['String']>;
-  _updatedAt?: Maybe<Scalars['Date']>;
-};
-
-export enum EnumHymnBook {
-  None = 'none',
-  Genesis = 'genesis',
-  Exodus = 'exodus',
-  Leviticus = 'leviticus',
-  Numbers = 'numbers',
-  Deuteronomy = 'deuteronomy',
-  Joshua = 'joshua',
-  Judges = 'judges',
-  Ruth = 'ruth',
-  FirstSamuel = 'first_samuel',
-  SecondSamuel = 'second_samuel',
-  FirstKings = 'first_kings',
-  SecondKings = 'second_kings',
-  FirstChronicles = 'first_chronicles',
-  SecondChronicles = 'second_chronicles',
-  Ezra = 'ezra',
-  Nehemiah = 'nehemiah',
-  Esther = 'esther',
-  Job = 'job',
-  Psalms = 'psalms',
-  Proverbs = 'proverbs',
-  Ecclesiastes = 'ecclesiastes',
-  SongOfSongs = 'song_of_songs',
-  Isaiah = 'isaiah',
-  Jeremiah = 'jeremiah',
-  Lamentations = 'lamentations',
-  Ezekiel = 'ezekiel',
-  Daniel = 'daniel',
-  Hosea = 'hosea',
-  Joel = 'joel',
-  Amos = 'amos',
-  Obadiah = 'obadiah',
-  Jonah = 'jonah',
-  Micah = 'micah',
-  Nahum = 'nahum',
-  Habakkuk = 'habakkuk',
-  Zephaniah = 'zephaniah',
-  Haggai = 'haggai',
-  Zechariah = 'zechariah',
-  Malachi = 'malachi',
-  Matthew = 'matthew',
-  Mark = 'mark',
-  Luke = 'luke',
-  John = 'john',
-  Acts = 'acts',
-  Romans = 'romans',
-  FirstCorinthians = 'first_corinthians',
-  SecondCorinthians = 'second_corinthians',
-  Galatians = 'galatians',
-  Ephesians = 'ephesians',
-  Philippians = 'philippians',
-  Colossians = 'colossians',
-  FirstThessalonians = 'first_thessalonians',
-  SecondThessalonians = 'second_thessalonians',
-  FirstTimothy = 'first_timothy',
-  SecondTimothy = 'second_timothy',
-  Titus = 'titus',
-  Philemon = 'philemon',
-  Hebrews = 'hebrews',
-  James = 'james',
-  FirstPeter = 'first_peter',
-  SecondPeter = 'second_peter',
-  FirstJohn = 'first_john',
-  SecondJohn = 'second_john',
-  ThirdJohn = 'third_john',
-  Jude = 'jude',
-  Revelation = 'revelation'
-}
-
-export type ExternalUrl = Document & {
-   __typename?: 'ExternalUrl';
-  _createdAt?: Maybe<Scalars['Date']>;
-  _id: Scalars['ID'];
-  _rev?: Maybe<Scalars['String']>;
-  _type?: Maybe<Scalars['String']>;
-  _updatedAt?: Maybe<Scalars['Date']>;
-  title?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
-};
-
-export type FeaturedReference = PageContent | ExternalUrl | RelativeUrl;
-
-export type FilterInput = {
-  id?: Maybe<Scalars['String']>;
-  slug?: Maybe<Scalars['String']>;
-  search?: Maybe<Scalars['String']>;
-  textContains?: Maybe<Scalars['String']>;
-};
-
-export type Hymn = Document & {
-   __typename?: 'Hymn';
-  _createdAt?: Maybe<Scalars['Date']>;
-  _id: Scalars['ID'];
-  _rev?: Maybe<Scalars['String']>;
-  _type?: Maybe<Scalars['String']>;
-  _updatedAt?: Maybe<Scalars['Date']>;
-  title?: Maybe<Scalars['String']>;
-  author?: Maybe<Author>;
-  hymnNumber?: Maybe<Scalars['Int']>;
-  content?: Maybe<Scalars['JSON']>;
-  tune?: Maybe<Tune>;
-  alternateTunes?: Maybe<Array<Maybe<Tune>>>;
-  book?: Maybe<Scalars['String']>;
-  chapter?: Maybe<Scalars['Int']>;
-  chapterVerse?: Maybe<Scalars['String']>;
-  scripture?: Maybe<Scalars['String']>;
-  files?: Maybe<Array<Maybe<Asset>>>;
-  keywords?: Maybe<Array<Maybe<Keyword>>>;
-  occasions?: Maybe<Array<Maybe<Occasion>>>;
-  verses?: Maybe<Scalars['String']>;
-  copyright?: Maybe<Copyright>;
-};
-
-export enum InvoiceStatus {
-  Draft = 'draft',
-  Open = 'open',
-  Paid = 'paid',
-  Uncollectible = 'uncollectible',
-  Void = 'void'
-}
-
-
-export type Keyword = Document & {
-   __typename?: 'Keyword';
-  _createdAt?: Maybe<Scalars['Date']>;
-  _id: Scalars['ID'];
-  _rev?: Maybe<Scalars['String']>;
-  _type?: Maybe<Scalars['String']>;
-  _updatedAt?: Maybe<Scalars['Date']>;
-  name?: Maybe<Scalars['String']>;
-  hymns?: Maybe<Array<Maybe<Hymn>>>;
-  prayers?: Maybe<Array<Maybe<Prayer>>>;
-  liturgies?: Maybe<Array<Maybe<Liturgy>>>;
-};
-
-export enum KeywordSortBy {
-  NameAsc = 'name_ASC',
-  NameDesc = 'name_DESC'
-}
-
-export type Liturgy = Document & {
-   __typename?: 'Liturgy';
-  _createdAt?: Maybe<Scalars['Date']>;
-  _id: Scalars['ID'];
-  _rev?: Maybe<Scalars['String']>;
-  _type?: Maybe<Scalars['String']>;
-  _updatedAt?: Maybe<Scalars['Date']>;
-  title?: Maybe<Scalars['String']>;
-  author?: Maybe<Author>;
-  content?: Maybe<Scalars['JSON']>;
-  note?: Maybe<Scalars['String']>;
-  files?: Maybe<Array<Maybe<Asset>>>;
-  keywords?: Maybe<Array<Maybe<Keyword>>>;
-  occasions?: Maybe<Array<Maybe<Occasion>>>;
-  copyright?: Maybe<Copyright>;
-};
-
-export type Main = Document & {
-   __typename?: 'Main';
-  _createdAt?: Maybe<Scalars['Date']>;
-  _id: Scalars['ID'];
-  _rev?: Maybe<Scalars['String']>;
-  _type?: Maybe<Scalars['String']>;
-  _updatedAt?: Maybe<Scalars['Date']>;
-  heading?: Maybe<Scalars['String']>;
-  subheading?: Maybe<Scalars['String']>;
-  blurb?: Maybe<Scalars['JSON']>;
-  searchblurb?: Maybe<Scalars['JSON']>;
-  featured?: Maybe<Array<Maybe<FeaturedReference>>>;
-  menuItems?: Maybe<Array<Maybe<MenuItem>>>;
-};
-
-export type Menu = Document & {
-   __typename?: 'Menu';
-  _createdAt?: Maybe<Scalars['Date']>;
-  _id: Scalars['ID'];
-  _rev?: Maybe<Scalars['String']>;
-  _type?: Maybe<Scalars['String']>;
-  _updatedAt?: Maybe<Scalars['Date']>;
-  code?: Maybe<Scalars['String']>;
-  name?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
-  link?: Maybe<PageContent>;
-};
-
-export type MenuItem = {
-   __typename?: 'MenuItem';
-  _key?: Maybe<Scalars['String']>;
-  text?: Maybe<Scalars['String']>;
-  childpages?: Maybe<Array<Maybe<ChildPage>>>;
-};
-
-export type Metre = Document & {
-   __typename?: 'Metre';
-  _createdAt?: Maybe<Scalars['Date']>;
-  _id: Scalars['ID'];
-  _rev?: Maybe<Scalars['String']>;
-  _type?: Maybe<Scalars['String']>;
-  _updatedAt?: Maybe<Scalars['Date']>;
-  metre?: Maybe<Scalars['String']>;
-  tunes?: Maybe<Array<Maybe<Tune>>>;
-};
-
-export type MetreIn = {
-  in?: Maybe<Array<Maybe<Scalars['String']>>>;
-};
-
-export enum MetreSortBy {
-  MetreAsc = 'metre_ASC',
-  MetreDesc = 'metre_DESC'
-}
-
-export type Mutation = {
-   __typename?: 'Mutation';
-  addShortListItem?: Maybe<Array<Maybe<ShortList>>>;
-  removeShortListItem?: Maybe<Array<Maybe<ShortList>>>;
-  changeFreeAccount?: Maybe<User>;
-  createUser?: Maybe<User>;
-  stripeCheckoutSession?: Maybe<StripeCheckoutSession>;
-  changePassword?: Maybe<PasswordChangeTicket>;
-  cancelSubscription?: Maybe<StripeSubscription>;
-};
-
-
-export type MutationAddShortListItemArgs = {
-  item: Scalars['ID'];
-};
-
-
-export type MutationRemoveShortListItemArgs = {
-  item: Scalars['ID'];
-};
-
-
-export type MutationChangeFreeAccountArgs = {
-  hasFreeAccount: Scalars['Boolean'];
-};
-
-
-export type MutationCreateUserArgs = {
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  email: Scalars['String'];
-  password: Scalars['String'];
-  confirmPassword: Scalars['String'];
-};
-
-export type Name = {
-   __typename?: 'Name';
-  first?: Maybe<Scalars['String']>;
-  last?: Maybe<Scalars['String']>;
-};
-
-export type Occasion = Document & {
-   __typename?: 'Occasion';
-  _createdAt?: Maybe<Scalars['Date']>;
-  _id: Scalars['ID'];
-  _rev?: Maybe<Scalars['String']>;
-  _type?: Maybe<Scalars['String']>;
-  _updatedAt?: Maybe<Scalars['Date']>;
-  name?: Maybe<Scalars['String']>;
-  parent?: Maybe<Occasion>;
-  churchyear?: Maybe<Scalars['Boolean']>;
-};
-
-export type OccasionGroupedById = {
-   __typename?: 'OccasionGroupedById';
-  _id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
-  values?: Maybe<Array<Maybe<Occasion>>>;
-};
-
-export type PageContent = Document & {
-   __typename?: 'PageContent';
-  _createdAt?: Maybe<Scalars['Date']>;
-  _id: Scalars['ID'];
-  _rev?: Maybe<Scalars['String']>;
-  _type?: Maybe<Scalars['String']>;
-  _updatedAt?: Maybe<Scalars['Date']>;
-  title?: Maybe<Scalars['String']>;
-  subtitle?: Maybe<Scalars['String']>;
-  slug?: Maybe<Scalars['String']>;
-  hasToc?: Maybe<Scalars['Boolean']>;
-  content?: Maybe<Scalars['JSON']>;
-};
-
-export type PageInfo = {
-   __typename?: 'PageInfo';
-  currentPage: Scalars['Int'];
-  itemCount: Scalars['Int'];
-  perPage: Scalars['Int'];
-};
-
-export type PasswordChangeTicket = {
-   __typename?: 'PasswordChangeTicket';
-  ticket?: Maybe<Scalars['String']>;
-};
-
-export type Prayer = Document & {
-   __typename?: 'Prayer';
-  _createdAt?: Maybe<Scalars['Date']>;
-  _id: Scalars['ID'];
-  _rev?: Maybe<Scalars['String']>;
-  _type?: Maybe<Scalars['String']>;
-  _updatedAt?: Maybe<Scalars['Date']>;
-  title?: Maybe<Scalars['String']>;
-  author?: Maybe<Author>;
-  content?: Maybe<Scalars['JSON']>;
-  note?: Maybe<Scalars['String']>;
-  occasions?: Maybe<Array<Maybe<Occasion>>>;
-  copyright?: Maybe<Copyright>;
-  keywords?: Maybe<Array<Maybe<Keyword>>>;
-  categories?: Maybe<Array<Maybe<Category>>>;
-};
-
-export type PrayerPagination = {
-   __typename?: 'PrayerPagination';
-  pageInfo?: Maybe<PageInfo>;
-  items?: Maybe<Array<Maybe<Prayer>>>;
-};
-
 export type Query = {
-   __typename?: 'Query';
+  __typename?: 'Query';
   me?: Maybe<User>;
   main?: Maybe<Main>;
   subscription?: Maybe<StripeSubscription>;
@@ -513,43 +123,50 @@ export type QueryPrayerPaginationArgs = {
   perPage: Scalars['Int'];
 };
 
-export type RelativeUrl = Document & {
-   __typename?: 'RelativeUrl';
-  _createdAt?: Maybe<Scalars['Date']>;
-  _id: Scalars['ID'];
-  _rev?: Maybe<Scalars['String']>;
-  _type?: Maybe<Scalars['String']>;
-  _updatedAt?: Maybe<Scalars['Date']>;
-  title?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
+export type Mutation = {
+  __typename?: 'Mutation';
+  addShortListItem?: Maybe<Array<Maybe<ShortList>>>;
+  removeShortListItem?: Maybe<Array<Maybe<ShortList>>>;
+  changeFreeAccount?: Maybe<User>;
+  createUser?: Maybe<User>;
+  stripeCheckoutSession?: Maybe<StripeCheckoutSession>;
+  changePassword?: Maybe<PasswordChangeTicket>;
+  cancelSubscription?: Maybe<StripeSubscription>;
 };
 
-export type Resource = Document & {
-   __typename?: 'Resource';
-  _createdAt?: Maybe<Scalars['Date']>;
+
+export type MutationAddShortListItemArgs = {
+  item: Scalars['ID'];
+};
+
+
+export type MutationRemoveShortListItemArgs = {
+  item: Scalars['ID'];
+};
+
+
+export type MutationChangeFreeAccountArgs = {
+  hasFreeAccount: Scalars['Boolean'];
+};
+
+
+export type MutationCreateUserArgs = {
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  email: Scalars['String'];
+  password: Scalars['String'];
+  confirmPassword: Scalars['String'];
+};
+
+
+
+export type SearchResult = Hymn | Prayer | Liturgy | Scripture;
+
+export type OccasionGroupedById = {
+  __typename?: 'OccasionGroupedById';
   _id: Scalars['ID'];
-  _rev?: Maybe<Scalars['String']>;
-  _type?: Maybe<Scalars['String']>;
-  _updatedAt?: Maybe<Scalars['Date']>;
   name?: Maybe<Scalars['String']>;
-  type?: Maybe<ResourceType>;
-};
-
-export type ResourceType = Asset | RelativeUrl | ExternalUrl | PageContent;
-
-export type Scripture = Document & {
-   __typename?: 'Scripture';
-  _createdAt?: Maybe<Scalars['Date']>;
-  _id: Scalars['ID'];
-  _rev?: Maybe<Scalars['String']>;
-  _type?: Maybe<Scalars['String']>;
-  _updatedAt?: Maybe<Scalars['Date']>;
-  title?: Maybe<Scalars['String']>;
-  content?: Maybe<Scalars['JSON']>;
-  note?: Maybe<Scalars['JSON']>;
-  translation?: Maybe<Scalars['String']>;
-  occasions?: Maybe<Array<Maybe<Occasion>>>;
-  keywords?: Maybe<Array<Maybe<Keyword>>>;
+  values?: Maybe<Array<Maybe<Occasion>>>;
 };
 
 export type SearchInput = {
@@ -565,28 +182,311 @@ export type SearchInputOperator = {
   metre?: Maybe<MetreIn>;
 };
 
-export type SearchResult = Hymn | Prayer | Liturgy | Scripture;
-
-export type ShortList = Hymn | Prayer | Liturgy | Scripture;
-
-export type StripeCheckoutSession = {
-   __typename?: 'StripeCheckoutSession';
-  sessionId?: Maybe<Scalars['String']>;
+export type MetreIn = {
+  in?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
-export type StripeSubscription = {
-   __typename?: 'StripeSubscription';
-  id: Scalars['ID'];
-  cancelAt?: Maybe<Scalars['Date']>;
-  canceledAt?: Maybe<Scalars['Date']>;
-  currentPeriodEnd?: Maybe<Scalars['Date']>;
-  plan?: Maybe<Scalars['String']>;
-  startDate?: Maybe<Scalars['Date']>;
-  status?: Maybe<Scalars['String']>;
+export enum EnumHymnBook {
+  None = 'none',
+  Genesis = 'genesis',
+  Exodus = 'exodus',
+  Leviticus = 'leviticus',
+  Numbers = 'numbers',
+  Deuteronomy = 'deuteronomy',
+  Joshua = 'joshua',
+  Judges = 'judges',
+  Ruth = 'ruth',
+  FirstSamuel = 'first_samuel',
+  SecondSamuel = 'second_samuel',
+  FirstKings = 'first_kings',
+  SecondKings = 'second_kings',
+  FirstChronicles = 'first_chronicles',
+  SecondChronicles = 'second_chronicles',
+  Ezra = 'ezra',
+  Nehemiah = 'nehemiah',
+  Esther = 'esther',
+  Job = 'job',
+  Psalms = 'psalms',
+  Proverbs = 'proverbs',
+  Ecclesiastes = 'ecclesiastes',
+  SongOfSongs = 'song_of_songs',
+  Isaiah = 'isaiah',
+  Jeremiah = 'jeremiah',
+  Lamentations = 'lamentations',
+  Ezekiel = 'ezekiel',
+  Daniel = 'daniel',
+  Hosea = 'hosea',
+  Joel = 'joel',
+  Amos = 'amos',
+  Obadiah = 'obadiah',
+  Jonah = 'jonah',
+  Micah = 'micah',
+  Nahum = 'nahum',
+  Habakkuk = 'habakkuk',
+  Zephaniah = 'zephaniah',
+  Haggai = 'haggai',
+  Zechariah = 'zechariah',
+  Malachi = 'malachi',
+  Matthew = 'matthew',
+  Mark = 'mark',
+  Luke = 'luke',
+  John = 'john',
+  Acts = 'acts',
+  Romans = 'romans',
+  FirstCorinthians = 'first_corinthians',
+  SecondCorinthians = 'second_corinthians',
+  Galatians = 'galatians',
+  Ephesians = 'ephesians',
+  Philippians = 'philippians',
+  Colossians = 'colossians',
+  FirstThessalonians = 'first_thessalonians',
+  SecondThessalonians = 'second_thessalonians',
+  FirstTimothy = 'first_timothy',
+  SecondTimothy = 'second_timothy',
+  Titus = 'titus',
+  Philemon = 'philemon',
+  Hebrews = 'hebrews',
+  James = 'james',
+  FirstPeter = 'first_peter',
+  SecondPeter = 'second_peter',
+  FirstJohn = 'first_john',
+  SecondJohn = 'second_john',
+  ThirdJohn = 'third_john',
+  Jude = 'jude',
+  Revelation = 'revelation'
+}
+
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  currentPage: Scalars['Int'];
+  itemCount: Scalars['Int'];
+  perPage: Scalars['Int'];
+};
+
+export type FilterInput = {
+  id?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
+  search?: Maybe<Scalars['String']>;
+  textContains?: Maybe<Scalars['String']>;
+};
+
+export type Document = {
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+};
+
+export type FeaturedReference = PageContent | ExternalUrl | RelativeUrl;
+
+export type Main = Document & {
+  __typename?: 'Main';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  heading?: Maybe<Scalars['String']>;
+  subheading?: Maybe<Scalars['String']>;
+  blurb?: Maybe<Scalars['JSON']>;
+  searchblurb?: Maybe<Scalars['JSON']>;
+  featured?: Maybe<Array<Maybe<FeaturedReference>>>;
+  menuItems?: Maybe<Array<Maybe<MenuItem>>>;
+};
+
+export type ChildPageReference = PageContent | Hymn | Prayer | Liturgy | Scripture | Asset;
+
+export type MenuItem = {
+  __typename?: 'MenuItem';
+  _key?: Maybe<Scalars['String']>;
+  text?: Maybe<Scalars['String']>;
+  childpages?: Maybe<Array<Maybe<ChildPage>>>;
+};
+
+export type ChildPage = {
+  __typename?: 'ChildPage';
+  _id: Scalars['ID'];
+  childPage?: Maybe<ChildPageReference>;
+  alternateText?: Maybe<Scalars['String']>;
+};
+
+export type Author = Document & {
+  __typename?: 'Author';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  name?: Maybe<Scalars['String']>;
+  bio?: Maybe<Scalars['JSON']>;
+  dates?: Maybe<Scalars['String']>;
+  hymns?: Maybe<Array<Maybe<Hymn>>>;
+  liturgies?: Maybe<Array<Maybe<Liturgy>>>;
+  scripture?: Maybe<Array<Maybe<Scripture>>>;
+};
+
+export type Category = Document & {
+  __typename?: 'Category';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  parent?: Maybe<Category>;
+};
+
+export type Copyright = Document & {
+  __typename?: 'Copyright';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+export type Hymn = Document & {
+  __typename?: 'Hymn';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  author?: Maybe<Author>;
+  hymnNumber?: Maybe<Scalars['Int']>;
+  content?: Maybe<Scalars['JSON']>;
+  tune?: Maybe<Tune>;
+  alternateTunes?: Maybe<Array<Maybe<Tune>>>;
+  book?: Maybe<Scalars['String']>;
+  chapter?: Maybe<Scalars['Int']>;
+  chapterVerse?: Maybe<Scalars['String']>;
+  scripture?: Maybe<Scalars['String']>;
+  files?: Maybe<Array<Maybe<Asset>>>;
+  keywords?: Maybe<Array<Maybe<Keyword>>>;
+  occasions?: Maybe<Array<Maybe<Occasion>>>;
+  verses?: Maybe<Scalars['String']>;
+  copyright?: Maybe<Copyright>;
+};
+
+export type Keyword = Document & {
+  __typename?: 'Keyword';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  name?: Maybe<Scalars['String']>;
+  hymns?: Maybe<Array<Maybe<Hymn>>>;
+  prayers?: Maybe<Array<Maybe<Prayer>>>;
+  liturgies?: Maybe<Array<Maybe<Liturgy>>>;
+};
+
+export enum KeywordSortBy {
+  NameAsc = 'name_ASC',
+  NameDesc = 'name_DESC'
+}
+
+export type Liturgy = Document & {
+  __typename?: 'Liturgy';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  author?: Maybe<Author>;
+  content?: Maybe<Scalars['JSON']>;
+  note?: Maybe<Scalars['String']>;
+  files?: Maybe<Array<Maybe<Asset>>>;
+  keywords?: Maybe<Array<Maybe<Keyword>>>;
+  occasions?: Maybe<Array<Maybe<Occasion>>>;
+  copyright?: Maybe<Copyright>;
+};
+
+export type Menu = Document & {
+  __typename?: 'Menu';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  code?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+  type?: Maybe<Scalars['String']>;
+  link?: Maybe<PageContent>;
+};
+
+export type Metre = Document & {
+  __typename?: 'Metre';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  metre?: Maybe<Scalars['String']>;
+  tunes?: Maybe<Array<Maybe<Tune>>>;
+};
+
+export enum MetreSortBy {
+  MetreAsc = 'metre_ASC',
+  MetreDesc = 'metre_DESC'
+}
+
+export type Occasion = Document & {
+  __typename?: 'Occasion';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  name?: Maybe<Scalars['String']>;
+  parent?: Maybe<Occasion>;
+  churchyear?: Maybe<Scalars['Boolean']>;
+};
+
+export type Prayer = Document & {
+  __typename?: 'Prayer';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  author?: Maybe<Author>;
+  content?: Maybe<Scalars['JSON']>;
+  note?: Maybe<Scalars['String']>;
+  occasions?: Maybe<Array<Maybe<Occasion>>>;
+  copyright?: Maybe<Copyright>;
+  keywords?: Maybe<Array<Maybe<Keyword>>>;
+  categories?: Maybe<Array<Maybe<Category>>>;
+};
+
+export type PrayerPagination = {
+  __typename?: 'PrayerPagination';
+  pageInfo?: Maybe<PageInfo>;
+  items?: Maybe<Array<Maybe<Prayer>>>;
+};
+
+export type Scripture = Document & {
+  __typename?: 'Scripture';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  content?: Maybe<Scalars['JSON']>;
+  note?: Maybe<Scalars['JSON']>;
+  translation?: Maybe<Scalars['String']>;
+  occasions?: Maybe<Array<Maybe<Occasion>>>;
+  keywords?: Maybe<Array<Maybe<Keyword>>>;
 };
 
 export type Tune = Document & {
-   __typename?: 'Tune';
+  __typename?: 'Tune';
   _createdAt?: Maybe<Scalars['Date']>;
   _id: Scalars['ID'];
   _rev?: Maybe<Scalars['String']>;
@@ -604,8 +504,64 @@ export enum TuneSortBy {
   TitleDesc = 'title_DESC'
 }
 
+export type Asset = Document & {
+  __typename?: 'Asset';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  name?: Maybe<Scalars['String']>;
+  file?: Maybe<Scalars['String']>;
+  size?: Maybe<Scalars['Int']>;
+  url?: Maybe<Scalars['String']>;
+};
+
+export type ResourceType = Asset | RelativeUrl | ExternalUrl | PageContent;
+
+export type Resource = Document & {
+  __typename?: 'Resource';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  name?: Maybe<Scalars['String']>;
+  type?: Maybe<ResourceType>;
+};
+
+export type PageContent = Document & {
+  __typename?: 'PageContent';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  subtitle?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
+  hasToc?: Maybe<Scalars['Boolean']>;
+  content?: Maybe<Scalars['JSON']>;
+};
+
+export type ShortList = Hymn | Prayer | Liturgy | Scripture;
+
+export type Name = {
+  __typename?: 'Name';
+  first?: Maybe<Scalars['String']>;
+  last?: Maybe<Scalars['String']>;
+};
+
+export enum InvoiceStatus {
+  Draft = 'draft',
+  Open = 'open',
+  Paid = 'paid',
+  Uncollectible = 'uncollectible',
+  Void = 'void'
+}
+
 export type User = Document & {
-   __typename?: 'User';
+  __typename?: 'User';
   _createdAt?: Maybe<Scalars['Date']>;
   _id: Scalars['ID'];
   _rev?: Maybe<Scalars['String']>;
@@ -624,9 +580,52 @@ export type User = Document & {
   stripeCustomerId?: Maybe<Scalars['String']>;
 };
 
-export type AddShortListItemMutationVariables = {
-  item: Scalars['ID'];
+export type RelativeUrl = Document & {
+  __typename?: 'RelativeUrl';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
 };
+
+export type ExternalUrl = Document & {
+  __typename?: 'ExternalUrl';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
+};
+
+export type StripeCheckoutSession = {
+  __typename?: 'StripeCheckoutSession';
+  sessionId?: Maybe<Scalars['String']>;
+};
+
+export type StripeSubscription = {
+  __typename?: 'StripeSubscription';
+  id: Scalars['ID'];
+  cancelAt?: Maybe<Scalars['Date']>;
+  canceledAt?: Maybe<Scalars['Date']>;
+  currentPeriodEnd?: Maybe<Scalars['Date']>;
+  plan?: Maybe<Scalars['String']>;
+  startDate?: Maybe<Scalars['Date']>;
+  status?: Maybe<Scalars['String']>;
+};
+
+export type PasswordChangeTicket = {
+  __typename?: 'PasswordChangeTicket';
+  ticket?: Maybe<Scalars['String']>;
+};
+
+export type AddShortListItemMutationVariables = Exact<{
+  item: Scalars['ID'];
+}>;
 
 
 export type AddShortListItemMutation = (
@@ -646,14 +645,14 @@ export type AddShortListItemMutation = (
   )>>> }
 );
 
-export type AdvancedSearchQueryVariables = {
+export type AdvancedSearchQueryVariables = Exact<{
   title?: Maybe<Scalars['String']>;
   tune?: Maybe<Scalars['String']>;
   metres?: Maybe<Array<Maybe<Scalars['String']>>>;
   occasion?: Maybe<Scalars['String']>;
   keyword?: Maybe<Scalars['String']>;
   book?: Maybe<EnumHymnBook>;
-};
+}>;
 
 
 export type AdvancedSearchQuery = (
@@ -685,7 +684,7 @@ export type AdvancedSearchQuery = (
   )>>> }
 );
 
-export type CancelSubscriptionMutationVariables = {};
+export type CancelSubscriptionMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CancelSubscriptionMutation = (
@@ -696,7 +695,7 @@ export type CancelSubscriptionMutation = (
   )> }
 );
 
-export type ChangePasswordMutationVariables = {};
+export type ChangePasswordMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type ChangePasswordMutation = (
@@ -707,13 +706,13 @@ export type ChangePasswordMutation = (
   )> }
 );
 
-export type CreateUserMutationVariables = {
+export type CreateUserMutationVariables = Exact<{
   firstName: Scalars['String'];
   lastName: Scalars['String'];
   email: Scalars['String'];
   password: Scalars['String'];
   confirmPassword: Scalars['String'];
-};
+}>;
 
 
 export type CreateUserMutation = (
@@ -728,7 +727,7 @@ export type CreateUserMutation = (
   )> }
 );
 
-export type CurrentSubscriptionQueryVariables = {};
+export type CurrentSubscriptionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CurrentSubscriptionQuery = (
@@ -739,11 +738,11 @@ export type CurrentSubscriptionQuery = (
   )> }
 );
 
-export type FindKeywordQueryVariables = {
+export type FindKeywordQueryVariables = Exact<{
   title?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
-};
+}>;
 
 
 export type FindKeywordQuery = (
@@ -754,11 +753,11 @@ export type FindKeywordQuery = (
   )>>> }
 );
 
-export type FindMetreQueryVariables = {
+export type FindMetreQueryVariables = Exact<{
   metre?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
-};
+}>;
 
 
 export type FindMetreQuery = (
@@ -769,7 +768,7 @@ export type FindMetreQuery = (
   )>>> }
 );
 
-export type FindOccasionQueryVariables = {};
+export type FindOccasionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type FindOccasionQuery = (
@@ -784,14 +783,21 @@ export type FindOccasionQuery = (
   )>>> }
 );
 
-export type FindOneAuthorQueryVariables = {
+export type FindOneAuthorQueryVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 
 export type FindOneAuthorQuery = (
   { __typename?: 'Query' }
-  & { authorById?: Maybe<(
+  & { main?: Maybe<(
+    { __typename?: 'Main' }
+    & Pick<Main, '_id'>
+    & { menuItems?: Maybe<Array<Maybe<(
+      { __typename?: 'MenuItem' }
+      & MenuItemFragment
+    )>>> }
+  )>, authorById?: Maybe<(
     { __typename?: 'Author' }
     & Pick<Author, '_id' | '_type' | 'name' | 'dates'>
     & { hymns?: Maybe<Array<Maybe<(
@@ -804,14 +810,21 @@ export type FindOneAuthorQuery = (
   )> }
 );
 
-export type FindOneHymnQueryVariables = {
+export type FindOneHymnQueryVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 
 export type FindOneHymnQuery = (
   { __typename?: 'Query' }
-  & { hymnById?: Maybe<(
+  & { main?: Maybe<(
+    { __typename?: 'Main' }
+    & Pick<Main, '_id'>
+    & { menuItems?: Maybe<Array<Maybe<(
+      { __typename?: 'MenuItem' }
+      & MenuItemFragment
+    )>>> }
+  )>, hymnById?: Maybe<(
     { __typename?: 'Hymn' }
     & Pick<Hymn, '_id' | 'title' | 'hymnNumber' | 'content' | 'scripture'>
     & { copyright?: Maybe<(
@@ -850,14 +863,21 @@ export type FindOneHymnQuery = (
   )> }
 );
 
-export type FindOneKeywordQueryVariables = {
+export type FindOneKeywordQueryVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 
 export type FindOneKeywordQuery = (
   { __typename?: 'Query' }
-  & { keywordById?: Maybe<(
+  & { main?: Maybe<(
+    { __typename?: 'Main' }
+    & Pick<Main, '_id'>
+    & { menuItems?: Maybe<Array<Maybe<(
+      { __typename?: 'MenuItem' }
+      & MenuItemFragment
+    )>>> }
+  )>, keywordById?: Maybe<(
     { __typename?: 'Keyword' }
     & Pick<Keyword, 'name'>
     & { hymns?: Maybe<Array<Maybe<(
@@ -873,14 +893,21 @@ export type FindOneKeywordQuery = (
   )> }
 );
 
-export type FindOneLiturgyQueryVariables = {
+export type FindOneLiturgyQueryVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 
 export type FindOneLiturgyQuery = (
   { __typename?: 'Query' }
-  & { liturgyById?: Maybe<(
+  & { main?: Maybe<(
+    { __typename?: 'Main' }
+    & Pick<Main, '_id'>
+    & { menuItems?: Maybe<Array<Maybe<(
+      { __typename?: 'MenuItem' }
+      & MenuItemFragment
+    )>>> }
+  )>, liturgyById?: Maybe<(
     { __typename?: 'Liturgy' }
     & Pick<Liturgy, '_id' | 'title' | 'content'>
     & { author?: Maybe<(
@@ -896,14 +923,21 @@ export type FindOneLiturgyQuery = (
   )> }
 );
 
-export type FindOnePrayerQueryVariables = {
+export type FindOnePrayerQueryVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 
 export type FindOnePrayerQuery = (
   { __typename?: 'Query' }
-  & { prayerById?: Maybe<(
+  & { main?: Maybe<(
+    { __typename?: 'Main' }
+    & Pick<Main, '_id'>
+    & { menuItems?: Maybe<Array<Maybe<(
+      { __typename?: 'MenuItem' }
+      & MenuItemFragment
+    )>>> }
+  )>, prayerById?: Maybe<(
     { __typename?: 'Prayer' }
     & Pick<Prayer, '_id' | 'title' | 'content'>
     & { author?: Maybe<(
@@ -916,22 +950,29 @@ export type FindOnePrayerQuery = (
   )> }
 );
 
-export type FindOneScriptureQueryVariables = {
+export type FindOneScriptureQueryVariables = Exact<{
   id: Scalars['ID'];
-};
+}>;
 
 
 export type FindOneScriptureQuery = (
   { __typename?: 'Query' }
-  & { scriptureById?: Maybe<(
+  & { main?: Maybe<(
+    { __typename?: 'Main' }
+    & Pick<Main, '_id'>
+    & { menuItems?: Maybe<Array<Maybe<(
+      { __typename?: 'MenuItem' }
+      & MenuItemFragment
+    )>>> }
+  )>, scriptureById?: Maybe<(
     { __typename?: 'Scripture' }
     & Pick<Scripture, '_id' | 'title' | 'content'>
   )> }
 );
 
-export type FindPrayerContentsQueryVariables = {
+export type FindPrayerContentsQueryVariables = Exact<{
   page: Scalars['Int'];
-};
+}>;
 
 
 export type FindPrayerContentsQuery = (
@@ -948,11 +989,11 @@ export type FindPrayerContentsQuery = (
   )> }
 );
 
-export type FindTuneQueryVariables = {
+export type FindTuneQueryVariables = Exact<{
   title?: Maybe<Scalars['String']>;
   skip?: Maybe<Scalars['Int']>;
   limit?: Maybe<Scalars['Int']>;
-};
+}>;
 
 
 export type FindTuneQuery = (
@@ -963,50 +1004,67 @@ export type FindTuneQuery = (
   )>>> }
 );
 
-export type ChangeFreeAccountMutationVariables = {
+export type MenuItemFragment = (
+  { __typename?: 'MenuItem' }
+  & Pick<MenuItem, '_key' | 'text'>
+  & { childpages?: Maybe<Array<Maybe<(
+    { __typename?: 'ChildPage' }
+    & Pick<ChildPage, '_id' | 'alternateText'>
+    & { childPage?: Maybe<(
+      { __typename?: 'PageContent' }
+      & Pick<PageContent, '_id' | '_type' | 'slug' | 'title'>
+    ) | (
+      { __typename?: 'Hymn' }
+      & Pick<Hymn, '_id' | '_type'>
+    ) | (
+      { __typename?: 'Prayer' }
+      & Pick<Prayer, '_id' | '_type'>
+    ) | (
+      { __typename?: 'Liturgy' }
+      & Pick<Liturgy, '_id' | '_type'>
+    ) | (
+      { __typename?: 'Scripture' }
+      & Pick<Scripture, '_id' | '_type'>
+    ) | (
+      { __typename?: 'Asset' }
+      & Pick<Asset, '_id' | '_type' | 'name' | 'url'>
+    )> }
+  )>>> }
+);
+
+export type ChangeFreeAccountMutationVariables = Exact<{
   hasFreeAccount: Scalars['Boolean'];
-};
+}>;
 
 
 export type ChangeFreeAccountMutation = (
   { __typename?: 'Mutation' }
   & { changeFreeAccount?: Maybe<(
-    { __typename: 'User' }
+    { __typename?: 'User' }
     & Pick<User, 'hasFreeAccount'>
   )> }
 );
 
-export type HomeQueryVariables = {};
+export type HomeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type HomeQuery = (
   { __typename?: 'Query' }
   & { main?: Maybe<(
     { __typename?: 'Main' }
-    & Pick<Main, 'heading' | 'subheading' | 'blurb' | 'searchblurb'>
+    & Pick<Main, '_id' | 'heading' | 'subheading' | 'blurb' | 'searchblurb'>
     & { menuItems?: Maybe<Array<Maybe<(
       { __typename?: 'MenuItem' }
-      & Pick<MenuItem, '_key' | 'text'>
-      & { childpages?: Maybe<Array<Maybe<(
-        { __typename?: 'ChildPage' }
-        & Pick<ChildPage, '_id' | 'alternateText'>
-        & { childPage?: Maybe<(
-          { __typename?: 'PageContent' }
-          & Pick<PageContent, '_id' | '_type' | 'slug' | 'title'>
-        ) | { __typename?: 'Hymn' } | { __typename?: 'Prayer' } | { __typename?: 'Liturgy' } | { __typename?: 'Scripture' } | (
-          { __typename?: 'Asset' }
-          & Pick<Asset, '_id' | '_type' | 'name' | 'url'>
-        )> }
-      )>>> }
+      & MenuItemFragment
     )>>> }
   )> }
 );
 
-export type LiturgySearchQueryVariables = {
+export type LiturgySearchQueryVariables = Exact<{
   title?: Maybe<Scalars['String']>;
   occasion?: Maybe<Scalars['String']>;
   keyword?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type LiturgySearchQuery = (
@@ -1021,7 +1079,7 @@ export type LiturgySearchQuery = (
   )>>> }
 );
 
-export type MeQueryVariables = {};
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = (
@@ -1048,24 +1106,31 @@ export type MeQuery = (
   )> }
 );
 
-export type PageContentQueryVariables = {
+export type PageContentQueryVariables = Exact<{
   slug?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type PageContentQuery = (
   { __typename?: 'Query' }
-  & { pageContentOne?: Maybe<(
+  & { main?: Maybe<(
+    { __typename?: 'Main' }
+    & Pick<Main, '_id'>
+    & { menuItems?: Maybe<Array<Maybe<(
+      { __typename?: 'MenuItem' }
+      & MenuItemFragment
+    )>>> }
+  )>, pageContentOne?: Maybe<(
     { __typename?: 'PageContent' }
     & Pick<PageContent, '_id' | 'title' | 'content' | 'hasToc' | 'slug' | 'subtitle'>
   )> }
 );
 
-export type PrayerSearchQueryVariables = {
+export type PrayerSearchQueryVariables = Exact<{
   title?: Maybe<Scalars['String']>;
   occasion?: Maybe<Scalars['String']>;
   keyword?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type PrayerSearchQuery = (
@@ -1080,9 +1145,9 @@ export type PrayerSearchQuery = (
   )>>> }
 );
 
-export type RemoveShortListItemMutationVariables = {
+export type RemoveShortListItemMutationVariables = Exact<{
   item: Scalars['ID'];
-};
+}>;
 
 
 export type RemoveShortListItemMutation = (
@@ -1102,7 +1167,7 @@ export type RemoveShortListItemMutation = (
   )>>> }
 );
 
-export type StripeCheckoutSessionMutationVariables = {};
+export type StripeCheckoutSessionMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type StripeCheckoutSessionMutation = (
@@ -1113,9 +1178,9 @@ export type StripeCheckoutSessionMutation = (
   )> }
 );
 
-export type TextSearchQueryVariables = {
+export type TextSearchQueryVariables = Exact<{
   search?: Maybe<Scalars['String']>;
-};
+}>;
 
 
 export type TextSearchQuery = (
@@ -1147,7 +1212,30 @@ export type TextSearchQuery = (
   )>>> }
 );
 
-
+export const MenuItemFragmentDoc = gql`
+    fragment menuItem on MenuItem {
+  _key
+  text
+  childpages {
+    _id
+    alternateText
+    childPage {
+      ... on Document {
+        _id
+        _type
+      }
+      ... on PageContent {
+        slug
+        title
+      }
+      ... on Asset {
+        name
+        url
+      }
+    }
+  }
+}
+    `;
 export const AddShortListItemDocument = gql`
     mutation addShortListItem($item: ID!) {
   addShortListItem(item: $item) {
@@ -1171,7 +1259,7 @@ export const AddShortListItemDocument = gql`
   }
 }
     `;
-export type AddShortListItemMutationFn = ApolloReactCommon.MutationFunction<AddShortListItemMutation, AddShortListItemMutationVariables>;
+export type AddShortListItemMutationFn = Apollo.MutationFunction<AddShortListItemMutation, AddShortListItemMutationVariables>;
 
 /**
  * __useAddShortListItemMutation__
@@ -1190,12 +1278,12 @@ export type AddShortListItemMutationFn = ApolloReactCommon.MutationFunction<AddS
  *   },
  * });
  */
-export function useAddShortListItemMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AddShortListItemMutation, AddShortListItemMutationVariables>) {
-        return ApolloReactHooks.useMutation<AddShortListItemMutation, AddShortListItemMutationVariables>(AddShortListItemDocument, baseOptions);
+export function useAddShortListItemMutation(baseOptions?: Apollo.MutationHookOptions<AddShortListItemMutation, AddShortListItemMutationVariables>) {
+        return Apollo.useMutation<AddShortListItemMutation, AddShortListItemMutationVariables>(AddShortListItemDocument, baseOptions);
       }
 export type AddShortListItemMutationHookResult = ReturnType<typeof useAddShortListItemMutation>;
-export type AddShortListItemMutationResult = ApolloReactCommon.MutationResult<AddShortListItemMutation>;
-export type AddShortListItemMutationOptions = ApolloReactCommon.BaseMutationOptions<AddShortListItemMutation, AddShortListItemMutationVariables>;
+export type AddShortListItemMutationResult = Apollo.MutationResult<AddShortListItemMutation>;
+export type AddShortListItemMutationOptions = Apollo.BaseMutationOptions<AddShortListItemMutation, AddShortListItemMutationVariables>;
 export const AdvancedSearchDocument = gql`
     query advancedSearch($title: String, $tune: String, $metres: [String], $occasion: String, $keyword: String, $book: EnumHymnBook) {
   search(filter: {textContains: $title, book: $book, tune: $tune, occasion: $occasion, keyword: $keyword, _operators: {metre: {in: $metres}}}) {
@@ -1253,15 +1341,15 @@ export const AdvancedSearchDocument = gql`
  *   },
  * });
  */
-export function useAdvancedSearchQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<AdvancedSearchQuery, AdvancedSearchQueryVariables>) {
-        return ApolloReactHooks.useQuery<AdvancedSearchQuery, AdvancedSearchQueryVariables>(AdvancedSearchDocument, baseOptions);
+export function useAdvancedSearchQuery(baseOptions?: Apollo.QueryHookOptions<AdvancedSearchQuery, AdvancedSearchQueryVariables>) {
+        return Apollo.useQuery<AdvancedSearchQuery, AdvancedSearchQueryVariables>(AdvancedSearchDocument, baseOptions);
       }
-export function useAdvancedSearchLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<AdvancedSearchQuery, AdvancedSearchQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<AdvancedSearchQuery, AdvancedSearchQueryVariables>(AdvancedSearchDocument, baseOptions);
+export function useAdvancedSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AdvancedSearchQuery, AdvancedSearchQueryVariables>) {
+          return Apollo.useLazyQuery<AdvancedSearchQuery, AdvancedSearchQueryVariables>(AdvancedSearchDocument, baseOptions);
         }
 export type AdvancedSearchQueryHookResult = ReturnType<typeof useAdvancedSearchQuery>;
 export type AdvancedSearchLazyQueryHookResult = ReturnType<typeof useAdvancedSearchLazyQuery>;
-export type AdvancedSearchQueryResult = ApolloReactCommon.QueryResult<AdvancedSearchQuery, AdvancedSearchQueryVariables>;
+export type AdvancedSearchQueryResult = Apollo.QueryResult<AdvancedSearchQuery, AdvancedSearchQueryVariables>;
 export const CancelSubscriptionDocument = gql`
     mutation cancelSubscription {
   cancelSubscription {
@@ -1275,7 +1363,7 @@ export const CancelSubscriptionDocument = gql`
   }
 }
     `;
-export type CancelSubscriptionMutationFn = ApolloReactCommon.MutationFunction<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>;
+export type CancelSubscriptionMutationFn = Apollo.MutationFunction<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>;
 
 /**
  * __useCancelSubscriptionMutation__
@@ -1293,12 +1381,12 @@ export type CancelSubscriptionMutationFn = ApolloReactCommon.MutationFunction<Ca
  *   },
  * });
  */
-export function useCancelSubscriptionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>) {
-        return ApolloReactHooks.useMutation<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>(CancelSubscriptionDocument, baseOptions);
+export function useCancelSubscriptionMutation(baseOptions?: Apollo.MutationHookOptions<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>) {
+        return Apollo.useMutation<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>(CancelSubscriptionDocument, baseOptions);
       }
 export type CancelSubscriptionMutationHookResult = ReturnType<typeof useCancelSubscriptionMutation>;
-export type CancelSubscriptionMutationResult = ApolloReactCommon.MutationResult<CancelSubscriptionMutation>;
-export type CancelSubscriptionMutationOptions = ApolloReactCommon.BaseMutationOptions<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>;
+export type CancelSubscriptionMutationResult = Apollo.MutationResult<CancelSubscriptionMutation>;
+export type CancelSubscriptionMutationOptions = Apollo.BaseMutationOptions<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>;
 export const ChangePasswordDocument = gql`
     mutation changePassword {
   changePassword {
@@ -1306,7 +1394,7 @@ export const ChangePasswordDocument = gql`
   }
 }
     `;
-export type ChangePasswordMutationFn = ApolloReactCommon.MutationFunction<ChangePasswordMutation, ChangePasswordMutationVariables>;
+export type ChangePasswordMutationFn = Apollo.MutationFunction<ChangePasswordMutation, ChangePasswordMutationVariables>;
 
 /**
  * __useChangePasswordMutation__
@@ -1324,12 +1412,12 @@ export type ChangePasswordMutationFn = ApolloReactCommon.MutationFunction<Change
  *   },
  * });
  */
-export function useChangePasswordMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ChangePasswordMutation, ChangePasswordMutationVariables>) {
-        return ApolloReactHooks.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument, baseOptions);
+export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptions<ChangePasswordMutation, ChangePasswordMutationVariables>) {
+        return Apollo.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument, baseOptions);
       }
 export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
-export type ChangePasswordMutationResult = ApolloReactCommon.MutationResult<ChangePasswordMutation>;
-export type ChangePasswordMutationOptions = ApolloReactCommon.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
+export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
+export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
 export const CreateUserDocument = gql`
     mutation createUser($firstName: String!, $lastName: String!, $email: String!, $password: String!, $confirmPassword: String!) {
   createUser(firstName: $firstName, lastName: $lastName, email: $email, password: $password, confirmPassword: $confirmPassword) {
@@ -1344,7 +1432,7 @@ export const CreateUserDocument = gql`
   }
 }
     `;
-export type CreateUserMutationFn = ApolloReactCommon.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
+export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
 
 /**
  * __useCreateUserMutation__
@@ -1367,12 +1455,12 @@ export type CreateUserMutationFn = ApolloReactCommon.MutationFunction<CreateUser
  *   },
  * });
  */
-export function useCreateUserMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>) {
-        return ApolloReactHooks.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, baseOptions);
+export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<CreateUserMutation, CreateUserMutationVariables>) {
+        return Apollo.useMutation<CreateUserMutation, CreateUserMutationVariables>(CreateUserDocument, baseOptions);
       }
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
-export type CreateUserMutationResult = ApolloReactCommon.MutationResult<CreateUserMutation>;
-export type CreateUserMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
+export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
 export const CurrentSubscriptionDocument = gql`
     query currentSubscription {
   subscription {
@@ -1402,15 +1490,15 @@ export const CurrentSubscriptionDocument = gql`
  *   },
  * });
  */
-export function useCurrentSubscriptionQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CurrentSubscriptionQuery, CurrentSubscriptionQueryVariables>) {
-        return ApolloReactHooks.useQuery<CurrentSubscriptionQuery, CurrentSubscriptionQueryVariables>(CurrentSubscriptionDocument, baseOptions);
+export function useCurrentSubscriptionQuery(baseOptions?: Apollo.QueryHookOptions<CurrentSubscriptionQuery, CurrentSubscriptionQueryVariables>) {
+        return Apollo.useQuery<CurrentSubscriptionQuery, CurrentSubscriptionQueryVariables>(CurrentSubscriptionDocument, baseOptions);
       }
-export function useCurrentSubscriptionLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CurrentSubscriptionQuery, CurrentSubscriptionQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<CurrentSubscriptionQuery, CurrentSubscriptionQueryVariables>(CurrentSubscriptionDocument, baseOptions);
+export function useCurrentSubscriptionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CurrentSubscriptionQuery, CurrentSubscriptionQueryVariables>) {
+          return Apollo.useLazyQuery<CurrentSubscriptionQuery, CurrentSubscriptionQueryVariables>(CurrentSubscriptionDocument, baseOptions);
         }
 export type CurrentSubscriptionQueryHookResult = ReturnType<typeof useCurrentSubscriptionQuery>;
 export type CurrentSubscriptionLazyQueryHookResult = ReturnType<typeof useCurrentSubscriptionLazyQuery>;
-export type CurrentSubscriptionQueryResult = ApolloReactCommon.QueryResult<CurrentSubscriptionQuery, CurrentSubscriptionQueryVariables>;
+export type CurrentSubscriptionQueryResult = Apollo.QueryResult<CurrentSubscriptionQuery, CurrentSubscriptionQueryVariables>;
 export const FindKeywordDocument = gql`
     query findKeyword($title: String, $skip: Int, $limit: Int) {
   keywordMany(filter: {textContains: $title}, limit: $limit, skip: $skip, sort: name_ASC) {
@@ -1438,15 +1526,15 @@ export const FindKeywordDocument = gql`
  *   },
  * });
  */
-export function useFindKeywordQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FindKeywordQuery, FindKeywordQueryVariables>) {
-        return ApolloReactHooks.useQuery<FindKeywordQuery, FindKeywordQueryVariables>(FindKeywordDocument, baseOptions);
+export function useFindKeywordQuery(baseOptions?: Apollo.QueryHookOptions<FindKeywordQuery, FindKeywordQueryVariables>) {
+        return Apollo.useQuery<FindKeywordQuery, FindKeywordQueryVariables>(FindKeywordDocument, baseOptions);
       }
-export function useFindKeywordLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FindKeywordQuery, FindKeywordQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<FindKeywordQuery, FindKeywordQueryVariables>(FindKeywordDocument, baseOptions);
+export function useFindKeywordLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindKeywordQuery, FindKeywordQueryVariables>) {
+          return Apollo.useLazyQuery<FindKeywordQuery, FindKeywordQueryVariables>(FindKeywordDocument, baseOptions);
         }
 export type FindKeywordQueryHookResult = ReturnType<typeof useFindKeywordQuery>;
 export type FindKeywordLazyQueryHookResult = ReturnType<typeof useFindKeywordLazyQuery>;
-export type FindKeywordQueryResult = ApolloReactCommon.QueryResult<FindKeywordQuery, FindKeywordQueryVariables>;
+export type FindKeywordQueryResult = Apollo.QueryResult<FindKeywordQuery, FindKeywordQueryVariables>;
 export const FindMetreDocument = gql`
     query findMetre($metre: String, $skip: Int, $limit: Int) {
   metreMany(filter: {textContains: $metre}, limit: $limit, skip: $skip, sort: metre_ASC) {
@@ -1474,15 +1562,15 @@ export const FindMetreDocument = gql`
  *   },
  * });
  */
-export function useFindMetreQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FindMetreQuery, FindMetreQueryVariables>) {
-        return ApolloReactHooks.useQuery<FindMetreQuery, FindMetreQueryVariables>(FindMetreDocument, baseOptions);
+export function useFindMetreQuery(baseOptions?: Apollo.QueryHookOptions<FindMetreQuery, FindMetreQueryVariables>) {
+        return Apollo.useQuery<FindMetreQuery, FindMetreQueryVariables>(FindMetreDocument, baseOptions);
       }
-export function useFindMetreLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FindMetreQuery, FindMetreQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<FindMetreQuery, FindMetreQueryVariables>(FindMetreDocument, baseOptions);
+export function useFindMetreLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindMetreQuery, FindMetreQueryVariables>) {
+          return Apollo.useLazyQuery<FindMetreQuery, FindMetreQueryVariables>(FindMetreDocument, baseOptions);
         }
 export type FindMetreQueryHookResult = ReturnType<typeof useFindMetreQuery>;
 export type FindMetreLazyQueryHookResult = ReturnType<typeof useFindMetreLazyQuery>;
-export type FindMetreQueryResult = ApolloReactCommon.QueryResult<FindMetreQuery, FindMetreQueryVariables>;
+export type FindMetreQueryResult = Apollo.QueryResult<FindMetreQuery, FindMetreQueryVariables>;
 export const FindOccasionDocument = gql`
     query findOccasion {
   occasionManyGroupById {
@@ -1510,17 +1598,23 @@ export const FindOccasionDocument = gql`
  *   },
  * });
  */
-export function useFindOccasionQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FindOccasionQuery, FindOccasionQueryVariables>) {
-        return ApolloReactHooks.useQuery<FindOccasionQuery, FindOccasionQueryVariables>(FindOccasionDocument, baseOptions);
+export function useFindOccasionQuery(baseOptions?: Apollo.QueryHookOptions<FindOccasionQuery, FindOccasionQueryVariables>) {
+        return Apollo.useQuery<FindOccasionQuery, FindOccasionQueryVariables>(FindOccasionDocument, baseOptions);
       }
-export function useFindOccasionLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FindOccasionQuery, FindOccasionQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<FindOccasionQuery, FindOccasionQueryVariables>(FindOccasionDocument, baseOptions);
+export function useFindOccasionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOccasionQuery, FindOccasionQueryVariables>) {
+          return Apollo.useLazyQuery<FindOccasionQuery, FindOccasionQueryVariables>(FindOccasionDocument, baseOptions);
         }
 export type FindOccasionQueryHookResult = ReturnType<typeof useFindOccasionQuery>;
 export type FindOccasionLazyQueryHookResult = ReturnType<typeof useFindOccasionLazyQuery>;
-export type FindOccasionQueryResult = ApolloReactCommon.QueryResult<FindOccasionQuery, FindOccasionQueryVariables>;
+export type FindOccasionQueryResult = Apollo.QueryResult<FindOccasionQuery, FindOccasionQueryVariables>;
 export const FindOneAuthorDocument = gql`
     query findOneAuthor($id: ID!) {
+  main {
+    _id
+    menuItems {
+      ...menuItem
+    }
+  }
   authorById(id: $id) {
     _id
     _type
@@ -1539,7 +1633,7 @@ export const FindOneAuthorDocument = gql`
     }
   }
 }
-    `;
+    ${MenuItemFragmentDoc}`;
 
 /**
  * __useFindOneAuthorQuery__
@@ -1557,17 +1651,23 @@ export const FindOneAuthorDocument = gql`
  *   },
  * });
  */
-export function useFindOneAuthorQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FindOneAuthorQuery, FindOneAuthorQueryVariables>) {
-        return ApolloReactHooks.useQuery<FindOneAuthorQuery, FindOneAuthorQueryVariables>(FindOneAuthorDocument, baseOptions);
+export function useFindOneAuthorQuery(baseOptions?: Apollo.QueryHookOptions<FindOneAuthorQuery, FindOneAuthorQueryVariables>) {
+        return Apollo.useQuery<FindOneAuthorQuery, FindOneAuthorQueryVariables>(FindOneAuthorDocument, baseOptions);
       }
-export function useFindOneAuthorLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FindOneAuthorQuery, FindOneAuthorQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<FindOneAuthorQuery, FindOneAuthorQueryVariables>(FindOneAuthorDocument, baseOptions);
+export function useFindOneAuthorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOneAuthorQuery, FindOneAuthorQueryVariables>) {
+          return Apollo.useLazyQuery<FindOneAuthorQuery, FindOneAuthorQueryVariables>(FindOneAuthorDocument, baseOptions);
         }
 export type FindOneAuthorQueryHookResult = ReturnType<typeof useFindOneAuthorQuery>;
 export type FindOneAuthorLazyQueryHookResult = ReturnType<typeof useFindOneAuthorLazyQuery>;
-export type FindOneAuthorQueryResult = ApolloReactCommon.QueryResult<FindOneAuthorQuery, FindOneAuthorQueryVariables>;
+export type FindOneAuthorQueryResult = Apollo.QueryResult<FindOneAuthorQuery, FindOneAuthorQueryVariables>;
 export const FindOneHymnDocument = gql`
     query findOneHymn($id: ID!) {
+  main {
+    _id
+    menuItems {
+      ...menuItem
+    }
+  }
   hymnById(id: $id) {
     _id
     title
@@ -1627,7 +1727,7 @@ export const FindOneHymnDocument = gql`
     }
   }
 }
-    `;
+    ${MenuItemFragmentDoc}`;
 
 /**
  * __useFindOneHymnQuery__
@@ -1645,17 +1745,23 @@ export const FindOneHymnDocument = gql`
  *   },
  * });
  */
-export function useFindOneHymnQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FindOneHymnQuery, FindOneHymnQueryVariables>) {
-        return ApolloReactHooks.useQuery<FindOneHymnQuery, FindOneHymnQueryVariables>(FindOneHymnDocument, baseOptions);
+export function useFindOneHymnQuery(baseOptions?: Apollo.QueryHookOptions<FindOneHymnQuery, FindOneHymnQueryVariables>) {
+        return Apollo.useQuery<FindOneHymnQuery, FindOneHymnQueryVariables>(FindOneHymnDocument, baseOptions);
       }
-export function useFindOneHymnLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FindOneHymnQuery, FindOneHymnQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<FindOneHymnQuery, FindOneHymnQueryVariables>(FindOneHymnDocument, baseOptions);
+export function useFindOneHymnLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOneHymnQuery, FindOneHymnQueryVariables>) {
+          return Apollo.useLazyQuery<FindOneHymnQuery, FindOneHymnQueryVariables>(FindOneHymnDocument, baseOptions);
         }
 export type FindOneHymnQueryHookResult = ReturnType<typeof useFindOneHymnQuery>;
 export type FindOneHymnLazyQueryHookResult = ReturnType<typeof useFindOneHymnLazyQuery>;
-export type FindOneHymnQueryResult = ApolloReactCommon.QueryResult<FindOneHymnQuery, FindOneHymnQueryVariables>;
+export type FindOneHymnQueryResult = Apollo.QueryResult<FindOneHymnQuery, FindOneHymnQueryVariables>;
 export const FindOneKeywordDocument = gql`
     query findOneKeyword($id: ID!) {
+  main {
+    _id
+    menuItems {
+      ...menuItem
+    }
+  }
   keywordById(id: $id) {
     name
     hymns {
@@ -1676,7 +1782,7 @@ export const FindOneKeywordDocument = gql`
     }
   }
 }
-    `;
+    ${MenuItemFragmentDoc}`;
 
 /**
  * __useFindOneKeywordQuery__
@@ -1694,17 +1800,23 @@ export const FindOneKeywordDocument = gql`
  *   },
  * });
  */
-export function useFindOneKeywordQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FindOneKeywordQuery, FindOneKeywordQueryVariables>) {
-        return ApolloReactHooks.useQuery<FindOneKeywordQuery, FindOneKeywordQueryVariables>(FindOneKeywordDocument, baseOptions);
+export function useFindOneKeywordQuery(baseOptions?: Apollo.QueryHookOptions<FindOneKeywordQuery, FindOneKeywordQueryVariables>) {
+        return Apollo.useQuery<FindOneKeywordQuery, FindOneKeywordQueryVariables>(FindOneKeywordDocument, baseOptions);
       }
-export function useFindOneKeywordLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FindOneKeywordQuery, FindOneKeywordQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<FindOneKeywordQuery, FindOneKeywordQueryVariables>(FindOneKeywordDocument, baseOptions);
+export function useFindOneKeywordLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOneKeywordQuery, FindOneKeywordQueryVariables>) {
+          return Apollo.useLazyQuery<FindOneKeywordQuery, FindOneKeywordQueryVariables>(FindOneKeywordDocument, baseOptions);
         }
 export type FindOneKeywordQueryHookResult = ReturnType<typeof useFindOneKeywordQuery>;
 export type FindOneKeywordLazyQueryHookResult = ReturnType<typeof useFindOneKeywordLazyQuery>;
-export type FindOneKeywordQueryResult = ApolloReactCommon.QueryResult<FindOneKeywordQuery, FindOneKeywordQueryVariables>;
+export type FindOneKeywordQueryResult = Apollo.QueryResult<FindOneKeywordQuery, FindOneKeywordQueryVariables>;
 export const FindOneLiturgyDocument = gql`
     query findOneLiturgy($id: ID!) {
+  main {
+    _id
+    menuItems {
+      ...menuItem
+    }
+  }
   liturgyById(id: $id) {
     _id
     title
@@ -1726,7 +1838,7 @@ export const FindOneLiturgyDocument = gql`
     }
   }
 }
-    `;
+    ${MenuItemFragmentDoc}`;
 
 /**
  * __useFindOneLiturgyQuery__
@@ -1744,17 +1856,23 @@ export const FindOneLiturgyDocument = gql`
  *   },
  * });
  */
-export function useFindOneLiturgyQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FindOneLiturgyQuery, FindOneLiturgyQueryVariables>) {
-        return ApolloReactHooks.useQuery<FindOneLiturgyQuery, FindOneLiturgyQueryVariables>(FindOneLiturgyDocument, baseOptions);
+export function useFindOneLiturgyQuery(baseOptions?: Apollo.QueryHookOptions<FindOneLiturgyQuery, FindOneLiturgyQueryVariables>) {
+        return Apollo.useQuery<FindOneLiturgyQuery, FindOneLiturgyQueryVariables>(FindOneLiturgyDocument, baseOptions);
       }
-export function useFindOneLiturgyLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FindOneLiturgyQuery, FindOneLiturgyQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<FindOneLiturgyQuery, FindOneLiturgyQueryVariables>(FindOneLiturgyDocument, baseOptions);
+export function useFindOneLiturgyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOneLiturgyQuery, FindOneLiturgyQueryVariables>) {
+          return Apollo.useLazyQuery<FindOneLiturgyQuery, FindOneLiturgyQueryVariables>(FindOneLiturgyDocument, baseOptions);
         }
 export type FindOneLiturgyQueryHookResult = ReturnType<typeof useFindOneLiturgyQuery>;
 export type FindOneLiturgyLazyQueryHookResult = ReturnType<typeof useFindOneLiturgyLazyQuery>;
-export type FindOneLiturgyQueryResult = ApolloReactCommon.QueryResult<FindOneLiturgyQuery, FindOneLiturgyQueryVariables>;
+export type FindOneLiturgyQueryResult = Apollo.QueryResult<FindOneLiturgyQuery, FindOneLiturgyQueryVariables>;
 export const FindOnePrayerDocument = gql`
     query findOnePrayer($id: ID!) {
+  main {
+    _id
+    menuItems {
+      ...menuItem
+    }
+  }
   prayerById(id: $id) {
     _id
     author {
@@ -1770,7 +1888,7 @@ export const FindOnePrayerDocument = gql`
     }
   }
 }
-    `;
+    ${MenuItemFragmentDoc}`;
 
 /**
  * __useFindOnePrayerQuery__
@@ -1788,24 +1906,30 @@ export const FindOnePrayerDocument = gql`
  *   },
  * });
  */
-export function useFindOnePrayerQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FindOnePrayerQuery, FindOnePrayerQueryVariables>) {
-        return ApolloReactHooks.useQuery<FindOnePrayerQuery, FindOnePrayerQueryVariables>(FindOnePrayerDocument, baseOptions);
+export function useFindOnePrayerQuery(baseOptions?: Apollo.QueryHookOptions<FindOnePrayerQuery, FindOnePrayerQueryVariables>) {
+        return Apollo.useQuery<FindOnePrayerQuery, FindOnePrayerQueryVariables>(FindOnePrayerDocument, baseOptions);
       }
-export function useFindOnePrayerLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FindOnePrayerQuery, FindOnePrayerQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<FindOnePrayerQuery, FindOnePrayerQueryVariables>(FindOnePrayerDocument, baseOptions);
+export function useFindOnePrayerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOnePrayerQuery, FindOnePrayerQueryVariables>) {
+          return Apollo.useLazyQuery<FindOnePrayerQuery, FindOnePrayerQueryVariables>(FindOnePrayerDocument, baseOptions);
         }
 export type FindOnePrayerQueryHookResult = ReturnType<typeof useFindOnePrayerQuery>;
 export type FindOnePrayerLazyQueryHookResult = ReturnType<typeof useFindOnePrayerLazyQuery>;
-export type FindOnePrayerQueryResult = ApolloReactCommon.QueryResult<FindOnePrayerQuery, FindOnePrayerQueryVariables>;
+export type FindOnePrayerQueryResult = Apollo.QueryResult<FindOnePrayerQuery, FindOnePrayerQueryVariables>;
 export const FindOneScriptureDocument = gql`
     query findOneScripture($id: ID!) {
+  main {
+    _id
+    menuItems {
+      ...menuItem
+    }
+  }
   scriptureById(id: $id) {
     _id
     title
     content
   }
 }
-    `;
+    ${MenuItemFragmentDoc}`;
 
 /**
  * __useFindOneScriptureQuery__
@@ -1823,15 +1947,15 @@ export const FindOneScriptureDocument = gql`
  *   },
  * });
  */
-export function useFindOneScriptureQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FindOneScriptureQuery, FindOneScriptureQueryVariables>) {
-        return ApolloReactHooks.useQuery<FindOneScriptureQuery, FindOneScriptureQueryVariables>(FindOneScriptureDocument, baseOptions);
+export function useFindOneScriptureQuery(baseOptions?: Apollo.QueryHookOptions<FindOneScriptureQuery, FindOneScriptureQueryVariables>) {
+        return Apollo.useQuery<FindOneScriptureQuery, FindOneScriptureQueryVariables>(FindOneScriptureDocument, baseOptions);
       }
-export function useFindOneScriptureLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FindOneScriptureQuery, FindOneScriptureQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<FindOneScriptureQuery, FindOneScriptureQueryVariables>(FindOneScriptureDocument, baseOptions);
+export function useFindOneScriptureLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOneScriptureQuery, FindOneScriptureQueryVariables>) {
+          return Apollo.useLazyQuery<FindOneScriptureQuery, FindOneScriptureQueryVariables>(FindOneScriptureDocument, baseOptions);
         }
 export type FindOneScriptureQueryHookResult = ReturnType<typeof useFindOneScriptureQuery>;
 export type FindOneScriptureLazyQueryHookResult = ReturnType<typeof useFindOneScriptureLazyQuery>;
-export type FindOneScriptureQueryResult = ApolloReactCommon.QueryResult<FindOneScriptureQuery, FindOneScriptureQueryVariables>;
+export type FindOneScriptureQueryResult = Apollo.QueryResult<FindOneScriptureQuery, FindOneScriptureQueryVariables>;
 export const FindPrayerContentsDocument = gql`
     query findPrayerContents($page: Int!) {
   prayerPagination(page: $page, perPage: 20) {
@@ -1865,15 +1989,15 @@ export const FindPrayerContentsDocument = gql`
  *   },
  * });
  */
-export function useFindPrayerContentsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FindPrayerContentsQuery, FindPrayerContentsQueryVariables>) {
-        return ApolloReactHooks.useQuery<FindPrayerContentsQuery, FindPrayerContentsQueryVariables>(FindPrayerContentsDocument, baseOptions);
+export function useFindPrayerContentsQuery(baseOptions?: Apollo.QueryHookOptions<FindPrayerContentsQuery, FindPrayerContentsQueryVariables>) {
+        return Apollo.useQuery<FindPrayerContentsQuery, FindPrayerContentsQueryVariables>(FindPrayerContentsDocument, baseOptions);
       }
-export function useFindPrayerContentsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FindPrayerContentsQuery, FindPrayerContentsQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<FindPrayerContentsQuery, FindPrayerContentsQueryVariables>(FindPrayerContentsDocument, baseOptions);
+export function useFindPrayerContentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindPrayerContentsQuery, FindPrayerContentsQueryVariables>) {
+          return Apollo.useLazyQuery<FindPrayerContentsQuery, FindPrayerContentsQueryVariables>(FindPrayerContentsDocument, baseOptions);
         }
 export type FindPrayerContentsQueryHookResult = ReturnType<typeof useFindPrayerContentsQuery>;
 export type FindPrayerContentsLazyQueryHookResult = ReturnType<typeof useFindPrayerContentsLazyQuery>;
-export type FindPrayerContentsQueryResult = ApolloReactCommon.QueryResult<FindPrayerContentsQuery, FindPrayerContentsQueryVariables>;
+export type FindPrayerContentsQueryResult = Apollo.QueryResult<FindPrayerContentsQuery, FindPrayerContentsQueryVariables>;
 export const FindTuneDocument = gql`
     query findTune($title: String, $skip: Int, $limit: Int) {
   tuneMany(filter: {textContains: $title}, limit: $limit, skip: $skip, sort: title_ASC) {
@@ -1901,24 +2025,23 @@ export const FindTuneDocument = gql`
  *   },
  * });
  */
-export function useFindTuneQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<FindTuneQuery, FindTuneQueryVariables>) {
-        return ApolloReactHooks.useQuery<FindTuneQuery, FindTuneQueryVariables>(FindTuneDocument, baseOptions);
+export function useFindTuneQuery(baseOptions?: Apollo.QueryHookOptions<FindTuneQuery, FindTuneQueryVariables>) {
+        return Apollo.useQuery<FindTuneQuery, FindTuneQueryVariables>(FindTuneDocument, baseOptions);
       }
-export function useFindTuneLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<FindTuneQuery, FindTuneQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<FindTuneQuery, FindTuneQueryVariables>(FindTuneDocument, baseOptions);
+export function useFindTuneLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindTuneQuery, FindTuneQueryVariables>) {
+          return Apollo.useLazyQuery<FindTuneQuery, FindTuneQueryVariables>(FindTuneDocument, baseOptions);
         }
 export type FindTuneQueryHookResult = ReturnType<typeof useFindTuneQuery>;
 export type FindTuneLazyQueryHookResult = ReturnType<typeof useFindTuneLazyQuery>;
-export type FindTuneQueryResult = ApolloReactCommon.QueryResult<FindTuneQuery, FindTuneQueryVariables>;
+export type FindTuneQueryResult = Apollo.QueryResult<FindTuneQuery, FindTuneQueryVariables>;
 export const ChangeFreeAccountDocument = gql`
     mutation changeFreeAccount($hasFreeAccount: Boolean!) {
   changeFreeAccount(hasFreeAccount: $hasFreeAccount) {
-    __typename
     hasFreeAccount
   }
 }
     `;
-export type ChangeFreeAccountMutationFn = ApolloReactCommon.MutationFunction<ChangeFreeAccountMutation, ChangeFreeAccountMutationVariables>;
+export type ChangeFreeAccountMutationFn = Apollo.MutationFunction<ChangeFreeAccountMutation, ChangeFreeAccountMutationVariables>;
 
 /**
  * __useChangeFreeAccountMutation__
@@ -1937,44 +2060,26 @@ export type ChangeFreeAccountMutationFn = ApolloReactCommon.MutationFunction<Cha
  *   },
  * });
  */
-export function useChangeFreeAccountMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ChangeFreeAccountMutation, ChangeFreeAccountMutationVariables>) {
-        return ApolloReactHooks.useMutation<ChangeFreeAccountMutation, ChangeFreeAccountMutationVariables>(ChangeFreeAccountDocument, baseOptions);
+export function useChangeFreeAccountMutation(baseOptions?: Apollo.MutationHookOptions<ChangeFreeAccountMutation, ChangeFreeAccountMutationVariables>) {
+        return Apollo.useMutation<ChangeFreeAccountMutation, ChangeFreeAccountMutationVariables>(ChangeFreeAccountDocument, baseOptions);
       }
 export type ChangeFreeAccountMutationHookResult = ReturnType<typeof useChangeFreeAccountMutation>;
-export type ChangeFreeAccountMutationResult = ApolloReactCommon.MutationResult<ChangeFreeAccountMutation>;
-export type ChangeFreeAccountMutationOptions = ApolloReactCommon.BaseMutationOptions<ChangeFreeAccountMutation, ChangeFreeAccountMutationVariables>;
+export type ChangeFreeAccountMutationResult = Apollo.MutationResult<ChangeFreeAccountMutation>;
+export type ChangeFreeAccountMutationOptions = Apollo.BaseMutationOptions<ChangeFreeAccountMutation, ChangeFreeAccountMutationVariables>;
 export const HomeDocument = gql`
     query Home {
   main {
+    _id
     heading
     subheading
     blurb
     searchblurb
     menuItems {
-      _key
-      text
-      childpages {
-        _id
-        alternateText
-        childPage {
-          ... on PageContent {
-            _id
-            _type
-            slug
-            title
-          }
-          ... on Asset {
-            _id
-            _type
-            name
-            url
-          }
-        }
-      }
+      ...menuItem
     }
   }
 }
-    `;
+    ${MenuItemFragmentDoc}`;
 
 /**
  * __useHomeQuery__
@@ -1991,15 +2096,15 @@ export const HomeDocument = gql`
  *   },
  * });
  */
-export function useHomeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<HomeQuery, HomeQueryVariables>) {
-        return ApolloReactHooks.useQuery<HomeQuery, HomeQueryVariables>(HomeDocument, baseOptions);
+export function useHomeQuery(baseOptions?: Apollo.QueryHookOptions<HomeQuery, HomeQueryVariables>) {
+        return Apollo.useQuery<HomeQuery, HomeQueryVariables>(HomeDocument, baseOptions);
       }
-export function useHomeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HomeQuery, HomeQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<HomeQuery, HomeQueryVariables>(HomeDocument, baseOptions);
+export function useHomeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HomeQuery, HomeQueryVariables>) {
+          return Apollo.useLazyQuery<HomeQuery, HomeQueryVariables>(HomeDocument, baseOptions);
         }
 export type HomeQueryHookResult = ReturnType<typeof useHomeQuery>;
 export type HomeLazyQueryHookResult = ReturnType<typeof useHomeLazyQuery>;
-export type HomeQueryResult = ApolloReactCommon.QueryResult<HomeQuery, HomeQueryVariables>;
+export type HomeQueryResult = Apollo.QueryResult<HomeQuery, HomeQueryVariables>;
 export const LiturgySearchDocument = gql`
     query liturgySearch($title: String, $occasion: String, $keyword: String) {
   liturgySearch(filter: {textContains: $title, occasion: $occasion, keyword: $keyword}) {
@@ -2033,15 +2138,15 @@ export const LiturgySearchDocument = gql`
  *   },
  * });
  */
-export function useLiturgySearchQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<LiturgySearchQuery, LiturgySearchQueryVariables>) {
-        return ApolloReactHooks.useQuery<LiturgySearchQuery, LiturgySearchQueryVariables>(LiturgySearchDocument, baseOptions);
+export function useLiturgySearchQuery(baseOptions?: Apollo.QueryHookOptions<LiturgySearchQuery, LiturgySearchQueryVariables>) {
+        return Apollo.useQuery<LiturgySearchQuery, LiturgySearchQueryVariables>(LiturgySearchDocument, baseOptions);
       }
-export function useLiturgySearchLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<LiturgySearchQuery, LiturgySearchQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<LiturgySearchQuery, LiturgySearchQueryVariables>(LiturgySearchDocument, baseOptions);
+export function useLiturgySearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<LiturgySearchQuery, LiturgySearchQueryVariables>) {
+          return Apollo.useLazyQuery<LiturgySearchQuery, LiturgySearchQueryVariables>(LiturgySearchDocument, baseOptions);
         }
 export type LiturgySearchQueryHookResult = ReturnType<typeof useLiturgySearchQuery>;
 export type LiturgySearchLazyQueryHookResult = ReturnType<typeof useLiturgySearchLazyQuery>;
-export type LiturgySearchQueryResult = ApolloReactCommon.QueryResult<LiturgySearchQuery, LiturgySearchQueryVariables>;
+export type LiturgySearchQueryResult = Apollo.QueryResult<LiturgySearchQuery, LiturgySearchQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {
@@ -2066,10 +2171,10 @@ export const MeDocument = gql`
         title
         hymnNumber
       }
-      ... on Prayer {
+      ... on Liturgy {
         title
       }
-      ... on Liturgy {
+      ... on Prayer {
         title
       }
       ... on Scripture {
@@ -2095,17 +2200,23 @@ export const MeDocument = gql`
  *   },
  * });
  */
-export function useMeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<MeQuery, MeQueryVariables>) {
-        return ApolloReactHooks.useQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
+export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
+        return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
       }
-export function useMeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
+export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery, MeQueryVariables>) {
+          return Apollo.useLazyQuery<MeQuery, MeQueryVariables>(MeDocument, baseOptions);
         }
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
-export type MeQueryResult = ApolloReactCommon.QueryResult<MeQuery, MeQueryVariables>;
+export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
 export const PageContentDocument = gql`
     query pageContent($slug: String) {
+  main {
+    _id
+    menuItems {
+      ...menuItem
+    }
+  }
   pageContentOne(filter: {slug: $slug}) {
     _id
     title
@@ -2115,7 +2226,7 @@ export const PageContentDocument = gql`
     subtitle
   }
 }
-    `;
+    ${MenuItemFragmentDoc}`;
 
 /**
  * __usePageContentQuery__
@@ -2133,15 +2244,15 @@ export const PageContentDocument = gql`
  *   },
  * });
  */
-export function usePageContentQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PageContentQuery, PageContentQueryVariables>) {
-        return ApolloReactHooks.useQuery<PageContentQuery, PageContentQueryVariables>(PageContentDocument, baseOptions);
+export function usePageContentQuery(baseOptions?: Apollo.QueryHookOptions<PageContentQuery, PageContentQueryVariables>) {
+        return Apollo.useQuery<PageContentQuery, PageContentQueryVariables>(PageContentDocument, baseOptions);
       }
-export function usePageContentLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PageContentQuery, PageContentQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<PageContentQuery, PageContentQueryVariables>(PageContentDocument, baseOptions);
+export function usePageContentLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PageContentQuery, PageContentQueryVariables>) {
+          return Apollo.useLazyQuery<PageContentQuery, PageContentQueryVariables>(PageContentDocument, baseOptions);
         }
 export type PageContentQueryHookResult = ReturnType<typeof usePageContentQuery>;
 export type PageContentLazyQueryHookResult = ReturnType<typeof usePageContentLazyQuery>;
-export type PageContentQueryResult = ApolloReactCommon.QueryResult<PageContentQuery, PageContentQueryVariables>;
+export type PageContentQueryResult = Apollo.QueryResult<PageContentQuery, PageContentQueryVariables>;
 export const PrayerSearchDocument = gql`
     query prayerSearch($title: String, $occasion: String, $keyword: String) {
   prayerSearch(filter: {textContains: $title, occasion: $occasion, keyword: $keyword}) {
@@ -2175,15 +2286,15 @@ export const PrayerSearchDocument = gql`
  *   },
  * });
  */
-export function usePrayerSearchQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<PrayerSearchQuery, PrayerSearchQueryVariables>) {
-        return ApolloReactHooks.useQuery<PrayerSearchQuery, PrayerSearchQueryVariables>(PrayerSearchDocument, baseOptions);
+export function usePrayerSearchQuery(baseOptions?: Apollo.QueryHookOptions<PrayerSearchQuery, PrayerSearchQueryVariables>) {
+        return Apollo.useQuery<PrayerSearchQuery, PrayerSearchQueryVariables>(PrayerSearchDocument, baseOptions);
       }
-export function usePrayerSearchLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PrayerSearchQuery, PrayerSearchQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<PrayerSearchQuery, PrayerSearchQueryVariables>(PrayerSearchDocument, baseOptions);
+export function usePrayerSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PrayerSearchQuery, PrayerSearchQueryVariables>) {
+          return Apollo.useLazyQuery<PrayerSearchQuery, PrayerSearchQueryVariables>(PrayerSearchDocument, baseOptions);
         }
 export type PrayerSearchQueryHookResult = ReturnType<typeof usePrayerSearchQuery>;
 export type PrayerSearchLazyQueryHookResult = ReturnType<typeof usePrayerSearchLazyQuery>;
-export type PrayerSearchQueryResult = ApolloReactCommon.QueryResult<PrayerSearchQuery, PrayerSearchQueryVariables>;
+export type PrayerSearchQueryResult = Apollo.QueryResult<PrayerSearchQuery, PrayerSearchQueryVariables>;
 export const RemoveShortListItemDocument = gql`
     mutation removeShortListItem($item: ID!) {
   removeShortListItem(item: $item) {
@@ -2207,7 +2318,7 @@ export const RemoveShortListItemDocument = gql`
   }
 }
     `;
-export type RemoveShortListItemMutationFn = ApolloReactCommon.MutationFunction<RemoveShortListItemMutation, RemoveShortListItemMutationVariables>;
+export type RemoveShortListItemMutationFn = Apollo.MutationFunction<RemoveShortListItemMutation, RemoveShortListItemMutationVariables>;
 
 /**
  * __useRemoveShortListItemMutation__
@@ -2226,12 +2337,12 @@ export type RemoveShortListItemMutationFn = ApolloReactCommon.MutationFunction<R
  *   },
  * });
  */
-export function useRemoveShortListItemMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<RemoveShortListItemMutation, RemoveShortListItemMutationVariables>) {
-        return ApolloReactHooks.useMutation<RemoveShortListItemMutation, RemoveShortListItemMutationVariables>(RemoveShortListItemDocument, baseOptions);
+export function useRemoveShortListItemMutation(baseOptions?: Apollo.MutationHookOptions<RemoveShortListItemMutation, RemoveShortListItemMutationVariables>) {
+        return Apollo.useMutation<RemoveShortListItemMutation, RemoveShortListItemMutationVariables>(RemoveShortListItemDocument, baseOptions);
       }
 export type RemoveShortListItemMutationHookResult = ReturnType<typeof useRemoveShortListItemMutation>;
-export type RemoveShortListItemMutationResult = ApolloReactCommon.MutationResult<RemoveShortListItemMutation>;
-export type RemoveShortListItemMutationOptions = ApolloReactCommon.BaseMutationOptions<RemoveShortListItemMutation, RemoveShortListItemMutationVariables>;
+export type RemoveShortListItemMutationResult = Apollo.MutationResult<RemoveShortListItemMutation>;
+export type RemoveShortListItemMutationOptions = Apollo.BaseMutationOptions<RemoveShortListItemMutation, RemoveShortListItemMutationVariables>;
 export const StripeCheckoutSessionDocument = gql`
     mutation stripeCheckoutSession {
   stripeCheckoutSession {
@@ -2239,7 +2350,7 @@ export const StripeCheckoutSessionDocument = gql`
   }
 }
     `;
-export type StripeCheckoutSessionMutationFn = ApolloReactCommon.MutationFunction<StripeCheckoutSessionMutation, StripeCheckoutSessionMutationVariables>;
+export type StripeCheckoutSessionMutationFn = Apollo.MutationFunction<StripeCheckoutSessionMutation, StripeCheckoutSessionMutationVariables>;
 
 /**
  * __useStripeCheckoutSessionMutation__
@@ -2257,12 +2368,12 @@ export type StripeCheckoutSessionMutationFn = ApolloReactCommon.MutationFunction
  *   },
  * });
  */
-export function useStripeCheckoutSessionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<StripeCheckoutSessionMutation, StripeCheckoutSessionMutationVariables>) {
-        return ApolloReactHooks.useMutation<StripeCheckoutSessionMutation, StripeCheckoutSessionMutationVariables>(StripeCheckoutSessionDocument, baseOptions);
+export function useStripeCheckoutSessionMutation(baseOptions?: Apollo.MutationHookOptions<StripeCheckoutSessionMutation, StripeCheckoutSessionMutationVariables>) {
+        return Apollo.useMutation<StripeCheckoutSessionMutation, StripeCheckoutSessionMutationVariables>(StripeCheckoutSessionDocument, baseOptions);
       }
 export type StripeCheckoutSessionMutationHookResult = ReturnType<typeof useStripeCheckoutSessionMutation>;
-export type StripeCheckoutSessionMutationResult = ApolloReactCommon.MutationResult<StripeCheckoutSessionMutation>;
-export type StripeCheckoutSessionMutationOptions = ApolloReactCommon.BaseMutationOptions<StripeCheckoutSessionMutation, StripeCheckoutSessionMutationVariables>;
+export type StripeCheckoutSessionMutationResult = Apollo.MutationResult<StripeCheckoutSessionMutation>;
+export type StripeCheckoutSessionMutationOptions = Apollo.BaseMutationOptions<StripeCheckoutSessionMutation, StripeCheckoutSessionMutationVariables>;
 export const TextSearchDocument = gql`
     query textSearch($search: String) {
   textSearch(filter: {search: $search}) {
@@ -2315,12 +2426,12 @@ export const TextSearchDocument = gql`
  *   },
  * });
  */
-export function useTextSearchQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TextSearchQuery, TextSearchQueryVariables>) {
-        return ApolloReactHooks.useQuery<TextSearchQuery, TextSearchQueryVariables>(TextSearchDocument, baseOptions);
+export function useTextSearchQuery(baseOptions?: Apollo.QueryHookOptions<TextSearchQuery, TextSearchQueryVariables>) {
+        return Apollo.useQuery<TextSearchQuery, TextSearchQueryVariables>(TextSearchDocument, baseOptions);
       }
-export function useTextSearchLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TextSearchQuery, TextSearchQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<TextSearchQuery, TextSearchQueryVariables>(TextSearchDocument, baseOptions);
+export function useTextSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TextSearchQuery, TextSearchQueryVariables>) {
+          return Apollo.useLazyQuery<TextSearchQuery, TextSearchQueryVariables>(TextSearchDocument, baseOptions);
         }
 export type TextSearchQueryHookResult = ReturnType<typeof useTextSearchQuery>;
 export type TextSearchLazyQueryHookResult = ReturnType<typeof useTextSearchLazyQuery>;
-export type TextSearchQueryResult = ApolloReactCommon.QueryResult<TextSearchQuery, TextSearchQueryVariables>;
+export type TextSearchQueryResult = Apollo.QueryResult<TextSearchQuery, TextSearchQueryVariables>;

@@ -1,12 +1,12 @@
 import React, {FC} from 'react';
 import PropTypes from 'prop-types';
+import Router from 'next/router';
 import {Box, Button, Styled} from 'theme-ui';
 import {string, object} from 'yup';
 import {Formik, Form} from 'formik';
 import {TextField} from '../form';
 
 import {useCreateUserMutation} from '../queries';
-import redirect from '../../../lib/redirect';
 import Loading from '../loading';
 import GoogleButton from './google-button';
 
@@ -38,13 +38,8 @@ type CreateAccountFormProps = {
 
 const CreateAccountForm: FC<CreateAccountFormProps> = ({redirectPath}) => {
   const [createAccount, {loading, error}] = useCreateUserMutation({
-    update(/* cache */) {
-      // Force a reload of all the current queries now that the user is
-      // logged in
-      // cache.reset().then(() => {
-      // redirect('/my-account');
-      // });
-      redirect('/my-account');
+    update() {
+      void Router.replace('/my-account');
     }
   });
 

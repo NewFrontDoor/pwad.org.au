@@ -8,7 +8,7 @@ import {TextField} from '../form';
 import {usePrayerSearchQuery, PrayerSearchQueryVariables} from '../queries';
 import Loading from '../loading';
 import ServerError from '../server-error';
-import SearchResult from './search-result';
+import SearchResult, {isSearchResult} from './search-result';
 import SearchOccasionInput from './search-occasion-input';
 import SearchKeywordInput from './search-keyword-input';
 import initialSelectValue from './initial-select-value';
@@ -34,17 +34,23 @@ const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
   if (data?.prayerSearch?.length > 0) {
     return (
       <>
-        {data.prayerSearch.map((result) => (
-          <SearchResult
-            {...result}
-            key={result._id}
-            prefetch={() =>
-              prefetchOnePrayer(client, {
-                id: result._id
-              })
-            }
-          />
-        ))}
+        {data.prayerSearch.map((result) => {
+          if (isSearchResult(result)) {
+            return (
+              <SearchResult
+                {...result}
+                key={result._id}
+                prefetch={() =>
+                  prefetchOnePrayer(client, {
+                    id: result._id
+                  })
+                }
+              />
+            );
+          }
+
+          return null;
+        })}
       </>
     );
   }

@@ -1,15 +1,14 @@
 import React from 'react';
-import {NextPage} from 'next';
+import PropTypes from 'prop-types';
+import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
 import dynamic from 'next/dynamic';
 import {Styled, Flex, Box} from 'theme-ui';
 
+import * as resourceQuery from '../../queries/resource';
+import {MenuItem} from '../../queries/_types';
 import PageLayout from '../components/page-layout';
 import Logo from '../components/logo';
-import redirect, {buildUrl} from '../../lib/redirect';
-import withApollo, {WithApolloPageContext} from '../../lib/with-apollo-client';
-
-import checkLoggedIn from '../check-logged-in';
-import {useMeQuery} from '../components/queries';
+import useUser from '../use-user';
 
 const ManageAccountForm = dynamic(
   async () => import('../components/account/manage-account-form'),
@@ -18,12 +17,17 @@ const ManageAccountForm = dynamic(
   }
 );
 
-const MyAccount: NextPage = () => {
-  const {data} = useMeQuery();
-  const {hasPaidAccount, hasFreeAccount, name} = data?.me ?? {};
+type MyAccountProps = InferGetServerSidePropsType<typeof getServerSideProps>;
+
+const MyAccount: NextPage<MyAccountProps> = ({menuItems}) => {
+  const {loggedInUser} = useUser({
+    redirectTo: '/api/login'
+  });
+
+  const {hasPaidAccount, hasFreeAccount, name} = loggedInUser?.user ?? {};
 
   return (
-    <PageLayout>
+    <PageLayout menuItems={menuItems}>
       <Flex marginBottom={3}>
         <Box sx={{width: '75px'}}>
           <Logo />
@@ -33,11 +37,11 @@ const MyAccount: NextPage = () => {
           <Styled.h2>My Account</Styled.h2>
         </Box>
       </Flex>
-      {data?.me &&
+      {loggedInUser?.user &&
         (hasPaidAccount || hasFreeAccount ? (
           <>
             <Styled.p variant="h1">Welcome back {name.first}!</Styled.p>
-            <ManageAccountForm {...data.me} />
+            <ManageAccountForm {...loggedInUser.user} />
           </>
         ) : (
           <>
@@ -47,26 +51,27 @@ const MyAccount: NextPage = () => {
             <Styled.p variant="h2">
               Which type of account would you like to create?
             </Styled.p>
-            <ManageAccountForm {...data.me} />
+            <ManageAccountForm {...loggedInUser.user} />
           </>
         ))}
     </PageLayout>
   );
 };
 
-MyAccount.getInitialProps = async (context: WithApolloPageContext) => {
-  const {loggedInUser} = await checkLoggedIn(context.apolloClient);
-
-  if (loggedInUser.user) {
-    return;
-  }
-
-  const currentURL = buildUrl(context.req);
-  const url = new URL('/api/login', currentURL);
-
-  url.searchParams.set('r', currentURL.href);
-
-  redirect(url.href, context);
+MyAccount.propTypes = {
+  menuItems: PropTypes.array
 };
 
-export default withApollo(MyAccount);
+export const getServerSideProps: GetServerSideProps<{
+  menuItems: MenuItem[];
+}> = async function () {
+  const menuItems = await resourceQuery.menuItems();
+
+  return {
+    props: {
+      menuItems
+    }
+  };
+};
+
+export default MyAccount;

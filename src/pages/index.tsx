@@ -1,25 +1,25 @@
 import React from 'react';
-import {NextPage} from 'next';
+import PropTypes from 'prop-types';
+import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
 import {Styled, Box, Grid} from 'theme-ui';
 
-import withApollo from '../../lib/with-apollo-client';
-import {useHomeQuery} from '../components/queries';
+import {initializeApollo} from '../../lib/apollo/client';
+import * as resourceQuery from '../../queries/resource';
+import {MenuItem} from '../../queries/_types';
+import {useHomeQuery, HomeDocument} from '../components/queries';
 import PageLayout from '../components/page-layout';
 import Featured from '../components/featured';
 import SearchControl from '../components/search-box/search-control';
 import BlockContent from '../components/block-content';
 import Logo from '../components/logo';
-import Loading from '../components/loading';
 
-const Index: NextPage = () => {
-  const {loading, data} = useHomeQuery();
+type IndexPageProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-  if (loading) {
-    return <Loading />;
-  }
+const Index: NextPage<IndexPageProps> = ({menuItems}) => {
+  const {data} = useHomeQuery();
 
   return (
-    <PageLayout>
+    <PageLayout menuItems={menuItems}>
       <Grid columns={['1fr 3fr', '1fr 5fr']}>
         <Box
           sx={{
@@ -48,4 +48,24 @@ const Index: NextPage = () => {
   );
 };
 
-export default withApollo(Index);
+Index.propTypes = {
+  menuItems: PropTypes.array
+};
+
+export const getServerSideProps: GetServerSideProps<{
+  menuItems: MenuItem[];
+}> = async function (context) {
+  const apolloClient = initializeApollo();
+
+  await apolloClient.query({query: HomeDocument, context});
+  const menuItems = await resourceQuery.menuItems();
+
+  return {
+    props: {
+      menuItems,
+      initialApolloState: apolloClient.cache.extract()
+    }
+  };
+};
+
+export default Index;

@@ -1,7 +1,14 @@
-import gql from 'graphql-tag';
+import {gql} from '@apollo/client';
+import menuItem from './fragments/menu-item';
 
 export default gql`
   query findOneKeyword($id: ID!) {
+    main {
+      _id
+      menuItems {
+        ...menuItem
+      }
+    }
     keywordById(id: $id) {
       name
       hymns {
@@ -22,4 +29,5 @@ export default gql`
       }
     }
   }
+  ${menuItem}
 `;

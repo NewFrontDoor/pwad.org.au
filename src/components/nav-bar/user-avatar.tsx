@@ -2,24 +2,25 @@ import React, {FC} from 'react';
 import {Avatar, useThemeUI} from 'theme-ui';
 import {User} from 'react-feather';
 
-import {useMeQuery} from '../queries';
-
-// HACK: mineral-ui to apply the background color
-User.displayName = 'UserIcon';
+import useUser from '../../use-user';
 
 const UserAvatar: FC = () => {
   const {theme} = useThemeUI();
-  const {data} = useMeQuery();
+  const {loggedInUser} = useUser();
 
-  if (data.me) {
-    const name = `${data.me.name.first} ${data.me.name.last}`;
+  if (loggedInUser?.user?.picture) {
+    const name = `${loggedInUser.user.name.first} ${loggedInUser.user.name.last}`;
 
-    return data.me.picture ? (
-      <Avatar src={data.me.picture} alt={name} background={theme.theme_color} />
-    ) : (
-      <User role="img" />
+    return (
+      <Avatar
+        src={loggedInUser.user.picture}
+        alt={name}
+        background={theme.theme_color}
+      />
     );
   }
+
+  return <User role="img" />;
 };
 
 export default UserAvatar;

@@ -1,3 +1,6 @@
+/* eslint camelcase: "warn" */
+
+require('dotenv').config();
 const {promisify} = require('util');
 let {pipeline} = require('stream');
 const {ManagementClient} = require('auth0');
@@ -194,31 +197,21 @@ function updateNowEnv() {
   return pipeline(src('.env'), parseEnv(), replaceSecret());
 }
 
-async function copyAppMetadata() {
-  const management = new ManagementClient({
-    domain: process.env.AUTH0_DOMAIN,
-    clientId: process.env.AUTH0_CLIENT_ID,
-    clientSecret: process.env.AUTH0_CLIENT_SECRET,
-    scope: 'read:users update:users update:users_app_metadata'
-  });
+const management = new ManagementClient({
+  domain: process.env.AUTH0_DOMAIN,
+  clientId: process.env.AUTH0_CLIENT_ID,
+  clientSecret: process.env.AUTH0_CLIENT_SECRET,
+  scope: 'read:users update:users update:users_app_metadata'
+});
 
-  const email = '';
-
-  const users = await management.getUsersByEmail(email);
-
-  const dbUser = users.find((user) => user.user_id.startsWith('auth0'));
-  const googleUser = users.find((user) =>
-    user.user_id.startsWith('google-oauth2')
+async function updateUser() {
+  await management.updateUser(
+    {id: 'auth0|ID'},
+    {
+      given_name: '',
+      family_name: ''
+    }
   );
-
-  console.log({dbUser, googleUser});
-
-  if (dbUser.app_metadata) {
-    await management.updateAppMetadata(
-      {id: googleUser.user_id},
-      dbUser.app_metadata
-    );
-  }
 }
 
 const prodDump = task(
@@ -252,6 +245,6 @@ exports.prodcopy = series(prodDump, devRestore);
 
 exports.images = series(cleanImages, images);
 
-exports.copyAppMetadata = copyAppMetadata;
+exports.updateUser = updateUser;
 exports.updateNowEnv = series(setupEnv, updateNowEnv);
 exports.setupEnv = series(setupEnv);
