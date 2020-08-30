@@ -11,6 +11,7 @@ import {Hymn, HymnPropTypes, MenuItem} from '../../../../queries/_types';
 
 import useUser from '../../../use-user';
 import {defineAbilitiesFor} from '../../../../lib/abilities';
+import Loading from '../../../components/loading';
 import BlockContent from '../../../components/block-content';
 import PageLayout from '../../../components/page-layout';
 import ShortListButton from '../../../components/shortlist-button';
@@ -35,14 +36,16 @@ const Song: NextPage<SongProps> = ({hymn, menuItems}) => {
   });
 
   useEffect(() => {
-    if (loggedInUser.user) {
-      const ability = defineAbilitiesFor(loggedInUser.user);
+    const ability = defineAbilitiesFor(loggedInUser.user);
 
-      if (ability.cannot('read', 'Hymn')) {
-        void Router.push('/my-account');
-      }
+    if (ability.cannot('read', 'Hymn')) {
+      void Router.push('/my-account');
     }
   }, [loggedInUser.user]);
+
+  if (!loggedInUser.user) {
+    return <Loading />
+  }
 
   const {
     author,

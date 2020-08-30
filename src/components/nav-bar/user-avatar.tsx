@@ -20,7 +20,11 @@ const UserAvatar: FC = () => {
     );
   }
 
-  return <User role="img" />;
+  if (loggedInUser?.user) {
+    return <User role="img" />;
+  }
+
+  return null;
 };
 
 export default UserAvatar;

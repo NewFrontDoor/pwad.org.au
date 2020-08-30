@@ -8,6 +8,7 @@ import * as resourceQuery from '../../queries/resource';
 import {MenuItem} from '../../queries/_types';
 import PageLayout from '../components/page-layout';
 import Logo from '../components/logo';
+import Loading from '../components/loading';
 import useUser from '../use-user';
 
 const ManageAccountForm = dynamic(
@@ -24,7 +25,11 @@ const MyAccount: NextPage<MyAccountProps> = ({menuItems}) => {
     redirectTo: '/api/login'
   });
 
-  const {hasPaidAccount, hasFreeAccount, name} = loggedInUser?.user ?? {};
+  if (!loggedInUser.user) {
+    return <Loading />
+  }
+
+  const {hasPaidAccount, hasFreeAccount, name} = loggedInUser.user;
 
   return (
     <PageLayout menuItems={menuItems}>

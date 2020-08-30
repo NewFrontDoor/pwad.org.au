@@ -12,10 +12,8 @@ const AbilityContext = createContext(ability);
 export const AbilityProvider: FC = ({children}) => {
   useMeQuery({
     onCompleted(data) {
-      if (data?.me) {
-        const {rules} = defineAbilitiesFor(data.me);
-        ability.update(rules);
-      }
+      const {rules} = defineAbilitiesFor(data.me);
+      ability.update(rules);
     }
   });
 

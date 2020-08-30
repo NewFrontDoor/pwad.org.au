@@ -10,6 +10,7 @@ import {MenuItem} from '../../../queries/_types';
 import {defineAbilitiesFor} from '../../../lib/abilities';
 
 import useUser from '../../use-user';
+import Loading from '../../components/loading';
 import PageLayout from '../../components/page-layout';
 import SongSearchControl from '../../components/search-box/song-search-control';
 
@@ -22,14 +23,16 @@ const Rejoice: NextPage<RejoiceProps> = ({menuItems}) => {
   });
 
   useEffect(() => {
-    if (loggedInUser.user) {
-      const ability = defineAbilitiesFor(loggedInUser.user);
+    const ability = defineAbilitiesFor(loggedInUser.user);
 
-      if (ability.cannot('read', 'Hymn')) {
-        void Router.push('/my-account');
-      }
+    if (ability.cannot('read', 'Hymn')) {
+      void Router.push('/my-account');
     }
   }, [loggedInUser.user]);
+
+  if (!loggedInUser.user) {
+    return <Loading />
+  }
 
   return (
     <PageLayout menuItems={menuItems}>
