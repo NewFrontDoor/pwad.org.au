@@ -10,6 +10,7 @@ import {MenuItem} from '../../queries/_types';
 import NavBar from './nav-bar/nav-bar';
 import Footer from './footer/footer';
 import BannerImage, {randomBanner} from './banner-image';
+import { GA_TRACKING_ID } from '../../lib/google-analytics'
 
 import GlobalStyles from './global-styles';
 
@@ -33,6 +34,22 @@ const PageLayout: FC<PageLayoutProps> = ({menuItems, children}) => {
           <meta
             name="Description"
             content="Public Worship and Aids to Devotion Committee Website - provided by the PWAD Committee to help congregations within the Presbyterian Church of Australia"
+          />
+          <script
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_TRACKING_ID}', {
+              page_path: window.location.pathname,
+            });
+          `,
+            }}
           />
         </Head>
         <GlobalStyles />
