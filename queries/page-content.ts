@@ -18,6 +18,7 @@ export async function getBySlug(slug: string): Promise<PageContent> {
                 ...,
                 _type == 'internalLink' => {
                   reference-> {
+                    'slug': slug.current,
                     _id,
                     _type
                   }
