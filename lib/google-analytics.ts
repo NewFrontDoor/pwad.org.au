@@ -1,10 +1,5 @@
 export const GA_TRACKING_ID = 'UA-179034248-1'
 
-declare global {
-  interface Window { gtag: any; }
-}
-
-
 // https://developers.google.com/analytics/devguides/collection/gtagjs/pages
 export const pageview = (url) => {
   window.gtag('config', GA_TRACKING_ID, {
