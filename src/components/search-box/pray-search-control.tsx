@@ -20,7 +20,8 @@ type AdvancedSearchProps = {
 
 const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
   const {loading, error, data, client} = usePrayerSearchQuery({
-    variables: search
+    variables: search,
+    fetchPolicy: 'cache-and-network'
   });
 
   if (loading) {
@@ -91,11 +92,25 @@ const SearchBox: FC = () => {
           pathname: router.pathname,
           query
         },
-        router.pathname
+        router.pathname,
+        {shallow: true}
       );
     },
     [router]
   );
+
+  const handleListAll = useCallback(() => {
+    void router.push(
+      {
+        pathname: router.pathname,
+        query: {
+          title: ''
+        }
+      },
+      router.pathname,
+      {shallow: true}
+    );
+  }, [router]);
 
   const showSearchResults = !isEmpty(router.query);
   let initialValues: SearchFields = {
@@ -114,7 +129,11 @@ const SearchBox: FC = () => {
 
   return (
     <>
-      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        onReset={handleListAll}
+      >
         <Form>
           <Flex>
             <Box grow={1} sx={{flexDirection: ['column', 'row'], width: '50%'}}>
@@ -132,8 +151,13 @@ const SearchBox: FC = () => {
                 <Field as={SearchKeywordInput} label="Keyword" name="keyword" />
               </Box>
               <Box marginBottom="1em">
-                <Button isFullWidth type="submit">
+                <Button type="submit" sx={{width: '100%'}}>
                   Search
+                </Button>
+              </Box>
+              <Box marginBottom="1em">
+                <Button type="reset" sx={{width: '100%'}}>
+                  List all
                 </Button>
               </Box>
             </Box>
