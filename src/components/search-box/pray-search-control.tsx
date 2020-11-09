@@ -21,7 +21,7 @@ type AdvancedSearchProps = {
 const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
   const {loading, error, data, client} = usePrayerSearchQuery({
     variables: search,
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'network-only'
   });
 
   if (loading) {

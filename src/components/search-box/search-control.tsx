@@ -14,7 +14,7 @@ import {prefetchSearchResult} from '../../prefetch';
 const TextSearch: FC<TextSearchQueryVariables> = (props) => {
   const {loading, error, data, client} = useTextSearchQuery({
     variables: props,
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'network-only'
   });
 
   if (loading) {
