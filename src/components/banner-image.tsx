@@ -25,13 +25,13 @@ const BannerImage: FC<BannerImageProps> = ({image}) => {
   const {theme} = useThemeUI();
   const sizes = ['medium', 'wide'].map((size, index) => ({
     size,
-    width: theme.breakpoints[index + 1]
+    width: theme.breakpoints[index + 1] as string
   }));
 
   const background = (size: string): {backgroundImage: string} => ({
     backgroundImage: `linear-gradient(
         0deg,
-        ${theme.colors.gray[1]},
+        ${theme.colors.gray[1] as string},
         ${rgba(theme.colors.gray[1], 0.4)}
       ),
       url('/static/banners/${image}${size}.jpeg')`

@@ -44,7 +44,7 @@ const Song: NextPage<SongProps> = ({hymn, menuItems}) => {
   }, [loggedInUser.user]);
 
   if (!loggedInUser.user) {
-    return <Loading />;
+    return <Loading />
   }
 
   const {

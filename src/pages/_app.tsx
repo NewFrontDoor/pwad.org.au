@@ -7,21 +7,21 @@ import {ApolloProvider} from '@apollo/client';
 import {useApollo} from '../../lib/apollo/client';
 import {AbilityProvider} from '../components/ability-context';
 
-import Router from 'next/router';
-import * as gtag from '../../lib/google-analytics';
+import Router from 'next/router'
+import * as gtag from '../../lib/google-analytics'
+
 
 const App: FC<AppProps> = ({Component, pageProps}) => {
   const apolloClient = useApollo(pageProps.initialApolloState);
   useEffect(() => {
     const handleRouteChange = (url) => {
-      gtag.pageview(url);
-    };
-
-    Router.events.on('routeChangeComplete', handleRouteChange);
+      gtag.pageview(url)
+    }
+    Router.events.on('routeChangeComplete', handleRouteChange)
     return () => {
-      Router.events.off('routeChangeComplete', handleRouteChange);
-    };
-  }, []);
+      Router.events.off('routeChangeComplete', handleRouteChange)
+    }
+  }, [])
 
   return (
     <ApolloProvider client={apolloClient}>

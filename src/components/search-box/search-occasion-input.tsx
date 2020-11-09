@@ -17,12 +17,15 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
 
   let options = [];
 
-  options = error
-    ? []
-    : data?.occasionManyGroupById?.map(({name, values}) => ({
+  if (error) {
+    options = [];
+  } else {
+    options =
+      data?.occasionManyGroupById?.map(({name, values}) => ({
         label: name,
         options: values.map(({_id, name}) => ({value: _id, label: name}))
       })) ?? [];
+  }
 
   let {value} = field;
 

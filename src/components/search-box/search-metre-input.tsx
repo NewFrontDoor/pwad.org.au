@@ -34,12 +34,15 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
 
   let options = [];
 
-  options = error
-    ? []
-    : data?.metreMany.map(({_id, metre}) => ({
+  if (error) {
+    options = [];
+  } else {
+    options =
+      data?.metreMany.map(({_id, metre}) => ({
         label: metre,
         value: _id
       })) ?? [];
+  }
 
   let value = intersectionBy(options, field.value, 'value');
 

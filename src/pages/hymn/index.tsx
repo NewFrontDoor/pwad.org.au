@@ -31,7 +31,7 @@ const Rejoice: NextPage<RejoiceProps> = ({menuItems}) => {
   }, [loggedInUser.user]);
 
   if (!loggedInUser.user) {
-    return <Loading />;
+    return <Loading />
   }
 
   return (

@@ -1,7 +1,7 @@
 import React, {FC} from 'react';
-import {ThemeProvider, Theme} from 'theme-ui';
+import {ThemeProvider} from 'theme-ui';
 
-const theme: Theme = {
+const theme = {
   breakpoints: ['40em', '52em', '64em'],
   space: [0, 4, 8, 16, 32, 64, 128, 256, 512],
   fonts: {
@@ -299,7 +299,7 @@ const theme: Theme = {
 
 export default theme;
 
-export const darkTheme: Theme = {
+export const darkTheme = {
   ...theme,
   colors: {
     ...theme.colors,
