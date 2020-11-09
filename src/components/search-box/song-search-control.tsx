@@ -2,7 +2,6 @@ import React, {FC, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import {useRouter} from 'next/router';
 import isEmpty from 'lodash/isEmpty';
-import {useResponsiveValue} from '@theme-ui/match-media';
 import {Styled, Button, Grid, Box} from 'theme-ui';
 import {Formik, Form, Field} from 'formik';
 import {TextField} from '../form';
@@ -87,7 +86,6 @@ type SearchFields = {
 };
 
 const SearchBox: FC = () => {
-  const isMedium = useResponsiveValue([false, true]);
   const router = useRouter();
   const handleSubmit = useCallback(
     ({occasion, keyword, title, metres, tune, book}: SearchFields) => {
@@ -118,11 +116,25 @@ const SearchBox: FC = () => {
           pathname: router.pathname,
           query
         },
-        router.pathname
+        router.pathname,
+        {shallow: true}
       );
     },
     [router]
   );
+
+  const handleListAll = useCallback(() => {
+    void router.push(
+      {
+        pathname: router.pathname,
+        query: {
+          title: ''
+        }
+      },
+      router.pathname,
+      {shallow: true}
+    );
+  }, [router]);
 
   const showSearchResults = !isEmpty(router.query);
   let initialValues: SearchFields = {
@@ -147,7 +159,11 @@ const SearchBox: FC = () => {
 
   return (
     <>
-      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        onReset={handleListAll}
+      >
         <Form>
           <Grid columns={[1, 2]}>
             <Box>
@@ -174,24 +190,16 @@ const SearchBox: FC = () => {
                 <Field as={SearchKeywordInput} label="Keyword" name="keyword" />
               </Box>
               <Box marginBottom="1em">
-                <Button isFullWidth type="submit">
+                <Button type="submit" sx={{width: '100%'}}>
                   Search
                 </Button>
               </Box>
-            </Box>
-            {isMedium && (
-              <Box>
-                <Styled.p>
-                  {/*Search Instructions to help people to search. Lorem ipsum
-                  dolor sit amet, affert theophrastus in sea, at aeterno
-                  invidunt platonem has. Habeo inimicus rationibus mel ex, nisl
-                  fabellas nec ei, quo et quot putant legendos. Prompta
-                  definitiones nam an, quidam scaevola per te. Eum at purto
-                  vocibus mnesarchum, diam falli an nam. Dicunt perfecto
-                  deserunt mel in, mundi moderatius eu eam.*/}
-                </Styled.p>
+              <Box marginBottom="1em">
+                <Button type="reset" sx={{width: '100%'}}>
+                  List all
+                </Button>
               </Box>
-            )}
+            </Box>
           </Grid>
         </Form>
       </Formik>

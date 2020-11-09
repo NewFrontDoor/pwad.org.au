@@ -24,7 +24,7 @@ const FormField: FC<FormFieldProps> = ({label, isLabelHidden, ...props}) => {
       ) : (
         <span>{label}</span>
       )}
-      <Input {...props} {...field} />
+      <Input {...field} {...props} />
       {meta.touched && meta.error ? (
         <div className="error">{meta.error}</div>
       ) : null}

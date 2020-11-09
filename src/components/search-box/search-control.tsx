@@ -1,4 +1,4 @@
-import React, {FC, useCallback} from 'react';
+import React, {FC, useState, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import {useRouter} from 'next/router';
 import isEmpty from 'lodash/isEmpty';
@@ -11,13 +11,10 @@ import ServerError from '../server-error';
 import SearchResult, {isSearchResult} from './search-result';
 import {prefetchSearchResult} from '../../prefetch';
 
-type TextSearchProps = {
-  search: TextSearchQueryVariables;
-};
-
-const TextSearch: FC<TextSearchProps> = ({search}) => {
+const TextSearch: FC<TextSearchQueryVariables> = (props) => {
   const {loading, error, data, client} = useTextSearchQuery({
-    variables: search
+    variables: props,
+    fetchPolicy: 'cache-and-network'
   });
 
   if (loading) {
@@ -52,7 +49,7 @@ const TextSearch: FC<TextSearchProps> = ({search}) => {
 };
 
 TextSearch.propTypes = {
-  search: PropTypes.object.isRequired
+  search: PropTypes.string.isRequired
 };
 
 const SearchBox: FC = () => {
@@ -64,11 +61,23 @@ const SearchBox: FC = () => {
           pathname: router.pathname,
           query
         },
-        router.pathname
+        router.pathname,
+        {shallow: true}
       );
     },
     [router]
   );
+
+  const handleListAll = useCallback(() => {
+    void router.push(
+      {
+        pathname: router.pathname,
+        query: {search: ''}
+      },
+      router.pathname,
+      {shallow: true}
+    );
+  }, [router]);
 
   const showSearchResults = !isEmpty(router.query);
   let initialValues: TextSearchQueryVariables = {search: ''};
@@ -85,9 +94,16 @@ const SearchBox: FC = () => {
         using the search box below. Advanced search will allow you to refine
         your criteria on data available in the resource.
       </Styled.p>
-      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        onReset={handleListAll}
+      >
         <Form>
-          <Grid marginBottom="1em" columns={[1, 'auto min-content']}>
+          <Grid
+            marginBottom="1em"
+            columns={[1, 'auto max-content max-content']}
+          >
             <Box marginEnd="auto">
               <TextField
                 isLabelHidden
@@ -99,12 +115,19 @@ const SearchBox: FC = () => {
             </Box>
 
             <Box marginStart="1em">
-              <Button type="submit">Search</Button>
+              <Button type="submit" sx={{width: '100%'}}>
+                Search
+              </Button>
+            </Box>
+            <Box marginStart="1em">
+              <Button type="reset" sx={{width: '100%'}}>
+                List all
+              </Button>
             </Box>
           </Grid>
         </Form>
       </Formik>
-      {showSearchResults && <TextSearch search={router.query} />}
+      {showSearchResults && <TextSearch {...router.query} />}
     </>
   );
 };
