@@ -28,6 +28,7 @@ export function defineAbilitiesFor(user?: User): PwadAbility {
       if (user) {
         can('manage', 'my-account');
       }
+
       break;
   }
 

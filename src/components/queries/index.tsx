@@ -1286,7 +1286,9 @@ export type AddShortListItemMutationResult = Apollo.MutationResult<AddShortListI
 export type AddShortListItemMutationOptions = Apollo.BaseMutationOptions<AddShortListItemMutation, AddShortListItemMutationVariables>;
 export const AdvancedSearchDocument = gql`
     query advancedSearch($title: String, $tune: String, $metres: [String], $occasion: String, $keyword: String, $book: EnumHymnBook) {
-  search(filter: {textContains: $title, book: $book, tune: $tune, occasion: $occasion, keyword: $keyword, _operators: {metre: {in: $metres}}}) {
+  search(
+    filter: {textContains: $title, book: $book, tune: $tune, occasion: $occasion, keyword: $keyword, _operators: {metre: {in: $metres}}}
+  ) {
     ... on Document {
       _id
       _type
@@ -1420,7 +1422,13 @@ export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordM
 export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
 export const CreateUserDocument = gql`
     mutation createUser($firstName: String!, $lastName: String!, $email: String!, $password: String!, $confirmPassword: String!) {
-  createUser(firstName: $firstName, lastName: $lastName, email: $email, password: $password, confirmPassword: $confirmPassword) {
+  createUser(
+    firstName: $firstName
+    lastName: $lastName
+    email: $email
+    password: $password
+    confirmPassword: $confirmPassword
+  ) {
     _id
     hasPaidAccount
     hasFreeAccount
@@ -1501,7 +1509,12 @@ export type CurrentSubscriptionLazyQueryHookResult = ReturnType<typeof useCurren
 export type CurrentSubscriptionQueryResult = Apollo.QueryResult<CurrentSubscriptionQuery, CurrentSubscriptionQueryVariables>;
 export const FindKeywordDocument = gql`
     query findKeyword($title: String, $skip: Int, $limit: Int) {
-  keywordMany(filter: {textContains: $title}, limit: $limit, skip: $skip, sort: name_ASC) {
+  keywordMany(
+    filter: {textContains: $title}
+    limit: $limit
+    skip: $skip
+    sort: name_ASC
+  ) {
     _id
     name
   }
@@ -1537,7 +1550,12 @@ export type FindKeywordLazyQueryHookResult = ReturnType<typeof useFindKeywordLaz
 export type FindKeywordQueryResult = Apollo.QueryResult<FindKeywordQuery, FindKeywordQueryVariables>;
 export const FindMetreDocument = gql`
     query findMetre($metre: String, $skip: Int, $limit: Int) {
-  metreMany(filter: {textContains: $metre}, limit: $limit, skip: $skip, sort: metre_ASC) {
+  metreMany(
+    filter: {textContains: $metre}
+    limit: $limit
+    skip: $skip
+    sort: metre_ASC
+  ) {
     _id
     metre
   }
@@ -1651,7 +1669,7 @@ export const FindOneAuthorDocument = gql`
  *   },
  * });
  */
-export function useFindOneAuthorQuery(baseOptions?: Apollo.QueryHookOptions<FindOneAuthorQuery, FindOneAuthorQueryVariables>) {
+export function useFindOneAuthorQuery(baseOptions: Apollo.QueryHookOptions<FindOneAuthorQuery, FindOneAuthorQueryVariables>) {
         return Apollo.useQuery<FindOneAuthorQuery, FindOneAuthorQueryVariables>(FindOneAuthorDocument, baseOptions);
       }
 export function useFindOneAuthorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOneAuthorQuery, FindOneAuthorQueryVariables>) {
@@ -1745,7 +1763,7 @@ export const FindOneHymnDocument = gql`
  *   },
  * });
  */
-export function useFindOneHymnQuery(baseOptions?: Apollo.QueryHookOptions<FindOneHymnQuery, FindOneHymnQueryVariables>) {
+export function useFindOneHymnQuery(baseOptions: Apollo.QueryHookOptions<FindOneHymnQuery, FindOneHymnQueryVariables>) {
         return Apollo.useQuery<FindOneHymnQuery, FindOneHymnQueryVariables>(FindOneHymnDocument, baseOptions);
       }
 export function useFindOneHymnLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOneHymnQuery, FindOneHymnQueryVariables>) {
@@ -1800,7 +1818,7 @@ export const FindOneKeywordDocument = gql`
  *   },
  * });
  */
-export function useFindOneKeywordQuery(baseOptions?: Apollo.QueryHookOptions<FindOneKeywordQuery, FindOneKeywordQueryVariables>) {
+export function useFindOneKeywordQuery(baseOptions: Apollo.QueryHookOptions<FindOneKeywordQuery, FindOneKeywordQueryVariables>) {
         return Apollo.useQuery<FindOneKeywordQuery, FindOneKeywordQueryVariables>(FindOneKeywordDocument, baseOptions);
       }
 export function useFindOneKeywordLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOneKeywordQuery, FindOneKeywordQueryVariables>) {
@@ -1856,7 +1874,7 @@ export const FindOneLiturgyDocument = gql`
  *   },
  * });
  */
-export function useFindOneLiturgyQuery(baseOptions?: Apollo.QueryHookOptions<FindOneLiturgyQuery, FindOneLiturgyQueryVariables>) {
+export function useFindOneLiturgyQuery(baseOptions: Apollo.QueryHookOptions<FindOneLiturgyQuery, FindOneLiturgyQueryVariables>) {
         return Apollo.useQuery<FindOneLiturgyQuery, FindOneLiturgyQueryVariables>(FindOneLiturgyDocument, baseOptions);
       }
 export function useFindOneLiturgyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOneLiturgyQuery, FindOneLiturgyQueryVariables>) {
@@ -1906,7 +1924,7 @@ export const FindOnePrayerDocument = gql`
  *   },
  * });
  */
-export function useFindOnePrayerQuery(baseOptions?: Apollo.QueryHookOptions<FindOnePrayerQuery, FindOnePrayerQueryVariables>) {
+export function useFindOnePrayerQuery(baseOptions: Apollo.QueryHookOptions<FindOnePrayerQuery, FindOnePrayerQueryVariables>) {
         return Apollo.useQuery<FindOnePrayerQuery, FindOnePrayerQueryVariables>(FindOnePrayerDocument, baseOptions);
       }
 export function useFindOnePrayerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOnePrayerQuery, FindOnePrayerQueryVariables>) {
@@ -1947,7 +1965,7 @@ export const FindOneScriptureDocument = gql`
  *   },
  * });
  */
-export function useFindOneScriptureQuery(baseOptions?: Apollo.QueryHookOptions<FindOneScriptureQuery, FindOneScriptureQueryVariables>) {
+export function useFindOneScriptureQuery(baseOptions: Apollo.QueryHookOptions<FindOneScriptureQuery, FindOneScriptureQueryVariables>) {
         return Apollo.useQuery<FindOneScriptureQuery, FindOneScriptureQueryVariables>(FindOneScriptureDocument, baseOptions);
       }
 export function useFindOneScriptureLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindOneScriptureQuery, FindOneScriptureQueryVariables>) {
@@ -1989,7 +2007,7 @@ export const FindPrayerContentsDocument = gql`
  *   },
  * });
  */
-export function useFindPrayerContentsQuery(baseOptions?: Apollo.QueryHookOptions<FindPrayerContentsQuery, FindPrayerContentsQueryVariables>) {
+export function useFindPrayerContentsQuery(baseOptions: Apollo.QueryHookOptions<FindPrayerContentsQuery, FindPrayerContentsQueryVariables>) {
         return Apollo.useQuery<FindPrayerContentsQuery, FindPrayerContentsQueryVariables>(FindPrayerContentsDocument, baseOptions);
       }
 export function useFindPrayerContentsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FindPrayerContentsQuery, FindPrayerContentsQueryVariables>) {
@@ -2000,7 +2018,12 @@ export type FindPrayerContentsLazyQueryHookResult = ReturnType<typeof useFindPra
 export type FindPrayerContentsQueryResult = Apollo.QueryResult<FindPrayerContentsQuery, FindPrayerContentsQueryVariables>;
 export const FindTuneDocument = gql`
     query findTune($title: String, $skip: Int, $limit: Int) {
-  tuneMany(filter: {textContains: $title}, limit: $limit, skip: $skip, sort: title_ASC) {
+  tuneMany(
+    filter: {textContains: $title}
+    limit: $limit
+    skip: $skip
+    sort: title_ASC
+  ) {
     _id
     title
   }
@@ -2107,7 +2130,9 @@ export type HomeLazyQueryHookResult = ReturnType<typeof useHomeLazyQuery>;
 export type HomeQueryResult = Apollo.QueryResult<HomeQuery, HomeQueryVariables>;
 export const LiturgySearchDocument = gql`
     query liturgySearch($title: String, $occasion: String, $keyword: String) {
-  liturgySearch(filter: {textContains: $title, occasion: $occasion, keyword: $keyword}) {
+  liturgySearch(
+    filter: {textContains: $title, occasion: $occasion, keyword: $keyword}
+  ) {
     _id
     _type
     title
@@ -2255,7 +2280,9 @@ export type PageContentLazyQueryHookResult = ReturnType<typeof usePageContentLaz
 export type PageContentQueryResult = Apollo.QueryResult<PageContentQuery, PageContentQueryVariables>;
 export const PrayerSearchDocument = gql`
     query prayerSearch($title: String, $occasion: String, $keyword: String) {
-  prayerSearch(filter: {textContains: $title, occasion: $occasion, keyword: $keyword}) {
+  prayerSearch(
+    filter: {textContains: $title, occasion: $occasion, keyword: $keyword}
+  ) {
     _id
     _type
     title

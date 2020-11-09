@@ -25,5 +25,3 @@ generates:
   ./lib/fragment-types.json:
     plugins:
       - fragment-matcher
-    config:
-      apolloClientVersion: 3

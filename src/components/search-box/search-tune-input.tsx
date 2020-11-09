@@ -35,15 +35,12 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
 
   let options = [];
 
-  if (error) {
-    options = [];
-  } else {
-    options =
-      data?.tuneMany?.map(({_id, title}) => ({
+  options = error
+    ? []
+    : data?.tuneMany?.map(({_id, title}) => ({
         label: title,
         value: _id
       })) ?? [];
-  }
 
   let {value} = field;
 
