@@ -1,12 +1,11 @@
 import React, {FC, useCallback} from 'react';
-import PropTypes from 'prop-types';
 import {useRouter} from 'next/router';
 import isEmpty from 'lodash/isEmpty';
 import {Styled, Button, Grid, Box} from 'theme-ui';
 import {Formik, Form, Field} from 'formik';
 import {TextField} from '../form';
 import {
-  useAdvancedSearchQuery,
+  useAdvancedSearchLazyQuery,
   AdvancedSearchQueryVariables,
   EnumHymnBook
 } from '../queries';
@@ -20,53 +19,6 @@ import SearchOccasionInput from './search-occasion-input';
 import SearchKeywordInput from './search-keyword-input';
 import initialSelectValue from './initial-select-value';
 import {prefetchOneHymn} from '../../prefetch';
-
-type AdvancedSearchProps = {
-  search: AdvancedSearchQueryVariables;
-};
-const AdvancedSearch: FC<AdvancedSearchProps> = ({search}) => {
-  const {loading, error, data, client} = useAdvancedSearchQuery({
-    variables: search
-  });
-
-  if (loading) {
-    return <Loading />;
-  }
-
-  if (error) {
-    return <ServerError error={error} />;
-  }
-
-  if (data?.search?.length > 0) {
-    return (
-      <>
-        {data.search.map((result) => {
-          if (isSearchResult(result)) {
-            return (
-              <SearchResult
-                {...result}
-                key={result._id}
-                prefetch={() =>
-                  prefetchOneHymn(client, {
-                    id: result._id
-                  })
-                }
-              />
-            );
-          }
-
-          return null;
-        })}
-      </>
-    );
-  }
-
-  return <Styled.p variant="prose">No results found...</Styled.p>;
-};
-
-AdvancedSearch.propTypes = {
-  search: PropTypes.any.isRequired
-};
 
 type SearchFields = {
   title?: string;
@@ -87,54 +39,41 @@ type SearchFields = {
 
 const SearchBox: FC = () => {
   const router = useRouter();
+
+  const [search, {loading, error, data, client}] = useAdvancedSearchLazyQuery();
+
   const handleSubmit = useCallback(
     ({occasion, keyword, title, metres, tune, book}: SearchFields) => {
-      const query: AdvancedSearchQueryVariables = {title};
+      const variables: AdvancedSearchQueryVariables = {title};
 
       if (metres && metres.length > 0) {
-        query.metres = metres.map((metre) => metre.value);
+        variables.metres = metres.map((metre) => metre.value);
       }
 
       if (book) {
-        query.book = book.value;
+        variables.book = book.value;
       }
 
       if (occasion) {
-        query.occasion = occasion.value;
+        variables.occasion = occasion.value;
       }
 
       if (tune) {
-        query.tune = tune.value;
+        variables.tune = tune.value;
       }
 
       if (keyword) {
-        query.keyword = keyword.value;
+        variables.keyword = keyword.value;
       }
 
-      void router.push(
-        {
-          pathname: router.pathname,
-          query
-        },
-        router.pathname,
-        {shallow: true}
-      );
+      search({variables});
     },
-    [router]
+    [search]
   );
 
   const handleListAll = useCallback(() => {
-    void router.push(
-      {
-        pathname: router.pathname,
-        query: {
-          title: ''
-        }
-      },
-      router.pathname,
-      {shallow: true}
-    );
-  }, [router]);
+    search({variables: {title: ''}});
+  }, [search]);
 
   const showSearchResults = !isEmpty(router.query);
   let initialValues: SearchFields = {
@@ -203,7 +142,32 @@ const SearchBox: FC = () => {
           </Grid>
         </Form>
       </Formik>
-      {showSearchResults && <AdvancedSearch search={router.query} />}
+      {loading && <Loading />}
+      {error && <ServerError error={error} />}
+      {data?.search?.length === 0 && (
+        <Styled.p variant="prose">No results found...</Styled.p>
+      )}
+      {data?.search?.length > 0 && (
+        <>
+          {data.search.map((result) => {
+            if (isSearchResult(result)) {
+              return (
+                <SearchResult
+                  {...result}
+                  key={result._id}
+                  prefetch={() =>
+                    prefetchOneHymn(client, {
+                      id: result._id
+                    })
+                  }
+                />
+              );
+            }
+
+            return null;
+          })}
+        </>
+      )}
     </>
   );
 };

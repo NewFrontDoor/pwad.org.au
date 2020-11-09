@@ -1,83 +1,30 @@
 import React, {FC, useState, useCallback} from 'react';
-import PropTypes from 'prop-types';
 import {useRouter} from 'next/router';
 import isEmpty from 'lodash/isEmpty';
 import {Grid, Box, Styled, Button} from 'theme-ui';
 import {Formik, Form} from 'formik';
 import {TextField} from '../form';
-import {useTextSearchQuery, TextSearchQueryVariables} from '../queries';
+import {useTextSearchLazyQuery, TextSearchQueryVariables} from '../queries';
 import Loading from '../loading';
 import ServerError from '../server-error';
 import SearchResult, {isSearchResult} from './search-result';
 import {prefetchSearchResult} from '../../prefetch';
 
-const TextSearch: FC<TextSearchQueryVariables> = (props) => {
-  const {loading, error, data, client} = useTextSearchQuery({
-    variables: props,
-    fetchPolicy: 'network-only'
-  });
-
-  if (loading) {
-    return <Loading />;
-  }
-
-  if (error) {
-    return <ServerError error={error} />;
-  }
-
-  if (data.textSearch && data.textSearch.length > 0) {
-    return (
-      <>
-        {data.textSearch.map((result) => {
-          if (isSearchResult(result)) {
-            return (
-              <SearchResult
-                {...result}
-                key={result._id}
-                prefetch={() => prefetchSearchResult(client, result)}
-              />
-            );
-          }
-
-          return null;
-        })}
-      </>
-    );
-  }
-
-  return <Styled.p variant="prose">No results found...</Styled.p>;
-};
-
-TextSearch.propTypes = {
-  search: PropTypes.string.isRequired
-};
-
 const SearchBox: FC = () => {
   const router = useRouter();
+
+  const [search, {loading, error, data, client}] = useTextSearchLazyQuery();
+
   const handleSubmit = useCallback(
-    (query: TextSearchQueryVariables) => {
-      void router.push(
-        {
-          pathname: router.pathname,
-          query
-        },
-        router.pathname,
-        {shallow: true}
-      );
+    (variables: TextSearchQueryVariables) => {
+      search({variables});
     },
-    [router]
+    [search]
   );
 
   const handleListAll = useCallback(() => {
-    void router.push(
-      {
-        pathname: router.pathname,
-        query: {search: ''}
-      },
-      router.pathname,
-      {shallow: true}
-    );
-  }, [router]);
+    search({variables: {search: ''}});
+  }, [search]);
 
   const showSearchResults = !isEmpty(router.query);
   let initialValues: TextSearchQueryVariables = {search: ''};
@@ -127,7 +74,28 @@ const SearchBox: FC = () => {
           </Grid>
         </Form>
       </Formik>
-      {showSearchResults && <TextSearch {...router.query} />}
+      {loading && <Loading />}
+      {error && <ServerError error={error} />}
+      {data?.textSearch?.length === 0 && (
+        <Styled.p variant="prose">No results found...</Styled.p>
+      )}
+      {data?.textSearch?.length > 0 && (
+        <>
+          {data.textSearch.map((result) => {
+            if (isSearchResult(result)) {
+              return (
+                <SearchResult
+                  {...result}
+                  key={result._id}
+                  prefetch={() => prefetchSearchResult(client, result)}
+                />
+              );
+            }
+
+            return null;
+          })}
+        </>
+      )}
     </>
   );
 };
