@@ -182,13 +182,13 @@ const SearchBox: FC = () => {
             {isMedium && (
               <Box>
                 <Styled.p>
-                  Search Instructions to help people to search. Lorem ipsum
+                  {/*Search Instructions to help people to search. Lorem ipsum
                   dolor sit amet, affert theophrastus in sea, at aeterno
                   invidunt platonem has. Habeo inimicus rationibus mel ex, nisl
                   fabellas nec ei, quo et quot putant legendos. Prompta
                   definitiones nam an, quidam scaevola per te. Eum at purto
                   vocibus mnesarchum, diam falli an nam. Dicunt perfecto
-                  deserunt mel in, mundi moderatius eu eam.
+                  deserunt mel in, mundi moderatius eu eam.*/}
                 </Styled.p>
               </Box>
             )}
