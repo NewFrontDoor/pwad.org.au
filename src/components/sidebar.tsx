@@ -76,6 +76,7 @@ SidebarFiles.defaultProps = {
 };
 
 export const SidebarTune: FC<Tune> = ({_id, title, file}) => {
+  console.log({_id, title, file});
   return (
     <>
       <Styled.h3>Tune</Styled.h3>
@@ -91,7 +92,7 @@ export const SidebarTune: FC<Tune> = ({_id, title, file}) => {
               {title}
             </AudioManager.PlayButton>
           ) : (
-            {title}
+            title
           )}
         </li>
       </Styled.ul>
