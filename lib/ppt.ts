@@ -1,4 +1,3 @@
-import urlBuilder from '@sanity/image-url';
 import Pptxgen from 'pptxgenjs';
 
 function toPlainText(blocks = []) {
