@@ -40,7 +40,7 @@ pptx.defineSlideMaster({
       placeholder: {
         options: {
           name: 'title',
-          type: Pptxgen.PLACEHOLDER_TYPES.title,
+          type: 'title',
           x: 1.22,
           y: 0.76,
           w: 8.46,
@@ -64,7 +64,7 @@ pptx.defineSlideMaster({
       placeholder: {
         options: {
           name: 'hymnNumber',
-          type: Pptxgen.PLACEHOLDER_TYPES.body,
+          type: 'body',
           x: 1.28,
           y: 2.85,
           w: 7,
