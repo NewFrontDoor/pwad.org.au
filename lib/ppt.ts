@@ -18,7 +18,7 @@ function toPlainText(blocks = []) {
   );
 }
 
-function slugify(text) {
+function slugify(text: string) {
   return text
     .toString()
     .toLowerCase()
