@@ -40,7 +40,7 @@ pptx.defineSlideMaster({
       placeholder: {
         options: {
           name: 'title',
-          type: 'title',
+          type: Pptxgen.PLACEHOLDER_TYPES.title,
           x: 1.22,
           y: 0.76,
           w: 8.46,
