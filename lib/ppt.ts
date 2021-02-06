@@ -136,7 +136,7 @@ function produceSlide({title, content, hymnNumber}: SlideOptions) {
     pptx.addSlide('LYRIC_SLIDE').addText(para, {placeholder: 'body'})
   );
   pptx.writeFile(
-    `${hymnNumber !== 0 ? hymnNumber + '-' : ''}${slugify(title)}.pptx`
+    `${hymnNumber === 0 ? '' : `${hymnNumber}-`}${slugify(title)}.pptx`
   );
 }
 
