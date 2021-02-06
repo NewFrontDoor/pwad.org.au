@@ -117,7 +117,13 @@ pptx.defineSlideMaster({
   ]
 });
 
-function produceSlide({title, content, hymnNumber}) {
+type SlideOptions = {
+  title: string;
+  content: unknown[];
+  hymnNumber: number;
+};
+
+function produceSlide({title, content, hymnNumber}: SlideOptions) {
   const verses = toPlainText(content);
 
   pptx
