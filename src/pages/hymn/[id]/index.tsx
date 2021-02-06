@@ -7,6 +7,7 @@ import {jsx, Styled, Flex, Box} from 'theme-ui';
 
 import * as hymnQuery from '../../../../queries/hymn';
 import * as resourceQuery from '../../../../queries/resource';
+import produceSlide from '../../../../lib/ppt';
 import {Hymn, HymnPropTypes, MenuItem} from '../../../../queries/_types';
 
 import useUser from '../../../use-user';
@@ -58,6 +59,10 @@ const Song: NextPage<SongProps> = ({hymn, menuItems}) => {
     scripture
   } = hymn;
 
+  function generatePPT() {
+    produceSlide({title, content, hymnNumber});
+  }
+
   let files = hymn.files || [];
   files = files.filter(Boolean);
 
@@ -86,7 +91,7 @@ const Song: NextPage<SongProps> = ({hymn, menuItems}) => {
             {tune?.musicCopyright && (
               <SidebarMusicCopyright {...tune.musicCopyright} />
             )}
-            {files.length > 0 && <SidebarFiles files={files} />}
+            <SidebarFiles files={files} generatePPT={generatePPT} />
           </>
         </Sidebar>
 
