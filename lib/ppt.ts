@@ -18,13 +18,13 @@ function toPlainText(blocks = []) {
   );
 }
 
-function slugify(text) {
+function slugify(text: string) {
   return text
     .toString()
     .toLowerCase()
     .replace(/\s+/g, '-') // Replace spaces with -
     .replace(/[^\w\-]+/g, '') // Remove all non-word chars
-    .replace(/\-\-+/g, '-') // Replace multiple - with single -
+    .replace(/--+/g, '-') // Replace multiple - with single -
     .replace(/^-+/, '') // Trim - from start of text
     .replace(/-+$/, ''); // Trim - from end of text
 }
@@ -40,22 +40,11 @@ pptx.defineSlideMaster({
       placeholder: {
         options: {
           name: 'title',
-          type: 'title',
+          type: Pptxgen.PLACEHOLDER_TYPES.title,
           x: 1.22,
           y: 0.76,
           w: 8.46,
-          h: 3.07,
-          align: 'left',
-          bold: true,
-          fontSize: 44,
-          fontFace: 'Arial',
-          color: 'D6FEFF',
-          shadow: {
-            type: 'outer',
-            angle: 45,
-            blur: 3,
-            offset: 3
-          }
+          h: 3.07
         },
         text: 'title here'
       }
@@ -64,22 +53,11 @@ pptx.defineSlideMaster({
       placeholder: {
         options: {
           name: 'hymnNumber',
-          type: 'body',
+          type: Pptxgen.PLACEHOLDER_TYPES.body,
           x: 1.28,
           y: 2.85,
           w: 7,
-          h: 1.6,
-          align: 'left',
-          bold: true,
-          fontSize: 21,
-          fontFace: 'Arial',
-          color: 'FFFFFF',
-          shadow: {
-            type: 'outer',
-            angle: 45,
-            blur: 3,
-            offset: 3
-          }
+          h: 1.6
         },
         text: 'hymn number here'
       }
@@ -95,21 +73,11 @@ pptx.defineSlideMaster({
       placeholder: {
         options: {
           name: 'body',
-          type: 'body',
+          type: Pptxgen.PLACEHOLDER_TYPES.body,
           x: 0.17,
           y: 0.21,
           w: 9.58,
-          h: 5.42,
-          align: 'left',
-          fontSize: 37,
-          bold: true,
-          fontFace: 'Arial',
-          color: 'FFFFFF',
-          shadow: {
-            angle: 45,
-            blur: 3,
-            offset: 3
-          }
+          h: 5.42
         },
         text: 'Lyrics here'
       }
@@ -117,17 +85,60 @@ pptx.defineSlideMaster({
   ]
 });
 
-function produceSlide({title, content, hymnNumber}) {
+type SlideOptions = {
+  title: string;
+  content: unknown[];
+  hymnNumber: number;
+};
+
+function produceSlide({title, content, hymnNumber}: SlideOptions) {
   const verses = toPlainText(content);
 
   pptx
     .addSlide('TITLE_SLIDE')
-    .addText(title, {placeholder: 'title'})
+    .addText(title, {
+      placeholder: 'title',
+      align: 'left',
+      bold: true,
+      fontSize: 44,
+      fontFace: 'Arial',
+      color: 'D6FEFF',
+      shadow: {
+        type: 'outer',
+        angle: 45,
+        blur: 3,
+        offset: 3
+      }
+    })
     .addText(hymnNumber === 0 ? '' : `Rejoice ${hymnNumber}`, {
-      placeholder: 'hymnNumber'
+      placeholder: 'hymnNumber',
+      align: 'left',
+      bold: true,
+      fontSize: 21,
+      fontFace: 'Arial',
+      color: 'FFFFFF',
+      shadow: {
+        type: 'outer',
+        angle: 45,
+        blur: 3,
+        offset: 3
+      }
     });
   verses.map((para) =>
-    pptx.addSlide('LYRIC_SLIDE').addText(para, {placeholder: 'body'})
+    pptx.addSlide('LYRIC_SLIDE').addText(para, {
+      placeholder: 'body',
+      align: 'left',
+      fontSize: 37,
+      bold: true,
+      fontFace: 'Arial',
+      color: 'FFFFFF',
+      shadow: {
+        type: 'outer',
+        angle: 45,
+        blur: 3,
+        offset: 3
+      }
+    })
   );
   pptx.writeFile(
     `${hymnNumber === 0 ? '' : `${hymnNumber}-`}${slugify(title)}.pptx`
