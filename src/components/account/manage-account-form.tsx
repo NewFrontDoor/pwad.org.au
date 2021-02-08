@@ -1,13 +1,14 @@
 import React, {FC, useCallback} from 'react';
 import {useApolloClient} from '@apollo/client';
 import PropTypes from 'prop-types';
-import {Styled, Box, Grid, Text} from 'theme-ui';
+import {Styled, Box, Grid, Text, Select, Label} from 'theme-ui';
 import {Check} from 'react-feather';
 import startCase from 'lodash/startCase';
 import Button from '../button';
 import Loading from '../loading';
 import {loadStripe} from '@stripe/stripe-js';
 import {Elements, useStripe} from '@stripe/react-stripe-js';
+import {useForm} from 'react-hook-form';
 import {
   MeDocument,
   CurrentSubscriptionDocument,
@@ -17,6 +18,7 @@ import {
   useChangeFreeAccountMutation,
   useChangePasswordMutation,
   useCurrentSubscriptionQuery,
+  useUpdatePresentationOptionsMutation,
   User,
   StripeSubscription
 } from '../queries';
@@ -117,6 +119,61 @@ BuySubscription.propTypes = {
   changeFreeAccount: PropTypes.func.isRequired
 };
 
+type PresentationOptionsProps = {
+  font: string;
+  background: string;
+  ratio: string;
+};
+
+const PresentationOptions: FC<PresentationOptionsProps> = ({
+  font,
+  background,
+  ratio
+}) => {
+  const {register, handleSubmit} = useForm({
+    defaultValues: {
+      font: font || 'arial',
+      background: background || 'pca',
+      ratio: ratio || '1610'
+    }
+  });
+  const onSubmit = (data) => useUpdatePresentationOptionsMutation(data);
+
+  return (
+    <>
+      <Box as="form" sx={{width: '100%'}} onSubmit={handleSubmit(onSubmit)}>
+        <Text as="h3">Presentation options:</Text>
+        <Label for="font">Font</Label>
+        <Select ref={register} defaultValue="arial" name="font">
+          <option value="arial">Arial</option>
+          <option value="helvetica">Helvetica</option>
+          <option value="arounded">Arial Rounded</option>
+        </Select>
+        <Label for="colourScheme">Background/colour scheme</Label>
+        <Select ref={register} defaultValue="PCA" name="colourScheme">
+          <option value="pca">PCA</option>
+          <option value="white">White</option>
+          <option value="beige">Beige</option>
+          <option value="black">Black</option>
+        </Select>
+        <Label for="aspectRatio">Aspect Ratio</Label>
+        <Select ref={register} defaultValue="169" name="aspectRatio">
+          <option value="169">16:9</option>
+          <option value="1610">16:10</option>
+          <option value="43">4:3</option>
+        </Select>
+        <input type="submit" value="Save" />
+      </Box>
+    </>
+  );
+};
+
+PresentationOptions.propTypes = {
+  font: PropTypes.string,
+  background: PropTypes.string,
+  ratio: PropTypes.string
+};
+
 const SubscriptionDetails: FC<StripeSubscription> = ({
   status,
   plan,
@@ -173,6 +230,8 @@ const ManageForm: FC<User> = ({hasFreeAccount, hasPaidAccount}) => {
 
   const {data, loading} = useCurrentSubscriptionQuery();
 
+  const {presentation} = usePresentationOptionsQuery();
+
   const [changeFreeAccount] = useChangeFreeAccountMutation({
     update(cache, {data}) {
       const {changeFreeAccount} = data;
@@ -226,7 +285,19 @@ const ManageForm: FC<User> = ({hasFreeAccount, hasPaidAccount}) => {
           </Grid>
         )}
 
-        <Button onClick={handleChangePassword}>Change Password</Button>
+        <Grid columns={[1, 2]} gap={[3, 5]}>
+          <PresentationOptions {...data.presentation} />
+          <Box>
+            <Button
+              isPrimary
+              isFullWidth
+              size="jumbo"
+              onClick={handleChangePassword}
+            >
+              Change Password
+            </Button>
+          </Box>
+        </Grid>
       </Box>
       <Box sx={{width: '100%'}}>
         <Text as="h3">
