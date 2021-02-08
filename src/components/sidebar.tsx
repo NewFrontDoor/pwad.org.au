@@ -39,7 +39,7 @@ Composer.defaultProps = {
   name: undefined
 };
 
-export const SidebarFiles: FC<{files: Asset[]}> = ({files}) => {
+export const SidebarFiles = ({files, generatePPT}) => {
   const [fileExpand, fileToggle] = useToggle(false);
   return (
     <>
@@ -57,6 +57,11 @@ export const SidebarFiles: FC<{files: Asset[]}> = ({files}) => {
             <Link {...assetLinkProps(file)} /> ({prettyBytes(file.size || 0)})
           </li>
         ))}
+        <li key="ppt">
+          <Link sx={{cursor: 'pointer'}} onClick={() => generatePPT()}>
+            Powerpoint file
+          </Link>
+        </li>
       </Styled.ul>
       {files.length > 4 && (
         <button type="button" onClick={() => fileToggle()}>
@@ -68,11 +73,13 @@ export const SidebarFiles: FC<{files: Asset[]}> = ({files}) => {
 };
 
 SidebarFiles.propTypes = {
-  files: PropTypes.array
+  files: PropTypes.array,
+  generatePPT: PropTypes.func
 };
 
 SidebarFiles.defaultProps = {
-  files: []
+  files: [],
+  generatePPT: () => undefined
 };
 
 export const SidebarTune: FC<Tune> = ({_id, title, file}) => {

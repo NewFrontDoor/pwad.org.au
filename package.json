@@ -103,6 +103,7 @@
     "nanoid": "^3.1.12",
     "next": "^9.5.2",
     "polished": "^3.6.5",
+    "pptxgenjs": "^3.4.0",
     "pretty-bytes": "^5.4.0",
     "prop-types": "^15.7.2",
     "react": "^16.13.1",
