@@ -18,7 +18,6 @@ import {
   useChangeFreeAccountMutation,
   useChangePasswordMutation,
   useCurrentSubscriptionQuery,
-  useUpdatePresentationOptionsMutation,
   User,
   StripeSubscription
 } from '../queries';
@@ -126,18 +125,19 @@ type PresentationOptionsProps = {
 };
 
 const PresentationOptions: FC<PresentationOptionsProps> = ({
+  user,
   font,
   background,
   ratio
 }) => {
   const {register, handleSubmit} = useForm({
     defaultValues: {
-      font: font || 'arial',
-      background: background || 'pca',
-      ratio: ratio || '1610'
+      font,
+      background,
+      ratio
     }
   });
-  const onSubmit = (data) => useUpdatePresentationOptionsMutation(data);
+  const onSubmit = (data) => useUpdatePresentationOptionsMutation(user, data);
 
   return (
     <>
@@ -169,9 +169,9 @@ const PresentationOptions: FC<PresentationOptionsProps> = ({
 };
 
 PresentationOptions.propTypes = {
-  font: PropTypes.string,
-  background: PropTypes.string,
-  ratio: PropTypes.string
+  font: PropTypes.string.isRequired,
+  background: PropTypes.string.isRequired,
+  ratio: PropTypes.string.isRequired
 };
 
 const SubscriptionDetails: FC<StripeSubscription> = ({
@@ -225,12 +225,14 @@ SubscriptionDetails.propTypes = {
   cancelAt: PropTypes.any
 };
 
-const ManageForm: FC<User> = ({hasFreeAccount, hasPaidAccount}) => {
+const ManageForm: FC<User> = ({
+  hasFreeAccount,
+  hasPaidAccount,
+  presentationOptions
+}) => {
   const isFreeAccount = hasFreeAccount || !hasPaidAccount;
 
   const {data, loading} = useCurrentSubscriptionQuery();
-
-  const {presentation} = usePresentationOptionsQuery();
 
   const [changeFreeAccount] = useChangeFreeAccountMutation({
     update(cache, {data}) {
@@ -286,7 +288,7 @@ const ManageForm: FC<User> = ({hasFreeAccount, hasPaidAccount}) => {
         )}
 
         <Grid columns={[1, 2]} gap={[3, 5]}>
-          <PresentationOptions {...data.presentation} />
+          <PresentationOptions {...presentationOptions} />
           <Box>
             <Button
               isPrimary
@@ -322,12 +324,22 @@ const ManageForm: FC<User> = ({hasFreeAccount, hasPaidAccount}) => {
 
 ManageForm.propTypes = {
   hasFreeAccount: PropTypes.bool,
-  hasPaidAccount: PropTypes.bool
+  hasPaidAccount: PropTypes.bool,
+  presentationOptions: PropTypes.shape({
+    font: PropTypes.string,
+    background: PropTypes.string,
+    ratio: PropTypes.string
+  })
 };
 
 ManageForm.defaultProps = {
   hasFreeAccount: false,
-  hasPaidAccount: false
+  hasPaidAccount: false,
+  presentationOptions: {
+    font: 'arial',
+    background: 'pca',
+    ratio: 'LAYOUT_16x9'
+  }
 };
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_CLIENT_TOKEN);

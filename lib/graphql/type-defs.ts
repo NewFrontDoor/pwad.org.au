@@ -445,6 +445,12 @@ export const typeDefs = gql`
     last: String
   }
 
+  type PresentationOptions {
+    background: String
+    font: String
+    ratio: String
+  }
+
   enum InvoiceStatus {
     draft
     open
@@ -468,6 +474,7 @@ export const typeDefs = gql`
     shortlist: [ShortList]
     role: String
     periodEndDate: Date
+    presentationOptions: PresentationOptions
     invoiceStatus: InvoiceStatus
     stripeCustomerId: String
   }

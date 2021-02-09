@@ -553,6 +553,13 @@ export type Name = {
   last?: Maybe<Scalars['String']>;
 };
 
+export type PresentationOptions = {
+  __typename?: 'PresentationOptions';
+  background?: Maybe<Scalars['String']>;
+  font?: Maybe<Scalars['String']>;
+  ratio?: Maybe<Scalars['String']>;
+};
+
 export enum InvoiceStatus {
   Draft = 'draft',
   Open = 'open',
@@ -577,6 +584,7 @@ export type User = Document & {
   shortlist?: Maybe<Array<Maybe<ShortList>>>;
   role?: Maybe<Scalars['String']>;
   periodEndDate?: Maybe<Scalars['Date']>;
+  presentationOptions?: Maybe<PresentationOptions>;
   invoiceStatus?: Maybe<InvoiceStatus>;
   stripeCustomerId?: Maybe<Scalars['String']>;
 };
@@ -746,6 +754,7 @@ export type ResolversTypes = {
   PageContent: ResolverTypeWrapper<any>;
   ShortList: ResolverTypeWrapper<any>;
   Name: ResolverTypeWrapper<any>;
+  PresentationOptions: ResolverTypeWrapper<any>;
   InvoiceStatus: ResolverTypeWrapper<any>;
   User: ResolverTypeWrapper<any>;
   RelativeUrl: ResolverTypeWrapper<any>;
@@ -797,6 +806,7 @@ export type ResolversParentTypes = {
   PageContent: any;
   ShortList: any;
   Name: any;
+  PresentationOptions: any;
   User: any;
   RelativeUrl: any;
   ExternalUrl: any;
@@ -1140,6 +1150,13 @@ export type NameResolvers<ContextType = Context, ParentType extends ResolversPar
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
 };
 
+export type PresentationOptionsResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PresentationOptions'] = ResolversParentTypes['PresentationOptions']> = {
+  background?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  font?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  ratio?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+};
+
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
   _createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -1155,6 +1172,7 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
   shortlist?: Resolver<Maybe<Array<Maybe<ResolversTypes['ShortList']>>>, ParentType, ContextType>;
   role?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   periodEndDate?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  presentationOptions?: Resolver<Maybe<ResolversTypes['PresentationOptions']>, ParentType, ContextType>;
   invoiceStatus?: Resolver<Maybe<ResolversTypes['InvoiceStatus']>, ParentType, ContextType>;
   stripeCustomerId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType>;
@@ -1236,6 +1254,7 @@ export type Resolvers<ContextType = Context> = {
   PageContent?: PageContentResolvers<ContextType>;
   ShortList?: ShortListResolvers<ContextType>;
   Name?: NameResolvers<ContextType>;
+  PresentationOptions?: PresentationOptionsResolvers<ContextType>;
   User?: UserResolvers<ContextType>;
   RelativeUrl?: RelativeUrlResolvers<ContextType>;
   ExternalUrl?: ExternalUrlResolvers<ContextType>;

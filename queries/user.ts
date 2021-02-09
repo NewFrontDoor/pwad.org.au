@@ -52,6 +52,7 @@ export async function findOrCreate(
       invoiceStatus,
       periodEndDate,
       stripeCustomerId,
+      presentationOptions,
       "role": permission.role,
       shortlist[]->{_id,_type,title,hymnNumber}
   }`,

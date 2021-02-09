@@ -552,6 +552,13 @@ export type Name = {
   last?: Maybe<Scalars['String']>;
 };
 
+export type PresentationOptions = {
+  __typename?: 'PresentationOptions';
+  background?: Maybe<Scalars['String']>;
+  font?: Maybe<Scalars['String']>;
+  ratio?: Maybe<Scalars['String']>;
+};
+
 export enum InvoiceStatus {
   Draft = 'draft',
   Open = 'open',
@@ -576,6 +583,7 @@ export type User = Document & {
   shortlist?: Maybe<Array<Maybe<ShortList>>>;
   role?: Maybe<Scalars['String']>;
   periodEndDate?: Maybe<Scalars['Date']>;
+  presentationOptions?: Maybe<PresentationOptions>;
   invoiceStatus?: Maybe<InvoiceStatus>;
   stripeCustomerId?: Maybe<Scalars['String']>;
 };
@@ -1102,7 +1110,10 @@ export type MeQuery = (
     ) | (
       { __typename?: 'Scripture' }
       & Pick<Scripture, '_id' | '_type' | 'title'>
-    )>>> }
+    )>>>, presentationOptions?: Maybe<(
+      { __typename?: 'PresentationOptions' }
+      & Pick<PresentationOptions, 'font' | 'background' | 'ratio'>
+    )> }
   )> }
 );
 
@@ -2180,6 +2191,11 @@ export const MeDocument = gql`
       ... on Scripture {
         title
       }
+    }
+    presentationOptions {
+      font
+      background
+      ratio
     }
   }
 }

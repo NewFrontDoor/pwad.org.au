@@ -34,6 +34,11 @@ export default gql`
           title
         }
       }
+      presentationOptions {
+        font
+        background
+        ratio
+      }
     }
   }
 `;
