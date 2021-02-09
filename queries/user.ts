@@ -19,7 +19,7 @@ const management = new ManagementClient({
  * @return    User
  */
 export async function getById(id: string): Promise<User> {
-  return sanity.fetch(
+  const result = sanity.fetch(
     `*[_type == "user" && _id == $id][0]{
       _id,
       name,
@@ -33,6 +33,9 @@ export async function getById(id: string): Promise<User> {
   }`,
     {id}
   );
+
+  console.log(result);
+  return result;
 }
 
 /**

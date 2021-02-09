@@ -11,6 +11,32 @@ export default gql`
         first
         last
       }
+      periodEndDate
+      stripeCustomerId
+      shortlist {
+        ... on Document {
+          _id
+          _type
+        }
+        ... on Hymn {
+          title
+          hymnNumber
+        }
+        ... on Liturgy {
+          title
+        }
+        ... on Prayer {
+          title
+        }
+        ... on Scripture {
+          title
+        }
+      }
+      presentationOptions {
+        font
+        background
+        ratio
+      }
     }
   }
 `;

@@ -146,17 +146,17 @@ const PresentationOptionsForm = ({
           <option value="arounded">Arial Rounded</option>
         </Select>
         <Label for="colourScheme">Background/colour scheme</Label>
-        <Select ref={register} defaultValue="PCA" name="colourScheme">
+        <Select ref={register} defaultValue="PCA" name="background">
           <option value="pca">PCA</option>
           <option value="white">White</option>
           <option value="beige">Beige</option>
           <option value="black">Black</option>
         </Select>
         <Label for="aspectRatio">Aspect Ratio</Label>
-        <Select ref={register} defaultValue="169" name="aspectRatio">
-          <option value="169">16:9</option>
-          <option value="1610">16:10</option>
-          <option value="43">4:3</option>
+        <Select ref={register} defaultValue="169" name="ratio">
+          <option value="LAYOUT_16x9">16:9</option>
+          <option value="LAYOUT_16x10">16:10</option>
+          <option value="LAYOUT_4x3">4:3</option>
         </Select>
         <input type="submit" value="Save" />
       </Box>
