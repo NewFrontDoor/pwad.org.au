@@ -470,14 +470,14 @@ export const typeDefs = gql`
     _updatedAt: Date
     auth0Id: String
     name: Name
-    email: String
+    email: String!
     hasPaidAccount: Boolean
     hasFreeAccount: Boolean
     picture: String
-    shortlist: [ShortList!]
+    shortlist: [ShortList!]!
     role: String
     periodEndDate: Date
-    presentationOptions: PresentationOptions!
+    presentationOptions: PresentationOptions
     invoiceStatus: InvoiceStatus
     stripeCustomerId: String
   }

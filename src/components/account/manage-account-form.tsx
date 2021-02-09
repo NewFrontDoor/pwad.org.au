@@ -131,7 +131,7 @@ const PresentationOptionsForm = ({
   font,
   background,
   ratio
-}: PresentationOptions) => {
+}: Partial<PresentationOptions>) => {
   const [updateOptions] = useUpdatePresentationOptionsMutation({
     update(cache, {data}) {
       const meQuery = cache.readQuery<MeQuery>({query: MeDocument});

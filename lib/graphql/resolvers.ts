@@ -112,26 +112,37 @@ export const resolvers: Resolvers = {
       return context.models.liturgy.search(args.filter);
     },
     async subscription(_parent, _args, context) {
-      return context.user.map(async (user) => {
-        return context.models.stripe.getUserSubscription(user);
-      });
+      return context.user
+        .map(async (user) => {
+          return context.models.stripe.getUserSubscription(user);
+        })
+        .unwrapOr(null);
     }
   },
   Mutation: {
     async changePassword(_parent, _args, context) {
-      return context.user.map(async (user) => {
-        return context.models.user.changePassword(user, context.host);
-      });
+      return context.user
+        .map(async (user) => {
+          return context.models.user.changePassword(user, context.host);
+        })
+        .unwrapOr(undefined);
     },
     async stripeCheckoutSession(_parent, _args, context) {
-      return context.user.map(async (user) => {
-        return context.models.stripe.createCheckoutSession(user, context.host);
-      });
+      return context.user
+        .map(async (user) => {
+          return context.models.stripe.createCheckoutSession(
+            user,
+            context.host
+          );
+        })
+        .unwrapOr({sessionId: null});
     },
     async cancelSubscription(_parent, _args, context) {
-      return context.user.map(async (user) => {
-        return context.models.stripe.cancelSubscription(user);
-      });
+      return context.user
+        .map(async (user) => {
+          return context.models.stripe.cancelSubscription(user);
+        })
+        .unwrapOr(undefined);
     },
     async addShortListItem(_parent, args, context) {
       return context.user

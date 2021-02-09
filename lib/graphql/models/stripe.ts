@@ -51,11 +51,13 @@ export async function createCheckoutSession(
  */
 export async function getUserSubscription(
   user: User
-): Promise<StripeSubscription | undefined> {
+): Promise<StripeSubscription | null> {
   const subscription = await findCurrentSubscription(user);
-  if (subscription) {
+  if (typeof subscription !== 'undefined') {
     return subscriptionResponse(subscription);
   }
+
+  return null;
 }
 
 /**
@@ -70,7 +72,7 @@ export async function cancelSubscription(
 ): Promise<StripeSubscription | undefined> {
   const subscription = await findCurrentSubscription(user);
 
-  if (subscription) {
+  if (typeof subscription !== 'undefined') {
     const canceledSubscription = await stripe.subscriptions.update(
       subscription.id,
       {
@@ -112,7 +114,7 @@ function subscriptionResponse(
 async function findCurrentSubscription(
   user: User
 ): Promise<Stripe.Subscription | undefined> {
-  if (user.stripeCustomerId) {
+  if (typeof user.stripeCustomerId === 'string') {
     const customer = await stripe.customers.retrieve(user.stripeCustomerId, {
       expand: ['subscriptions']
     });

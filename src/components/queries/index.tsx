@@ -577,14 +577,14 @@ export type User = Document & {
   _updatedAt?: Maybe<Scalars['Date']>;
   auth0Id?: Maybe<Scalars['String']>;
   name?: Maybe<Name>;
-  email?: Maybe<Scalars['String']>;
+  email: Scalars['String'];
   hasPaidAccount?: Maybe<Scalars['Boolean']>;
   hasFreeAccount?: Maybe<Scalars['Boolean']>;
   picture?: Maybe<Scalars['String']>;
-  shortlist?: Maybe<Array<ShortList>>;
+  shortlist: Array<ShortList>;
   role?: Maybe<Scalars['String']>;
   periodEndDate?: Maybe<Scalars['Date']>;
-  presentationOptions: PresentationOptions;
+  presentationOptions?: Maybe<PresentationOptions>;
   invoiceStatus?: Maybe<InvoiceStatus>;
   stripeCustomerId?: Maybe<Scalars['String']>;
 };
@@ -1080,7 +1080,7 @@ export type MeQuery = (
     & { name?: Maybe<(
       { __typename?: 'Name' }
       & Pick<Name, 'first' | 'last'>
-    )>, shortlist?: Maybe<Array<(
+    )>, shortlist: Array<(
       { __typename?: 'Hymn' }
       & Pick<Hymn, '_id' | '_type' | 'title' | 'hymnNumber'>
     ) | (
@@ -1092,10 +1092,10 @@ export type MeQuery = (
     ) | (
       { __typename?: 'Scripture' }
       & Pick<Scripture, '_id' | '_type' | 'title'>
-    )>>, presentationOptions: (
+    )>, presentationOptions?: Maybe<(
       { __typename?: 'PresentationOptions' }
       & Pick<PresentationOptions, 'font' | 'background' | 'ratio'>
-    ) }
+    )> }
   )> }
 );
 

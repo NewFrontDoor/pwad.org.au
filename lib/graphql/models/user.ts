@@ -4,14 +4,7 @@ import md5Hex from 'md5-hex';
 import {ManagementClient, PasswordChangeTicketResponse} from 'auth0';
 import isAfter from 'date-fns/isAfter';
 import isEmpty from 'lodash/isEmpty';
-import {
-  Maybe,
-  User,
-  ShortList,
-  InvoiceStatus,
-  PresentationOptions,
-  PresentationOptionsInput
-} from '../gen-types';
+import {User, InvoiceStatus, PresentationOptionsInput} from '../gen-types';
 import sanity from '../../sanity';
 
 const cookieSecret = process.env.SESSION_COOKIE_SECRET;
@@ -93,11 +86,6 @@ export async function findOrCreate(
   }
 
   result.hasPaidAccount = hasPaidAccount(result);
-  result.presentationOptions = result.presentationOptions ?? {
-    font: 'arial',
-    background: 'pca',
-    ratio: 'LAYOUT_16x9'
-  };
 
   return result;
 }
@@ -173,7 +161,7 @@ export async function changePassword(
 export async function addShortListItem(
   user: User,
   reference: string
-): Promise<Array<Maybe<ShortList>>> {
+): Promise<User['shortlist']> {
   const {_id} = user;
   await sanity
     .patch(_id)
@@ -201,7 +189,7 @@ export async function addShortListItem(
 export async function removeShortListItem(
   user: User,
   referenceIndex: number
-): Promise<Array<Maybe<ShortList>>> {
+): Promise<User['shortlist']> {
   const {_id} = user;
   if (referenceIndex >= 0) {
     await sanity
@@ -224,7 +212,7 @@ export async function removeShortListItem(
 export async function updatePresentationOptions(
   user: User,
   options: PresentationOptionsInput
-): Promise<PresentationOptions> {
+): Promise<User['presentationOptions']> {
   const {_id} = user;
   await sanity
     .patch(_id)
@@ -239,13 +227,7 @@ export async function updatePresentationOptions(
 
   const {presentationOptions} = await getById(_id);
 
-  return (
-    presentationOptions ?? {
-      font: 'arial',
-      background: 'pca',
-      ratio: 'LAYOUT_16x9'
-    }
-  );
+  return presentationOptions;
 }
 
 /**
