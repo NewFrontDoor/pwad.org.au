@@ -93,6 +93,11 @@ export async function findOrCreate(
   }
 
   result.hasPaidAccount = hasPaidAccount(result);
+  result.presentationOptions = result.presentationOptions ?? {
+    font: 'arial',
+    background: 'pca',
+    ratio: 'LAYOUT_16x9'
+  };
 
   return result;
 }
@@ -234,7 +239,13 @@ export async function updatePresentationOptions(
 
   const {presentationOptions} = await getById(_id);
 
-  return presentationOptions ?? {};
+  return (
+    presentationOptions ?? {
+      font: 'arial',
+      background: 'pca',
+      ratio: 'LAYOUT_16x9'
+    }
+  );
 }
 
 /**
