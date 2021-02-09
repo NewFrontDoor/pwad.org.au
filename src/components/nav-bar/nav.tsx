@@ -70,7 +70,7 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
           <>
             <NavMenuItem>
               <Link variant="nav" href="/short-list">
-                Short list ({loggedInUser?.user?.shortlist.length})
+                Short list ({loggedInUser?.user?.shortlist?.length ?? 0})
               </Link>
             </NavMenuItem>
             <NavMenuItem>

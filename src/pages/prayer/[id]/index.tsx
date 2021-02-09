@@ -3,9 +3,10 @@ import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
 import PropTypes from 'prop-types';
 import {Text, Flex, Box} from 'theme-ui';
 
+import is from '../../../is';
 import * as prayerQuery from '../../../../queries/prayer';
 import * as resourceQuery from '../../../../queries/resource';
-import {Prayer, MenuItem, PrayerPropTypes} from '../../../../queries/_types';
+import {Prayer, MenuItem} from '../../../../queries/_types';
 
 import PageLayout from '../../../components/page-layout';
 import Sidebar, {
@@ -109,8 +110,15 @@ const PrayerPage: NextPage<PrayerPageProps> = ({prayer, menuItems}) => {
 };
 
 PrayerPage.propTypes = {
-  prayer: PrayerPropTypes,
-  menuItems: PropTypes.array
+  prayer: PropTypes.exact({
+    _id: PropTypes.string.isRequired,
+    _type: is('prayer'),
+    categories: PropTypes.array.isRequired,
+    content: PropTypes.array.isRequired,
+    keywords: PropTypes.array.isRequired,
+    title: PropTypes.string.isRequired
+  }).isRequired,
+  menuItems: PropTypes.array.isRequired
 };
 
 export default PrayerPage;
@@ -119,10 +127,16 @@ export const getServerSideProps: GetServerSideProps<{
   prayer: Prayer;
   menuItems: MenuItem[];
 }> = async function (context) {
-  let id = context.params.id;
+  let id = context.params?.id;
 
   if (Array.isArray(id)) {
-    id = id[0];
+    [id] = id;
+  }
+
+  if (typeof id === 'undefined') {
+    return {
+      notFound: true
+    };
   }
 
   const menuItems = await resourceQuery.menuItems();

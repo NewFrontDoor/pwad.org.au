@@ -1,3 +1,4 @@
+import assert from 'assert';
 import {nanoid} from 'nanoid';
 import md5Hex from 'md5-hex';
 import {ManagementClient, PasswordChangeTicketResponse} from 'auth0';
@@ -6,10 +7,20 @@ import isEmpty from 'lodash/isEmpty';
 import {User, ShortList, InvoiceStatus, PresentationOptions} from './_types';
 import sanity from '../lib/sanity';
 
+const cookieSecret = process.env.SESSION_COOKIE_SECRET;
+const domain = process.env.AUTH0_DOMAIN;
+const clientId = process.env.AUTH0_CLIENT_ID;
+const clientSecret = process.env.AUTH0_CLIENT_SECRET;
+
+assert(cookieSecret, 'Auth0 Cookie Secret must be set');
+assert(domain, 'Auth0 Domain must be set');
+assert(clientId, 'Auth0 Client Id must be set');
+assert(clientSecret, 'Auth0 Client Secret must be set');
+
 const management = new ManagementClient({
-  domain: process.env.AUTH0_DOMAIN,
-  clientId: process.env.AUTH0_CLIENT_ID,
-  clientSecret: process.env.AUTH0_CLIENT_SECRET,
+  domain,
+  clientId,
+  clientSecret,
   scope: 'create:user_tickets'
 });
 
@@ -163,7 +174,7 @@ export async function addShortListItem(
 
   const {shortlist} = await getById(_id);
 
-  return shortlist;
+  return shortlist ?? [];
 }
 
 /**
@@ -186,7 +197,7 @@ export async function removeShortListItem(
   }
 
   const {shortlist} = await getById(_id);
-  return shortlist;
+  return shortlist ?? [];
 }
 
 /**
@@ -212,7 +223,7 @@ export async function updatePresentationOptions(
     .commit();
 
   const {presentationOptions} = await getById(_id);
-  return presentationOptions;
+  return presentationOptions ?? {};
 }
 
 /**
@@ -221,7 +232,7 @@ export async function updatePresentationOptions(
  * @return      [description]
  */
 function hasPaidAccount(user: User): boolean {
-  const periodEndDate = new Date(user.periodEndDate);
+  const periodEndDate = user.periodEndDate ?? Date.now();
   const hasPaidInvoice = user.invoiceStatus === InvoiceStatus.Paid;
   const isWithinInvoicePeriod = isAfter(periodEndDate, Date.now());
 

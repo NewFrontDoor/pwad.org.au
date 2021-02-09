@@ -17,13 +17,13 @@ export async function createCheckoutSession(
   const successUrl = new URL('/my-account', host);
   const cancelUrl = new URL('/my-account', host);
 
-  const customer = user.stripeCustomerId;
-  let customer_email: string;
+  const customer = user.stripeCustomerId ?? undefined;
+  let customer_email: string | undefined;
 
   // New users won't have a Stripe Customer Id,
   // so we prefill their email address instead
   if (typeof customer === 'undefined') {
-    customer_email = user.email;
+    customer_email = user.email ?? undefined;
   }
 
   // NOTE: accepts only one of customer, or customer_email and not both
@@ -51,9 +51,11 @@ export async function createCheckoutSession(
  */
 export async function getUserSubscription(
   user: User
-): Promise<StripeSubscription> {
+): Promise<StripeSubscription | undefined> {
   const subscription = await findCurrentSubscription(user);
-  return subscriptionResponse(subscription);
+  if (subscription) {
+    return subscriptionResponse(subscription);
+  }
 }
 
 /**
@@ -65,17 +67,21 @@ export async function getUserSubscription(
  */
 export async function cancelSubscription(
   user: User
-): Promise<StripeSubscription> {
-  const subscription = await findCurrentSubscription(user);
+): Promise<StripeSubscription | undefined> {
+  if (user) {
+    const subscription = await findCurrentSubscription(user);
 
-  const canceledSubscription = await stripe.subscriptions.update(
-    subscription.id,
-    {
-      cancel_at_period_end: true
+    if (subscription) {
+      const canceledSubscription = await stripe.subscriptions.update(
+        subscription.id,
+        {
+          cancel_at_period_end: true
+        }
+      );
+
+      return subscriptionResponse(canceledSubscription);
     }
-  );
-
-  return subscriptionResponse(canceledSubscription);
+  }
 }
 
 /**
@@ -90,11 +96,15 @@ function subscriptionResponse(
 
   return {
     id: subscription.id,
-    plan: firstItem.plan.nickname,
+    plan: firstItem.plan.nickname ?? '',
     status: subscription.status,
     startDate: fromUnixTime(subscription.start_date),
-    cancelAt: fromUnixTime(subscription.cancel_at),
-    canceledAt: fromUnixTime(subscription.canceled_at),
+    cancelAt: subscription.cancel_at
+      ? fromUnixTime(subscription.cancel_at)
+      : undefined,
+    canceledAt: subscription.canceled_at
+      ? fromUnixTime(subscription.canceled_at)
+      : undefined,
     currentPeriodEnd: fromUnixTime(subscription.current_period_end)
   };
 }
@@ -106,17 +116,19 @@ function subscriptionResponse(
  */
 async function findCurrentSubscription(
   user: User
-): Promise<Stripe.Subscription> {
-  const customer = await stripe.customers.retrieve(user.stripeCustomerId, {
-    expand: ['subscription']
-  });
+): Promise<Stripe.Subscription | undefined> {
+  if (user.stripeCustomerId) {
+    const customer = await stripe.customers.retrieve(user.stripeCustomerId, {
+      expand: ['subscription']
+    });
 
-  assertCustomer(customer);
+    assertCustomer(customer);
 
-  // NOTE: Assuming the current subscription is the first active subscription
-  return customer.subscriptions.data.find(
-    (subscription) => subscription.status === 'active'
-  );
+    // NOTE: Assuming the current subscription is the first active subscription
+    return customer.subscriptions?.data.find(
+      (subscription) => subscription.status === 'active'
+    );
+  }
 }
 
 /**

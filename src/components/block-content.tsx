@@ -12,12 +12,12 @@ const slugger = new GithubSlugger();
 
 type InternalLinkProps = {
   mark: {
-    reference?: GenLinkProps;
+    reference: GenLinkProps;
   };
   children: string;
 };
 
-const InternalLink: FC<InternalLinkProps> = ({children, mark}) => {
+const InternalLink = ({children, mark}: InternalLinkProps) => {
   const reference = {...mark.reference, title: children, children};
   return <Link {...linkProps(reference)}>{children}</Link>;
 };
@@ -25,21 +25,11 @@ const InternalLink: FC<InternalLinkProps> = ({children, mark}) => {
 InternalLink.propTypes = {
   mark: PropTypes.shape({
     reference: PropTypes.any
-  }),
+  }).isRequired,
   children: PropTypes.any
 };
 
-type ExternalLinkProps = {
-  mark: {
-    _key?: string;
-    _type?: string;
-    blank?: boolean;
-    href?: string;
-  };
-  children: ReactNode;
-};
-
-const ExternalLink: FC<ExternalLinkProps> = ({children, mark}) => {
+const ExternalLink = ({children, mark}) => {
   const reference = {...mark, isBlank: mark.blank, children, isInternal: false};
   return <Link {...reference} />;
 };
@@ -54,13 +44,7 @@ ExternalLink.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-type ImageProps = {
-  node: {
-    asset?: any;
-  };
-};
-
-const Image: FC<ImageProps> = ({node}) => {
+const Image = ({node}) => {
   return <img {...node.asset} />;
 };
 
@@ -70,31 +54,22 @@ Image.propTypes = {
   }).isRequired
 };
 
-type SerializerProps = {
-  node: {
-    style: string;
-    children: Array<{
-      text: string;
-    }>;
-  };
-};
-
 type VideoProps = {
   node: {
-    url?: string;
+    url?: string | null;
   };
 };
 
 const Video: FC<VideoProps> = ({node}) => {
   const {url} = node;
-  if (url) {
-    const video = getVideoId(url || null);
+  if (typeof url === 'string') {
+    const video = getVideoId(url);
 
-    if (video.service === 'youtube') {
+    if (video.service === 'youtube' && typeof video.id === 'string') {
       return <Youtube modestBranding annotations={false} video={video.id} />;
     }
 
-    if (video.service === 'vimeo') {
+    if (video.service === 'vimeo' && typeof video.id === 'string') {
       return <Vimeo showTitle={false} showByline={false} video={video.id} />;
     }
   }
@@ -106,6 +81,15 @@ Video.propTypes = {
   node: PropTypes.shape({
     url: PropTypes.string
   }).isRequired
+};
+
+type SerializerProps = {
+  node: {
+    style: string;
+    children: Array<{
+      text: string;
+    }>;
+  };
 };
 
 const serializers = {

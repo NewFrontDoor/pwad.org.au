@@ -37,13 +37,8 @@ const resolveSanityDocument = <T extends SanityType>(
 export const resolvers: Resolvers = {
   Query: {
     async me(_parent, _args, context) {
-      try {
-        const user = await context.user;
-
-        return user;
-      } catch {
-        return null;
-      }
+      const user = await context.user;
+      return user.isOk() ? user.value : null;
     },
     async main(_parent, _args, context) {
       return context.models.resource.main();
@@ -67,10 +62,11 @@ export const resolvers: Resolvers = {
       return context.models.keyword.getById(args.id);
     },
     async textSearch(_parent, args, context) {
-      const user = await context.user;
-      const ability = defineAbilitiesFor(user);
+      const ability = await context.user
+        .map((user) => defineAbilitiesFor(user))
+        .unwrapOr(defineAbilitiesFor());
       const {search} = args.filter;
-      return context.models.resource.textSearch(ability, search);
+      return context.models.resource.textSearch(ability, search ?? '');
     },
     async authorById(_parent, args, context) {
       return context.models.author.getById(args.id);
@@ -80,30 +76,30 @@ export const resolvers: Resolvers = {
     },
     async pageContentOne(_parent, args, context) {
       const {slug} = args.filter;
-      return context.models.pageContent.getBySlug(slug);
+      return context.models.pageContent.getBySlug(slug ?? '');
     },
     async metreMany(_parent, args, context) {
       return context.models.metre.findMany(
         args.filter,
         args.sort,
-        args.skip,
-        args.limit
+        args.skip ?? 0,
+        args.limit ?? 20
       );
     },
     async tuneMany(_parent, args, context) {
       return context.models.tune.findMany(
         args.filter,
         args.sort,
-        args.skip,
-        args.limit
+        args.skip ?? 0,
+        args.limit ?? 20
       );
     },
     async keywordMany(_parent, args, context) {
       return context.models.keyword.findMany(
         args.filter,
         args.sort,
-        args.skip,
-        args.limit
+        args.skip ?? 0,
+        args.limit ?? 20
       );
     },
     async search(_parent, args, context) {
@@ -116,35 +112,48 @@ export const resolvers: Resolvers = {
       return context.models.liturgy.search(args.filter);
     },
     async subscription(_parent, _args, context) {
-      const user = await context.user;
-      return context.models.stripe.getUserSubscription(user);
+      return context.user.map(async (user) => {
+        return context.models.stripe.getUserSubscription(user);
+      });
     }
   },
   Mutation: {
     async changePassword(_parent, _args, context) {
-      const user = await context.user;
-      return context.models.user.changePassword(user, context.host);
+      return context.user.map(async (user) => {
+        return context.models.user.changePassword(user, context.host);
+      });
     },
     async stripeCheckoutSession(_parent, _args, context) {
-      const user = await context.user;
-      return context.models.stripe.createCheckoutSession(user, context.host);
+      return context.user.map(async (user) => {
+        return context.models.stripe.createCheckoutSession(user, context.host);
+      });
     },
     async cancelSubscription(_parent, _args, context) {
-      const user = await context.user;
-      return context.models.stripe.cancelSubscription(user);
+      return context.user.map(async (user) => {
+        return context.models.stripe.cancelSubscription(user);
+      });
     },
     async addShortListItem(_parent, args, context) {
-      const user = await context.user;
-      return context.models.user.addShortListItem(user, args.item);
+      return context.user
+        .map(async (user) => {
+          return context.models.user.addShortListItem(user, args.item);
+        })
+        .unwrapOr([]);
     },
     async removeShortListItem(_parent, args, context) {
-      const user = await context.user;
-      const itemIndex = user.shortlist.findIndex(({_id}) => args.item === _id);
-      return context.models.user.removeShortListItem(user, itemIndex);
+      return context.user
+        .map(async (user) => {
+          const itemIndex = user.shortlist?.findIndex(
+            (item) => args.item === item?._id
+          );
+          return context.models.user.removeShortListItem(user, itemIndex ?? 0);
+        })
+        .unwrapOr([]);
     },
     async updatePresentationOptions(_parent, args, context) {
-      const user = await context.user;
-      return context.models.user.updatePresentationOptions(user, args.input);
+      return context.user.map(async (user) => {
+        return context.models.user.updatePresentationOptions(user, args.input);
+      });
     }
   },
   Document: {

@@ -3,6 +3,8 @@ import { GraphQLResolveInfo, GraphQLScalarType, GraphQLScalarTypeConfig } from '
 import { Context } from './context';
 export type Maybe<T> = T | null;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type RequireFields<T, K extends keyof T> = { [X in Exclude<keyof T, K>]?: T[X] } & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
@@ -20,23 +22,22 @@ export type Query = {
   me?: Maybe<User>;
   main?: Maybe<Main>;
   subscription?: Maybe<StripeSubscription>;
-  occasionManyGroupById?: Maybe<Array<Maybe<OccasionGroupedById>>>;
+  occasionManyGroupById?: Maybe<Array<OccasionGroupedById>>;
   menuItems?: Maybe<Array<Maybe<MenuItem>>>;
-  textSearch?: Maybe<Array<Maybe<SearchResult>>>;
-  search?: Maybe<Array<Maybe<SearchResult>>>;
-  prayerSearch?: Maybe<Array<Maybe<Prayer>>>;
-  liturgySearch?: Maybe<Array<Maybe<Liturgy>>>;
+  textSearch?: Maybe<Array<SearchResult>>;
+  search?: Maybe<Array<SearchResult>>;
+  prayerSearch?: Maybe<Array<Prayer>>;
+  liturgySearch?: Maybe<Array<Liturgy>>;
   pageContentOne?: Maybe<PageContent>;
   authorById?: Maybe<Author>;
   hymnById?: Maybe<Hymn>;
   keywordById?: Maybe<Keyword>;
-  keywordMany?: Maybe<Array<Maybe<Keyword>>>;
+  keywordMany?: Maybe<Array<Keyword>>;
   liturgyById?: Maybe<Liturgy>;
   scriptureById?: Maybe<Scripture>;
-  tuneMany?: Maybe<Array<Maybe<Tune>>>;
-  metreMany?: Maybe<Array<Maybe<Metre>>>;
+  tuneMany?: Maybe<Array<Tune>>;
+  metreMany?: Maybe<Array<Metre>>;
   prayerById?: Maybe<Prayer>;
-  prayerPagination?: Maybe<PrayerPagination>;
 };
 
 
@@ -118,16 +119,10 @@ export type QueryPrayerByIdArgs = {
   id: Scalars['ID'];
 };
 
-
-export type QueryPrayerPaginationArgs = {
-  page: Scalars['Int'];
-  perPage: Scalars['Int'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
-  addShortListItem?: Maybe<Array<Maybe<ShortList>>>;
-  removeShortListItem?: Maybe<Array<Maybe<ShortList>>>;
+  addShortListItem?: Maybe<Array<ShortList>>;
+  removeShortListItem?: Maybe<Array<ShortList>>;
   changeFreeAccount?: Maybe<User>;
   updatePresentationOptions: PresentationOptions;
   createUser?: Maybe<User>;
@@ -173,7 +168,7 @@ export type OccasionGroupedById = {
   __typename?: 'OccasionGroupedById';
   _id: Scalars['ID'];
   name?: Maybe<Scalars['String']>;
-  values?: Maybe<Array<Maybe<Occasion>>>;
+  values?: Maybe<Array<Occasion>>;
 };
 
 export type SearchInput = {
@@ -304,8 +299,8 @@ export type Main = Document & {
   subheading?: Maybe<Scalars['String']>;
   blurb?: Maybe<Scalars['JSON']>;
   searchblurb?: Maybe<Scalars['JSON']>;
-  featured?: Maybe<Array<Maybe<FeaturedReference>>>;
-  menuItems?: Maybe<Array<Maybe<MenuItem>>>;
+  featured?: Maybe<Array<FeaturedReference>>;
+  menuItems?: Maybe<Array<MenuItem>>;
 };
 
 export type ChildPageReference = PageContent | Hymn | Prayer | Liturgy | Scripture | Asset;
@@ -314,7 +309,7 @@ export type MenuItem = {
   __typename?: 'MenuItem';
   _key?: Maybe<Scalars['String']>;
   text?: Maybe<Scalars['String']>;
-  childpages?: Maybe<Array<Maybe<ChildPage>>>;
+  childpages?: Maybe<Array<ChildPage>>;
 };
 
 export type ChildPage = {
@@ -335,8 +330,8 @@ export type Author = Document & {
   bio?: Maybe<Scalars['JSON']>;
   dates?: Maybe<Scalars['String']>;
   hymns?: Maybe<Array<Maybe<Hymn>>>;
-  liturgies?: Maybe<Array<Maybe<Liturgy>>>;
-  scripture?: Maybe<Array<Maybe<Scripture>>>;
+  liturgies?: Maybe<Array<Liturgy>>;
+  scripture?: Maybe<Array<Scripture>>;
 };
 
 export type Category = Document & {
@@ -372,14 +367,14 @@ export type Hymn = Document & {
   hymnNumber?: Maybe<Scalars['Int']>;
   content?: Maybe<Scalars['JSON']>;
   tune?: Maybe<Tune>;
-  alternateTunes?: Maybe<Array<Maybe<Tune>>>;
+  alternateTunes?: Maybe<Array<Tune>>;
   book?: Maybe<Scalars['String']>;
   chapter?: Maybe<Scalars['Int']>;
   chapterVerse?: Maybe<Scalars['String']>;
   scripture?: Maybe<Scalars['String']>;
-  files?: Maybe<Array<Maybe<Asset>>>;
-  keywords?: Maybe<Array<Maybe<Keyword>>>;
-  occasions?: Maybe<Array<Maybe<Occasion>>>;
+  files?: Maybe<Array<Asset>>;
+  keywords?: Maybe<Array<Keyword>>;
+  occasions?: Maybe<Array<Occasion>>;
   verses?: Maybe<Scalars['String']>;
   copyright?: Maybe<Copyright>;
 };
@@ -392,9 +387,9 @@ export type Keyword = Document & {
   _type?: Maybe<Scalars['String']>;
   _updatedAt?: Maybe<Scalars['Date']>;
   name?: Maybe<Scalars['String']>;
-  hymns?: Maybe<Array<Maybe<Hymn>>>;
-  prayers?: Maybe<Array<Maybe<Prayer>>>;
-  liturgies?: Maybe<Array<Maybe<Liturgy>>>;
+  hymns?: Maybe<Array<Hymn>>;
+  prayers?: Maybe<Array<Prayer>>;
+  liturgies?: Maybe<Array<Liturgy>>;
 };
 
 export enum KeywordSortBy {
@@ -413,9 +408,9 @@ export type Liturgy = Document & {
   author?: Maybe<Author>;
   content?: Maybe<Scalars['JSON']>;
   note?: Maybe<Scalars['String']>;
-  files?: Maybe<Array<Maybe<Asset>>>;
-  keywords?: Maybe<Array<Maybe<Keyword>>>;
-  occasions?: Maybe<Array<Maybe<Occasion>>>;
+  files?: Maybe<Array<Asset>>;
+  keywords?: Maybe<Array<Keyword>>;
+  occasions?: Maybe<Array<Occasion>>;
   copyright?: Maybe<Copyright>;
 };
 
@@ -440,7 +435,7 @@ export type Metre = Document & {
   _type?: Maybe<Scalars['String']>;
   _updatedAt?: Maybe<Scalars['Date']>;
   metre?: Maybe<Scalars['String']>;
-  tunes?: Maybe<Array<Maybe<Tune>>>;
+  tunes?: Maybe<Array<Tune>>;
 };
 
 export enum MetreSortBy {
@@ -471,16 +466,10 @@ export type Prayer = Document & {
   author?: Maybe<Author>;
   content?: Maybe<Scalars['JSON']>;
   note?: Maybe<Scalars['String']>;
-  occasions?: Maybe<Array<Maybe<Occasion>>>;
+  occasions?: Maybe<Array<Occasion>>;
   copyright?: Maybe<Copyright>;
-  keywords?: Maybe<Array<Maybe<Keyword>>>;
-  categories?: Maybe<Array<Maybe<Category>>>;
-};
-
-export type PrayerPagination = {
-  __typename?: 'PrayerPagination';
-  pageInfo?: Maybe<PageInfo>;
-  items?: Maybe<Array<Maybe<Prayer>>>;
+  keywords?: Maybe<Array<Keyword>>;
+  categories?: Maybe<Array<Category>>;
 };
 
 export type Scripture = Document & {
@@ -494,8 +483,8 @@ export type Scripture = Document & {
   content?: Maybe<Scalars['JSON']>;
   note?: Maybe<Scalars['JSON']>;
   translation?: Maybe<Scalars['String']>;
-  occasions?: Maybe<Array<Maybe<Occasion>>>;
-  keywords?: Maybe<Array<Maybe<Keyword>>>;
+  occasions?: Maybe<Array<Occasion>>;
+  keywords?: Maybe<Array<Keyword>>;
 };
 
 export type Tune = Document & {
@@ -567,9 +556,9 @@ export type Name = {
 
 export type PresentationOptions = {
   __typename?: 'PresentationOptions';
-  background?: Maybe<Scalars['String']>;
-  font?: Maybe<Scalars['String']>;
-  ratio?: Maybe<Scalars['String']>;
+  background: Scalars['String'];
+  font: Scalars['String'];
+  ratio: Scalars['String'];
 };
 
 export enum InvoiceStatus {
@@ -593,10 +582,10 @@ export type User = Document & {
   hasPaidAccount?: Maybe<Scalars['Boolean']>;
   hasFreeAccount?: Maybe<Scalars['Boolean']>;
   picture?: Maybe<Scalars['String']>;
-  shortlist?: Maybe<Array<Maybe<ShortList>>>;
+  shortlist?: Maybe<Array<ShortList>>;
   role?: Maybe<Scalars['String']>;
   periodEndDate?: Maybe<Scalars['Date']>;
-  presentationOptions?: Maybe<PresentationOptions>;
+  presentationOptions: PresentationOptions;
   invoiceStatus?: Maybe<InvoiceStatus>;
   stripeCustomerId?: Maybe<Scalars['String']>;
 };
@@ -708,7 +697,7 @@ export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   info: GraphQLResolveInfo
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
-export type IsTypeOfResolverFn<T = {}> = (obj: T, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
+export type IsTypeOfResolverFn<T = {}, TContext = {}> = (obj: T, context: TContext, info: GraphQLResolveInfo) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
 
@@ -757,7 +746,6 @@ export type ResolversTypes = {
   MetreSortBy: ResolverTypeWrapper<any>;
   Occasion: ResolverTypeWrapper<any>;
   Prayer: ResolverTypeWrapper<any>;
-  PrayerPagination: ResolverTypeWrapper<any>;
   Scripture: ResolverTypeWrapper<any>;
   Tune: ResolverTypeWrapper<any>;
   TuneSortBy: ResolverTypeWrapper<any>;
@@ -811,7 +799,6 @@ export type ResolversParentTypes = {
   Metre: any;
   Occasion: any;
   Prayer: any;
-  PrayerPagination: any;
   Scripture: any;
   Tune: any;
   Asset: any;
@@ -833,28 +820,27 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   me?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType>;
   main?: Resolver<Maybe<ResolversTypes['Main']>, ParentType, ContextType>;
   subscription?: Resolver<Maybe<ResolversTypes['StripeSubscription']>, ParentType, ContextType>;
-  occasionManyGroupById?: Resolver<Maybe<Array<Maybe<ResolversTypes['OccasionGroupedById']>>>, ParentType, ContextType>;
+  occasionManyGroupById?: Resolver<Maybe<Array<ResolversTypes['OccasionGroupedById']>>, ParentType, ContextType>;
   menuItems?: Resolver<Maybe<Array<Maybe<ResolversTypes['MenuItem']>>>, ParentType, ContextType>;
-  textSearch?: Resolver<Maybe<Array<Maybe<ResolversTypes['SearchResult']>>>, ParentType, ContextType, RequireFields<QueryTextSearchArgs, 'filter'>>;
-  search?: Resolver<Maybe<Array<Maybe<ResolversTypes['SearchResult']>>>, ParentType, ContextType, RequireFields<QuerySearchArgs, 'filter'>>;
-  prayerSearch?: Resolver<Maybe<Array<Maybe<ResolversTypes['Prayer']>>>, ParentType, ContextType, RequireFields<QueryPrayerSearchArgs, 'filter'>>;
-  liturgySearch?: Resolver<Maybe<Array<Maybe<ResolversTypes['Liturgy']>>>, ParentType, ContextType, RequireFields<QueryLiturgySearchArgs, 'filter'>>;
+  textSearch?: Resolver<Maybe<Array<ResolversTypes['SearchResult']>>, ParentType, ContextType, RequireFields<QueryTextSearchArgs, 'filter'>>;
+  search?: Resolver<Maybe<Array<ResolversTypes['SearchResult']>>, ParentType, ContextType, RequireFields<QuerySearchArgs, 'filter'>>;
+  prayerSearch?: Resolver<Maybe<Array<ResolversTypes['Prayer']>>, ParentType, ContextType, RequireFields<QueryPrayerSearchArgs, 'filter'>>;
+  liturgySearch?: Resolver<Maybe<Array<ResolversTypes['Liturgy']>>, ParentType, ContextType, RequireFields<QueryLiturgySearchArgs, 'filter'>>;
   pageContentOne?: Resolver<Maybe<ResolversTypes['PageContent']>, ParentType, ContextType, RequireFields<QueryPageContentOneArgs, 'filter'>>;
   authorById?: Resolver<Maybe<ResolversTypes['Author']>, ParentType, ContextType, RequireFields<QueryAuthorByIdArgs, 'id'>>;
   hymnById?: Resolver<Maybe<ResolversTypes['Hymn']>, ParentType, ContextType, RequireFields<QueryHymnByIdArgs, 'id'>>;
   keywordById?: Resolver<Maybe<ResolversTypes['Keyword']>, ParentType, ContextType, RequireFields<QueryKeywordByIdArgs, 'id'>>;
-  keywordMany?: Resolver<Maybe<Array<Maybe<ResolversTypes['Keyword']>>>, ParentType, ContextType, RequireFields<QueryKeywordManyArgs, never>>;
+  keywordMany?: Resolver<Maybe<Array<ResolversTypes['Keyword']>>, ParentType, ContextType, RequireFields<QueryKeywordManyArgs, never>>;
   liturgyById?: Resolver<Maybe<ResolversTypes['Liturgy']>, ParentType, ContextType, RequireFields<QueryLiturgyByIdArgs, 'id'>>;
   scriptureById?: Resolver<Maybe<ResolversTypes['Scripture']>, ParentType, ContextType, RequireFields<QueryScriptureByIdArgs, 'id'>>;
-  tuneMany?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tune']>>>, ParentType, ContextType, RequireFields<QueryTuneManyArgs, never>>;
-  metreMany?: Resolver<Maybe<Array<Maybe<ResolversTypes['Metre']>>>, ParentType, ContextType, RequireFields<QueryMetreManyArgs, never>>;
+  tuneMany?: Resolver<Maybe<Array<ResolversTypes['Tune']>>, ParentType, ContextType, RequireFields<QueryTuneManyArgs, never>>;
+  metreMany?: Resolver<Maybe<Array<ResolversTypes['Metre']>>, ParentType, ContextType, RequireFields<QueryMetreManyArgs, never>>;
   prayerById?: Resolver<Maybe<ResolversTypes['Prayer']>, ParentType, ContextType, RequireFields<QueryPrayerByIdArgs, 'id'>>;
-  prayerPagination?: Resolver<Maybe<ResolversTypes['PrayerPagination']>, ParentType, ContextType, RequireFields<QueryPrayerPaginationArgs, 'page' | 'perPage'>>;
 };
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  addShortListItem?: Resolver<Maybe<Array<Maybe<ResolversTypes['ShortList']>>>, ParentType, ContextType, RequireFields<MutationAddShortListItemArgs, 'item'>>;
-  removeShortListItem?: Resolver<Maybe<Array<Maybe<ResolversTypes['ShortList']>>>, ParentType, ContextType, RequireFields<MutationRemoveShortListItemArgs, 'item'>>;
+  addShortListItem?: Resolver<Maybe<Array<ResolversTypes['ShortList']>>, ParentType, ContextType, RequireFields<MutationAddShortListItemArgs, 'item'>>;
+  removeShortListItem?: Resolver<Maybe<Array<ResolversTypes['ShortList']>>, ParentType, ContextType, RequireFields<MutationRemoveShortListItemArgs, 'item'>>;
   changeFreeAccount?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationChangeFreeAccountArgs, 'hasFreeAccount'>>;
   updatePresentationOptions?: Resolver<ResolversTypes['PresentationOptions'], ParentType, ContextType, RequireFields<MutationUpdatePresentationOptionsArgs, 'input'>>;
   createUser?: Resolver<Maybe<ResolversTypes['User']>, ParentType, ContextType, RequireFields<MutationCreateUserArgs, 'firstName' | 'lastName' | 'email' | 'password' | 'confirmPassword'>>;
@@ -878,15 +864,15 @@ export type SearchResultResolvers<ContextType = Context, ParentType extends Reso
 export type OccasionGroupedByIdResolvers<ContextType = Context, ParentType extends ResolversParentTypes['OccasionGroupedById'] = ResolversParentTypes['OccasionGroupedById']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  values?: Resolver<Maybe<Array<Maybe<ResolversTypes['Occasion']>>>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  values?: Resolver<Maybe<Array<ResolversTypes['Occasion']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type PageInfoResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PageInfo'] = ResolversParentTypes['PageInfo']> = {
   currentPage?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   itemCount?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
   perPage?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type DocumentResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Document'] = ResolversParentTypes['Document']> = {
@@ -912,9 +898,9 @@ export type MainResolvers<ContextType = Context, ParentType extends ResolversPar
   subheading?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   blurb?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   searchblurb?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
-  featured?: Resolver<Maybe<Array<Maybe<ResolversTypes['FeaturedReference']>>>, ParentType, ContextType>;
-  menuItems?: Resolver<Maybe<Array<Maybe<ResolversTypes['MenuItem']>>>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  featured?: Resolver<Maybe<Array<ResolversTypes['FeaturedReference']>>, ParentType, ContextType>;
+  menuItems?: Resolver<Maybe<Array<ResolversTypes['MenuItem']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ChildPageReferenceResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ChildPageReference'] = ResolversParentTypes['ChildPageReference']> = {
@@ -924,15 +910,15 @@ export type ChildPageReferenceResolvers<ContextType = Context, ParentType extend
 export type MenuItemResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MenuItem'] = ResolversParentTypes['MenuItem']> = {
   _key?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   text?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  childpages?: Resolver<Maybe<Array<Maybe<ResolversTypes['ChildPage']>>>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  childpages?: Resolver<Maybe<Array<ResolversTypes['ChildPage']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ChildPageResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ChildPage'] = ResolversParentTypes['ChildPage']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   childPage?: Resolver<Maybe<ResolversTypes['ChildPageReference']>, ParentType, ContextType>;
   alternateText?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type AuthorResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Author'] = ResolversParentTypes['Author']> = {
@@ -945,9 +931,9 @@ export type AuthorResolvers<ContextType = Context, ParentType extends ResolversP
   bio?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   dates?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   hymns?: Resolver<Maybe<Array<Maybe<ResolversTypes['Hymn']>>>, ParentType, ContextType>;
-  liturgies?: Resolver<Maybe<Array<Maybe<ResolversTypes['Liturgy']>>>, ParentType, ContextType>;
-  scripture?: Resolver<Maybe<Array<Maybe<ResolversTypes['Scripture']>>>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  liturgies?: Resolver<Maybe<Array<ResolversTypes['Liturgy']>>, ParentType, ContextType>;
+  scripture?: Resolver<Maybe<Array<ResolversTypes['Scripture']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CategoryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Category'] = ResolversParentTypes['Category']> = {
@@ -958,7 +944,7 @@ export type CategoryResolvers<ContextType = Context, ParentType extends Resolver
   _updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   parent?: Resolver<Maybe<ResolversTypes['Category']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type CopyrightResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Copyright'] = ResolversParentTypes['Copyright']> = {
@@ -968,7 +954,7 @@ export type CopyrightResolvers<ContextType = Context, ParentType extends Resolve
   _type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   _updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type HymnResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Hymn'] = ResolversParentTypes['Hymn']> = {
@@ -982,17 +968,17 @@ export type HymnResolvers<ContextType = Context, ParentType extends ResolversPar
   hymnNumber?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   content?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   tune?: Resolver<Maybe<ResolversTypes['Tune']>, ParentType, ContextType>;
-  alternateTunes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tune']>>>, ParentType, ContextType>;
+  alternateTunes?: Resolver<Maybe<Array<ResolversTypes['Tune']>>, ParentType, ContextType>;
   book?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   chapter?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   chapterVerse?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   scripture?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  files?: Resolver<Maybe<Array<Maybe<ResolversTypes['Asset']>>>, ParentType, ContextType>;
-  keywords?: Resolver<Maybe<Array<Maybe<ResolversTypes['Keyword']>>>, ParentType, ContextType>;
-  occasions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Occasion']>>>, ParentType, ContextType>;
+  files?: Resolver<Maybe<Array<ResolversTypes['Asset']>>, ParentType, ContextType>;
+  keywords?: Resolver<Maybe<Array<ResolversTypes['Keyword']>>, ParentType, ContextType>;
+  occasions?: Resolver<Maybe<Array<ResolversTypes['Occasion']>>, ParentType, ContextType>;
   verses?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   copyright?: Resolver<Maybe<ResolversTypes['Copyright']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type KeywordResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Keyword'] = ResolversParentTypes['Keyword']> = {
@@ -1002,10 +988,10 @@ export type KeywordResolvers<ContextType = Context, ParentType extends Resolvers
   _type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   _updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  hymns?: Resolver<Maybe<Array<Maybe<ResolversTypes['Hymn']>>>, ParentType, ContextType>;
-  prayers?: Resolver<Maybe<Array<Maybe<ResolversTypes['Prayer']>>>, ParentType, ContextType>;
-  liturgies?: Resolver<Maybe<Array<Maybe<ResolversTypes['Liturgy']>>>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  hymns?: Resolver<Maybe<Array<ResolversTypes['Hymn']>>, ParentType, ContextType>;
+  prayers?: Resolver<Maybe<Array<ResolversTypes['Prayer']>>, ParentType, ContextType>;
+  liturgies?: Resolver<Maybe<Array<ResolversTypes['Liturgy']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type LiturgyResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Liturgy'] = ResolversParentTypes['Liturgy']> = {
@@ -1018,11 +1004,11 @@ export type LiturgyResolvers<ContextType = Context, ParentType extends Resolvers
   author?: Resolver<Maybe<ResolversTypes['Author']>, ParentType, ContextType>;
   content?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   note?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  files?: Resolver<Maybe<Array<Maybe<ResolversTypes['Asset']>>>, ParentType, ContextType>;
-  keywords?: Resolver<Maybe<Array<Maybe<ResolversTypes['Keyword']>>>, ParentType, ContextType>;
-  occasions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Occasion']>>>, ParentType, ContextType>;
+  files?: Resolver<Maybe<Array<ResolversTypes['Asset']>>, ParentType, ContextType>;
+  keywords?: Resolver<Maybe<Array<ResolversTypes['Keyword']>>, ParentType, ContextType>;
+  occasions?: Resolver<Maybe<Array<ResolversTypes['Occasion']>>, ParentType, ContextType>;
   copyright?: Resolver<Maybe<ResolversTypes['Copyright']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MenuResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Menu'] = ResolversParentTypes['Menu']> = {
@@ -1035,7 +1021,7 @@ export type MenuResolvers<ContextType = Context, ParentType extends ResolversPar
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   link?: Resolver<Maybe<ResolversTypes['PageContent']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MetreResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Metre'] = ResolversParentTypes['Metre']> = {
@@ -1045,8 +1031,8 @@ export type MetreResolvers<ContextType = Context, ParentType extends ResolversPa
   _type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   _updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   metre?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  tunes?: Resolver<Maybe<Array<Maybe<ResolversTypes['Tune']>>>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  tunes?: Resolver<Maybe<Array<ResolversTypes['Tune']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type OccasionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Occasion'] = ResolversParentTypes['Occasion']> = {
@@ -1058,7 +1044,7 @@ export type OccasionResolvers<ContextType = Context, ParentType extends Resolver
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   parent?: Resolver<Maybe<ResolversTypes['Occasion']>, ParentType, ContextType>;
   churchyear?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type PrayerResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Prayer'] = ResolversParentTypes['Prayer']> = {
@@ -1071,17 +1057,11 @@ export type PrayerResolvers<ContextType = Context, ParentType extends ResolversP
   author?: Resolver<Maybe<ResolversTypes['Author']>, ParentType, ContextType>;
   content?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   note?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  occasions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Occasion']>>>, ParentType, ContextType>;
+  occasions?: Resolver<Maybe<Array<ResolversTypes['Occasion']>>, ParentType, ContextType>;
   copyright?: Resolver<Maybe<ResolversTypes['Copyright']>, ParentType, ContextType>;
-  keywords?: Resolver<Maybe<Array<Maybe<ResolversTypes['Keyword']>>>, ParentType, ContextType>;
-  categories?: Resolver<Maybe<Array<Maybe<ResolversTypes['Category']>>>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
-};
-
-export type PrayerPaginationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PrayerPagination'] = ResolversParentTypes['PrayerPagination']> = {
-  pageInfo?: Resolver<Maybe<ResolversTypes['PageInfo']>, ParentType, ContextType>;
-  items?: Resolver<Maybe<Array<Maybe<ResolversTypes['Prayer']>>>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  keywords?: Resolver<Maybe<Array<ResolversTypes['Keyword']>>, ParentType, ContextType>;
+  categories?: Resolver<Maybe<Array<ResolversTypes['Category']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ScriptureResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Scripture'] = ResolversParentTypes['Scripture']> = {
@@ -1094,9 +1074,9 @@ export type ScriptureResolvers<ContextType = Context, ParentType extends Resolve
   content?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   note?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
   translation?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  occasions?: Resolver<Maybe<Array<Maybe<ResolversTypes['Occasion']>>>, ParentType, ContextType>;
-  keywords?: Resolver<Maybe<Array<Maybe<ResolversTypes['Keyword']>>>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  occasions?: Resolver<Maybe<Array<ResolversTypes['Occasion']>>, ParentType, ContextType>;
+  keywords?: Resolver<Maybe<Array<ResolversTypes['Keyword']>>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type TuneResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Tune'] = ResolversParentTypes['Tune']> = {
@@ -1110,7 +1090,7 @@ export type TuneResolvers<ContextType = Context, ParentType extends ResolversPar
   composer?: Resolver<Maybe<ResolversTypes['Author']>, ParentType, ContextType>;
   file?: Resolver<Maybe<ResolversTypes['Asset']>, ParentType, ContextType>;
   musicCopyright?: Resolver<Maybe<ResolversTypes['Copyright']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type AssetResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Asset'] = ResolversParentTypes['Asset']> = {
@@ -1123,7 +1103,7 @@ export type AssetResolvers<ContextType = Context, ParentType extends ResolversPa
   file?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   size?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
   url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ResourceTypeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ResourceType'] = ResolversParentTypes['ResourceType']> = {
@@ -1138,7 +1118,7 @@ export type ResourceResolvers<ContextType = Context, ParentType extends Resolver
   _updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   type?: Resolver<Maybe<ResolversTypes['ResourceType']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type PageContentResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PageContent'] = ResolversParentTypes['PageContent']> = {
@@ -1152,7 +1132,7 @@ export type PageContentResolvers<ContextType = Context, ParentType extends Resol
   slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   hasToc?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   content?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ShortListResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ShortList'] = ResolversParentTypes['ShortList']> = {
@@ -1162,14 +1142,14 @@ export type ShortListResolvers<ContextType = Context, ParentType extends Resolve
 export type NameResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Name'] = ResolversParentTypes['Name']> = {
   first?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   last?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type PresentationOptionsResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PresentationOptions'] = ResolversParentTypes['PresentationOptions']> = {
-  background?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  font?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  ratio?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  background?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  ratio?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
@@ -1184,13 +1164,13 @@ export type UserResolvers<ContextType = Context, ParentType extends ResolversPar
   hasPaidAccount?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   hasFreeAccount?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
   picture?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  shortlist?: Resolver<Maybe<Array<Maybe<ResolversTypes['ShortList']>>>, ParentType, ContextType>;
+  shortlist?: Resolver<Maybe<Array<ResolversTypes['ShortList']>>, ParentType, ContextType>;
   role?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   periodEndDate?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
-  presentationOptions?: Resolver<Maybe<ResolversTypes['PresentationOptions']>, ParentType, ContextType>;
+  presentationOptions?: Resolver<ResolversTypes['PresentationOptions'], ParentType, ContextType>;
   invoiceStatus?: Resolver<Maybe<ResolversTypes['InvoiceStatus']>, ParentType, ContextType>;
   stripeCustomerId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type RelativeUrlResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RelativeUrl'] = ResolversParentTypes['RelativeUrl']> = {
@@ -1201,7 +1181,7 @@ export type RelativeUrlResolvers<ContextType = Context, ParentType extends Resol
   _updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type ExternalUrlResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ExternalUrl'] = ResolversParentTypes['ExternalUrl']> = {
@@ -1212,12 +1192,12 @@ export type ExternalUrlResolvers<ContextType = Context, ParentType extends Resol
   _updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   url?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type StripeCheckoutSessionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['StripeCheckoutSession'] = ResolversParentTypes['StripeCheckoutSession']> = {
   sessionId?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type StripeSubscriptionResolvers<ContextType = Context, ParentType extends ResolversParentTypes['StripeSubscription'] = ResolversParentTypes['StripeSubscription']> = {
@@ -1228,12 +1208,12 @@ export type StripeSubscriptionResolvers<ContextType = Context, ParentType extend
   plan?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   startDate?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   status?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type PasswordChangeTicketResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PasswordChangeTicket'] = ResolversParentTypes['PasswordChangeTicket']> = {
   ticket?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type Resolvers<ContextType = Context> = {
@@ -1260,7 +1240,6 @@ export type Resolvers<ContextType = Context> = {
   Metre?: MetreResolvers<ContextType>;
   Occasion?: OccasionResolvers<ContextType>;
   Prayer?: PrayerResolvers<ContextType>;
-  PrayerPagination?: PrayerPaginationResolvers<ContextType>;
   Scripture?: ScriptureResolvers<ContextType>;
   Tune?: TuneResolvers<ContextType>;
   Asset?: AssetResolvers<ContextType>;

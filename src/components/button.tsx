@@ -25,8 +25,6 @@ const Button: FC<ButtonProps> = ({
 }) => {
   let width = 'initial';
   let variant = '';
-  let startIcon = null;
-  let endIcon = null;
 
   if (isPrimary) {
     variant = 'primary';
@@ -34,22 +32,6 @@ const Button: FC<ButtonProps> = ({
 
   if (isFullWidth) {
     width = '100%';
-  }
-
-  if (iconStart) {
-    startIcon = React.cloneElement(iconStart, {
-      key: 'iconStart',
-      width: '1em',
-      height: '1em'
-    });
-  }
-
-  if (iconEnd) {
-    endIcon = React.cloneElement(iconEnd, {
-      key: 'iconEnd',
-      width: '1em',
-      height: '1em'
-    });
   }
 
   return (
@@ -88,9 +70,19 @@ const Button: FC<ButtonProps> = ({
           }
         }}
       >
-        {startIcon}
+        {iconStart &&
+          React.cloneElement(iconStart, {
+            key: 'iconStart',
+            width: '1em',
+            height: '1em'
+          })}
         {children && <span>{children}</span>}
-        {endIcon}
+        {iconEnd &&
+          React.cloneElement(iconEnd, {
+            key: 'iconEnd',
+            width: '1em',
+            height: '1em'
+          })}
       </span>
     </BaseButton>
   );

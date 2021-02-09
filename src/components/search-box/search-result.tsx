@@ -13,7 +13,7 @@ type SearchResultListProps = SearchResult & {
 
 export function isSearchResult(result: unknown): result is SearchResult {
   return ['hymn', 'prayer', 'liturgy', 'scripture'].includes(
-    (result as Partial<SearchResult>)._type
+    (result as Partial<SearchResult>)._type ?? ''
   );
 }
 
@@ -95,7 +95,7 @@ SearchResultList.propTypes = {
 };
 
 SearchResultList.defaultProps = {
-  content: null,
+  content: [],
   keywords: []
 };
 

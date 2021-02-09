@@ -1,5 +1,4 @@
 /** @jsx jsx */
-import {FC} from 'react';
 import PropTypes from 'prop-types';
 import {jsx} from 'theme-ui';
 import GithubSlugger from 'github-slugger';
@@ -11,8 +10,8 @@ type TocProps = {
   blocks?: BlockContent[];
 };
 
-const Toc: FC<TocProps> = ({blocks}) => {
-  const headings = deriveToc(blocks);
+const Toc = ({blocks}: TocProps) => {
+  const headings = deriveToc(blocks ?? []);
 
   return (
     <div>
@@ -34,11 +33,11 @@ Toc.propTypes = {
 
 type TocItem = {
   slug: string;
-  name: any[];
+  name: string;
 };
 
 export function deriveToc(content: BlockContent[]): TocItem[] {
-  const toc = [];
+  const toc: TocItem[] = [];
 
   for (const block of content) {
     if (block.style === 'h2') {

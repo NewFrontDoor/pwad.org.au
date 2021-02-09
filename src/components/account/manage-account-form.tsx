@@ -6,7 +6,7 @@ import {Check} from 'react-feather';
 import startCase from 'lodash/startCase';
 import Button from '../button';
 import Loading from '../loading';
-import {loadStripe} from '@stripe/stripe-js';
+import {Stripe, loadStripe} from '@stripe/stripe-js';
 import {Elements, useStripe} from '@stripe/react-stripe-js';
 import {useForm} from 'react-hook-form';
 import {
@@ -30,7 +30,7 @@ const CancelSubscriptionButton = () => {
       cache.writeQuery({
         query: CurrentSubscriptionDocument,
         data: {
-          subscription: data.cancelSubscription
+          subscription: data?.cancelSubscription
         }
       });
     }
@@ -68,11 +68,13 @@ const AccountPaymentButton = ({children}: AccountPaymentButtonProps) => {
       mutation: StripeCheckoutSessionDocument
     });
 
-    const {sessionId} = data.stripeCheckoutSession;
+    const {sessionId} = data?.stripeCheckoutSession ?? {};
 
-    void stripe.redirectToCheckout({
-      sessionId
-    });
+    if (typeof sessionId === 'string') {
+      void stripe?.redirectToCheckout({
+        sessionId
+      });
+    }
   }, [client, stripe]);
 
   return (
@@ -197,7 +199,7 @@ const SubscriptionDetails = ({
 
       <dl>
         <dt>Subscription status:</dt>
-        <dd>{startCase(status)}</dd>
+        <dd>{startCase(status ?? '')}</dd>
 
         {active && (
           <>
@@ -236,20 +238,20 @@ const ManageForm = ({
   hasPaidAccount,
   presentationOptions
 }: User) => {
-  const isFreeAccount = hasFreeAccount || !hasPaidAccount;
+  const isFreeAccount = hasFreeAccount ?? !hasPaidAccount;
 
   const {data, loading} = useCurrentSubscriptionQuery();
 
   const [changeFreeAccount] = useChangeFreeAccountMutation({
     update(cache, {data}) {
-      const {changeFreeAccount} = data;
-      const {me} = cache.readQuery({query: MeDocument});
+      const {changeFreeAccount} = data ?? {};
+      const {me} = cache.readQuery({query: MeDocument}) ?? {};
       cache.writeQuery({
         query: MeDocument,
         data: {
           me: {
             ...me,
-            hasFreeAccount: changeFreeAccount.hasFreeAccount
+            hasFreeAccount: changeFreeAccount?.hasFreeAccount
           }
         }
       });
@@ -274,7 +276,9 @@ const ManageForm = ({
   async function handleChangePassword(): Promise<void> {
     const {data} = await changePassword();
 
-    window.location.assign(data.changePassword.ticket);
+    if (data?.changePassword?.ticket) {
+      window.location.assign(data.changePassword.ticket);
+    }
   }
 
   return (
@@ -348,7 +352,11 @@ ManageForm.defaultProps = {
   }
 };
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_CLIENT_TOKEN);
+let stripePromise: Promise<Stripe | null> = Promise.resolve(null);
+
+if (process.env.NEXT_PUBLIC_STRIPE_CLIENT_TOKEN) {
+  stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_CLIENT_TOKEN);
+}
 
 const ManageFormProvider = (props: User) => (
   <Elements stripe={stripePromise}>

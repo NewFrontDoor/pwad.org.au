@@ -1,70 +1,3 @@
-import PropTypes, { string } from 'prop-types';
-import is from '../src/is';
-
-export const HymnPropTypes = PropTypes.exact({
-  _id: PropTypes.string.isRequired,
-  _type: is('hymn'),
-  content: PropTypes.array,
-  author: PropTypes.any,
-  tune: PropTypes.any,
-  alternateTunes: PropTypes.array,
-  copyright: PropTypes.any,
-  scripture: PropTypes.string,
-  title: PropTypes.string,
-  hymnNumber: PropTypes.number,
-  files: PropTypes.array,
-  book: PropTypes.string,
-  chapter: PropTypes.number,
-  chapterVerse: PropTypes.string,
-  keywords: PropTypes.array,
-  occasions: PropTypes.array,
-  verses: PropTypes.string
-});
-
-export const AuthorPropTypes = PropTypes.exact({
-  _id: PropTypes.string,
-  _type: is('author'),
-  name: PropTypes.string,
-  dates: PropTypes.string,
-  hymns: PropTypes.array,
-  liturgies: PropTypes.array
-});
-
-export const LiturgyPropTypes = PropTypes.exact({
-  _id: PropTypes.string,
-  _type: is('liturgy'),
-  title: PropTypes.string,
-  content: PropTypes.array,
-  files: PropTypes.array,
-  keywords: PropTypes.array,
-  categories: PropTypes.array,
-  author: PropTypes.any,
-  copyright: PropTypes.any
-});
-
-export const KeyWordPropTypes = PropTypes.exact({
-  _id: PropTypes.string,
-  _type: is('keyword'),
-  name: PropTypes.string,
-  prayers: PropTypes.array,
-  hymns: PropTypes.array,
-  liturgies: PropTypes.array
-});
-
-export const PrayerPropTypes = PropTypes.exact({
-  _id: PropTypes.string,
-  _type: is('prayer'),
-  categories: PropTypes.array,
-  content: PropTypes.array,
-  keywords: PropTypes.array,
-  title: PropTypes.string
-});
-
-export const ScripturePropTypes = PropTypes.exact({
-  _id: PropTypes.string,
-  _type: is('scripture')
-});
-
 export type Author = {
   _id: string;
   _type: 'author';
@@ -85,9 +18,9 @@ export type Asset = {
 export type Keyword = {
   _id: string;
   name?: string;
-  hymns?: Hymn[];
-  prayers?: Prayer[];
-  liturgies?: Liturgy[];
+  hymns: Hymn[];
+  prayers: Prayer[];
+  liturgies: Liturgy[];
 };
 
 export type Category = {
@@ -99,7 +32,7 @@ export type Liturgy = {
   _id: string;
   _type: 'liturgy';
   title?: string;
-  content?: BlockContent[];
+  content: BlockContent[];
   files?: Asset[];
   keywords?: Keyword[];
   categories?: Category[];
@@ -110,14 +43,14 @@ export type Liturgy = {
 export type Hymn = {
   _id: string;
   _type: 'hymn';
-  content?: BlockContent[];
+  content: BlockContent[];
   author?: Author;
   tune?: Tune;
   alternateTunes?: Tune[];
   copyright?: Copyright;
   scripture?: string;
-  title?: string;
-  hymnNumber?: number;
+  title: string;
+  hymnNumber: number;
   files?: Asset[];
   book?: string;
   chapter?: number;
@@ -141,7 +74,7 @@ export type Prayer = {
   _id: string;
   _type: 'prayer';
   author?: Author;
-  content?: BlockContent[];
+  content: BlockContent[];
   title?: string;
   copyright?: Copyright;
   keywords?: Keyword[];
@@ -151,8 +84,7 @@ export type Scripture = {
   _id: string;
   _type: 'scripture';
   title?: string;
-  content?: BlockContent[];
-  note?: BlockContent[];
+  content: BlockContent[];
   translation?: string;
   occasions?: Occasion[];
   keywords?: Keyword[];
@@ -173,8 +105,8 @@ export type ChildPage = {
 };
 
 export type MenuItem = {
-  _key?: string;
-  text?: string;
+  _key: string;
+  text: string;
   childpages?: ChildPage[];
 };
 
@@ -199,20 +131,10 @@ export type PageContent = {
   _type: 'pageContent';
   content?: BlockContent[];
   hasToc?: boolean;
-  slug?: string;
+  slug: string;
   subtitle?: string;
   title?: string;
 };
-
-export const PageContentPropTypes = PropTypes.exact({
-  _id: PropTypes.string,
-  _type: is('pageContent'),
-  content: PropTypes.array,
-  hasToc: PropTypes.bool,
-  slug: PropTypes.string,
-  subtitle: PropTypes.string,
-  title: PropTypes.string
-});
 
 export type Copyright = {
   _id: string;

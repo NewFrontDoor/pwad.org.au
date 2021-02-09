@@ -7,8 +7,11 @@ export default async function callback(
 ): Promise<void> {
   try {
     await auth0.handleCallback(request, response, {redirectTo: '/'});
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
-    response.status(error.status || 400).end(error.message);
+    if (error instanceof Error) {
+      // @ts-expect-error error stats ??
+      response.status(error.status ?? 400).end(error.message);
+    }
   }
 }

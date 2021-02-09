@@ -5,12 +5,14 @@ import Router from 'next/router';
 import PropTypes from 'prop-types';
 import {jsx, Styled, Flex, Box} from 'theme-ui';
 
+import is from '../../../is';
+import produceSlide from '../../../../lib/ppt';
 import * as hymnQuery from '../../../../queries/hymn';
 import * as resourceQuery from '../../../../queries/resource';
-import produceSlide from '../../../../lib/ppt';
-import {Hymn, HymnPropTypes, MenuItem} from '../../../../queries/_types';
+import {Hymn, MenuItem} from '../../../../queries/_types';
 
 import useUser from '../../../use-user';
+import protectedGetServerSideProps from '../../../../lib/protected-get-server-side-props';
 import {defineAbilitiesFor} from '../../../../lib/abilities';
 import Loading from '../../../components/loading';
 import BlockContent from '../../../components/block-content';
@@ -31,18 +33,9 @@ import Sidebar, {
 type SongProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const Song: NextPage<SongProps> = ({hymn, menuItems}) => {
-  const redirectTo = '/api/login';
   const {loggedInUser} = useUser({
-    redirectTo
+    redirectTo: '/api/login'
   });
-
-  useEffect(() => {
-    const ability = defineAbilitiesFor(loggedInUser.user);
-
-    if (ability.cannot('read', 'Hymn')) {
-      void Router.push('/my-account');
-    }
-  }, [loggedInUser.user]);
 
   if (!loggedInUser.user) {
     return <Loading />;
@@ -65,13 +58,11 @@ const Song: NextPage<SongProps> = ({hymn, menuItems}) => {
       title,
       content,
       hymnNumber,
-      font: loggedInUser.user?.presentationOptions?.font,
-      background: loggedInUser?.user?.presentationOptions?.background,
-      ratio: loggedInUser.user?.presentationOptions?.ratio
+      ...loggedInUser.user?.presentationOptions
     });
   }
 
-  let files = hymn.files || [];
+  let files = hymn.files ?? [];
   files = files.filter(Boolean);
 
   return (
@@ -89,7 +80,7 @@ const Song: NextPage<SongProps> = ({hymn, menuItems}) => {
         <Sidebar>
           <>
             {tune && <SidebarTune {...tune} />}
-            {alternateTunes?.length > 0 && (
+            {alternateTunes && alternateTunes.length > 0 && (
               <SidebarAlternateTunes tunes={alternateTunes} />
             )}
             {author && <SidebarAuthor {...author} />}
@@ -119,10 +110,35 @@ export const getServerSideProps: GetServerSideProps<{
   hymn: Hymn;
   menuItems: MenuItem[];
 }> = async function (context) {
-  let id = context.params.id;
+  const result = await protectedGetServerSideProps(context);
+
+  if (result.isErr()) {
+    return {
+      redirect: result.error
+    };
+  }
+
+  const ability = defineAbilitiesFor(result.value);
+
+  if (ability.cannot('read', 'Hymn')) {
+    return {
+      redirect: {
+        statusCode: 302,
+        destination: '/my-account'
+      }
+    };
+  }
+
+  let id = context.params?.id;
 
   if (Array.isArray(id)) {
-    id = id[0];
+    [id] = id;
+  }
+
+  if (typeof id === 'undefined') {
+    return {
+      notFound: true
+    };
   }
 
   const menuItems = await resourceQuery.menuItems();
@@ -137,8 +153,26 @@ export const getServerSideProps: GetServerSideProps<{
 };
 
 Song.propTypes = {
-  hymn: HymnPropTypes.isRequired,
-  menuItems: PropTypes.array
+  hymn: PropTypes.exact({
+    _id: PropTypes.string.isRequired,
+    _type: is('hymn'),
+    content: PropTypes.array.isRequired,
+    author: PropTypes.any,
+    tune: PropTypes.any,
+    alternateTunes: PropTypes.array.isRequired,
+    copyright: PropTypes.any,
+    scripture: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    hymnNumber: PropTypes.number.isRequired,
+    files: PropTypes.array.isRequired,
+    book: PropTypes.string.isRequired,
+    chapter: PropTypes.number.isRequired,
+    chapterVerse: PropTypes.string.isRequired,
+    keywords: PropTypes.array.isRequired,
+    occasions: PropTypes.array.isRequired,
+    verses: PropTypes.string.isRequired
+  }).isRequired,
+  menuItems: PropTypes.array.isRequired
 };
 
 export default Song;

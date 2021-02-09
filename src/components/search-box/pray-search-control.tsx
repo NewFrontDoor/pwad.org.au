@@ -27,6 +27,7 @@ const SearchBox: FC = () => {
   const router = useRouter();
 
   const [search, {loading, error, data, client}] = usePrayerSearchLazyQuery();
+  const prayerSearch = data?.prayerSearch ?? [];
 
   const handleSubmit = useCallback(
     ({occasion, keyword, title}: SearchFields) => {
@@ -51,16 +52,25 @@ const SearchBox: FC = () => {
 
   const showSearchResults = !isEmpty(router.query);
   let initialValues: SearchFields = {
-    title: '',
-    occasion: null,
-    keyword: null
+    title: ''
   };
 
   if (showSearchResults) {
+    let occasion: SearchFields['occasion'];
+    let keyword: SearchFields['keyword'];
+
+    if (typeof router.query.occasion !== 'undefined') {
+      occasion = initialSelectValue(router.query.occasion).shift();
+    }
+
+    if (typeof router.query.keyword !== 'undefined') {
+      keyword = initialSelectValue(router.query.keyword).shift();
+    }
+
     initialValues = {
       ...router.query,
-      occasion: initialSelectValue(router.query.occasion).shift(),
-      keyword: initialSelectValue(router.query.keyword).shift()
+      occasion,
+      keyword
     };
   }
 
@@ -103,22 +113,24 @@ const SearchBox: FC = () => {
       </Formik>
       {loading && <Loading />}
       {error && <ServerError error={error} />}
-      {data?.prayerSearch?.length === 0 && (
+      {prayerSearch.length === 0 && (
         <Styled.p variant="prose">No results found...</Styled.p>
       )}
-      {data?.prayerSearch?.length > 0 && (
+      {prayerSearch.length > 0 && (
         <>
-          {data.prayerSearch.map((result) => {
+          {prayerSearch.map((result) => {
             if (isSearchResult(result)) {
               return (
                 <SearchResult
                   {...result}
                   key={result._id}
-                  prefetch={() =>
-                    prefetchOnePrayer(client, {
-                      id: result._id
-                    })
-                  }
+                  prefetch={() => {
+                    if (typeof client !== 'undefined') {
+                      prefetchOnePrayer(client, {
+                        id: result._id
+                      });
+                    }
+                  }}
                 />
               );
             }

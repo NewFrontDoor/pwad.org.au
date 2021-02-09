@@ -32,12 +32,14 @@ type NavBarProps = {
 
 const NavBar: FC<NavBarProps> = ({menuItems}) => {
   const isMedium = useResponsiveValue([false, true]);
-  const [selectedMenu, setSelectedMenu] = useState(null);
+  const [selectedMenu, setSelectedMenu] = useState('');
   const [isOpen, toggleOpen] = useToggle(false);
   const {theme} = useThemeUI();
 
   useEffect(() => {
-    const handleRouteChange = (): void => toggleOpen(false);
+    const handleRouteChange = () => {
+      toggleOpen(false);
+    };
 
     Router.events.on('routeChangeStart', handleRouteChange);
     return () => {
@@ -53,7 +55,11 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
   return (
     <>
       <DarkTheme>
-        <NavOverlay onClickOutside={() => toggleOpen(false)}>
+        <NavOverlay
+          onClickOutside={() => {
+            toggleOpen(false);
+          }}
+        >
           <motion.div
             animate={isOpen ? 'open' : 'closed'}
             variants={isMedium ? desktopOverlayVariants : mobileOverlayVariants}
@@ -89,7 +95,11 @@ const NavBar: FC<NavBarProps> = ({menuItems}) => {
                   </Flex>
                 )
               ) : (
-                <Nav onClose={() => toggleOpen(false)}>
+                <Nav
+                  onClose={() => {
+                    toggleOpen(false);
+                  }}
+                >
                   {menuItems && (
                     <NavItems
                       selectedMenu={selectedMenu}

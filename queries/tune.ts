@@ -25,5 +25,7 @@ export async function findMany(
 
   query = query.concat(['{_id, title}']);
 
-  return sanity.fetch(query.join('|'), {filter: `${filter.textContains}*`});
+  return sanity.fetch(query.join('|'), {
+    filter: `${filter?.textContains ?? ''}*`
+  });
 }

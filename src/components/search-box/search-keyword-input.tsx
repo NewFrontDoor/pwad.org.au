@@ -1,4 +1,4 @@
-import React, {FC, useState, useCallback} from 'react';
+import React, {FC, useMemo, useState, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import find from 'lodash/find';
 import Select from 'react-select';
@@ -18,32 +18,34 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
     variables: {title: searchTerm}
   });
 
+  const keywordMany = useMemo(() => data?.keywordMany ?? [], [
+    data?.keywordMany
+  ]);
+
   const fetchMoreKeywords = useCallback(() => {
     void fetchMore({
       variables: {
-        skip: data?.keywordMany.length
+        skip: keywordMany.length
       },
       updateQuery: (previous, {fetchMoreResult}) => {
         if (!fetchMoreResult) return previous;
         return {
           ...previous,
-          keywordMany: [...previous.keywordMany, ...fetchMoreResult.keywordMany]
+          keywordMany: [
+            ...(previous.keywordMany ?? []),
+            ...(fetchMoreResult.keywordMany ?? [])
+          ]
         };
       }
     });
-  }, [fetchMore, data]);
+  }, [fetchMore, keywordMany]);
 
-  let options = [];
-
-  if (error) {
-    options = [];
-  } else {
-    options =
-      data?.keywordMany?.map(({_id, name}) => ({
+  const options = error
+    ? []
+    : keywordMany.map(({_id, name}) => ({
         label: name,
         value: _id
       })) ?? [];
-  }
 
   let {value} = field;
 
@@ -61,7 +63,9 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
         value={value}
         inputValue={searchTerm}
         options={options}
-        onChange={(value) => helpers.setValue(value)}
+        onChange={(value) => {
+          helpers.setValue(value);
+        }}
         onMenuScrollToBottom={fetchMoreKeywords}
         onInputChange={(value) => {
           setSearchTerm(value);

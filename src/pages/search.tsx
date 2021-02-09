@@ -28,7 +28,7 @@ const Search: NextPage<SearchPageProps> = ({menuItems}) => {
 };
 
 Search.propTypes = {
-  menuItems: PropTypes.array
+  menuItems: PropTypes.array.isRequired
 };
 
 export const getServerSideProps: GetServerSideProps<{

@@ -1,10 +1,6 @@
-function initialSelectValue<T = string>(
-  input: string | string[]
-): Array<{value: T}> {
-  return []
-    .concat(input)
-    .filter(Boolean)
-    .map((value) => ({value}));
+function initialSelectValue<T>(input: T | T[]): Array<{value: T}> {
+  const inputArray = Array.isArray(input) ? input : [input];
+  return inputArray.filter(Boolean).map((value) => ({value}));
 }
 
 export default initialSelectValue;

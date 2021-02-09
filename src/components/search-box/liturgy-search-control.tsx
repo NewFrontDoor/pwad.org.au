@@ -32,6 +32,8 @@ const SearchBox: FC = () => {
 
   const [search, {loading, error, data, client}] = useLiturgySearchLazyQuery();
 
+  const liturgySearch = data?.liturgySearch ?? [];
+
   const handleSubmit = useCallback(
     ({occasion, keyword, title}: SearchFields) => {
       const variables: LiturgySearchQueryVariables = {title};
@@ -54,13 +56,26 @@ const SearchBox: FC = () => {
   }, [search]);
 
   const showSearchResults = !isEmpty(router.query);
-  let initialValues: SearchFields = {title: '', occasion: null, keyword: null};
+  let initialValues: SearchFields = {
+    title: ''
+  };
 
   if (showSearchResults) {
+    let occasion: SearchFields['occasion'];
+    let keyword: SearchFields['keyword'];
+
+    if (typeof router.query.occasion !== 'undefined') {
+      occasion = initialSelectValue(router.query.occasion).shift();
+    }
+
+    if (typeof router.query.keyword !== 'undefined') {
+      keyword = initialSelectValue(router.query.keyword).shift();
+    }
+
     initialValues = {
       ...router.query,
-      occasion: initialSelectValue(router.query.occasion).shift(),
-      keyword: initialSelectValue(router.query.keyword).shift()
+      occasion,
+      keyword
     };
   }
 
@@ -103,22 +118,24 @@ const SearchBox: FC = () => {
       </Formik>
       {loading && <Loading />}
       {error && <ServerError error={error} />}
-      {data?.liturgySearch?.length === 0 && (
+      {liturgySearch.length === 0 && (
         <Styled.p variant="prose">No results found...</Styled.p>
       )}
-      {data?.liturgySearch?.length > 0 && (
+      {liturgySearch.length > 0 && (
         <>
-          {data.liturgySearch.map((result) => {
+          {liturgySearch.map((result) => {
             if (isSearchResult(result)) {
               return (
                 <SearchResult
                   {...result}
                   key={result._id}
-                  prefetch={() =>
-                    prefetchOneLiturgy(client, {
-                      id: result._id
-                    })
-                  }
+                  prefetch={() => {
+                    if (typeof client !== 'undefined') {
+                      prefetchOneLiturgy(client, {
+                        id: result._id
+                      });
+                    }
+                  }}
                 />
               );
             }

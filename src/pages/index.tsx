@@ -36,10 +36,10 @@ const Index: NextPage<IndexPageProps> = ({menuItems}) => {
             fontWeight: 'bold'
           }}
         >
-          {data?.main.heading}
+          {data?.main?.heading}
         </Styled.h1>
         <Box sx={{gridColumn: ['1/3', '2/3'], gridRow: [null, '2/3']}}>
-          <BlockContent blocks={data?.main.blurb} />
+          <BlockContent blocks={data?.main?.blurb} />
         </Box>
       </Grid>
       <SearchControl />
@@ -49,7 +49,7 @@ const Index: NextPage<IndexPageProps> = ({menuItems}) => {
 };
 
 Index.propTypes = {
-  menuItems: PropTypes.array
+  menuItems: PropTypes.array.isRequired
 };
 
 export const getServerSideProps: GetServerSideProps<{

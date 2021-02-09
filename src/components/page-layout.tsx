@@ -10,7 +10,7 @@ import {MenuItem} from '../../queries/_types';
 import NavBar from './nav-bar/nav-bar';
 import Footer from './footer/footer';
 import BannerImage, {randomBanner} from './banner-image';
-import { GA_TRACKING_ID } from '../../lib/google-analytics'
+import {GA_TRACKING_ID} from '../../lib/google-analytics';
 
 import GlobalStyles from './global-styles';
 
@@ -40,6 +40,7 @@ const PageLayout: FC<PageLayoutProps> = ({menuItems, children}) => {
             src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
           />
           <script
+            // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{
               __html: `
             window.dataLayer = window.dataLayer || [];
@@ -48,7 +49,7 @@ const PageLayout: FC<PageLayoutProps> = ({menuItems, children}) => {
             gtag('config', '${GA_TRACKING_ID}', {
               page_path: window.location.pathname,
             });
-          `,
+          `
             }}
           />
         </Head>
@@ -61,8 +62,8 @@ const PageLayout: FC<PageLayoutProps> = ({menuItems, children}) => {
             minHeight: '100vh',
             background: `linear-gradient(
                 0deg,
-                ${theme.colors.gray[1]},
-                ${rgba(theme.colors.gray[1], 0.4)}
+                ${theme.colors.gray[1] ?? ''},
+                ${rgba(theme.colors.gray[1] ?? '', 0.4)}
               )`
           }}
         >

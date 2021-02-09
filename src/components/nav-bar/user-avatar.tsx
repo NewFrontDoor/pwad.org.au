@@ -9,7 +9,9 @@ const UserAvatar: FC = () => {
   const {loggedInUser} = useUser();
 
   if (loggedInUser?.user?.picture) {
-    const name = `${loggedInUser.user.name.first} ${loggedInUser.user.name.last}`;
+    const name = `${loggedInUser?.user?.name?.first ?? ''} ${
+      loggedInUser?.user?.name?.last ?? ''
+    }`;
 
     return (
       <Avatar

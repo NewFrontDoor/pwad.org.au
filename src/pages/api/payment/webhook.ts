@@ -1,3 +1,4 @@
+import assert from 'assert';
 import {buffer} from 'micro';
 import Stripe from 'stripe';
 import {NextApiRequest, NextApiResponse} from 'next';
@@ -33,6 +34,8 @@ async function webhook(
   response: NextApiResponse
 ): Promise<void> {
   const signature = request.headers['stripe-signature'];
+  assert(signature, 'Stripe signature header must be set');
+  assert(endpointSecret, 'Stripe webhook secret token must be set');
 
   let event: Stripe.Event;
 
@@ -40,9 +43,14 @@ async function webhook(
     const body = await buffer(request);
 
     event = stripe.webhooks.constructEvent(body, signature, endpointSecret);
-  } catch (error) {
+  } catch (error: unknown) {
     console.error(error);
-    return response.status(400).send(`Webhook Error: ${String(error.message)}`);
+
+    if (error instanceof Error) {
+      response.status(400).send(`Webhook Error: ${error.message}`);
+    }
+
+    return;
   }
 
   if (event.type === 'invoice.payment_succeeded') {

@@ -5,12 +5,12 @@ export const typeDefs = gql`
     me: User
     main: Main
     subscription: StripeSubscription
-    occasionManyGroupById: [OccasionGroupedById]
+    occasionManyGroupById: [OccasionGroupedById!]
     menuItems: [MenuItem]
-    textSearch(filter: FilterInput!): [SearchResult]
-    search(filter: SearchInput!): [SearchResult]
-    prayerSearch(filter: SearchInput!): [Prayer]
-    liturgySearch(filter: SearchInput!): [Liturgy]
+    textSearch(filter: FilterInput!): [SearchResult!]
+    search(filter: SearchInput!): [SearchResult!]
+    prayerSearch(filter: SearchInput!): [Prayer!]
+    liturgySearch(filter: SearchInput!): [Liturgy!]
 
     pageContentOne(filter: FilterInput!): PageContent
 
@@ -24,7 +24,7 @@ export const typeDefs = gql`
       limit: Int
       skip: Int
       sort: KeywordSortBy
-    ): [Keyword]
+    ): [Keyword!]
 
     liturgyById(id: ID!): Liturgy
     scriptureById(id: ID!): Scripture
@@ -34,22 +34,21 @@ export const typeDefs = gql`
       limit: Int
       skip: Int
       sort: TuneSortBy
-    ): [Tune]
+    ): [Tune!]
 
     metreMany(
       filter: FilterInput
       limit: Int
       skip: Int
       sort: MetreSortBy
-    ): [Metre]
+    ): [Metre!]
 
     prayerById(id: ID!): Prayer
-    prayerPagination(page: Int!, perPage: Int!): PrayerPagination
   }
 
   type Mutation {
-    addShortListItem(item: ID!): [ShortList]
-    removeShortListItem(item: ID!): [ShortList]
+    addShortListItem(item: ID!): [ShortList!]
+    removeShortListItem(item: ID!): [ShortList!]
     changeFreeAccount(hasFreeAccount: Boolean!): User
     updatePresentationOptions(
       input: PresentationOptionsInput!
@@ -77,7 +76,7 @@ export const typeDefs = gql`
   type OccasionGroupedById {
     _id: ID!
     name: String
-    values: [Occasion]
+    values: [Occasion!]
   }
 
   input SearchInput {
@@ -206,8 +205,8 @@ export const typeDefs = gql`
     subheading: String
     blurb: JSON
     searchblurb: JSON
-    featured: [FeaturedReference]
-    menuItems: [MenuItem]
+    featured: [FeaturedReference!]
+    menuItems: [MenuItem!]
   }
 
   union ChildPageReference =
@@ -221,7 +220,7 @@ export const typeDefs = gql`
   type MenuItem {
     _key: String
     text: String
-    childpages: [ChildPage]
+    childpages: [ChildPage!]
   }
 
   type ChildPage {
@@ -240,8 +239,8 @@ export const typeDefs = gql`
     bio: JSON
     dates: String
     hymns: [Hymn]
-    liturgies: [Liturgy]
-    scripture: [Scripture]
+    liturgies: [Liturgy!]
+    scripture: [Scripture!]
   }
 
   type Category implements Document {
@@ -274,14 +273,14 @@ export const typeDefs = gql`
     hymnNumber: Int
     content: JSON
     tune: Tune
-    alternateTunes: [Tune]
+    alternateTunes: [Tune!]
     book: String
     chapter: Int
     chapterVerse: String
     scripture: String
-    files: [Asset]
-    keywords: [Keyword]
-    occasions: [Occasion]
+    files: [Asset!]
+    keywords: [Keyword!]
+    occasions: [Occasion!]
     verses: String
     copyright: Copyright
   }
@@ -293,9 +292,9 @@ export const typeDefs = gql`
     _type: String
     _updatedAt: Date
     name: String
-    hymns: [Hymn]
-    prayers: [Prayer]
-    liturgies: [Liturgy]
+    hymns: [Hymn!]
+    prayers: [Prayer!]
+    liturgies: [Liturgy!]
   }
 
   enum KeywordSortBy {
@@ -313,9 +312,9 @@ export const typeDefs = gql`
     author: Author
     content: JSON
     note: String
-    files: [Asset]
-    keywords: [Keyword]
-    occasions: [Occasion]
+    files: [Asset!]
+    keywords: [Keyword!]
+    occasions: [Occasion!]
     copyright: Copyright
   }
 
@@ -338,7 +337,7 @@ export const typeDefs = gql`
     _type: String
     _updatedAt: Date
     metre: String
-    tunes: [Tune]
+    tunes: [Tune!]
   }
 
   enum MetreSortBy {
@@ -367,15 +366,10 @@ export const typeDefs = gql`
     author: Author
     content: JSON
     note: String
-    occasions: [Occasion]
+    occasions: [Occasion!]
     copyright: Copyright
-    keywords: [Keyword]
-    categories: [Category]
-  }
-
-  type PrayerPagination {
-    pageInfo: PageInfo
-    items: [Prayer]
+    keywords: [Keyword!]
+    categories: [Category!]
   }
 
   type Scripture implements Document {
@@ -388,8 +382,8 @@ export const typeDefs = gql`
     content: JSON
     note: JSON
     translation: String
-    occasions: [Occasion]
-    keywords: [Keyword]
+    occasions: [Occasion!]
+    keywords: [Keyword!]
   }
 
   type Tune implements Document {
@@ -455,9 +449,9 @@ export const typeDefs = gql`
   }
 
   type PresentationOptions {
-    background: String
-    font: String
-    ratio: String
+    background: String!
+    font: String!
+    ratio: String!
   }
 
   enum InvoiceStatus {
@@ -480,10 +474,10 @@ export const typeDefs = gql`
     hasPaidAccount: Boolean
     hasFreeAccount: Boolean
     picture: String
-    shortlist: [ShortList]
+    shortlist: [ShortList!]
     role: String
     periodEndDate: Date
-    presentationOptions: PresentationOptions
+    presentationOptions: PresentationOptions!
     invoiceStatus: InvoiceStatus
     stripeCustomerId: String
   }

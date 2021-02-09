@@ -1,6 +1,7 @@
 /* eslint-env browser */
 
 import {useMemo} from 'react';
+import merge from 'deepmerge';
 import {NextPageContext} from 'next';
 import {ApolloClient} from '@apollo/client';
 import {InMemoryCache, NormalizedCacheObject} from '@apollo/client/cache';
@@ -24,8 +25,9 @@ function createIsomorphLink() {
   }
 
   const {HttpLink} = require('@apollo/client/link/http');
-  return new HttpLink({uri: '/api/graphql', credentials: 'same-origin'});
   /* eslint-enable @typescript-eslint/no-var-requires */
+
+  return new HttpLink({uri: '/api/graphql', credentials: 'same-origin'});
 }
 
 function createApolloClient() {
@@ -38,13 +40,20 @@ function createApolloClient() {
   });
 }
 
-export function initializeApollo(initialState: NormalizedCacheObject = null) {
+export function initializeApollo(initialState?: NormalizedCacheObject) {
   const _apolloClient = apolloClient ?? createApolloClient();
 
   // If your page has Next.js data fetching methods that use Apollo Client, the initial state
   // get hydrated here
   if (initialState) {
-    _apolloClient.cache.restore(initialState);
+    // Get existing cache, loaded during client side data fetching
+    const existingCache = _apolloClient.extract();
+
+    // Merge the existing cache into data passed from getStaticProps/getServerSideProps
+    const data = merge(initialState, existingCache);
+
+    // Restore the cache with the merged data
+    _apolloClient.cache.restore(data);
   }
 
   // For SSG and SSR always create a new Apollo Client

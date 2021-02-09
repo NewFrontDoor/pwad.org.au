@@ -8,7 +8,8 @@ import useUser from '../use-user';
 import {
   useRemoveShortListItemMutation,
   useAddShortListItemMutation,
-  MeDocument
+  MeDocument,
+  MeQuery
 } from './queries';
 
 import {ShortList} from '../../queries/_types';
@@ -23,7 +24,7 @@ type ShortListButtonProps = {
 
 export function isShortListItem(result: unknown): result is ShortList {
   return ['hymn', 'prayer', 'liturgy', 'scripture'].includes(
-    (result as Partial<ShortList>)._type
+    (result as Partial<ShortList>)._type ?? ''
   );
 }
 
@@ -47,14 +48,14 @@ const ShortListButton: FC<ShortListButtonProps> = ({item}) => {
       ]
     },
     update(cache, result) {
-      const {addShortListItem} = result.data;
-      const {me} = cache.readQuery({query: MeDocument});
+      const query = cache.readQuery<MeQuery>({query: MeDocument});
+
       cache.writeQuery({
         query: MeDocument,
         data: {
           me: {
-            ...me,
-            shortlist: addShortListItem
+            ...query?.me,
+            shortlist: result.data?.addShortListItem
           }
         }
       });
@@ -67,14 +68,13 @@ const ShortListButton: FC<ShortListButtonProps> = ({item}) => {
       removeShortListItem: shortlist.filter(({_id}) => _id !== item?._id)
     },
     update(cache, result) {
-      const {removeShortListItem} = result.data;
-      const {me} = cache.readQuery({query: MeDocument});
+      const query = cache.readQuery<MeQuery>({query: MeDocument});
       cache.writeQuery({
         query: MeDocument,
         data: {
           me: {
-            ...me,
-            shortlist: removeShortListItem
+            ...query?.me,
+            shortlist: result.data?.removeShortListItem
           }
         }
       });

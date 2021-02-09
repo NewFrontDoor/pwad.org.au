@@ -1,6 +1,6 @@
 /** @jsx jsx */
-import {FC} from 'react';
-import {jsx, Box, Styled} from 'theme-ui';
+import {ReactNode} from 'react';
+import {jsx, Box, Styled, Button} from 'theme-ui';
 import PropTypes from 'prop-types';
 import prettyBytes from 'pretty-bytes';
 import {AudioManager} from '@newfrontdoor/audio-player';
@@ -19,7 +19,7 @@ import useToggle from './use-toggle';
 -Sidebar (wrapper)
 */
 
-const Composer: FC<Author> = (props) => {
+const Composer = (props: Author) => {
   if (props.name) {
     return (
       <Styled.p>
@@ -39,38 +39,39 @@ Composer.defaultProps = {
   name: undefined
 };
 
-export const SidebarFiles = ({files, generatePPT}) => {
-  const [fileExpand, fileToggle] = useToggle(false);
-  return (
-    <>
-      <Styled.h3>Files</Styled.h3>
-      <Styled.ul
-        sx={{
-          listStyle: 'none',
-          padding: 0,
-          maxHeight: fileExpand ? 'auto' : '100px',
-          overflow: 'scroll'
-        }}
-      >
-        {files.map((file) => (
-          <li key={file._id}>
-            <Link {...assetLinkProps(file)} /> ({prettyBytes(file.size || 0)})
-          </li>
-        ))}
-        <li key="ppt">
-          <Link sx={{cursor: 'pointer'}} onClick={() => generatePPT()}>
-            Powerpoint file
-          </Link>
-        </li>
-      </Styled.ul>
-      {files.length > 4 && (
-        <button type="button" onClick={() => fileToggle()}>
-          {fileExpand ? 'Collapse' : 'Expand'} files list
-        </button>
-      )}
-    </>
-  );
+type SidebarFilesProps = {
+  files: Asset[];
+  generatePPT: () => void;
 };
+
+export const SidebarFiles = ({files, generatePPT}: SidebarFilesProps) => (
+  <>
+    <Styled.h3>Files</Styled.h3>
+    <Styled.ul
+      sx={{
+        listStyle: 'none',
+        padding: 0
+      }}
+    >
+      {files.map((file) => (
+        <li key={file._id}>
+          <Link {...assetLinkProps(file)} /> ({prettyBytes(file.size || 0)})
+        </li>
+      ))}
+      <li key="ppt">
+        <Button
+          variant="transparent"
+          sx={{padding: 0}}
+          onClick={() => {
+            generatePPT();
+          }}
+        >
+          Powerpoint file
+        </Button>
+      </li>
+    </Styled.ul>
+  </>
+);
 
 SidebarFiles.propTypes = {
   files: PropTypes.array,
@@ -82,30 +83,27 @@ SidebarFiles.defaultProps = {
   generatePPT: () => undefined
 };
 
-export const SidebarTune: FC<Tune> = ({_id, title, file}) => {
-  console.log({_id, title, file});
-  return (
-    <>
-      <Styled.h3>Tune</Styled.h3>
-      <Styled.ul
-        sx={{
-          listStyle: 'none',
-          padding: 0
-        }}
-      >
-        <li key={_id}>
-          {file ? (
-            <AudioManager.PlayButton src={file.url} variant="transparent">
-              {title}
-            </AudioManager.PlayButton>
-          ) : (
-            title
-          )}
-        </li>
-      </Styled.ul>
-    </>
-  );
-};
+export const SidebarTune = ({_id, title, file}: Tune) => (
+  <>
+    <Styled.h3>Tune</Styled.h3>
+    <Styled.ul
+      sx={{
+        listStyle: 'none',
+        padding: 0
+      }}
+    >
+      <li key={_id}>
+        {file ? (
+          <AudioManager.PlayButton src={file.url} variant="transparent">
+            {title}
+          </AudioManager.PlayButton>
+        ) : (
+          title
+        )}
+      </li>
+    </Styled.ul>
+  </>
+);
 
 SidebarTune.propTypes = {
   _id: PropTypes.string.isRequired,
@@ -117,7 +115,7 @@ SidebarTune.defaultProps = {
   file: undefined
 };
 
-export const SidebarAlternateTunes: FC<{tunes?: Tune[]}> = ({tunes}) => {
+export const SidebarAlternateTunes = ({tunes}: {tunes: Tune[]}) => {
   return (
     <>
       <Styled.h3>Alternate Tunes</Styled.h3>
@@ -154,7 +152,7 @@ SidebarAlternateTunes.defaultProps = {
   tunes: []
 };
 
-export const SidebarAuthor: FC<Author> = (props) => (
+export const SidebarAuthor = (props: Author) => (
   <>
     <Styled.h3>Hymn Author</Styled.h3>
     <Styled.p>
@@ -171,7 +169,7 @@ SidebarAuthor.defaultProps = {
   name: undefined
 };
 
-export const SidebarScripture: FC<{scripture: string}> = ({scripture}) => (
+export const SidebarScripture = ({scripture}: {scripture: string}) => (
   <>
     <Styled.h3>Scripture</Styled.h3>
     <Styled.p>{scripture}</Styled.p>
@@ -186,7 +184,7 @@ SidebarScripture.defaultProps = {
   scripture: undefined
 };
 
-export const SidebarTuneComposer: FC<Tune> = ({composer, metre}) => (
+export const SidebarTuneComposer = ({composer, metre}: Tune) => (
   <>
     <Styled.h3>Tune Composer</Styled.h3>
     <Composer {...composer} />
@@ -209,7 +207,7 @@ SidebarTuneComposer.defaultProps = {
   metre: undefined
 };
 
-export const SidebarCopyright: FC<Copyright> = ({name}) => (
+export const SidebarCopyright = ({name}: Copyright) => (
   <>
     <Styled.h3>Copyright (words)</Styled.h3>
     <Styled.p>{name || '-'}</Styled.p>
@@ -224,7 +222,7 @@ SidebarCopyright.defaultProps = {
   name: undefined
 };
 
-export const SidebarMusicCopyright: FC<Pick<Copyright, 'name'>> = (props) => (
+export const SidebarMusicCopyright = (props: Pick<Copyright, 'name'>) => (
   <>
     <Styled.h3>Copyright (music)</Styled.h3>
     <Styled.p>{props.name || '-'}</Styled.p>
@@ -235,7 +233,7 @@ SidebarMusicCopyright.propTypes = {
   name: PropTypes.string
 };
 
-const Sidebar: FC = ({children}) => (
+const Sidebar = ({children}: {children: ReactNode}) => (
   <AudioManager>
     <Box sx={{marginRight: '40px'}}>
       <AudioManager.NativePlayer controls={false} />

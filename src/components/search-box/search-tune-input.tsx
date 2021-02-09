@@ -1,4 +1,4 @@
-import React, {FC, useState, useCallback} from 'react';
+import React, {FC, useMemo, useState, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import find from 'lodash/find';
 import Select from 'react-select';
@@ -18,32 +18,32 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
     variables: {title: searchTerm}
   });
 
+  const tuneMany = useMemo(() => data?.tuneMany ?? [], [data?.tuneMany]);
+
   const fetchMoreTunes = useCallback(() => {
     void fetchMore({
       variables: {
-        skip: data?.tuneMany.length
+        skip: tuneMany.length
       },
       updateQuery: (previous, {fetchMoreResult}) => {
         if (!fetchMoreResult) return previous;
         return {
           ...previous,
-          tuneMany: [...previous.tuneMany, ...fetchMoreResult.tuneMany]
+          tuneMany: [
+            ...(previous.tuneMany ?? []),
+            ...(fetchMoreResult.tuneMany ?? [])
+          ]
         };
       }
     });
-  }, [fetchMore, data]);
+  }, [fetchMore, tuneMany]);
 
-  let options = [];
-
-  if (error) {
-    options = [];
-  } else {
-    options =
-      data?.tuneMany?.map(({_id, title}) => ({
+  const options = error
+    ? []
+    : data?.tuneMany?.map(({_id, title}) => ({
         label: title,
         value: _id
       })) ?? [];
-  }
 
   let {value} = field;
 
@@ -61,9 +61,13 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
         value={value}
         inputValue={searchTerm}
         options={options}
-        onChange={(value) => helpers.setValue(value)}
+        onChange={(value) => {
+          helpers.setValue(value);
+        }}
         onMenuScrollToBottom={fetchMoreTunes}
-        onInputChange={(value) => setSearchTerm(value)}
+        onInputChange={(value) => {
+          setSearchTerm(value);
+        }}
       />
     </Label>
   );

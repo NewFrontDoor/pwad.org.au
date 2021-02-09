@@ -4,13 +4,10 @@ import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
 import {Styled} from 'theme-ui';
 import BlockContent from '../../../components/block-content';
 
+import is from '../../../is';
 import * as pageContentQuery from '../../../../queries/page-content';
 import * as resourceQuery from '../../../../queries/resource';
-import {
-  PageContent,
-  MenuItem,
-  PageContentPropTypes
-} from '../../../../queries/_types';
+import {PageContent, MenuItem} from '../../../../queries/_types';
 
 import Toc from '../../../components/toc';
 
@@ -36,8 +33,16 @@ const Content: NextPage<ContentProps> = ({menuItems, pageContent}) => {
 };
 
 Content.propTypes = {
-  pageContent: PageContentPropTypes,
-  menuItems: PropTypes.array
+  pageContent: PropTypes.exact({
+    _id: PropTypes.string.isRequired,
+    _type: is('pageContent'),
+    content: PropTypes.array.isRequired,
+    hasToc: PropTypes.bool.isRequired,
+    slug: PropTypes.string.isRequired,
+    subtitle: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired
+  }).isRequired,
+  menuItems: PropTypes.array.isRequired
 };
 
 export default Content;
@@ -46,10 +51,16 @@ export const getServerSideProps: GetServerSideProps<{
   pageContent: PageContent;
   menuItems: MenuItem[];
 }> = async function (context) {
-  let slug = context.params.slug;
+  let slug = context.params?.slug;
 
   if (Array.isArray(slug)) {
     slug = slug[0];
+  }
+
+  if (typeof slug === 'undefined') {
+    return {
+      notFound: true
+    };
   }
 
   const menuItems = await resourceQuery.menuItems();
