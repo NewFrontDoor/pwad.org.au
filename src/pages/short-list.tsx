@@ -26,14 +26,16 @@ const ShortList: NextPage<ShortListProps> = ({menuItems}) => {
 
         {loggedInUser?.user && (
           <Text variant="listNone" as="ul">
-            {loggedInUser.user.shortlist.map((item) => {
+            {loggedInUser.user.shortlist?.map((item) => {
               if (isShortListItem(item)) {
                 return (
                   <li key={item._id}>
                     <ShortListButton item={item} />{' '}
                     <Link
                       {...linkProps(item)}
-                      onMouseOver={() => prefetchSearchResult(client, item)}
+                      onMouseOver={() => {
+                        prefetchSearchResult(client, item);
+                      }}
                     />
                   </li>
                 );
@@ -49,7 +51,7 @@ const ShortList: NextPage<ShortListProps> = ({menuItems}) => {
 };
 
 ShortList.propTypes = {
-  menuItems: PropTypes.array
+  menuItems: PropTypes.array.isRequired
 };
 
 export const getServerSideProps: GetServerSideProps<{

@@ -1,4 +1,4 @@
-import {OccasionGroupedById} from './_types';
+import {Occasion, OccasionGroupedById} from './_types';
 import sanity from '../lib/sanity';
 
 export async function findAll(): Promise<OccasionGroupedById[]> {
@@ -14,8 +14,8 @@ export async function findAll(): Promise<OccasionGroupedById[]> {
 
   const result = await sanity.fetch(query.join('|'));
 
-  const grouped = [];
-  const emptyGroup = [];
+  const grouped: OccasionGroupedById[] = [];
+  const emptyGroup: Occasion[] = [];
 
   for (const item of result) {
     if (item.values.length === 0) {
@@ -25,5 +25,5 @@ export async function findAll(): Promise<OccasionGroupedById[]> {
     }
   }
 
-  return [...grouped, {name: null, values: emptyGroup}];
+  return [...grouped, {_id: 'empty-group', values: emptyGroup}];
 }

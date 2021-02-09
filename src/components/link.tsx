@@ -17,8 +17,7 @@ import {
 } from '../../queries/_types';
 
 type LinkProps = {
-  as?: string;
-  href?: string;
+  href: string;
   onClick?: () => void;
   isInternal?: boolean;
   isBlank?: boolean;
@@ -26,11 +25,11 @@ type LinkProps = {
 } & HTMLProps<HTMLAnchorElement>;
 
 const Link: FC<LinkProps> = (props) => {
-  const {as, href, isInternal, isBlank, ...rest} = props;
+  const {href, isInternal, isBlank, ...rest} = props;
   const isNotApi = !href?.startsWith('/api/');
   if (href && isInternal && isNotApi) {
     return (
-      <NextLink passHref as={as} href={href}>
+      <NextLink passHref href={href}>
         <ThemeUiLink {...rest} />
       </NextLink>
     );
@@ -45,78 +44,94 @@ const Link: FC<LinkProps> = (props) => {
 };
 
 Link.propTypes = {
-  as: PropTypes.string,
-  href: PropTypes.string,
+  href: PropTypes.string.isRequired,
   isInternal: PropTypes.bool,
   isBlank: PropTypes.bool
 };
 
 Link.defaultProps = {
-  as: undefined,
-  href: undefined,
   isInternal: true,
   isBlank: false
 };
 
 export default Link;
 
-export function hymnLinkProps({_id, title, hymnNumber}: Hymn): LinkProps {
+export function hymnLinkProps({
+  _id,
+  title,
+  hymnNumber
+}: Pick<Hymn, '_id' | 'title' | 'hymnNumber'>): LinkProps {
   return {
-    as: `/hymn/${_id}/${String(kebabCase(title))}`,
-    href: '/hymn/[id]/[name]',
+    href: `/hymn/${_id}/${String(kebabCase(title))}`,
     children: `${hymnNumber}. ${title}`
   };
 }
 
-export function authorLinkProps({_id, name, dates}: Author): LinkProps {
+export function authorLinkProps({
+  _id,
+  name,
+  dates
+}: Pick<Author, '_id' | 'name' | 'dates'>): LinkProps {
   return {
-    as: `/author/${_id}/${String(kebabCase(name))}`,
-    href: '/author/[id]/[name]',
+    href: `/author/${_id}/${String(kebabCase(name))}`,
     children: dates ? `${name} (${dates})` : name
   };
 }
 
-export function liturgyLinkProps({_id, title}: Liturgy): LinkProps {
+export function liturgyLinkProps({
+  _id,
+  title
+}: Pick<Liturgy, '_id' | 'title'>): LinkProps {
   return {
-    as: `/liturgy/${_id}/${String(kebabCase(title))}`,
-    href: '/liturgy/[id]/[name]',
+    href: `/liturgy/${_id}/${String(kebabCase(title))}`,
     children: title
   };
 }
 
-export function prayerLinkProps({_id, title}: Prayer): LinkProps {
+export function prayerLinkProps({
+  _id,
+  title
+}: Pick<Prayer, '_id' | 'title'>): LinkProps {
   return {
-    as: `/prayer/${_id}/${String(kebabCase(title))}`,
-    href: '/prayer/[id]/[name]',
+    href: `/prayer/${_id}/${String(kebabCase(title))}`,
     children: title
   };
 }
 
-export function keywordLinkProps({_id, name}: Keyword): LinkProps {
+export function keywordLinkProps({
+  _id,
+  name
+}: Pick<Keyword, '_id' | 'name'>): LinkProps {
   return {
-    as: `/keyword/${_id}/${String(kebabCase(name))}`,
-    href: '/keyword/[id]/[name]',
+    href: `/keyword/${_id}/${String(kebabCase(name))}`,
     children: name
   };
 }
 
-export function pageContentLinkProps({slug, title}: PageContent): LinkProps {
+export function pageContentLinkProps({
+  slug,
+  title
+}: Pick<PageContent, 'slug' | 'title'>): LinkProps {
   return {
-    as: `/content/${slug}`,
-    href: '/content/[slug]',
+    href: `/content/${slug}`,
     children: title
   };
 }
 
-export function scriptureLinkProps({_id, title}: Scripture): LinkProps {
+export function scriptureLinkProps({
+  _id,
+  title
+}: Pick<Scripture, '_id' | 'title'>): LinkProps {
   return {
-    as: `/scripture/${_id}`,
-    href: '/scripture/[id]',
+    href: `/scripture/${_id}`,
     children: title
   };
 }
 
-export function assetLinkProps({url, name}: Asset): LinkProps {
+export function assetLinkProps({
+  url,
+  name
+}: Pick<Asset, 'url' | 'name'>): LinkProps {
   return {
     isInternal: false,
     href: url,
@@ -170,7 +185,7 @@ export function childPageLinkProps({
   alternateText,
   childPage
 }: ChildPage): LinkProps {
-  const props = childPage ? linkProps(childPage) : {};
+  const props = childPage ? linkProps(childPage) : {href: ''};
 
   if (alternateText) {
     props.children = alternateText;

@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {motion} from 'framer-motion';
 import {Styled, Box} from 'theme-ui';
@@ -47,12 +47,12 @@ const loadingCircleVariants = {
 
 const loadingCircleTransition = {
   duration: 0.5,
-  yoyo: Infinity,
+  yoyo: Number.POSITIVE_INFINITY,
   ease: 'easeInOut'
 };
 
-const Loading: FC<LoadingProps> = ({isLoading}) =>
-  isLoading && (
+const Loading = ({isLoading}: LoadingProps) =>
+  isLoading ? (
     <Box>
       <Styled.h2>
         Loading
@@ -80,7 +80,7 @@ const Loading: FC<LoadingProps> = ({isLoading}) =>
         </motion.span>
       </Styled.h2>
     </Box>
-  );
+  ) : null;
 
 Loading.propTypes = {
   isLoading: PropTypes.bool

@@ -6,7 +6,7 @@ type Subjects = 'all' | 'my-account' | 'Hymn' | 'User';
 type Abilities = [Actions, Subjects];
 type PwadAbility = Ability<Abilities>;
 
-export function defineAbilitiesFor(user?: User): PwadAbility {
+export function defineAbilitiesFor(user?: User | null): PwadAbility {
   const {can, cannot, rules} = new AbilityBuilder<PwadAbility>();
 
   switch (user?.role) {
@@ -28,6 +28,7 @@ export function defineAbilitiesFor(user?: User): PwadAbility {
       if (user) {
         can('manage', 'my-account');
       }
+
       break;
   }
 

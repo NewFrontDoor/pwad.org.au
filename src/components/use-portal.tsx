@@ -1,10 +1,10 @@
 /* eslint-env browser */
-/* eslint-disable unicorn/prefer-node-append, unicorn/prefer-node-remove */
+/* eslint-disable unicorn/prefer-dom-node-append, unicorn/prefer-dom-node-remove */
 
 import {useState, useEffect, useLayoutEffect} from 'react';
 
-function usePortal(id: string): Element {
-  const [portalNode, setPortalNode] = useState(null);
+function usePortal(id: string): HTMLDivElement | undefined {
+  const [portalNode, setPortalNode] = useState<HTMLDivElement>();
 
   useEffect(() => {
     setPortalNode(document.createElement('div'));
@@ -27,7 +27,7 @@ function usePortal(id: string): Element {
     }
 
     return () => {
-      rootNode.parentNode.removeChild(rootNode);
+      rootNode?.parentNode?.removeChild(rootNode);
     };
   }, [id, portalNode]);
 

@@ -1,9 +1,9 @@
-import {Metre, FilterInput, MetreSortBy} from '../gen-types';
+import {Maybe, Metre, FilterInput, MetreSortBy} from '../gen-types';
 import sanity from '../../sanity';
 
 export async function findMany(
-  filter?: FilterInput,
-  sort?: MetreSortBy,
+  filter?: Maybe<FilterInput>,
+  sort?: Maybe<MetreSortBy>,
   skip = 0,
   limit = 20
 ): Promise<Metre[]> {
@@ -25,5 +25,7 @@ export async function findMany(
 
   query = query.concat(['{_id, metre}']);
 
-  return sanity.fetch(query.join('|'), {filter: `${filter.textContains}*`});
+  return sanity.fetch(query.join('|'), {
+    filter: `${filter?.textContains ?? ''}*`
+  });
 }

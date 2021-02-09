@@ -37,10 +37,18 @@ type SearchFields = {
   };
 };
 
+function findHymnBook(book: string | string[]): EnumHymnBook {
+  const books = Array.isArray(book) ? book : [book];
+  const [, found] =
+    Object.entries(EnumHymnBook).find(([, b]) => books.includes(b)) ?? [];
+  return found ?? EnumHymnBook.None;
+}
+
 const SearchBox: FC = () => {
   const router = useRouter();
 
   const [search, {loading, error, data, client}] = useAdvancedSearchLazyQuery();
+  const searchResults = data?.search ?? [];
 
   const handleSubmit = useCallback(
     ({occasion, keyword, title, metres, tune, book}: SearchFields) => {
@@ -79,20 +87,46 @@ const SearchBox: FC = () => {
   let initialValues: SearchFields = {
     metres: [],
     title: '',
-    occasion: null,
-    keyword: null,
-    tune: null,
-    book: null
+    occasion: undefined,
+    keyword: undefined,
+    tune: undefined,
+    book: undefined
   };
 
   if (showSearchResults) {
+    let metres: SearchFields['metres'] = [];
+    let occasion: SearchFields['occasion'];
+    let keyword: SearchFields['keyword'];
+    let tune: SearchFields['tune'];
+    let book: SearchFields['book'];
+
+    if (typeof router.query.metres !== 'undefined') {
+      metres = initialSelectValue(router.query.metres) ?? [];
+    }
+
+    if (typeof router.query.occasion !== 'undefined') {
+      occasion = initialSelectValue(router.query.occasion).shift();
+    }
+
+    if (typeof router.query.keyword !== 'undefined') {
+      keyword = initialSelectValue(router.query.keyword).shift();
+    }
+
+    if (typeof router.query.tune !== 'undefined') {
+      tune = initialSelectValue(router.query.tune).shift();
+    }
+
+    if (typeof router.query.book !== 'undefined') {
+      book = initialSelectValue(findHymnBook(router.query.book)).shift();
+    }
+
     initialValues = {
       ...router.query,
-      metres: initialSelectValue(router.query.metres),
-      occasion: initialSelectValue(router.query.occasion).shift(),
-      keyword: initialSelectValue(router.query.keyword).shift(),
-      tune: initialSelectValue(router.query.tune).shift(),
-      book: initialSelectValue<EnumHymnBook>(router.query.book).shift()
+      metres,
+      occasion,
+      keyword,
+      tune,
+      book
     };
   }
 
@@ -147,19 +181,21 @@ const SearchBox: FC = () => {
       {data?.search?.length === 0 && (
         <Styled.p variant="prose">No results found...</Styled.p>
       )}
-      {data?.search?.length > 0 && (
+      {searchResults.length > 0 && (
         <>
-          {data.search.map((result) => {
+          {searchResults.map((result) => {
             if (isSearchResult(result)) {
               return (
                 <SearchResult
                   {...result}
                   key={result._id}
-                  prefetch={() =>
-                    prefetchOneHymn(client, {
-                      id: result._id
-                    })
-                  }
+                  prefetch={() => {
+                    if (typeof client !== 'undefined') {
+                      prefetchOneHymn(client, {
+                        id: result._id
+                      });
+                    }
+                  }}
                 />
               );
             }

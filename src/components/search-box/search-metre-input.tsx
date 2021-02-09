@@ -1,4 +1,4 @@
-import React, {FC, useState, useCallback} from 'react';
+import React, {FC, useMemo, useState, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import intersectionBy from 'lodash/intersectionBy';
 import Select from 'react-select';
@@ -17,32 +17,33 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
   const {loading, error, data, fetchMore} = useFindMetreQuery({
     variables: {metre: searchTerm}
   });
+
+  const metreMany = useMemo(() => data?.metreMany ?? [], [data?.metreMany]);
+
   const fetchMoreMetres = useCallback(() => {
     void fetchMore({
       variables: {
-        skip: data?.metreMany.length
+        skip: metreMany.length
       },
       updateQuery: (previous, {fetchMoreResult}) => {
         if (!fetchMoreResult) return previous;
         return {
           ...previous,
-          metreMany: [...previous.metreMany, ...fetchMoreResult.metreMany]
+          metreMany: [
+            ...(previous.metreMany ?? []),
+            ...(fetchMoreResult.metreMany ?? [])
+          ]
         };
       }
     });
-  }, [data, fetchMore]);
+  }, [metreMany, fetchMore]);
 
-  let options = [];
-
-  if (error) {
-    options = [];
-  } else {
-    options =
-      data?.metreMany.map(({_id, metre}) => ({
+  const options = error
+    ? []
+    : metreMany.map(({_id, metre}) => ({
         label: metre,
         value: _id
       })) ?? [];
-  }
 
   let value = intersectionBy(options, field.value, 'value');
 
@@ -61,9 +62,13 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
         value={value}
         inputValue={searchTerm}
         options={options}
-        onChange={(value) => helpers.setValue(value)}
+        onChange={(value) => {
+          helpers.setValue(value);
+        }}
         onMenuScrollToBottom={fetchMoreMetres}
-        onInputChange={(value) => setSearchTerm(value)}
+        onInputChange={(value) => {
+          setSearchTerm(value);
+        }}
       />
     </Label>
   );

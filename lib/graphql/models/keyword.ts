@@ -1,4 +1,4 @@
-import {Keyword, FilterInput, KeywordSortBy} from '../gen-types';
+import {Maybe, Keyword, FilterInput, KeywordSortBy} from '../gen-types';
 import sanity from '../../sanity';
 
 export async function getById(id: string): Promise<Keyword> {
@@ -24,8 +24,8 @@ export async function getById(id: string): Promise<Keyword> {
 }
 
 export async function findMany(
-  filter?: FilterInput,
-  sort?: KeywordSortBy,
+  filter?: Maybe<FilterInput>,
+  sort?: Maybe<KeywordSortBy>,
   skip = 0,
   limit = 20
 ): Promise<Keyword[]> {
@@ -47,5 +47,7 @@ export async function findMany(
 
   query = query.concat(['{_id, name}']);
 
-  return sanity.fetch(query.join('|'), {filter: `${filter.textContains}*`});
+  return sanity.fetch(query.join('|'), {
+    filter: `${filter?.textContains ?? ''}*`
+  });
 }

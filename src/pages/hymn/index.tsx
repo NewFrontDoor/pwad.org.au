@@ -1,39 +1,20 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
-import Router from 'next/router';
 import {Styled} from 'theme-ui';
 
 import * as resourceQuery from '../../../queries/resource';
 import {MenuItem} from '../../../queries/_types';
 
+import protectedGetServerSideProps from '../../../lib/protected-get-server-side-props';
 import {defineAbilitiesFor} from '../../../lib/abilities';
 
-import useUser from '../../use-user';
-import Loading from '../../components/loading';
 import PageLayout from '../../components/page-layout';
 import SongSearchControl from '../../components/search-box/song-search-control';
 
 type RejoiceProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const Rejoice: NextPage<RejoiceProps> = ({menuItems}) => {
-  const redirectTo = '/api/login';
-  const {loggedInUser} = useUser({
-    redirectTo
-  });
-
-  useEffect(() => {
-    const ability = defineAbilitiesFor(loggedInUser.user);
-
-    if (ability.cannot('read', 'Hymn')) {
-      void Router.push('/my-account');
-    }
-  }, [loggedInUser.user]);
-
-  if (!loggedInUser.user) {
-    return <Loading />
-  }
-
   return (
     <PageLayout menuItems={menuItems}>
       <Styled.h1 fontWeight="extraBold">
@@ -51,12 +32,31 @@ const Rejoice: NextPage<RejoiceProps> = ({menuItems}) => {
 };
 
 Rejoice.propTypes = {
-  menuItems: PropTypes.array
+  menuItems: PropTypes.array.isRequired
 };
 
 export const getServerSideProps: GetServerSideProps<{
   menuItems: MenuItem[];
-}> = async function () {
+}> = async function (context) {
+  const result = await protectedGetServerSideProps(context);
+
+  if (result.isErr()) {
+    return {
+      redirect: result.error
+    };
+  }
+
+  const ability = defineAbilitiesFor(result.value);
+
+  if (ability.cannot('read', 'Hymn')) {
+    return {
+      redirect: {
+        statusCode: 302,
+        destination: '/my-account'
+      }
+    };
+  }
+
   const menuItems = await resourceQuery.menuItems();
 
   return {

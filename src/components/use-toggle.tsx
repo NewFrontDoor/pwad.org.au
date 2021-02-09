@@ -3,7 +3,7 @@ import {useState, useCallback} from 'react';
 function useToggle(
   initialState?: boolean
 ): [boolean, (newState?: boolean) => void] {
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState(initialState ?? false);
   const toggleState = useCallback(
     (newState?: boolean) => {
       setState((state: boolean) => {

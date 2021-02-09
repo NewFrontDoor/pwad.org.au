@@ -6,10 +6,11 @@ import {Check} from 'react-feather';
 import startCase from 'lodash/startCase';
 import Button from '../button';
 import Loading from '../loading';
-import {loadStripe} from '@stripe/stripe-js';
+import {Stripe, loadStripe} from '@stripe/stripe-js';
 import {Elements, useStripe} from '@stripe/react-stripe-js';
 import {useForm} from 'react-hook-form';
 import {
+  MeQuery,
   MeDocument,
   CurrentSubscriptionDocument,
   StripeCheckoutSessionDocument,
@@ -27,12 +28,14 @@ import {
 const CancelSubscriptionButton = () => {
   const [cancelSubscription] = useCancelSubscriptionMutation({
     update(cache, {data}) {
-      cache.writeQuery({
-        query: CurrentSubscriptionDocument,
-        data: {
-          subscription: data.cancelSubscription
-        }
-      });
+      if (data?.cancelSubscription?.__typename === 'StripeSubscription') {
+        cache.writeQuery({
+          query: CurrentSubscriptionDocument,
+          data: {
+            subscription: data.cancelSubscription
+          }
+        });
+      }
     }
   });
 
@@ -68,11 +71,11 @@ const AccountPaymentButton = ({children}: AccountPaymentButtonProps) => {
       mutation: StripeCheckoutSessionDocument
     });
 
-    const {sessionId} = data.stripeCheckoutSession;
-
-    void stripe.redirectToCheckout({
-      sessionId
-    });
+    if (typeof data?.stripeCheckoutSession?.sessionId === 'string') {
+      void stripe?.redirectToCheckout({
+        sessionId: data.stripeCheckoutSession.sessionId
+      });
+    }
   }, [client, stripe]);
 
   return (
@@ -129,7 +132,26 @@ const PresentationOptionsForm = ({
   background,
   ratio
 }: PresentationOptions) => {
-  const [updateOptions] = useUpdatePresentationOptionsMutation();
+  const [updateOptions] = useUpdatePresentationOptionsMutation({
+    update(cache, {data}) {
+      const meQuery = cache.readQuery<MeQuery>({query: MeDocument});
+
+      if (
+        meQuery?.me?.__typename === 'User' &&
+        data?.updatePresentationOptions?.__typename === 'PresentationOptions'
+      ) {
+        cache.writeQuery<MeQuery>({
+          query: MeDocument,
+          data: {
+            me: {
+              ...meQuery.me,
+              presentationOptions: data.updatePresentationOptions
+            }
+          }
+        });
+      }
+    }
+  });
   const {register, handleSubmit} = useForm({
     defaultValues: {
       font,
@@ -137,13 +159,13 @@ const PresentationOptionsForm = ({
       ratio
     }
   });
-  const onSubmit = handleSubmit((data) =>
-    updateOptions({
+  const onSubmit = handleSubmit((data) => {
+    void updateOptions({
       variables: {
         input: data
       }
-    })
-  );
+    });
+  });
 
   return (
     <>
@@ -197,7 +219,7 @@ const SubscriptionDetails = ({
 
       <dl>
         <dt>Subscription status:</dt>
-        <dd>{startCase(status)}</dd>
+        <dd>{startCase(status ?? '')}</dd>
 
         {active && (
           <>
@@ -236,23 +258,27 @@ const ManageForm = ({
   hasPaidAccount,
   presentationOptions
 }: User) => {
-  const isFreeAccount = hasFreeAccount || !hasPaidAccount;
+  const isFreeAccount = hasFreeAccount ?? !hasPaidAccount;
 
   const {data, loading} = useCurrentSubscriptionQuery();
 
   const [changeFreeAccount] = useChangeFreeAccountMutation({
     update(cache, {data}) {
-      const {changeFreeAccount} = data;
-      const {me} = cache.readQuery({query: MeDocument});
-      cache.writeQuery({
-        query: MeDocument,
-        data: {
-          me: {
-            ...me,
-            hasFreeAccount: changeFreeAccount.hasFreeAccount
+      const meQuery = cache.readQuery<MeQuery>({query: MeDocument});
+
+      if (
+        meQuery?.me?.__typename === 'User' &&
+        data?.changeFreeAccount?.__typename === 'User'
+      )
+        cache.writeQuery<MeQuery>({
+          query: MeDocument,
+          data: {
+            me: {
+              ...meQuery.me,
+              hasFreeAccount: data.changeFreeAccount.hasFreeAccount
+            }
           }
-        }
-      });
+        });
     }
   });
 
@@ -274,7 +300,9 @@ const ManageForm = ({
   async function handleChangePassword(): Promise<void> {
     const {data} = await changePassword();
 
-    window.location.assign(data.changePassword.ticket);
+    if (data?.changePassword?.ticket) {
+      window.location.assign(data.changePassword.ticket);
+    }
   }
 
   return (
@@ -348,7 +376,11 @@ ManageForm.defaultProps = {
   }
 };
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_CLIENT_TOKEN);
+let stripePromise: Promise<Stripe | null> = Promise.resolve(null);
+
+if (process.env.NEXT_PUBLIC_STRIPE_CLIENT_TOKEN) {
+  stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_CLIENT_TOKEN);
+}
 
 const ManageFormProvider = (props: User) => (
   <Elements stripe={stripePromise}>

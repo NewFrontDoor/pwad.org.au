@@ -31,7 +31,7 @@ const Pray: NextPage<PrayProps> = ({menuItems}) => {
 export default Pray;
 
 Pray.propTypes = {
-  menuItems: PropTypes.array
+  menuItems: PropTypes.array.isRequired
 };
 
 export const getServerSideProps: GetServerSideProps<{

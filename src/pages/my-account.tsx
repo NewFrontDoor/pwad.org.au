@@ -4,12 +4,13 @@ import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
 import dynamic from 'next/dynamic';
 import {Styled, Flex, Box} from 'theme-ui';
 
+import protectedGetServerSideProps from '../../lib/protected-get-server-side-props';
 import * as resourceQuery from '../../queries/resource';
 import {MenuItem} from '../../queries/_types';
 import PageLayout from '../components/page-layout';
 import Logo from '../components/logo';
 import Loading from '../components/loading';
-import useUser from '../use-user';
+import {useMeQuery} from '../components/queries';
 
 const ManageAccountForm = dynamic(
   async () => import('../components/account/manage-account-form'),
@@ -21,15 +22,7 @@ const ManageAccountForm = dynamic(
 type MyAccountProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const MyAccount: NextPage<MyAccountProps> = ({menuItems}) => {
-  const {loggedInUser} = useUser({
-    redirectTo: '/api/login'
-  });
-
-  if (!loggedInUser.user) {
-    return <Loading />;
-  }
-
-  const {hasPaidAccount, hasFreeAccount, name} = loggedInUser.user;
+  const {loading, data} = useMeQuery();
 
   return (
     <PageLayout menuItems={menuItems}>
@@ -42,21 +35,24 @@ const MyAccount: NextPage<MyAccountProps> = ({menuItems}) => {
           <Styled.h2>My Account</Styled.h2>
         </Box>
       </Flex>
-      {loggedInUser?.user &&
-        (hasPaidAccount || hasFreeAccount ? (
+      {loading && <Loading />}
+      {data?.me &&
+        (data.me.hasPaidAccount || data.me.hasFreeAccount ? (
           <>
-            <Styled.p variant="h1">Welcome back {name.first}!</Styled.p>
-            <ManageAccountForm {...loggedInUser.user} />
+            <Styled.p variant="h1">
+              Welcome back {data.me.name?.first}!
+            </Styled.p>
+            <ManageAccountForm {...data.me} />
           </>
         ) : (
           <>
             <Styled.p variant="h1">
-              Welcome {name.first}, lets get you set up!
+              Welcome {data.me.name?.first}, lets get you set up!
             </Styled.p>
             <Styled.p variant="h2">
               Which type of account would you like to create?
             </Styled.p>
-            <ManageAccountForm {...loggedInUser.user} />
+            <ManageAccountForm {...data.me} />
           </>
         ))}
     </PageLayout>
@@ -64,12 +60,20 @@ const MyAccount: NextPage<MyAccountProps> = ({menuItems}) => {
 };
 
 MyAccount.propTypes = {
-  menuItems: PropTypes.array
+  menuItems: PropTypes.array.isRequired
 };
 
 export const getServerSideProps: GetServerSideProps<{
   menuItems: MenuItem[];
-}> = async function () {
+}> = async function (context) {
+  const result = await protectedGetServerSideProps(context);
+
+  if (result.isErr()) {
+    return {
+      redirect: result.error
+    };
+  }
+
   const menuItems = await resourceQuery.menuItems();
 
   return {

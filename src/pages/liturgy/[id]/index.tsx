@@ -8,9 +8,10 @@ import Sidebar, {
   SidebarFiles
 } from '../../../components/sidebar';
 
+import is from '../../../is';
 import * as liturgyQuery from '../../../../queries/liturgy';
 import * as resourceQuery from '../../../../queries/resource';
-import {Liturgy, MenuItem, LiturgyPropTypes} from '../../../../queries/_types';
+import {Liturgy, MenuItem} from '../../../../queries/_types';
 
 import PageLayout from '../../../components/page-layout';
 import BlockContent from '../../../components/block-content';
@@ -20,7 +21,7 @@ type LiturgyProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const LiturgyPage: NextPage<LiturgyProps> = ({menuItems, liturgy}) => {
   const {author, content, title, copyright} = liturgy;
-  const files = liturgy?.files || [];
+  const files = liturgy?.files ?? [];
 
   return (
     <PageLayout menuItems={menuItems}>
@@ -52,8 +53,18 @@ const LiturgyPage: NextPage<LiturgyProps> = ({menuItems, liturgy}) => {
 };
 
 LiturgyPage.propTypes = {
-  liturgy: LiturgyPropTypes,
-  menuItems: PropTypes.array
+  liturgy: PropTypes.exact({
+    _id: PropTypes.string.isRequired,
+    _type: is('liturgy'),
+    title: PropTypes.string.isRequired,
+    content: PropTypes.array.isRequired,
+    files: PropTypes.array.isRequired,
+    keywords: PropTypes.array.isRequired,
+    categories: PropTypes.array.isRequired,
+    author: PropTypes.any,
+    copyright: PropTypes.any
+  }).isRequired,
+  menuItems: PropTypes.array.isRequired
 };
 
 export default LiturgyPage;
@@ -62,10 +73,16 @@ export const getServerSideProps: GetServerSideProps<{
   liturgy: Liturgy;
   menuItems: MenuItem[];
 }> = async function (context) {
-  let id = context.params.id;
+  let id = context.params?.id;
 
   if (Array.isArray(id)) {
-    id = id[0];
+    [id] = id;
+  }
+
+  if (typeof id === 'undefined') {
+    return {
+      notFound: true
+    };
   }
 
   const menuItems = await resourceQuery.menuItems();

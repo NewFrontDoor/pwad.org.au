@@ -7,7 +7,7 @@ type LoggedInUser = {
   loading: boolean;
   client: ApolloClient<any>;
   loggedInUser: {
-    user?: User;
+    user?: User | null;
   };
 };
 

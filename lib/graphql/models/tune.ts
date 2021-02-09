@@ -1,9 +1,9 @@
-import {Tune, FilterInput, TuneSortBy} from '../gen-types';
+import {Maybe, Tune, FilterInput, TuneSortBy} from '../gen-types';
 import sanity from '../../sanity';
 
 export async function findMany(
-  filter?: FilterInput,
-  sort?: TuneSortBy,
+  filter?: Maybe<FilterInput>,
+  sort?: Maybe<TuneSortBy>,
   skip = 0,
   limit = 20
 ): Promise<Tune[]> {
@@ -25,5 +25,7 @@ export async function findMany(
 
   query = query.concat(['{_id, title}']);
 
-  return sanity.fetch(query.join('|'), {filter: `${filter.textContains}*`});
+  return sanity.fetch(query.join('|'), {
+    filter: `${filter?.textContains ?? ''}*`
+  });
 }

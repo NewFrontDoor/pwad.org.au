@@ -12,7 +12,7 @@ const NavOverlay: FC<NavOverlayProps> = ({children, onClickOutside}) => {
 
   const handleClick = useCallback(
     (event) => {
-      if (target.contains(event.target)) {
+      if (target?.contains(event.target)) {
         return;
       }
 

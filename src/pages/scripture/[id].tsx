@@ -3,9 +3,10 @@ import PropTypes from 'prop-types';
 import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
 import {Text, Box} from 'theme-ui';
 
+import is from '../../is';
 import * as scriptureQuery from '../../../queries/scripture';
 import * as resourceQuery from '../../../queries/resource';
-import {Scripture, MenuItem, ScripturePropTypes} from '../../../queries/_types';
+import {Scripture, MenuItem} from '../../../queries/_types';
 
 import PageLayout from '../../components/page-layout';
 import BlockContent from '../../components/block-content';
@@ -44,8 +45,12 @@ const ScripturePage: NextPage<ScriptureProps> = ({scripture, menuItems}) => {
 };
 
 ScripturePage.propTypes = {
-  scripture: ScripturePropTypes,
-  menuItems: PropTypes.array
+  scripture: PropTypes.exact({
+    _id: PropTypes.string.isRequired,
+    _type: is('scripture'),
+    content: PropTypes.array.isRequired
+  }).isRequired,
+  menuItems: PropTypes.array.isRequired
 };
 
 export default ScripturePage;
@@ -54,10 +59,16 @@ export const getServerSideProps: GetServerSideProps<{
   scripture: Scripture;
   menuItems: MenuItem[];
 }> = async function (context) {
-  let id = context.params.id;
+  let id = context.params?.id;
 
   if (Array.isArray(id)) {
-    id = id[0];
+    [id] = id;
+  }
+
+  if (typeof id === 'undefined') {
+    return {
+      notFound: true
+    };
   }
 
   const menuItems = await resourceQuery.menuItems();

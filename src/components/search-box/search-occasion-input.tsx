@@ -15,17 +15,12 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
   const [field, , helpers] = useField(props);
   const {loading, error, data} = useFindOccasionQuery();
 
-  let options = [];
-
-  if (error) {
-    options = [];
-  } else {
-    options =
-      data?.occasionManyGroupById?.map(({name, values}) => ({
+  const options = error
+    ? []
+    : data?.occasionManyGroupById?.map(({name, values}) => ({
         label: name,
-        options: values.map(({_id, name}) => ({value: _id, label: name}))
+        options: values?.map(({_id, name}) => ({value: _id, label: name}))
       })) ?? [];
-  }
 
   let {value} = field;
 
@@ -45,7 +40,9 @@ const SearchInput: FC<SearchInput> = ({label, ...props}) => {
         isLoading={loading}
         value={value}
         options={options}
-        onChange={(value) => helpers.setValue(value)}
+        onChange={(value) => {
+          helpers.setValue(value);
+        }}
       />
     </Label>
   );

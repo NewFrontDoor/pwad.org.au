@@ -31,7 +31,7 @@ const Liturgy: NextPage<LiturgyProps> = ({menuItems}) => {
 export default Liturgy;
 
 Liturgy.propTypes = {
-  menuItems: PropTypes.array
+  menuItems: PropTypes.array.isRequired
 };
 
 export const getServerSideProps: GetServerSideProps<{

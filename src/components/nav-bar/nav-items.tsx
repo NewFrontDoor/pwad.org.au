@@ -15,7 +15,12 @@ const NavCollapse: FC<NavCollapseProps> = ({text, childpages}) => {
   const [isOpen, toggleOpen] = useToggle(false);
   return (
     <>
-      <Styled.p variant="prose" onClick={() => toggleOpen()}>
+      <Styled.p
+        variant="prose"
+        onClick={() => {
+          toggleOpen();
+        }}
+      >
         {text}
       </Styled.p>
       <Flex
@@ -35,7 +40,7 @@ const NavCollapse: FC<NavCollapseProps> = ({text, childpages}) => {
             listStyle: 'none'
           }}
         >
-          {childpages.map((item) => {
+          {childpages?.map((item) => {
             return (
               <Text key={item._id} as="li">
                 <Link {...childPageLinkProps(item)} variant="nav" />
@@ -63,7 +68,7 @@ const collapseVariants = {
 };
 
 type NavItemsProps = {
-  selectedMenu: string;
+  selectedMenu: string | null;
   menuItems: MenuItem[];
 };
 

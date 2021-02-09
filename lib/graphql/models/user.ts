@@ -1,20 +1,33 @@
+import assert from 'assert';
 import {nanoid} from 'nanoid';
 import md5Hex from 'md5-hex';
 import {ManagementClient, PasswordChangeTicketResponse} from 'auth0';
 import isAfter from 'date-fns/isAfter';
 import isEmpty from 'lodash/isEmpty';
 import {
+  Maybe,
   User,
   ShortList,
   InvoiceStatus,
-  PresentationOptions
+  PresentationOptions,
+  PresentationOptionsInput
 } from '../gen-types';
 import sanity from '../../sanity';
 
+const cookieSecret = process.env.SESSION_COOKIE_SECRET;
+const domain = process.env.AUTH0_DOMAIN;
+const clientId = process.env.AUTH0_CLIENT_ID;
+const clientSecret = process.env.AUTH0_CLIENT_SECRET;
+
+assert(cookieSecret, 'Auth0 Cookie Secret must be set');
+assert(domain, 'Auth0 Domain must be set');
+assert(clientId, 'Auth0 Client Id must be set');
+assert(clientSecret, 'Auth0 Client Secret must be set');
+
 const management = new ManagementClient({
-  domain: process.env.AUTH0_DOMAIN,
-  clientId: process.env.AUTH0_CLIENT_ID,
-  clientSecret: process.env.AUTH0_CLIENT_SECRET,
+  domain,
+  clientId,
+  clientSecret,
   scope: 'create:user_tickets'
 });
 
@@ -85,7 +98,7 @@ export async function findOrCreate(
 }
 
 type SubscriptionStatus = {
-  email: string;
+  email: string | null;
   invoiceStatus: string;
   stripeCustomerId: string;
   periodEndDate: Date;
@@ -134,13 +147,16 @@ export async function updateSubscriptionStatus({
 export async function changePassword(
   user: User,
   host: URL
-): Promise<PasswordChangeTicketResponse> {
+): Promise<PasswordChangeTicketResponse | undefined> {
   const resultUrl = new URL('/my-account', host);
-  return management.createPasswordChangeTicket({
-    email: user.email,
-    result_url: resultUrl.href,
-    connection_id: 'con_9pRAt1nFWr5rkyyK'
-  });
+
+  if (user.email) {
+    return management.createPasswordChangeTicket({
+      email: user.email,
+      result_url: resultUrl.href,
+      connection_id: 'con_9pRAt1nFWr5rkyyK'
+    });
+  }
 }
 
 /**
@@ -152,7 +168,7 @@ export async function changePassword(
 export async function addShortListItem(
   user: User,
   reference: string
-): Promise<ShortList[]> {
+): Promise<Array<Maybe<ShortList>>> {
   const {_id} = user;
   await sanity
     .patch(_id)
@@ -168,7 +184,7 @@ export async function addShortListItem(
 
   const {shortlist} = await getById(_id);
 
-  return shortlist;
+  return shortlist ?? [];
 }
 
 /**
@@ -180,7 +196,7 @@ export async function addShortListItem(
 export async function removeShortListItem(
   user: User,
   referenceIndex: number
-): Promise<ShortList[]> {
+): Promise<Array<Maybe<ShortList>>> {
   const {_id} = user;
   if (referenceIndex >= 0) {
     await sanity
@@ -191,7 +207,7 @@ export async function removeShortListItem(
   }
 
   const {shortlist} = await getById(_id);
-  return shortlist;
+  return shortlist ?? [];
 }
 
 /**
@@ -202,7 +218,7 @@ export async function removeShortListItem(
  */
 export async function updatePresentationOptions(
   user: User,
-  options: PresentationOptions
+  options: PresentationOptionsInput
 ): Promise<PresentationOptions> {
   const {_id} = user;
   await sanity
@@ -217,7 +233,8 @@ export async function updatePresentationOptions(
     .commit();
 
   const {presentationOptions} = await getById(_id);
-  return presentationOptions;
+
+  return presentationOptions ?? {};
 }
 
 /**

@@ -14,7 +14,7 @@ const SearchBox: FC = () => {
   const router = useRouter();
 
   const [search, {loading, error, data, client}] = useTextSearchLazyQuery();
-
+  const textSearch = data?.textSearch ?? [];
   const handleSubmit = useCallback(
     (variables: TextSearchQueryVariables) => {
       search({variables});
@@ -76,18 +76,22 @@ const SearchBox: FC = () => {
       </Formik>
       {loading && <Loading />}
       {error && <ServerError error={error} />}
-      {data?.textSearch?.length === 0 && (
+      {textSearch.length === 0 && (
         <Styled.p variant="prose">No results found...</Styled.p>
       )}
-      {data?.textSearch?.length > 0 && (
+      {textSearch.length > 0 && (
         <>
-          {data.textSearch.map((result) => {
+          {textSearch.map((result) => {
             if (isSearchResult(result)) {
               return (
                 <SearchResult
                   {...result}
                   key={result._id}
-                  prefetch={() => prefetchSearchResult(client, result)}
+                  prefetch={() => {
+                    if (typeof client !== 'undefined') {
+                      prefetchSearchResult(client, result);
+                    }
+                  }}
                 />
               );
             }

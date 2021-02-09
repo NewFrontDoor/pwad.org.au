@@ -3,9 +3,10 @@ import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
 import PropTypes from 'prop-types';
 import {Text} from 'theme-ui';
 
+import is from '../../../is';
 import * as keywordQuery from '../../../../queries/keyword';
 import * as resourceQuery from '../../../../queries/resource';
-import {Keyword, MenuItem, KeyWordPropTypes} from '../../../../queries/_types';
+import {Keyword, MenuItem} from '../../../../queries/_types';
 
 import PageLayout from '../../../components/page-layout';
 import ContentWrap from '../../../components/content-wrap';
@@ -69,8 +70,15 @@ const KeywordPage: NextPage<KeywordProps> = ({keyword, menuItems}) => {
 };
 
 KeywordPage.propTypes = {
-  keyword: KeyWordPropTypes,
-  menuItems: PropTypes.array
+  keyword: PropTypes.exact({
+    _id: PropTypes.string.isRequired,
+    _type: is('keyword'),
+    name: PropTypes.string.isRequired,
+    prayers: PropTypes.array.isRequired,
+    hymns: PropTypes.array.isRequired,
+    liturgies: PropTypes.array.isRequired
+  }).isRequired,
+  menuItems: PropTypes.array.isRequired
 };
 
 export default KeywordPage;
@@ -79,10 +87,16 @@ export const getServerSideProps: GetServerSideProps<{
   keyword: Keyword;
   menuItems: MenuItem[];
 }> = async function (context) {
-  let id = context.params.id;
+  let id = context.params?.id;
 
   if (Array.isArray(id)) {
-    id = id[0];
+    [id] = id;
+  }
+
+  if (typeof id === 'undefined') {
+    return {
+      notFound: true
+    };
   }
 
   const menuItems = await resourceQuery.menuItems();

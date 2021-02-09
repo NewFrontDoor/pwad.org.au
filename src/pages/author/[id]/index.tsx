@@ -3,9 +3,10 @@ import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
 import PropTypes from 'prop-types';
 import {Text} from 'theme-ui';
 
+import is from '../../../is';
 import * as authorQuery from '../../../../queries/author';
 import * as resourceQuery from '../../../../queries/resource';
-import {Author, MenuItem, AuthorPropTypes} from '../../../../queries/_types';
+import {Author, MenuItem} from '../../../../queries/_types';
 import PageLayout from '../../../components/page-layout';
 import Link, {hymnLinkProps, liturgyLinkProps} from '../../../components/link';
 
@@ -55,9 +56,15 @@ export const getServerSideProps: GetServerSideProps<{
   author: Author;
   menuItems: MenuItem[];
 }> = async function (context) {
-  let id = context.params.id;
+  let id = context.params?.id;
   if (Array.isArray(id)) {
-    id = id[0];
+    [id] = id;
+  }
+
+  if (typeof id === 'undefined') {
+    return {
+      notFound: true
+    };
   }
 
   const author = await authorQuery.getById(id);
@@ -72,8 +79,15 @@ export const getServerSideProps: GetServerSideProps<{
 };
 
 AuthorPage.propTypes = {
-  author: AuthorPropTypes,
-  menuItems: PropTypes.array
+  author: PropTypes.exact({
+    _id: PropTypes.string.isRequired,
+    _type: is('author'),
+    name: PropTypes.string.isRequired,
+    dates: PropTypes.string.isRequired,
+    hymns: PropTypes.array.isRequired,
+    liturgies: PropTypes.array.isRequired
+  }).isRequired,
+  menuItems: PropTypes.array.isRequired
 };
 
 export default AuthorPage;
