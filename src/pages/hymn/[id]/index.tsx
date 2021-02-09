@@ -60,7 +60,14 @@ const Song: NextPage<SongProps> = ({hymn, menuItems}) => {
   } = hymn;
 
   function generatePPT() {
-    produceSlide({title, content, hymnNumber, fontOpt: loggedInUser.presentationOptions.font, bgOpt: loggedInUser.presentationOptions.background, ratioOpt: loggedInUser.presentationOptions.ratio});
+    produceSlide({
+      title,
+      content,
+      hymnNumber,
+      fontOption: loggedInUser.user?.presentationOptions?.font,
+      backgroundOption: loggedInUser?.user?.presentationOptions?.background,
+      ratioOpt: loggedInUser.user?.presentationOptions?.ratio
+    });
   }
 
   let files = hymn.files || [];
