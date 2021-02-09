@@ -1,4 +1,4 @@
-import React, {FC, useCallback} from 'react';
+import React, {useCallback} from 'react';
 import {useApolloClient} from '@apollo/client';
 import PropTypes from 'prop-types';
 import {Styled, Box, Grid, Text, Select, Label} from 'theme-ui';
@@ -24,7 +24,7 @@ import {
   PresentationOptions
 } from '../queries';
 
-const CancelSubscriptionButton: FC = () => {
+const CancelSubscriptionButton = () => {
   const [cancelSubscription] = useCancelSubscriptionMutation({
     update(cache, {data}) {
       cache.writeQuery({
@@ -55,7 +55,11 @@ const CancelSubscriptionButton: FC = () => {
   );
 };
 
-const AccountPaymentButton: FC = ({children}) => {
+type AccountPaymentButtonProps = {
+  children: React.ReactNode;
+};
+
+const AccountPaymentButton = ({children}: AccountPaymentButtonProps) => {
   const stripe = useStripe();
   const client = useApolloClient();
 
@@ -87,10 +91,10 @@ type BuySubscriptionProps = {
   changeFreeAccount: () => void;
 };
 
-const BuySubscription: FC<BuySubscriptionProps> = ({
+const BuySubscription = ({
   hasFreeAccount,
   changeFreeAccount
-}) => {
+}: BuySubscriptionProps) => {
   return (
     <>
       <Box sx={{width: '100%'}} marginBottom={3}>
@@ -133,50 +137,56 @@ const PresentationOptionsForm = ({
       ratio
     }
   });
-  const onSubmit = (data) => updateOptions(data);
+  const onSubmit = handleSubmit((data) =>
+    updateOptions({
+      variables: {
+        input: data
+      }
+    })
+  );
 
   return (
     <>
-      <Box as="form" sx={{width: '100%'}} onSubmit={handleSubmit(onSubmit)}>
+      <Box as="form" sx={{width: '100%'}} onSubmit={onSubmit}>
         <Text as="h3">Presentation options:</Text>
-        <Label for="font">Font</Label>
+        <Label htmlFor="font">Font</Label>
         <Select ref={register} defaultValue="arial" name="font">
           <option value="arial">Arial</option>
           <option value="helvetica">Helvetica</option>
           <option value="arounded">Arial Rounded</option>
         </Select>
-        <Label for="colourScheme">Background/colour scheme</Label>
+        <Label htmlFor="colourScheme">Background/colour scheme</Label>
         <Select ref={register} defaultValue="PCA" name="background">
           <option value="pca">PCA</option>
           <option value="white">White</option>
           <option value="beige">Beige</option>
           <option value="black">Black</option>
         </Select>
-        <Label for="aspectRatio">Aspect Ratio</Label>
+        <Label htmlFor="aspectRatio">Aspect Ratio</Label>
         <Select ref={register} defaultValue="169" name="ratio">
           <option value="LAYOUT_16x9">16:9</option>
           <option value="LAYOUT_16x10">16:10</option>
           <option value="LAYOUT_4x3">4:3</option>
         </Select>
-        <input type="submit" value="Save" />
+        <Button type="submit">Save</Button>
       </Box>
     </>
   );
 };
 
 PresentationOptionsForm.propTypes = {
-  font: PropTypes.string.isRequired,
-  background: PropTypes.string.isRequired,
-  ratio: PropTypes.string.isRequired
+  font: PropTypes.string,
+  background: PropTypes.string,
+  ratio: PropTypes.string
 };
 
-const SubscriptionDetails: FC<StripeSubscription> = ({
+const SubscriptionDetails = ({
   status,
   plan,
   currentPeriodEnd,
   canceledAt,
   cancelAt
-}) => {
+}: StripeSubscription) => {
   const canceled = status === 'canceled' || canceledAt !== null;
   const active = !canceled;
 
@@ -221,11 +231,11 @@ SubscriptionDetails.propTypes = {
   cancelAt: PropTypes.any
 };
 
-const ManageForm: FC<User> = ({
+const ManageForm = ({
   hasFreeAccount,
   hasPaidAccount,
   presentationOptions
-}) => {
+}: User) => {
   const isFreeAccount = hasFreeAccount || !hasPaidAccount;
 
   const {data, loading} = useCurrentSubscriptionQuery();
@@ -340,7 +350,7 @@ ManageForm.defaultProps = {
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_CLIENT_TOKEN);
 
-const ManageFormProvider: FC<User> = (props) => (
+const ManageFormProvider = (props: User) => (
   <Elements stripe={stripePromise}>
     <ManageForm {...props} />
   </Elements>

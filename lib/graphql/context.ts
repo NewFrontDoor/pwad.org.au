@@ -76,7 +76,8 @@ async function getUserContext(request: NextApiRequest): Promise<User | null> {
       shortlist = [],
       periodEndDate,
       hasPaidAccount,
-      stripeCustomerId
+      stripeCustomerId,
+      presentationOptions
     } = await userModel.findOrCreate(user);
 
     return {
@@ -88,6 +89,7 @@ async function getUserContext(request: NextApiRequest): Promise<User | null> {
       periodEndDate,
       hasPaidAccount,
       stripeCustomerId,
+      presentationOptions,
       auth0Id: user.sub,
       picture: user.picture
     };

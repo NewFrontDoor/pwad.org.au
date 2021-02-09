@@ -51,7 +51,9 @@ export const typeDefs = gql`
     addShortListItem(item: ID!): [ShortList]
     removeShortListItem(item: ID!): [ShortList]
     changeFreeAccount(hasFreeAccount: Boolean!): User
-    updatePresentationOptions(input: PresentationOptionsInput!): User
+    updatePresentationOptions(
+      input: PresentationOptionsInput!
+    ): PresentationOptions!
 
     createUser(
       firstName: String!
