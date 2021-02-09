@@ -151,9 +151,18 @@ export const resolvers: Resolvers = {
         .unwrapOr([]);
     },
     async updatePresentationOptions(_parent, args, context) {
-      return context.user.map(async (user) => {
-        return context.models.user.updatePresentationOptions(user, args.input);
-      });
+      return context.user
+        .map(async (user) => {
+          return context.models.user.updatePresentationOptions(
+            user,
+            args.input
+          );
+        })
+        .unwrapOr({
+          font: 'arial',
+          background: 'pca',
+          ratio: 'LAYOUT_16x9'
+        });
     }
   },
   Document: {

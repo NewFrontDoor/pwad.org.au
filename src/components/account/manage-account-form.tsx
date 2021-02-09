@@ -10,6 +10,7 @@ import {Stripe, loadStripe} from '@stripe/stripe-js';
 import {Elements, useStripe} from '@stripe/react-stripe-js';
 import {useForm} from 'react-hook-form';
 import {
+  MeQuery,
   MeDocument,
   CurrentSubscriptionDocument,
   StripeCheckoutSessionDocument,
@@ -27,12 +28,14 @@ import {
 const CancelSubscriptionButton = () => {
   const [cancelSubscription] = useCancelSubscriptionMutation({
     update(cache, {data}) {
-      cache.writeQuery({
-        query: CurrentSubscriptionDocument,
-        data: {
-          subscription: data?.cancelSubscription
-        }
-      });
+      if (data?.cancelSubscription?.__typename === 'StripeSubscription') {
+        cache.writeQuery({
+          query: CurrentSubscriptionDocument,
+          data: {
+            subscription: data.cancelSubscription
+          }
+        });
+      }
     }
   });
 
@@ -68,11 +71,9 @@ const AccountPaymentButton = ({children}: AccountPaymentButtonProps) => {
       mutation: StripeCheckoutSessionDocument
     });
 
-    const {sessionId} = data?.stripeCheckoutSession ?? {};
-
-    if (typeof sessionId === 'string') {
+    if (typeof data?.stripeCheckoutSession?.sessionId === 'string') {
       void stripe?.redirectToCheckout({
-        sessionId
+        sessionId: data.stripeCheckoutSession.sessionId
       });
     }
   }, [client, stripe]);
@@ -131,7 +132,26 @@ const PresentationOptionsForm = ({
   background,
   ratio
 }: PresentationOptions) => {
-  const [updateOptions] = useUpdatePresentationOptionsMutation();
+  const [updateOptions] = useUpdatePresentationOptionsMutation({
+    update(cache, {data}) {
+      const meQuery = cache.readQuery<MeQuery>({query: MeDocument});
+
+      if (
+        meQuery?.me?.__typename === 'User' &&
+        data?.updatePresentationOptions?.__typename === 'PresentationOptions'
+      ) {
+        cache.writeQuery<MeQuery>({
+          query: MeDocument,
+          data: {
+            me: {
+              ...meQuery.me,
+              presentationOptions: data.updatePresentationOptions
+            }
+          }
+        });
+      }
+    }
+  });
   const {register, handleSubmit} = useForm({
     defaultValues: {
       font,
@@ -139,13 +159,13 @@ const PresentationOptionsForm = ({
       ratio
     }
   });
-  const onSubmit = handleSubmit((data) =>
-    updateOptions({
+  const onSubmit = handleSubmit((data) => {
+    void updateOptions({
       variables: {
         input: data
       }
-    })
-  );
+    });
+  });
 
   return (
     <>
@@ -244,17 +264,21 @@ const ManageForm = ({
 
   const [changeFreeAccount] = useChangeFreeAccountMutation({
     update(cache, {data}) {
-      const {changeFreeAccount} = data ?? {};
-      const {me} = cache.readQuery({query: MeDocument}) ?? {};
-      cache.writeQuery({
-        query: MeDocument,
-        data: {
-          me: {
-            ...me,
-            hasFreeAccount: changeFreeAccount?.hasFreeAccount
+      const meQuery = cache.readQuery<MeQuery>({query: MeDocument});
+
+      if (
+        meQuery?.me?.__typename === 'User' &&
+        data?.changeFreeAccount?.__typename === 'User'
+      )
+        cache.writeQuery<MeQuery>({
+          query: MeDocument,
+          data: {
+            me: {
+              ...meQuery.me,
+              hasFreeAccount: data.changeFreeAccount.hasFreeAccount
+            }
           }
-        }
-      });
+        });
     }
   });
 

@@ -53,7 +53,6 @@ const Song: NextPage<SongProps> = ({hymn, menuItems}) => {
   } = hymn;
 
   function generatePPT() {
-    console.log(loggedInUser);
     produceSlide({
       title,
       content,

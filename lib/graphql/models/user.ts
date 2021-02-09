@@ -233,13 +233,8 @@ export async function updatePresentationOptions(
     .commit();
 
   const {presentationOptions} = await getById(_id);
-  return (
-    presentationOptions ?? {
-      font: 'arial',
-      background: 'pca',
-      ratio: 'LAYOUT_16x9'
-    }
-  );
+
+  return presentationOptions ?? {};
 }
 
 /**
