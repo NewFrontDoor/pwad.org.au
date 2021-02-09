@@ -154,7 +154,7 @@ SidebarAlternateTunes.defaultProps = {
 
 export const SidebarAuthor = (props: Author) => (
   <>
-    <Styled.h3>Hymn Author</Styled.h3>
+    <Styled.h3>Author</Styled.h3>
     <Styled.p>
       <Link {...authorLinkProps(props)} />
     </Styled.p>
