@@ -1,13 +1,14 @@
-import React, {FC, useCallback} from 'react';
+import React, {useCallback} from 'react';
 import {useApolloClient} from '@apollo/client';
 import PropTypes from 'prop-types';
-import {Styled, Box, Grid, Text} from 'theme-ui';
+import {Styled, Box, Grid, Text, Select, Label} from 'theme-ui';
 import {Check} from 'react-feather';
 import startCase from 'lodash/startCase';
 import Button from '../button';
 import Loading from '../loading';
 import {loadStripe} from '@stripe/stripe-js';
 import {Elements, useStripe} from '@stripe/react-stripe-js';
+import {useForm} from 'react-hook-form';
 import {
   MeDocument,
   CurrentSubscriptionDocument,
@@ -17,11 +18,13 @@ import {
   useChangeFreeAccountMutation,
   useChangePasswordMutation,
   useCurrentSubscriptionQuery,
+  useUpdatePresentationOptionsMutation,
   User,
-  StripeSubscription
+  StripeSubscription,
+  PresentationOptions
 } from '../queries';
 
-const CancelSubscriptionButton: FC = () => {
+const CancelSubscriptionButton = () => {
   const [cancelSubscription] = useCancelSubscriptionMutation({
     update(cache, {data}) {
       cache.writeQuery({
@@ -52,7 +55,11 @@ const CancelSubscriptionButton: FC = () => {
   );
 };
 
-const AccountPaymentButton: FC = ({children}) => {
+type AccountPaymentButtonProps = {
+  children: React.ReactNode;
+};
+
+const AccountPaymentButton = ({children}: AccountPaymentButtonProps) => {
   const stripe = useStripe();
   const client = useApolloClient();
 
@@ -84,10 +91,10 @@ type BuySubscriptionProps = {
   changeFreeAccount: () => void;
 };
 
-const BuySubscription: FC<BuySubscriptionProps> = ({
+const BuySubscription = ({
   hasFreeAccount,
   changeFreeAccount
-}) => {
+}: BuySubscriptionProps) => {
   return (
     <>
       <Box sx={{width: '100%'}} marginBottom={3}>
@@ -117,13 +124,69 @@ BuySubscription.propTypes = {
   changeFreeAccount: PropTypes.func.isRequired
 };
 
-const SubscriptionDetails: FC<StripeSubscription> = ({
+const PresentationOptionsForm = ({
+  font,
+  background,
+  ratio
+}: PresentationOptions) => {
+  const [updateOptions] = useUpdatePresentationOptionsMutation();
+  const {register, handleSubmit} = useForm({
+    defaultValues: {
+      font,
+      background,
+      ratio
+    }
+  });
+  const onSubmit = handleSubmit((data) =>
+    updateOptions({
+      variables: {
+        input: data
+      }
+    })
+  );
+
+  return (
+    <>
+      <Box as="form" sx={{width: '100%'}} onSubmit={onSubmit}>
+        <Text as="h3">Presentation options:</Text>
+        <Label htmlFor="font">Font</Label>
+        <Select ref={register} defaultValue="arial" name="font">
+          <option value="arial">Arial</option>
+          <option value="helvetica">Helvetica</option>
+          <option value="arounded">Arial Rounded</option>
+        </Select>
+        <Label htmlFor="colourScheme">Background/colour scheme</Label>
+        <Select ref={register} defaultValue="PCA" name="background">
+          <option value="pca">PCA</option>
+          <option value="white">White</option>
+          <option value="beige">Beige</option>
+          <option value="black">Black</option>
+        </Select>
+        <Label htmlFor="aspectRatio">Aspect Ratio</Label>
+        <Select ref={register} defaultValue="169" name="ratio">
+          <option value="LAYOUT_16x9">16:9</option>
+          <option value="LAYOUT_16x10">16:10</option>
+          <option value="LAYOUT_4x3">4:3</option>
+        </Select>
+        <Button type="submit">Save</Button>
+      </Box>
+    </>
+  );
+};
+
+PresentationOptionsForm.propTypes = {
+  font: PropTypes.string,
+  background: PropTypes.string,
+  ratio: PropTypes.string
+};
+
+const SubscriptionDetails = ({
   status,
   plan,
   currentPeriodEnd,
   canceledAt,
   cancelAt
-}) => {
+}: StripeSubscription) => {
   const canceled = status === 'canceled' || canceledAt !== null;
   const active = !canceled;
 
@@ -168,7 +231,11 @@ SubscriptionDetails.propTypes = {
   cancelAt: PropTypes.any
 };
 
-const ManageForm: FC<User> = ({hasFreeAccount, hasPaidAccount}) => {
+const ManageForm = ({
+  hasFreeAccount,
+  hasPaidAccount,
+  presentationOptions
+}: User) => {
   const isFreeAccount = hasFreeAccount || !hasPaidAccount;
 
   const {data, loading} = useCurrentSubscriptionQuery();
@@ -226,7 +293,19 @@ const ManageForm: FC<User> = ({hasFreeAccount, hasPaidAccount}) => {
           </Grid>
         )}
 
-        <Button onClick={handleChangePassword}>Change Password</Button>
+        <Grid columns={[1, 2]} gap={[3, 5]}>
+          <PresentationOptionsForm {...presentationOptions} />
+          <Box>
+            <Button
+              isPrimary
+              isFullWidth
+              size="jumbo"
+              onClick={handleChangePassword}
+            >
+              Change Password
+            </Button>
+          </Box>
+        </Grid>
       </Box>
       <Box sx={{width: '100%'}}>
         <Text as="h3">
@@ -251,17 +330,27 @@ const ManageForm: FC<User> = ({hasFreeAccount, hasPaidAccount}) => {
 
 ManageForm.propTypes = {
   hasFreeAccount: PropTypes.bool,
-  hasPaidAccount: PropTypes.bool
+  hasPaidAccount: PropTypes.bool,
+  presentationOptions: PropTypes.shape({
+    font: PropTypes.string,
+    background: PropTypes.string,
+    ratio: PropTypes.string
+  })
 };
 
 ManageForm.defaultProps = {
   hasFreeAccount: false,
-  hasPaidAccount: false
+  hasPaidAccount: false,
+  presentationOptions: {
+    font: 'arial',
+    background: 'pca',
+    ratio: 'LAYOUT_16x9'
+  }
 };
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_CLIENT_TOKEN);
 
-const ManageFormProvider: FC<User> = (props) => (
+const ManageFormProvider = (props: User) => (
   <Elements stripe={stripePromise}>
     <ManageForm {...props} />
   </Elements>

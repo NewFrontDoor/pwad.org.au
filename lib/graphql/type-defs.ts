@@ -51,6 +51,9 @@ export const typeDefs = gql`
     addShortListItem(item: ID!): [ShortList]
     removeShortListItem(item: ID!): [ShortList]
     changeFreeAccount(hasFreeAccount: Boolean!): User
+    updatePresentationOptions(
+      input: PresentationOptionsInput!
+    ): PresentationOptions!
 
     createUser(
       firstName: String!
@@ -92,6 +95,12 @@ export const typeDefs = gql`
 
   input MetreIn {
     in: [String]
+  }
+
+  input PresentationOptionsInput {
+    background: String
+    font: String
+    ratio: String
   }
 
   enum EnumHymnBook {
@@ -445,6 +454,12 @@ export const typeDefs = gql`
     last: String
   }
 
+  type PresentationOptions {
+    background: String
+    font: String
+    ratio: String
+  }
+
   enum InvoiceStatus {
     draft
     open
@@ -468,6 +483,7 @@ export const typeDefs = gql`
     shortlist: [ShortList]
     role: String
     periodEndDate: Date
+    presentationOptions: PresentationOptions
     invoiceStatus: InvoiceStatus
     stripeCustomerId: String
   }

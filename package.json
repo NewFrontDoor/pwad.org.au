@@ -109,6 +109,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-feather": "^2.0.8",
+    "react-hook-form": "^6.15.1",
     "react-query": "^2.12.1",
     "react-select": "^3.1.0",
     "stripe": "^8.90.0",

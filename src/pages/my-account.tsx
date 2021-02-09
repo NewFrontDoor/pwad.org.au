@@ -26,7 +26,7 @@ const MyAccount: NextPage<MyAccountProps> = ({menuItems}) => {
   });
 
   if (!loggedInUser.user) {
-    return <Loading />
+    return <Loading />;
   }
 
   const {hasPaidAccount, hasFreeAccount, name} = loggedInUser.user;

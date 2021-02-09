@@ -3,7 +3,7 @@ import md5Hex from 'md5-hex';
 import {ManagementClient, PasswordChangeTicketResponse} from 'auth0';
 import isAfter from 'date-fns/isAfter';
 import isEmpty from 'lodash/isEmpty';
-import {User, ShortList, InvoiceStatus} from './_types';
+import {User, ShortList, InvoiceStatus, PresentationOptions} from './_types';
 import sanity from '../lib/sanity';
 
 const management = new ManagementClient({
@@ -27,6 +27,7 @@ export async function getById(id: string): Promise<User> {
       invoiceStatus,
       periodEndDate,
       stripeCustomerId,
+      presentationOptions,
       "role": permission.role,
       shortlist[]->{_id,_type,title,hymnNumber}
   }`,
@@ -51,6 +52,7 @@ export async function findOrCreate(
       invoiceStatus,
       periodEndDate,
       stripeCustomerId,
+      presentationOptions,
       "role": permission.role,
       shortlist[]->{_id,_type,title,hymnNumber}
   }`,
@@ -185,6 +187,32 @@ export async function removeShortListItem(
 
   const {shortlist} = await getById(_id);
   return shortlist;
+}
+
+/**
+ * Updates user preferences for PPT downloads
+ * @param  user           The current user
+ * @param  options        The updated options set by the user
+ * @return                The user with their new presentation options
+ */
+export async function updatePresentationOptions(
+  user: User,
+  options: PresentationOptions
+): Promise<PresentationOptions> {
+  const {_id} = user;
+  await sanity
+    .patch(_id)
+    .set({
+      presentationOptions: {
+        font: options.font,
+        background: options.background,
+        ratio: options.ratio
+      }
+    })
+    .commit();
+
+  const {presentationOptions} = await getById(_id);
+  return presentationOptions;
 }
 
 /**

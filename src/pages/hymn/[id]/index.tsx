@@ -45,7 +45,7 @@ const Song: NextPage<SongProps> = ({hymn, menuItems}) => {
   }, [loggedInUser.user]);
 
   if (!loggedInUser.user) {
-    return <Loading />
+    return <Loading />;
   }
 
   const {
@@ -60,7 +60,15 @@ const Song: NextPage<SongProps> = ({hymn, menuItems}) => {
   } = hymn;
 
   function generatePPT() {
-    produceSlide({title, content, hymnNumber});
+    console.log(loggedInUser);
+    produceSlide({
+      title,
+      content,
+      hymnNumber,
+      font: loggedInUser.user?.presentationOptions?.font,
+      background: loggedInUser?.user?.presentationOptions?.background,
+      ratio: loggedInUser.user?.presentationOptions?.ratio
+    });
   }
 
   let files = hymn.files || [];

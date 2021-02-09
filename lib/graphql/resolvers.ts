@@ -141,6 +141,10 @@ export const resolvers: Resolvers = {
       const user = await context.user;
       const itemIndex = user.shortlist.findIndex(({_id}) => args.item === _id);
       return context.models.user.removeShortListItem(user, itemIndex);
+    },
+    async updatePresentationOptions(_parent, args, context) {
+      const user = await context.user;
+      return context.models.user.updatePresentationOptions(user, args.input);
     }
   },
   Document: {

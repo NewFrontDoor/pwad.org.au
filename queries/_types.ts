@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import PropTypes, { string } from 'prop-types';
 import is from '../src/is';
 
 export const HymnPropTypes = PropTypes.exact({
@@ -270,6 +270,12 @@ export enum InvoiceStatus {
   Void = 'void'
 }
 
+export type PresentationOptions = {
+  background?: string;
+  font?: string;
+  ratio?: string;
+};
+
 export type User = {
   _id: string;
   auth0Id?: string;
@@ -283,6 +289,7 @@ export type User = {
   periodEndDate?: Date;
   invoiceStatus?: InvoiceStatus;
   stripeCustomerId?: string;
+  presentationOptions?: PresentationOptions;
 };
 
 export type StripeCheckoutSession = {

@@ -128,6 +128,7 @@ export type Mutation = {
   addShortListItem?: Maybe<Array<Maybe<ShortList>>>;
   removeShortListItem?: Maybe<Array<Maybe<ShortList>>>;
   changeFreeAccount?: Maybe<User>;
+  updatePresentationOptions: PresentationOptions;
   createUser?: Maybe<User>;
   stripeCheckoutSession?: Maybe<StripeCheckoutSession>;
   changePassword?: Maybe<PasswordChangeTicket>;
@@ -147,6 +148,11 @@ export type MutationRemoveShortListItemArgs = {
 
 export type MutationChangeFreeAccountArgs = {
   hasFreeAccount: Scalars['Boolean'];
+};
+
+
+export type MutationUpdatePresentationOptionsArgs = {
+  input: PresentationOptionsInput;
 };
 
 
@@ -184,6 +190,12 @@ export type SearchInputOperator = {
 
 export type MetreIn = {
   in?: Maybe<Array<Maybe<Scalars['String']>>>;
+};
+
+export type PresentationOptionsInput = {
+  background?: Maybe<Scalars['String']>;
+  font?: Maybe<Scalars['String']>;
+  ratio?: Maybe<Scalars['String']>;
 };
 
 export enum EnumHymnBook {
@@ -552,6 +564,13 @@ export type Name = {
   last?: Maybe<Scalars['String']>;
 };
 
+export type PresentationOptions = {
+  __typename?: 'PresentationOptions';
+  background?: Maybe<Scalars['String']>;
+  font?: Maybe<Scalars['String']>;
+  ratio?: Maybe<Scalars['String']>;
+};
+
 export enum InvoiceStatus {
   Draft = 'draft',
   Open = 'open',
@@ -576,6 +595,7 @@ export type User = Document & {
   shortlist?: Maybe<Array<Maybe<ShortList>>>;
   role?: Maybe<Scalars['String']>;
   periodEndDate?: Maybe<Scalars['Date']>;
+  presentationOptions?: Maybe<PresentationOptions>;
   invoiceStatus?: Maybe<InvoiceStatus>;
   stripeCustomerId?: Maybe<Scalars['String']>;
 };
@@ -1102,7 +1122,10 @@ export type MeQuery = (
     ) | (
       { __typename?: 'Scripture' }
       & Pick<Scripture, '_id' | '_type' | 'title'>
-    )>>> }
+    )>>>, presentationOptions?: Maybe<(
+      { __typename?: 'PresentationOptions' }
+      & Pick<PresentationOptions, 'font' | 'background' | 'ratio'>
+    )> }
   )> }
 );
 
@@ -1210,6 +1233,19 @@ export type TextSearchQuery = (
     { __typename?: 'Scripture' }
     & Pick<Scripture, '_id' | '_type'>
   )>>> }
+);
+
+export type UpdatePresentationOptionsMutationVariables = Exact<{
+  input: PresentationOptionsInput;
+}>;
+
+
+export type UpdatePresentationOptionsMutation = (
+  { __typename?: 'Mutation' }
+  & { updatePresentationOptions: (
+    { __typename?: 'PresentationOptions' }
+    & Pick<PresentationOptions, 'background' | 'font' | 'ratio'>
+  ) }
 );
 
 export const MenuItemFragmentDoc = gql`
@@ -2181,6 +2217,11 @@ export const MeDocument = gql`
         title
       }
     }
+    presentationOptions {
+      font
+      background
+      ratio
+    }
   }
 }
     `;
@@ -2435,3 +2476,37 @@ export function useTextSearchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type TextSearchQueryHookResult = ReturnType<typeof useTextSearchQuery>;
 export type TextSearchLazyQueryHookResult = ReturnType<typeof useTextSearchLazyQuery>;
 export type TextSearchQueryResult = Apollo.QueryResult<TextSearchQuery, TextSearchQueryVariables>;
+export const UpdatePresentationOptionsDocument = gql`
+    mutation UpdatePresentationOptions($input: PresentationOptionsInput!) {
+  updatePresentationOptions(input: $input) {
+    background
+    font
+    ratio
+  }
+}
+    `;
+export type UpdatePresentationOptionsMutationFn = Apollo.MutationFunction<UpdatePresentationOptionsMutation, UpdatePresentationOptionsMutationVariables>;
+
+/**
+ * __useUpdatePresentationOptionsMutation__
+ *
+ * To run a mutation, you first call `useUpdatePresentationOptionsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePresentationOptionsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePresentationOptionsMutation, { data, loading, error }] = useUpdatePresentationOptionsMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdatePresentationOptionsMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePresentationOptionsMutation, UpdatePresentationOptionsMutationVariables>) {
+        return Apollo.useMutation<UpdatePresentationOptionsMutation, UpdatePresentationOptionsMutationVariables>(UpdatePresentationOptionsDocument, baseOptions);
+      }
+export type UpdatePresentationOptionsMutationHookResult = ReturnType<typeof useUpdatePresentationOptionsMutation>;
+export type UpdatePresentationOptionsMutationResult = Apollo.MutationResult<UpdatePresentationOptionsMutation>;
+export type UpdatePresentationOptionsMutationOptions = Apollo.BaseMutationOptions<UpdatePresentationOptionsMutation, UpdatePresentationOptionsMutationVariables>;
