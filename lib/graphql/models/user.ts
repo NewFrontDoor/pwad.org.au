@@ -3,7 +3,12 @@ import md5Hex from 'md5-hex';
 import {ManagementClient, PasswordChangeTicketResponse} from 'auth0';
 import isAfter from 'date-fns/isAfter';
 import isEmpty from 'lodash/isEmpty';
-import {User, ShortList, InvoiceStatus, PresentationOptions} from '../gen-types';
+import {
+  User,
+  ShortList,
+  InvoiceStatus,
+  PresentationOptions
+} from '../gen-types';
 import sanity from '../../sanity';
 
 const management = new ManagementClient({

@@ -51,6 +51,7 @@ export const typeDefs = gql`
     addShortListItem(item: ID!): [ShortList]
     removeShortListItem(item: ID!): [ShortList]
     changeFreeAccount(hasFreeAccount: Boolean!): User
+    updatePresentationOptions(input: PresentationOptionsInput!): User
 
     createUser(
       firstName: String!
@@ -92,6 +93,12 @@ export const typeDefs = gql`
 
   input MetreIn {
     in: [String]
+  }
+
+  input PresentationOptionsInput {
+    background: String
+    font: String
+    ratio: String
   }
 
   enum EnumHymnBook {

@@ -18,8 +18,10 @@ import {
   useChangeFreeAccountMutation,
   useChangePasswordMutation,
   useCurrentSubscriptionQuery,
+  useUpdatePresentationOptionsMutation,
   User,
-  StripeSubscription
+  StripeSubscription,
+  PresentationOptions
 } from '../queries';
 
 const CancelSubscriptionButton: FC = () => {
@@ -118,18 +120,12 @@ BuySubscription.propTypes = {
   changeFreeAccount: PropTypes.func.isRequired
 };
 
-type PresentationOptionsProps = {
-  font: string;
-  background: string;
-  ratio: string;
-};
-
-const PresentationOptions: FC<PresentationOptionsProps> = ({
-  user,
+const PresentationOptionsForm = ({
   font,
   background,
   ratio
-}) => {
+}: PresentationOptions) => {
+  const [updateOptions] = useUpdatePresentationOptionsMutation();
   const {register, handleSubmit} = useForm({
     defaultValues: {
       font,
@@ -137,7 +133,7 @@ const PresentationOptions: FC<PresentationOptionsProps> = ({
       ratio
     }
   });
-  const onSubmit = (data) => useUpdatePresentationOptionsMutation(user, data);
+  const onSubmit = (data) => updateOptions(data);
 
   return (
     <>
@@ -168,7 +164,7 @@ const PresentationOptions: FC<PresentationOptionsProps> = ({
   );
 };
 
-PresentationOptions.propTypes = {
+PresentationOptionsForm.propTypes = {
   font: PropTypes.string.isRequired,
   background: PropTypes.string.isRequired,
   ratio: PropTypes.string.isRequired
@@ -288,7 +284,7 @@ const ManageForm: FC<User> = ({
         )}
 
         <Grid columns={[1, 2]} gap={[3, 5]}>
-          <PresentationOptions {...presentationOptions} />
+          <PresentationOptionsForm {...presentationOptions} />
           <Box>
             <Button
               isPrimary

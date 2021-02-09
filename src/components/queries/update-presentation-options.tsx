@@ -1,14 +1,8 @@
 import {gql} from '@apollo/client';
 
 export default gql`
-  input PresentationOptions {
-    font: String
-    background: String
-    ratio: String
-  }
-
-  mutation updatePresentationOptions(input: PresentationOptions!): User {
-    updatePresentationOptions(user: $user, options: $options) {
+  mutation UpdatePresentationOptions($input: PresentationOptionsInput!) {
+    updatePresentationOptions(input: $input) {
       _id
       hasPaidAccount
       hasFreeAccount
