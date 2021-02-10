@@ -555,9 +555,9 @@ export type Name = {
 
 export type PresentationOptions = {
   __typename?: 'PresentationOptions';
-  background: Scalars['String'];
-  font: Scalars['String'];
-  ratio: Scalars['String'];
+  background?: Maybe<Scalars['String']>;
+  font?: Maybe<Scalars['String']>;
+  ratio?: Maybe<Scalars['String']>;
 };
 
 export enum InvoiceStatus {

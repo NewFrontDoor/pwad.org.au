@@ -556,9 +556,9 @@ export type Name = {
 
 export type PresentationOptions = {
   __typename?: 'PresentationOptions';
-  background: Scalars['String'];
-  font: Scalars['String'];
-  ratio: Scalars['String'];
+  background?: Maybe<Scalars['String']>;
+  font?: Maybe<Scalars['String']>;
+  ratio?: Maybe<Scalars['String']>;
 };
 
 export enum InvoiceStatus {
@@ -1146,9 +1146,9 @@ export type NameResolvers<ContextType = Context, ParentType extends ResolversPar
 };
 
 export type PresentationOptionsResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PresentationOptions'] = ResolversParentTypes['PresentationOptions']> = {
-  background?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  font?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  ratio?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  background?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  font?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  ratio?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 

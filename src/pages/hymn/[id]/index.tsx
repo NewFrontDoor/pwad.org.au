@@ -53,11 +53,16 @@ const Song: NextPage<SongProps> = ({hymn, menuItems}) => {
   } = hymn;
 
   function generatePPT() {
+    const {font, background, ratio} =
+      loggedInUser.user?.presentationOptions ?? {};
+
     produceSlide({
       title,
       content,
       hymnNumber,
-      ...loggedInUser.user?.presentationOptions
+      font: font ?? 'arial',
+      background: background ?? 'pca',
+      ratio: ratio ?? 'LAYOUT_16x9'
     });
   }
 

@@ -449,9 +449,9 @@ export const typeDefs = gql`
   }
 
   type PresentationOptions {
-    background: String!
-    font: String!
-    ratio: String!
+    background: String
+    font: String
+    ratio: String
   }
 
   enum InvoiceStatus {
