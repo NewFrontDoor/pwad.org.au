@@ -95,7 +95,7 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
                   </Link>
                 </NavMenuItem>
                 <NavMenuItem>
-                  <Link variant="nav" href="/api/logout">
+                  <Link variant="nav" href="/api/auth/logout">
                     Log out
                   </Link>
                 </NavMenuItem>
@@ -108,12 +108,12 @@ const Nav: FC<NavProps> = ({onClose, children}) => {
         {() => (
           <>
             <NavMenuItem>
-              <Link variant="nav" href="/api/login">
+              <Link variant="nav" href="/api/auth/login">
                 Log in
               </Link>
             </NavMenuItem>
             <NavMenuItem>
-              <Link variant="nav" href="/api/login">
+              <Link variant="nav" href="/api/auth/login">
                 Create account
               </Link>
             </NavMenuItem>

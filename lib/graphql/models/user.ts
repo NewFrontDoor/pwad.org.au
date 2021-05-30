@@ -7,8 +7,8 @@ import isEmpty from 'lodash/isEmpty';
 import {User, InvoiceStatus, PresentationOptionsInput} from '../gen-types';
 import sanity from '../../sanity';
 
-const cookieSecret = process.env.SESSION_COOKIE_SECRET;
-const domain = process.env.AUTH0_DOMAIN;
+const cookieSecret = process.env.AUTH0_SECRET;
+const domain = process.env.AUTH0_ISSUER_BASE_URL;
 const clientId = process.env.AUTH0_CLIENT_ID;
 const clientSecret = process.env.AUTH0_CLIENT_SECRET;
 

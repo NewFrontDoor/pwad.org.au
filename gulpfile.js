@@ -180,7 +180,7 @@ function parseEnv() {
 }
 
 function replaceSecret() {
-  return through.obj(async function (file, _, cb) {
+  return through.obj(async (file, _, cb) => {
     try {
       await gulpExeca.exec(`now secrets remove --yes ${file.path}`, {
         reject: false
@@ -198,7 +198,7 @@ function updateNowEnv() {
 }
 
 const management = new ManagementClient({
-  domain: process.env.AUTH0_DOMAIN,
+  domain: process.env.AUTH0_ISSUER_BASE_URL,
   clientId: process.env.AUTH0_CLIENT_ID,
   clientSecret: process.env.AUTH0_CLIENT_SECRET,
   scope: 'read:users update:users update:users_app_metadata'

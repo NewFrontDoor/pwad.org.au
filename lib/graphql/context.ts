@@ -1,6 +1,6 @@
-import {IncomingMessage} from 'http';
-import {err, errAsync, ResultAsync} from 'neverthrow';
-import auth0 from '../auth0';
+import {IncomingMessage, ServerResponse} from 'http';
+import {errAsync, ResultAsync} from 'neverthrow';
+import {getSession} from '@auth0/nextjs-auth0';
 import {HOST_URL} from '../host-url';
 import * as prayerModel from './models/prayer';
 import * as resourceModel from './models/resource';
@@ -40,10 +40,14 @@ export type Context = {
   };
 };
 
-export function context(ctx?: {req?: IncomingMessage}): Context {
-  const user = ctx?.req
-    ? getUserContext(ctx.req)
-    : errAsync<User, string>('No User Session');
+export function context(ctx?: {
+  req?: IncomingMessage;
+  res?: ServerResponse;
+}): Context {
+  const user =
+    ctx?.req && ctx.res
+      ? getUserContext(ctx.req, ctx.res)
+      : errAsync<User, string>('No User Session');
 
   const host = new URL(HOST_URL);
 
@@ -68,46 +72,46 @@ export function context(ctx?: {req?: IncomingMessage}): Context {
   };
 }
 
-export function getUserContext(request: IncomingMessage): UserResult {
-  return ResultAsync.fromPromise(
-    auth0.getSession(request),
-    () => 'No User Session'
-  ).andThen((response) => {
-    if (response) {
-      return ResultAsync.fromPromise(
-        userModel.findOrCreate(response.user),
-        () => 'No User Session'
-      ).map((result) => {
-        const {
-          _id,
-          name,
-          email,
-          role,
-          shortlist = [],
-          periodEndDate,
-          hasPaidAccount,
-          stripeCustomerId,
-          presentationOptions
-        } = result;
+export function getUserContext(
+  request: IncomingMessage,
+  response: ServerResponse
+): UserResult {
+  const session = getSession(request, response);
 
-        const user: User = {
-          _id,
-          role,
-          name,
-          email,
-          shortlist,
-          periodEndDate,
-          hasPaidAccount,
-          stripeCustomerId,
-          presentationOptions,
-          auth0Id: response.user.sub,
-          picture: response.user.picture
-        };
+  if (session) {
+    return ResultAsync.fromPromise(
+      userModel.findOrCreate(session.user),
+      () => 'No User Session'
+    ).map((result) => {
+      const {
+        _id,
+        name,
+        email,
+        role,
+        shortlist = [],
+        periodEndDate,
+        hasPaidAccount,
+        stripeCustomerId,
+        presentationOptions
+      } = result;
 
-        return user;
-      });
-    }
+      const user: User = {
+        _id,
+        role,
+        name,
+        email,
+        shortlist,
+        periodEndDate,
+        hasPaidAccount,
+        stripeCustomerId,
+        presentationOptions,
+        auth0Id: session.user.sub,
+        picture: session.user.picture
+      };
 
-    return err('No User Session');
-  });
+      return user;
+    });
+  }
+
+  return errAsync('No User Session');
 }

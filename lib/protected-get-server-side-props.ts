@@ -6,8 +6,8 @@ import {User} from './graphql/gen-types';
 export default function protectedGetServerSideProps(
   context: GetServerSidePropsContext
 ): ResultAsync<User, Redirect> {
-  return getUserContext(context.req).mapErr(() => ({
+  return getUserContext(context.req, context.res).mapErr(() => ({
     statusCode: 302,
-    destination: '/api/login'
+    destination: '/api/auth/login'
   }));
 }
