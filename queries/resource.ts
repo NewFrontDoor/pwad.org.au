@@ -1,4 +1,4 @@
-import {Ability} from '@casl/ability';
+import {PwadAbility} from '../lib/abilities';
 import {SearchResult, Main, MenuItem} from './_types';
 import sanity from '../lib/sanity';
 
@@ -29,7 +29,7 @@ async function searchFreeResources(search: string): Promise<SearchResult[]> {
 }
 
 export async function textSearch(
-  ability: Ability,
+  ability: PwadAbility,
   search: string
 ): Promise<SearchResult[]> {
   if (ability.can('read', 'Hymn')) {

@@ -4,10 +4,10 @@ import {User} from './graphql/gen-types';
 type Actions = 'manage' | 'read';
 type Subjects = 'all' | 'my-account' | 'Hymn' | 'User';
 type Abilities = [Actions, Subjects];
-type PwadAbility = Ability<Abilities>;
+export type PwadAbility = Ability<Abilities>;
 
 export function defineAbilitiesFor(user?: User | null): PwadAbility {
-  const {can, cannot, rules} = new AbilityBuilder<PwadAbility>();
+  const {can, cannot, build} = new AbilityBuilder<PwadAbility>(Ability);
 
   switch (user?.role) {
     case 'admin':
@@ -32,5 +32,5 @@ export function defineAbilitiesFor(user?: User | null): PwadAbility {
       break;
   }
 
-  return new Ability<Abilities>(rules);
+  return build();
 }
