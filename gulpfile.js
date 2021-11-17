@@ -1,52 +1,13 @@
 /* eslint camelcase: "warn" */
 
-require('dotenv').config();
 const {promisify} = require('util');
 let {pipeline} = require('stream');
 const {ManagementClient} = require('auth0');
-const {Password} = require('enquirer');
 const {series, src, dest} = require('gulp');
-const concat = require('gulp-concat');
-const Conf = require('conf');
-const dargs = require('dargs');
 const del = require('del');
-const dotenv = require('dotenv');
-const File = require('vinyl');
-const flatten = require('lodash/flatten');
-const gulpExeca = require('gulp-execa');
-const PluginError = require('plugin-error');
 const responsive = require('gulp-responsive');
-const through = require('through2');
-
-const {loadKdbx, readEnvEntries} = require('./keypass');
-const now = require('./now.json');
 
 pipeline = promisify(pipeline);
-
-const config = new Conf({
-  cwd: '.',
-  defaults: {
-    keypassFile: 'path to your keybase file'
-  }
-});
-
-const prompt = new Password({
-  name: 'password',
-  message: 'What is the keybase password?'
-});
-
-function task(...args) {
-  return gulpExeca.task(flatten(args).join(' '));
-}
-
-const mongo = task(
-  'docker-compose',
-  'up',
-  dargs({
-    _: ['mongo'],
-    detach: true
-  })
-);
 
 const x1 = {suffix: '@1x'};
 const x2 = {suffix: '@2x'};
@@ -132,71 +93,6 @@ function cleanImages() {
   return del('static/banners');
 }
 
-async function setupEnv() {
-  const keypassFile = config.get('keypassFile');
-  const password = await prompt.run();
-
-  return pipeline(
-    src(keypassFile),
-    loadKdbx(password),
-    await readEnvEntries(),
-    concat('.env'),
-    dest('.')
-  );
-}
-
-function isSecret(value) {
-  return value.startsWith('@');
-}
-
-function parseEnv() {
-  return through.obj(function (file, _, cb) {
-    if (file.isBuffer()) {
-      const env = dotenv.parse(file.contents);
-      for (const [key, secret] of Object.entries(now.env)) {
-        if (isSecret(secret)) {
-          const newKey = secret.replace('@', '');
-          const newValue = env[key];
-
-          if (newValue) {
-            this.push(
-              new File({
-                path: newKey,
-                contents: Buffer.from(newValue)
-              })
-            );
-          }
-        }
-      }
-    } else {
-      this.emit(
-        'error',
-        new PluginError('parse-env', 'env file was not found')
-      );
-    }
-
-    cb();
-  });
-}
-
-function replaceSecret() {
-  return through.obj(async (file, _, cb) => {
-    try {
-      await gulpExeca.exec(`now secrets remove --yes ${file.path}`, {
-        reject: false
-      });
-      await gulpExeca.exec(`now secrets add ${file.path} ${file.contents}`);
-      cb();
-    } catch (error) {
-      cb(error);
-    }
-  });
-}
-
-function updateNowEnv() {
-  return pipeline(src('.env'), parseEnv(), replaceSecret());
-}
-
 const management = new ManagementClient({
   domain: process.env.AUTH0_ISSUER_BASE_URL,
   clientId: process.env.AUTH0_CLIENT_ID,
@@ -214,37 +110,6 @@ async function updateUser() {
   );
 }
 
-const prodDump = task(
-  'mongodump',
-  dargs({
-    uri: process.env.MONGO_URI
-  })
-);
-
-const localRestore = task(
-  'mongorestore',
-  dargs(
-    {
-      drop: true,
-      uri: 'mongodb://localhost:27017/pwad',
-      nsFrom: 'pwad-stage.*',
-      nsTo: 'pwad.*'
-    },
-    {
-      allowCamelCase: true
-    }
-  )
-);
-
-const devRestore = series(mongo, localRestore);
-
-exports.prodDump = prodDump;
-exports.devRestore = devRestore;
-
-exports.prodcopy = series(prodDump, devRestore);
-
 exports.images = series(cleanImages, images);
 
 exports.updateUser = updateUser;
-exports.updateNowEnv = series(setupEnv, updateNowEnv);
-exports.setupEnv = series(setupEnv);

@@ -1,4 +1,3 @@
-require('dotenv').config();
 const bundleAnalyzer = require('@next/bundle-analyzer');
 const transpileModules = require('next-transpile-modules');
 
