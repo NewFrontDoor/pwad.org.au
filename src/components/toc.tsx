@@ -1,17 +1,17 @@
 /** @jsx jsx */
 import PropTypes from 'prop-types';
 import {jsx} from 'theme-ui';
-import GithubSlugger from 'github-slugger';
-import {BlockContent} from '../../queries/_types';
 
-const slugger = new GithubSlugger();
+import {useSlugger, GithubSlugger} from '../use-slugger';
+import {BlockContent} from '../../queries/_types';
 
 type TocProps = {
   blocks?: BlockContent[];
 };
 
 const Toc = ({blocks}: TocProps) => {
-  const headings = deriveToc(blocks ?? []);
+  const slugger = useSlugger();
+  const headings = deriveToc(slugger, blocks ?? []);
 
   return (
     <div>
@@ -36,7 +36,10 @@ type TocItem = {
   name: string;
 };
 
-export function deriveToc(content: BlockContent[]): TocItem[] {
+export function deriveToc(
+  slugger: GithubSlugger,
+  content: BlockContent[]
+): TocItem[] {
   const toc: TocItem[] = [];
 
   for (const block of content) {

@@ -1,14 +1,12 @@
 import React, {FC, ReactNode} from 'react';
 import PropTypes from 'prop-types';
 import {Styled} from 'theme-ui';
-import GithubSlugger from 'github-slugger';
 import SanityBlockContent from '@sanity/block-content-to-react';
 import getVideoId from 'get-video-id';
 import Vimeo from '@u-wave/react-vimeo';
 import Youtube from '@u-wave/react-youtube';
 import Link, {linkProps, GenLinkProps} from './link';
-
-const slugger = new GithubSlugger();
+import {useSlugger} from '../use-slugger';
 
 type InternalLinkProps = {
   mark: {
@@ -92,34 +90,38 @@ type SerializerProps = {
   };
 };
 
+const Block = (props: SerializerProps) => {
+  const slugger = useSlugger();
+
+  switch (props.node.style) {
+    case 'h2': {
+      const name = props.node.children.map((child) => child.text).join(' ');
+      const slug = slugger.slug(name);
+      return <Styled.h2 {...props} id={slug} />;
+    }
+
+    case 'h3':
+      return <Styled.h3 {...props} />;
+    case 'h4':
+      return <Styled.h4 {...props} />;
+    case 'h5':
+      return <Styled.h5 {...props} />;
+    case 'ul':
+      return <Styled.ul {...props} />;
+    case 'ol':
+      return <Styled.ol {...props} />;
+    case 'li':
+      return <Styled.li {...props} />;
+    case 'normal':
+      return <Styled.p variant="prose" {...props} />;
+    default:
+      return <Styled.p variant="prose" {...props} />;
+  }
+};
+
 const serializers = {
   types: {
-    block: (props: SerializerProps) => {
-      switch (props.node.style) {
-        case 'h2': {
-          const name = props.node.children.map((child) => child.text).join(' ');
-          const slug = slugger.slug(name);
-          return <Styled.h2 {...props} id={slug} />;
-        }
-
-        case 'h3':
-          return <Styled.h3 {...props} />;
-        case 'h4':
-          return <Styled.h4 {...props} />;
-        case 'h5':
-          return <Styled.h5 {...props} />;
-        case 'ul':
-          return <Styled.ul {...props} />;
-        case 'ol':
-          return <Styled.ol {...props} />;
-        case 'li':
-          return <Styled.li {...props} />;
-        case 'normal':
-          return <Styled.p variant="prose" {...props} />;
-        default:
-          return <Styled.p variant="prose" {...props} />;
-      }
-    },
+    block: Block,
     img: Image,
     video: Video
   },
