@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import {jsx, Styled, Flex, Box} from 'theme-ui';
 
 import is from '../../../is';
-import produceSlide from '../../../../lib/ppt';
+import produceSlide from '../../../../lib/ppt.js';
 import * as hymnQuery from '../../../../queries/hymn';
 import * as resourceQuery from '../../../../queries/resource';
 import {Hymn, MenuItem} from '../../../../queries/_types';
