@@ -16,7 +16,7 @@ import GlobalStyles from "./global-styles";
 
 import theme from "./theme";
 
-const bannerImage = randomBanner();
+// const bannerImage = randomBanner();
 
 const isBrowser = typeof window !== "undefined";
 
@@ -61,17 +61,18 @@ const PageLayout: FC<PageLayoutProps> = ({ menuItems, children }) => {
           />
         </Head>
         <GlobalStyles />
-        <BannerImage image={bannerImage} />
+        {/* <BannerImage image={bannerImage} /> */}
         <Box
           sx={{
             display: "flex",
             flexDirection: "column",
             minHeight: "100vh",
-            background: `linear-gradient(
+            background: "#f4fcff",
+            /*background: `linear-gradient(
                 0deg,
                 ${theme.colors.gray[1] ?? ""},
                 ${rgba(theme.colors.gray[1] ?? "", 0.4)}
-              )`,
+              )`*/
           }}
         >
           <Box
