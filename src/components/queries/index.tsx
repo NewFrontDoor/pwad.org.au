@@ -28,6 +28,7 @@ export type Query = {
   prayerSearch?: Maybe<Array<Prayer>>;
   liturgySearch?: Maybe<Array<Liturgy>>;
   pageContentOne?: Maybe<PageContent>;
+  restrictedContentOne?: Maybe<RestrictedContent>;
   authorById?: Maybe<Author>;
   hymnById?: Maybe<Hymn>;
   keywordById?: Maybe<Keyword>;
@@ -61,6 +62,11 @@ export type QueryLiturgySearchArgs = {
 
 
 export type QueryPageContentOneArgs = {
+  filter: FilterInput;
+};
+
+
+export type QueryRestrictedContentOneArgs = {
   filter: FilterInput;
 };
 
@@ -285,7 +291,7 @@ export type Document = {
   _updatedAt?: Maybe<Scalars['Date']>;
 };
 
-export type FeaturedReference = PageContent | ExternalUrl | RelativeUrl;
+export type FeaturedReference = PageContent | RestrictedContent | ExternalUrl | RelativeUrl;
 
 export type Main = Document & {
   __typename?: 'Main';
@@ -302,7 +308,7 @@ export type Main = Document & {
   menuItems?: Maybe<Array<MenuItem>>;
 };
 
-export type ChildPageReference = PageContent | Hymn | Prayer | Liturgy | Scripture | Asset;
+export type ChildPageReference = PageContent | RestrictedContent | Hymn | Prayer | Liturgy | Scripture | Asset;
 
 export type MenuItem = {
   __typename?: 'MenuItem';
@@ -413,6 +419,8 @@ export type Liturgy = Document & {
   copyright?: Maybe<Copyright>;
 };
 
+export type PageTypes = PageContent | RestrictedContent;
+
 export type Menu = Document & {
   __typename?: 'Menu';
   _createdAt?: Maybe<Scalars['Date']>;
@@ -423,7 +431,7 @@ export type Menu = Document & {
   code?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
-  link?: Maybe<PageContent>;
+  link?: Maybe<PageTypes>;
 };
 
 export type Metre = Document & {
@@ -518,7 +526,7 @@ export type Asset = Document & {
   url?: Maybe<Scalars['String']>;
 };
 
-export type ResourceType = Asset | RelativeUrl | ExternalUrl | PageContent;
+export type ResourceType = Asset | RelativeUrl | ExternalUrl | PageContent | RestrictedContent;
 
 export type Resource = Document & {
   __typename?: 'Resource';
@@ -533,6 +541,20 @@ export type Resource = Document & {
 
 export type PageContent = Document & {
   __typename?: 'PageContent';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  subtitle?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
+  hasToc?: Maybe<Scalars['Boolean']>;
+  content?: Maybe<Scalars['JSON']>;
+};
+
+export type RestrictedContent = Document & {
+  __typename?: 'RestrictedContent';
   _createdAt?: Maybe<Scalars['Date']>;
   _id: Scalars['ID'];
   _rev?: Maybe<Scalars['String']>;
@@ -1003,6 +1025,9 @@ export type MenuItemFragment = (
     & { childPage?: Maybe<(
       { __typename?: 'PageContent' }
       & Pick<PageContent, '_id' | '_type' | 'slug' | 'title'>
+    ) | (
+      { __typename?: 'RestrictedContent' }
+      & Pick<RestrictedContent, '_id' | '_type'>
     ) | (
       { __typename?: 'Hymn' }
       & Pick<Hymn, '_id' | '_type'>

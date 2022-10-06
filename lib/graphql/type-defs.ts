@@ -14,6 +14,8 @@ export const typeDefs = gql`
 
     pageContentOne(filter: FilterInput!): PageContent
 
+    restrictedContentOne(filter: FilterInput!): RestrictedContent
+
     authorById(id: ID!): Author
 
     hymnById(id: ID!): Hymn
@@ -193,7 +195,7 @@ export const typeDefs = gql`
     _updatedAt: Date
   }
 
-  union FeaturedReference = PageContent | ExternalUrl | RelativeUrl
+  union FeaturedReference = PageContent | RestrictedContent | ExternalUrl | RelativeUrl
 
   type Main implements Document {
     _createdAt: Date
@@ -210,7 +212,8 @@ export const typeDefs = gql`
   }
 
   union ChildPageReference =
-      PageContent
+      PageContent 
+    | RestrictedContent
     | Hymn
     | Prayer
     | Liturgy
@@ -318,6 +321,8 @@ export const typeDefs = gql`
     copyright: Copyright
   }
 
+  union PageTypes = PageContent | RestrictedContent
+
   type Menu implements Document {
     _createdAt: Date
     _id: ID!
@@ -327,7 +332,7 @@ export const typeDefs = gql`
     code: String
     name: String
     type: String
-    link: PageContent
+    link: PageTypes
   }
 
   type Metre implements Document {
@@ -416,7 +421,7 @@ export const typeDefs = gql`
     url: String
   }
 
-  union ResourceType = Asset | RelativeUrl | ExternalUrl | PageContent
+  union ResourceType = Asset | RelativeUrl | ExternalUrl | PageContent | RestrictedContent 
 
   type Resource implements Document {
     _createdAt: Date
@@ -440,6 +445,20 @@ export const typeDefs = gql`
     hasToc: Boolean
     content: JSON
   }
+
+  type RestrictedContent implements Document {
+    _createdAt: Date
+    _id: ID!
+    _rev: String
+    _type: String
+    _updatedAt: Date
+    title: String
+    subtitle: String
+    slug: String
+    hasToc: Boolean
+    content: JSON
+  }
+
 
   union ShortList = Hymn | Prayer | Liturgy | Scripture
 

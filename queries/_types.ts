@@ -1,15 +1,15 @@
 export type Author = {
   _id: string;
-  _type: 'author';
+  _type: "author";
   name: string;
   dates: string;
-  hymns: Array<Pick<Hymn, '_id' | '_type' | 'title' | 'hymnNumber'>>;
-  liturgies: Array<Pick<Liturgy, '_id' | '_type'>>;
+  hymns: Array<Pick<Hymn, "_id" | "_type" | "title" | "hymnNumber">>;
+  liturgies: Array<Pick<Liturgy, "_id" | "_type">>;
 };
 
 export type Asset = {
   _id: string;
-  _type: 'asset';
+  _type: "asset";
   name: string;
   size: number;
   url: string;
@@ -30,7 +30,7 @@ export type Category = {
 
 export type Liturgy = {
   _id: string;
-  _type: 'liturgy';
+  _type: "liturgy";
   title?: string;
   content: BlockContent[];
   files?: Asset[];
@@ -42,7 +42,7 @@ export type Liturgy = {
 
 export type Hymn = {
   _id: string;
-  _type: 'hymn';
+  _type: "hymn";
   content: BlockContent[];
   author?: Author;
   tune?: Tune;
@@ -62,7 +62,7 @@ export type Hymn = {
 
 export type Tune = {
   _id: string;
-  _type: 'tune';
+  _type: "tune";
   title: string;
   musicCopyright: Copyright;
   file: Asset;
@@ -72,7 +72,7 @@ export type Tune = {
 
 export type Prayer = {
   _id: string;
-  _type: 'prayer';
+  _type: "prayer";
   author?: Author;
   content: BlockContent[];
   title?: string;
@@ -82,7 +82,7 @@ export type Prayer = {
 
 export type Scripture = {
   _id: string;
-  _type: 'scripture';
+  _type: "scripture";
   title?: string;
   content: BlockContent[];
   translation?: string;
@@ -92,6 +92,7 @@ export type Scripture = {
 
 export type ChildPageReference =
   | PageContent
+  | RestrictedContent
   | Hymn
   | Prayer
   | Liturgy
@@ -121,14 +122,24 @@ export type BlockContent = {
 
 export type Metre = {
   _id: string;
-  _type?: 'metre';
+  _type?: "metre";
   metre?: string;
   tunes?: Tune[];
 };
 
 export type PageContent = {
   _id: string;
-  _type: 'pageContent';
+  _type: "pageContent";
+  content?: BlockContent[];
+  hasToc?: boolean;
+  slug: string;
+  subtitle?: string;
+  title?: string;
+};
+
+export type RestrictedContent = {
+  _id: string;
+  _type: "restrictedContent";
   content?: BlockContent[];
   hasToc?: boolean;
   slug: string;
@@ -145,7 +156,7 @@ export type ShortList = Hymn | Prayer | Scripture | Liturgy;
 
 export type Occasion = {
   _id: string;
-  _type: 'occasion';
+  _type: "occasion";
 };
 
 export type OccasionGroupedById = {
@@ -175,8 +186,8 @@ export type FilterInput = {
 };
 
 export enum TuneSortBy {
-  TitleAsc = 'title_ASC',
-  TitleDesc = 'title_DESC'
+  TitleAsc = "title_ASC",
+  TitleDesc = "title_DESC",
 }
 
 type Name = {
@@ -185,11 +196,11 @@ type Name = {
 };
 
 export enum InvoiceStatus {
-  Draft = 'draft',
-  Open = 'open',
-  Paid = 'paid',
-  Uncollectible = 'uncollectible',
-  Void = 'void'
+  Draft = "draft",
+  Open = "open",
+  Paid = "paid",
+  Uncollectible = "uncollectible",
+  Void = "void",
 }
 
 export type PresentationOptions = {

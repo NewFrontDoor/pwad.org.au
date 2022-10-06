@@ -11,6 +11,7 @@ import {
   Liturgy,
   Asset,
   PageContent,
+  RestrictedContent,
   Scripture,
   Hymn,
   ChildPage
@@ -118,6 +119,16 @@ export function pageContentLinkProps({
   };
 }
 
+export function restrictedContentLinkProps({
+  slug,
+  title
+}: Pick<RestrictedContent, 'slug' | 'title'>): LinkProps {
+  return {
+    href: `/restricted/${slug}`,
+    children: title
+  };
+}
+
 export function scriptureLinkProps({
   _id,
   title
@@ -145,6 +156,7 @@ export type GenLinkProps =
   | Prayer
   | Liturgy
   | PageContent
+  | RestrictedContent
   | Asset
   | Scripture
   | {
@@ -169,6 +181,9 @@ export function linkProps(props: GenLinkProps): LinkProps {
 
     case 'pageContent':
       return pageContentLinkProps(props);
+    
+    case 'restrictedContent':
+      return restrictedContentLinkProps(props);
 
     case 'asset':
       return assetLinkProps(props);
