@@ -23,28 +23,36 @@
       "Asset",
       "Resource",
       "PageContent",
+      "RestrictedContent",
       "User",
       "RelativeUrl",
       "ExternalUrl"
     ],
     "FeaturedReference": [
       "PageContent",
+      "RestrictedContent",
       "ExternalUrl",
       "RelativeUrl"
     ],
     "ChildPageReference": [
       "PageContent",
+      "RestrictedContent",
       "Hymn",
       "Prayer",
       "Liturgy",
       "Scripture",
       "Asset"
     ],
+    "PageTypes": [
+      "PageContent",
+      "RestrictedContent"
+    ],
     "ResourceType": [
       "Asset",
       "RelativeUrl",
       "ExternalUrl",
-      "PageContent"
+      "PageContent",
+      "RestrictedContent"
     ],
     "ShortList": [
       "Hymn",

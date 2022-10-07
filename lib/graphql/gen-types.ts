@@ -29,6 +29,7 @@ export type Query = {
   prayerSearch?: Maybe<Array<Prayer>>;
   liturgySearch?: Maybe<Array<Liturgy>>;
   pageContentOne?: Maybe<PageContent>;
+  restrictedContentOne?: Maybe<RestrictedContent>;
   authorById?: Maybe<Author>;
   hymnById?: Maybe<Hymn>;
   keywordById?: Maybe<Keyword>;
@@ -62,6 +63,11 @@ export type QueryLiturgySearchArgs = {
 
 
 export type QueryPageContentOneArgs = {
+  filter: FilterInput;
+};
+
+
+export type QueryRestrictedContentOneArgs = {
   filter: FilterInput;
 };
 
@@ -286,7 +292,7 @@ export type Document = {
   _updatedAt?: Maybe<Scalars['Date']>;
 };
 
-export type FeaturedReference = PageContent | ExternalUrl | RelativeUrl;
+export type FeaturedReference = PageContent | RestrictedContent | ExternalUrl | RelativeUrl;
 
 export type Main = Document & {
   __typename?: 'Main';
@@ -303,7 +309,7 @@ export type Main = Document & {
   menuItems?: Maybe<Array<MenuItem>>;
 };
 
-export type ChildPageReference = PageContent | Hymn | Prayer | Liturgy | Scripture | Asset;
+export type ChildPageReference = PageContent | RestrictedContent | Hymn | Prayer | Liturgy | Scripture | Asset;
 
 export type MenuItem = {
   __typename?: 'MenuItem';
@@ -414,6 +420,8 @@ export type Liturgy = Document & {
   copyright?: Maybe<Copyright>;
 };
 
+export type PageTypes = PageContent | RestrictedContent;
+
 export type Menu = Document & {
   __typename?: 'Menu';
   _createdAt?: Maybe<Scalars['Date']>;
@@ -424,7 +432,7 @@ export type Menu = Document & {
   code?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
-  link?: Maybe<PageContent>;
+  link?: Maybe<PageTypes>;
 };
 
 export type Metre = Document & {
@@ -519,7 +527,7 @@ export type Asset = Document & {
   url?: Maybe<Scalars['String']>;
 };
 
-export type ResourceType = Asset | RelativeUrl | ExternalUrl | PageContent;
+export type ResourceType = Asset | RelativeUrl | ExternalUrl | PageContent | RestrictedContent;
 
 export type Resource = Document & {
   __typename?: 'Resource';
@@ -534,6 +542,20 @@ export type Resource = Document & {
 
 export type PageContent = Document & {
   __typename?: 'PageContent';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  subtitle?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
+  hasToc?: Maybe<Scalars['Boolean']>;
+  content?: Maybe<Scalars['JSON']>;
+};
+
+export type RestrictedContent = Document & {
+  __typename?: 'RestrictedContent';
   _createdAt?: Maybe<Scalars['Date']>;
   _id: Scalars['ID'];
   _rev?: Maybe<Scalars['String']>;
@@ -728,7 +750,7 @@ export type ResolversTypes = {
   EnumHymnBook: ResolverTypeWrapper<any>;
   PageInfo: ResolverTypeWrapper<any>;
   FilterInput: ResolverTypeWrapper<any>;
-  Document: ResolversTypes['Main'] | ResolversTypes['Author'] | ResolversTypes['Category'] | ResolversTypes['Copyright'] | ResolversTypes['Hymn'] | ResolversTypes['Keyword'] | ResolversTypes['Liturgy'] | ResolversTypes['Menu'] | ResolversTypes['Metre'] | ResolversTypes['Occasion'] | ResolversTypes['Prayer'] | ResolversTypes['Scripture'] | ResolversTypes['Tune'] | ResolversTypes['Asset'] | ResolversTypes['Resource'] | ResolversTypes['PageContent'] | ResolversTypes['User'] | ResolversTypes['RelativeUrl'] | ResolversTypes['ExternalUrl'];
+  Document: ResolversTypes['Main'] | ResolversTypes['Author'] | ResolversTypes['Category'] | ResolversTypes['Copyright'] | ResolversTypes['Hymn'] | ResolversTypes['Keyword'] | ResolversTypes['Liturgy'] | ResolversTypes['Menu'] | ResolversTypes['Metre'] | ResolversTypes['Occasion'] | ResolversTypes['Prayer'] | ResolversTypes['Scripture'] | ResolversTypes['Tune'] | ResolversTypes['Asset'] | ResolversTypes['Resource'] | ResolversTypes['PageContent'] | ResolversTypes['RestrictedContent'] | ResolversTypes['User'] | ResolversTypes['RelativeUrl'] | ResolversTypes['ExternalUrl'];
   FeaturedReference: ResolverTypeWrapper<any>;
   Main: ResolverTypeWrapper<any>;
   ChildPageReference: ResolverTypeWrapper<any>;
@@ -741,6 +763,7 @@ export type ResolversTypes = {
   Keyword: ResolverTypeWrapper<any>;
   KeywordSortBy: ResolverTypeWrapper<any>;
   Liturgy: ResolverTypeWrapper<any>;
+  PageTypes: ResolverTypeWrapper<any>;
   Menu: ResolverTypeWrapper<any>;
   Metre: ResolverTypeWrapper<any>;
   MetreSortBy: ResolverTypeWrapper<any>;
@@ -753,6 +776,7 @@ export type ResolversTypes = {
   ResourceType: ResolverTypeWrapper<any>;
   Resource: ResolverTypeWrapper<any>;
   PageContent: ResolverTypeWrapper<any>;
+  RestrictedContent: ResolverTypeWrapper<any>;
   ShortList: ResolverTypeWrapper<any>;
   Name: ResolverTypeWrapper<any>;
   PresentationOptions: ResolverTypeWrapper<any>;
@@ -783,7 +807,7 @@ export type ResolversParentTypes = {
   PresentationOptionsInput: any;
   PageInfo: any;
   FilterInput: any;
-  Document: ResolversParentTypes['Main'] | ResolversParentTypes['Author'] | ResolversParentTypes['Category'] | ResolversParentTypes['Copyright'] | ResolversParentTypes['Hymn'] | ResolversParentTypes['Keyword'] | ResolversParentTypes['Liturgy'] | ResolversParentTypes['Menu'] | ResolversParentTypes['Metre'] | ResolversParentTypes['Occasion'] | ResolversParentTypes['Prayer'] | ResolversParentTypes['Scripture'] | ResolversParentTypes['Tune'] | ResolversParentTypes['Asset'] | ResolversParentTypes['Resource'] | ResolversParentTypes['PageContent'] | ResolversParentTypes['User'] | ResolversParentTypes['RelativeUrl'] | ResolversParentTypes['ExternalUrl'];
+  Document: ResolversParentTypes['Main'] | ResolversParentTypes['Author'] | ResolversParentTypes['Category'] | ResolversParentTypes['Copyright'] | ResolversParentTypes['Hymn'] | ResolversParentTypes['Keyword'] | ResolversParentTypes['Liturgy'] | ResolversParentTypes['Menu'] | ResolversParentTypes['Metre'] | ResolversParentTypes['Occasion'] | ResolversParentTypes['Prayer'] | ResolversParentTypes['Scripture'] | ResolversParentTypes['Tune'] | ResolversParentTypes['Asset'] | ResolversParentTypes['Resource'] | ResolversParentTypes['PageContent'] | ResolversParentTypes['RestrictedContent'] | ResolversParentTypes['User'] | ResolversParentTypes['RelativeUrl'] | ResolversParentTypes['ExternalUrl'];
   FeaturedReference: any;
   Main: any;
   ChildPageReference: any;
@@ -795,6 +819,7 @@ export type ResolversParentTypes = {
   Hymn: any;
   Keyword: any;
   Liturgy: any;
+  PageTypes: any;
   Menu: any;
   Metre: any;
   Occasion: any;
@@ -805,6 +830,7 @@ export type ResolversParentTypes = {
   ResourceType: any;
   Resource: any;
   PageContent: any;
+  RestrictedContent: any;
   ShortList: any;
   Name: any;
   PresentationOptions: any;
@@ -827,6 +853,7 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   prayerSearch?: Resolver<Maybe<Array<ResolversTypes['Prayer']>>, ParentType, ContextType, RequireFields<QueryPrayerSearchArgs, 'filter'>>;
   liturgySearch?: Resolver<Maybe<Array<ResolversTypes['Liturgy']>>, ParentType, ContextType, RequireFields<QueryLiturgySearchArgs, 'filter'>>;
   pageContentOne?: Resolver<Maybe<ResolversTypes['PageContent']>, ParentType, ContextType, RequireFields<QueryPageContentOneArgs, 'filter'>>;
+  restrictedContentOne?: Resolver<Maybe<ResolversTypes['RestrictedContent']>, ParentType, ContextType, RequireFields<QueryRestrictedContentOneArgs, 'filter'>>;
   authorById?: Resolver<Maybe<ResolversTypes['Author']>, ParentType, ContextType, RequireFields<QueryAuthorByIdArgs, 'id'>>;
   hymnById?: Resolver<Maybe<ResolversTypes['Hymn']>, ParentType, ContextType, RequireFields<QueryHymnByIdArgs, 'id'>>;
   keywordById?: Resolver<Maybe<ResolversTypes['Keyword']>, ParentType, ContextType, RequireFields<QueryKeywordByIdArgs, 'id'>>;
@@ -876,7 +903,7 @@ export type PageInfoResolvers<ContextType = Context, ParentType extends Resolver
 };
 
 export type DocumentResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Document'] = ResolversParentTypes['Document']> = {
-  __resolveType: TypeResolveFn<'Main' | 'Author' | 'Category' | 'Copyright' | 'Hymn' | 'Keyword' | 'Liturgy' | 'Menu' | 'Metre' | 'Occasion' | 'Prayer' | 'Scripture' | 'Tune' | 'Asset' | 'Resource' | 'PageContent' | 'User' | 'RelativeUrl' | 'ExternalUrl', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Main' | 'Author' | 'Category' | 'Copyright' | 'Hymn' | 'Keyword' | 'Liturgy' | 'Menu' | 'Metre' | 'Occasion' | 'Prayer' | 'Scripture' | 'Tune' | 'Asset' | 'Resource' | 'PageContent' | 'RestrictedContent' | 'User' | 'RelativeUrl' | 'ExternalUrl', ParentType, ContextType>;
   _createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   _rev?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -885,7 +912,7 @@ export type DocumentResolvers<ContextType = Context, ParentType extends Resolver
 };
 
 export type FeaturedReferenceResolvers<ContextType = Context, ParentType extends ResolversParentTypes['FeaturedReference'] = ResolversParentTypes['FeaturedReference']> = {
-  __resolveType: TypeResolveFn<'PageContent' | 'ExternalUrl' | 'RelativeUrl', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'PageContent' | 'RestrictedContent' | 'ExternalUrl' | 'RelativeUrl', ParentType, ContextType>;
 };
 
 export type MainResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Main'] = ResolversParentTypes['Main']> = {
@@ -904,7 +931,7 @@ export type MainResolvers<ContextType = Context, ParentType extends ResolversPar
 };
 
 export type ChildPageReferenceResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ChildPageReference'] = ResolversParentTypes['ChildPageReference']> = {
-  __resolveType: TypeResolveFn<'PageContent' | 'Hymn' | 'Prayer' | 'Liturgy' | 'Scripture' | 'Asset', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'PageContent' | 'RestrictedContent' | 'Hymn' | 'Prayer' | 'Liturgy' | 'Scripture' | 'Asset', ParentType, ContextType>;
 };
 
 export type MenuItemResolvers<ContextType = Context, ParentType extends ResolversParentTypes['MenuItem'] = ResolversParentTypes['MenuItem']> = {
@@ -1011,6 +1038,10 @@ export type LiturgyResolvers<ContextType = Context, ParentType extends Resolvers
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type PageTypesResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PageTypes'] = ResolversParentTypes['PageTypes']> = {
+  __resolveType: TypeResolveFn<'PageContent' | 'RestrictedContent', ParentType, ContextType>;
+};
+
 export type MenuResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Menu'] = ResolversParentTypes['Menu']> = {
   _createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -1020,7 +1051,7 @@ export type MenuResolvers<ContextType = Context, ParentType extends ResolversPar
   code?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
-  link?: Resolver<Maybe<ResolversTypes['PageContent']>, ParentType, ContextType>;
+  link?: Resolver<Maybe<ResolversTypes['PageTypes']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
@@ -1107,7 +1138,7 @@ export type AssetResolvers<ContextType = Context, ParentType extends ResolversPa
 };
 
 export type ResourceTypeResolvers<ContextType = Context, ParentType extends ResolversParentTypes['ResourceType'] = ResolversParentTypes['ResourceType']> = {
-  __resolveType: TypeResolveFn<'Asset' | 'RelativeUrl' | 'ExternalUrl' | 'PageContent', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Asset' | 'RelativeUrl' | 'ExternalUrl' | 'PageContent' | 'RestrictedContent', ParentType, ContextType>;
 };
 
 export type ResourceResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Resource'] = ResolversParentTypes['Resource']> = {
@@ -1122,6 +1153,20 @@ export type ResourceResolvers<ContextType = Context, ParentType extends Resolver
 };
 
 export type PageContentResolvers<ContextType = Context, ParentType extends ResolversParentTypes['PageContent'] = ResolversParentTypes['PageContent']> = {
+  _createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  _rev?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  _type?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  _updatedAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
+  title?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  subtitle?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  slug?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  hasToc?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
+  content?: Resolver<Maybe<ResolversTypes['JSON']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
+export type RestrictedContentResolvers<ContextType = Context, ParentType extends ResolversParentTypes['RestrictedContent'] = ResolversParentTypes['RestrictedContent']> = {
   _createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   _rev?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -1236,6 +1281,7 @@ export type Resolvers<ContextType = Context> = {
   Hymn?: HymnResolvers<ContextType>;
   Keyword?: KeywordResolvers<ContextType>;
   Liturgy?: LiturgyResolvers<ContextType>;
+  PageTypes?: PageTypesResolvers<ContextType>;
   Menu?: MenuResolvers<ContextType>;
   Metre?: MetreResolvers<ContextType>;
   Occasion?: OccasionResolvers<ContextType>;
@@ -1246,6 +1292,7 @@ export type Resolvers<ContextType = Context> = {
   ResourceType?: ResourceTypeResolvers<ContextType>;
   Resource?: ResourceResolvers<ContextType>;
   PageContent?: PageContentResolvers<ContextType>;
+  RestrictedContent?: RestrictedContentResolvers<ContextType>;
   ShortList?: ShortListResolvers<ContextType>;
   Name?: NameResolvers<ContextType>;
   PresentationOptions?: PresentationOptionsResolvers<ContextType>;
