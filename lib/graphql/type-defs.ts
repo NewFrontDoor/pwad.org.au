@@ -219,6 +219,7 @@ export const typeDefs = gql`
     | Liturgy
     | Scripture
     | Asset
+    | ExternalUrl
 
   type MenuItem {
     _key: String

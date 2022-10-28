@@ -308,7 +308,7 @@ export type Main = Document & {
   menuItems?: Maybe<Array<MenuItem>>;
 };
 
-export type ChildPageReference = PageContent | RestrictedContent | Hymn | Prayer | Liturgy | Scripture | Asset;
+export type ChildPageReference = PageContent | RestrictedContent | Hymn | Prayer | Liturgy | Scripture | Asset | ExternalUrl;
 
 export type MenuItem = {
   __typename?: 'MenuItem';
