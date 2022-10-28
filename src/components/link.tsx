@@ -14,7 +14,8 @@ import {
   RestrictedContent,
   Scripture,
   Hymn,
-  ChildPage
+  ChildPage,
+  ExternalUrl
 } from '../../queries/_types';
 
 type LinkProps = {
@@ -119,6 +120,16 @@ export function pageContentLinkProps({
   };
 }
 
+export function externalLinkProps({
+  title,
+  url,
+}: Pick<ExternalUrl, '_id' | 'url' | 'title'>): LinkProps {
+  return {
+    href: `${url}`,
+    children: title
+  };
+}
+
 export function restrictedContentLinkProps({
   slug,
   title
@@ -159,6 +170,7 @@ export type GenLinkProps =
   | RestrictedContent
   | Asset
   | Scripture
+  | ExternalUrl
   | {
       _id: string;
       _type: never;
@@ -190,6 +202,9 @@ export function linkProps(props: GenLinkProps): LinkProps {
 
     case 'scripture':
       return scriptureLinkProps(props);
+
+    case 'externalUrl':
+      return externalLinkProps(props);
 
     default:
       return props;

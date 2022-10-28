@@ -90,6 +90,14 @@ export type Scripture = {
   keywords?: Keyword[];
 };
 
+export type ExternalUrl = {
+  _id: string;
+  _type: "externalUrl";
+  title: string;
+  url: string;
+  blank?: boolean;
+}
+
 export type ChildPageReference =
   | PageContent
   | RestrictedContent
@@ -97,7 +105,8 @@ export type ChildPageReference =
   | Prayer
   | Liturgy
   | Scripture
-  | Asset;
+  | Asset
+  | ExternalUrl;
 
 export type ChildPage = {
   _id: string;

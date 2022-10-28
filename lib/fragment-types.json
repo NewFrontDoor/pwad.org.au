@@ -41,7 +41,8 @@
       "Prayer",
       "Liturgy",
       "Scripture",
-      "Asset"
+      "Asset",
+      "ExternalUrl"
     ],
     "PageTypes": [
       "PageContent",
