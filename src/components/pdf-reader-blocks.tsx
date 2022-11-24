@@ -7,9 +7,6 @@ import {
   Image,
   Link,
 } from "@react-pdf/renderer";
-//pdf styles
-
-
 
 const styles = StyleSheet.create({
   page: {
