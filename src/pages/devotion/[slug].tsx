@@ -17,7 +17,7 @@ import Sidebar, { SidebarContentPDF } from "../../components/sidebar";
 
 type ContentProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const Content: NextPage<ContentProps> = ({ menuItems, devotionContent }) => {
+const Content: NextPage<ContentProps> = ({ menuItems, devotionContent, slug }) => {
   const {title, content} = devotionContent
   return (
     <PageLayout menuItems={menuItems}>
@@ -32,12 +32,12 @@ const Content: NextPage<ContentProps> = ({ menuItems, devotionContent }) => {
       >
         <Sidebar>
           <>
-            <SidebarContentPDF content={content} title={title} header={''}/>
+            {content && <SidebarContentPDF content={content} title={title} header={''}/>}
           </>
         </Sidebar>
-
         <Box>
-        <BlockContent blocks={content} />
+        {content && <BlockContent blocks={content} />}
+        {!content && <div>No devotion found for that date.</div>}
         </Box>
       </Flex>
     </PageLayout>
@@ -61,6 +61,7 @@ export default Content;
 export const getServerSideProps: GetServerSideProps<{
   devotionContent: DevotionContent;
   menuItems: MenuItem[];
+  slug: string;
 }> = async function (context) {
   let slug = context.params?.slug;
 
@@ -83,6 +84,7 @@ export const getServerSideProps: GetServerSideProps<{
     props: {
       menuItems,
       devotionContent,
+      slug
     },
   };
 };

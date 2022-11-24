@@ -34,12 +34,13 @@ const Content: NextPage<ContentProps> = ({ menuItems, devotionContent, zonedDate
       >
         <Sidebar>
           <>
-            <SidebarContentPDF content={content} title={title} header={''}/>
+            {content && <SidebarContentPDF content={content} title={title} header={''}/>}
           </>
         </Sidebar>
 
         <Box>
-        <BlockContent blocks={content} />
+        {content && <BlockContent blocks={content} />}
+        {!content && <div>No devotion found for today ({zonedDate}).</div>}
         </Box>
       </Flex>
     </PageLayout>
