@@ -5,8 +5,12 @@ import PropTypes from 'prop-types';
 import prettyBytes from 'pretty-bytes';
 import {AudioManager} from '@newfrontdoor/audio-player';
 import Link, {authorLinkProps, assetLinkProps} from './link';
-import {Asset, Author, Tune, Copyright} from '../../queries/_types';
+import {Asset, Author, Tune, Copyright, BlockContent} from '../../queries/_types';
 import useToggle from './use-toggle';
+import { Page, Text, View, Document, StyleSheet, pdf } from '@react-pdf/renderer';
+import { saveAs } from 'file-saver';
+import PDFReaderBlocks from './pdf-reader-blocks'
+import {FaDownload} from 'react-icons/fa'
 
 /* _Function Index_
 -Composer (used within SidebarTune)
@@ -72,6 +76,59 @@ export const SidebarFiles = ({files, generatePPT}: SidebarFilesProps) => (
     </Styled.ul>
   </>
 );
+
+SidebarFiles.propTypes = {
+  files: PropTypes.array,
+  generatePPT: PropTypes.func
+};
+
+SidebarFiles.defaultProps = {
+  files: [],
+  generatePPT: () => undefined
+};
+
+type SidebarContentPDF = {
+  content: BlockContent[];
+  title?: string;
+  hymnNumber?: number;
+  date?: string;
+  header?: string;
+};
+
+
+export const SidebarContentPDF = ({content, title, hymnNumber, header}: SidebarContentPDF) => {
+  const fullTitle = hymnNumber ? `${hymnNumber}. ${title}` : title
+    const generatePdfDocument = async () => {
+      const document = <PDFReaderBlocks blocks={content} title={fullTitle}/>
+      const blob = await pdf((
+        document
+      )).toBlob();
+      saveAs(blob, `${fullTitle}.pdf`);
+      return blob;
+};
+  return (
+  <>
+    <Styled.h3>{header ? header : ''}</Styled.h3>
+    <Styled.ul
+      sx={{
+        listStyle: 'none',
+        padding: 0
+      }}
+    >
+      <li key="ppt">
+      <Button
+          variant="transparent"
+          sx={{padding: 0, display: "flex", alignItems: 'center', gap: "5px"}}
+          onClick={() => {
+            generatePdfDocument();
+          }}
+        >
+         <FaDownload/> PDF
+        </Button>
+      </li>
+    </Styled.ul>
+  </>
+)};
 
 SidebarFiles.propTypes = {
   files: PropTypes.array,

@@ -156,6 +156,14 @@ export type RestrictedContent = {
   title?: string;
 };
 
+export type DevotionContent = {
+  _id: string;
+  _type: "devotionContent";
+  content: BlockContent[];
+  date: string;
+  title?: string;
+};
+
 export type Copyright = {
   _id: string;
   name: string;

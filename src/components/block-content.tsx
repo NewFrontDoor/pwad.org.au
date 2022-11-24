@@ -1,6 +1,6 @@
 import React, {FC, ReactNode} from 'react';
 import PropTypes from 'prop-types';
-import {Styled} from 'theme-ui';
+import {Styled, sx} from 'theme-ui';
 import SanityBlockContent from '@sanity/block-content-to-react';
 import getVideoId from 'get-video-id';
 import Vimeo from '@u-wave/react-vimeo';
@@ -43,7 +43,10 @@ ExternalLink.propTypes = {
 };
 
 const Image = ({node}) => {
-  return <img {...node.asset} />;
+  const {url} = node.asset;
+  return <div>
+    <img src={url} alt="" style={{maxWidth: "100%"}}/>
+  </div>;
 };
 
 Image.propTypes = {
@@ -123,7 +126,8 @@ const serializers = {
   types: {
     block: Block,
     img: Image,
-    video: Video
+    video: Video,
+    image: Image
   },
   marks: {
     internalLink: InternalLink,
