@@ -36,7 +36,7 @@ type SongProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 const Song: NextPage<SongProps> = ({hymn, menuItems}) => {
   
   const {loggedInUser} = useUser({
-    redirectTo: false //DO NOT SHIP
+    redirectTo: '/api/auth/login'
   });
   if (!loggedInUser.user) {
     return <Loading />;
