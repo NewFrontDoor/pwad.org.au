@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 100,
   },
   invalid: {
-    fontSize: "12",
+    fontSize: "11",
     fontStyle: 'italic',
     margin: 10,
     marginLeft: 30,
@@ -43,6 +43,22 @@ const styles = StyleSheet.create({
     margin: 10,
     marginLeft: 30,
   },
+  h2:{
+    fontSize: "18",
+    marginBottom: '10'
+  },
+  h3:{
+    fontSize: "17",
+    marginBottom: '10'
+  },
+  h4:{
+    fontSize: "16",
+    marginBottom: '10'
+  },
+  h5:{
+    fontSize: "15",
+    marginBottom: '10'
+  }
 });
 
 const generateBlock = (block) => {
@@ -60,13 +76,13 @@ const generateBlock = (block) => {
       case 'span':
         return <Text style={styles.text}>{block.children[0].text.trim()}</Text>
       case 'h2':
-        return <Text style={styles.text}>{block.children[0].text.trim()}</Text>
+        return <Text style={styles.h2}>{block.children[0].text.trim()}</Text>
       case 'h3':
-        return <Text style={styles.text}>{block.children[0].text.trim()}</Text>
+        return <Text style={styles.h3}>{block.children[0].text.trim()}</Text>
       case 'h4':
-        return <Text style={styles.text}>{block.children[0].text.trim()}</Text>
+        return <Text style={styles.h4}>{block.children[0].text.trim()}</Text>
       case 'h5':
-        return <Text style={styles.text}>{block.children[0].text.trim()}</Text>
+        return <Text style={styles.h5}>{block.children[0].text.trim()}</Text>
       case 'ul':
         return <Text style={styles.invalid}>Lists not yet supported by PDFs</Text>
       case 'ol':
