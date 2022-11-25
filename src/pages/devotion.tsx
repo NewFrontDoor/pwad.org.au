@@ -16,11 +16,13 @@ import { DevotionContent, MenuItem } from "../../queries/_types";
 
 import PageLayout from "../components/page-layout";
 import Sidebar, { SidebarContentPDF } from "../components/sidebar";
+import Link from "next/link";
 
 type ContentProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const Content: NextPage<ContentProps> = ({ menuItems, devotionContent, zonedDate }) => {
   const {title, content} = devotionContent
+  const slug = `/devotion/${zonedDate}`
   return (
     <PageLayout menuItems={menuItems}>
         <Styled.h1>{devotionContent.title}</Styled.h1>
@@ -40,6 +42,7 @@ const Content: NextPage<ContentProps> = ({ menuItems, devotionContent, zonedDate
 
         <Box>
         {content && <BlockContent blocks={content} />}
+        {content && <Styled.p><em>A permanent link to this devotion can be found <Link href={slug} passHref>here</Link></em></Styled.p>}
         {!content && <div>No devotion found for today ({zonedDate}).</div>}
         </Box>
       </Flex>
