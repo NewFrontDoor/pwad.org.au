@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
 const generateBlock = (block) => {
   const type = block._type 
   if(type === "image"){
+    //if images aren't rendered properly it is likely due to CORS
     return <Image style={styles.image} src={block.asset.url} />
   }
 
