@@ -7,6 +7,7 @@ import Vimeo from '@u-wave/react-vimeo';
 import Youtube from '@u-wave/react-youtube';
 import Link, {linkProps, GenLinkProps} from './link';
 import {useSlugger} from '../use-slugger';
+import Image from 'next/image'
 
 type InternalLinkProps = {
   mark: {
@@ -42,14 +43,13 @@ ExternalLink.propTypes = {
   children: PropTypes.node.isRequired
 };
 
-const Image = ({node}) => {
-  const {url} = node.asset;
-  return <div>
-    <img src={url} alt="" style={{maxWidth: "100%"}}/>
-  </div>;
+const ImageSerializer = ({node}) => {
+  const {url, metadata} = node.asset;
+  const {height, width} = metadata.dimensions
+  return <Image src={url} height={height} width={width}/>
 };
 
-Image.propTypes = {
+ImageSerializer.propTypes = {
   node: PropTypes.shape({
     asset: PropTypes.any
   }).isRequired
@@ -125,9 +125,9 @@ const Block = (props: SerializerProps) => {
 const serializers = {
   types: {
     block: Block,
-    img: Image,
+    img: ImageSerializer,
     video: Video,
-    image: Image
+    image: ImageSerializer
   },
   marks: {
     internalLink: InternalLink,
