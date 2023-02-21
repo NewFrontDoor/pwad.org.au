@@ -2109,7 +2109,7 @@ export const HomeDocument = gql`
  * });
  */
 export function useHomeQuery(baseOptions?: Apollo.QueryHookOptions<HomeQuery, HomeQueryVariables>) {
-        return Apollo.useQuery<HomeQuery, HomeQueryVariables>(HomeDocument, baseOptions);
+        return Apollo.useQuery<HomeQuery, HomeQueryVariables>(HomeDocument, {...baseOptions, fetchPolicy: 'network-only', nextFetchPolicy: 'cache-first'});
       }
 export function useHomeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HomeQuery, HomeQueryVariables>) {
           return Apollo.useLazyQuery<HomeQuery, HomeQueryVariables>(HomeDocument, baseOptions);
