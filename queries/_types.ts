@@ -96,7 +96,7 @@ export type ExternalUrl = {
   title: string;
   url: string;
   blank?: boolean;
-}
+};
 
 export type ChildPageReference =
   | PageContent
@@ -162,6 +162,7 @@ export type DevotionContent = {
   content: BlockContent[];
   date: string;
   title?: string;
+  slug: string;
 };
 
 export type Copyright = {

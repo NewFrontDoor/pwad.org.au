@@ -6,73 +6,88 @@ import {
 } from "next";
 import { Styled, Box, Flex } from "theme-ui";
 import BlockContent from "../components/block-content";
-import { formatInTimeZone } from 'date-fns-tz'
-
+import { formatInTimeZone } from "date-fns-tz";
 
 import is from "../is";
-import * as devotionContentQuery from "../../queries/devotion-content";
 import * as resourceQuery from "../../queries/resource";
 import { DevotionContent, MenuItem } from "../../queries/_types";
 
 import PageLayout from "../components/page-layout";
 import Sidebar, { SidebarContentPDF } from "../components/sidebar";
 import Link from "next/link";
+import { getByDevotionsByDate } from "../../queries/devotions-by-date";
 
 type ContentProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const Content: NextPage<ContentProps> = ({ menuItems, devotionContent, zonedDate }) => {
-  const {title, content} = devotionContent
-  const slug = `/devotion/${zonedDate}`
+const Content: NextPage<ContentProps> = ({
+  menuItems,
+  devotions,
+  zonedDate,
+  formattedDate,
+}) => {
   return (
     <PageLayout menuItems={menuItems}>
-        <Styled.h1>{devotionContent.title}</Styled.h1>
-        <Flex
+      <Styled.h1>Daily Devotion Readings for {formattedDate}</Styled.h1>
+      <Flex
         sx={{
-          flexDirection: ['column-reverse', 'row', 'row'],
+          flexDirection: ["column-reverse", "row", "row"],
           // TODO: What should this value actually be?
-          justifyContent: 'flex-start',
-          gap: "30px"
+          justifyContent: "flex-start",
+          gap: "30px",
         }}
       >
         <Sidebar>
-          <>
-            {content && <SidebarContentPDF content={content} title={title} header={''}/>}
-          </>
+          {/* {content && (
+              <SidebarContentPDF content={content} title={title} header={""} />
+            )} */}
         </Sidebar>
 
         <Box>
-        {content && <BlockContent blocks={content} />}
-        {content && <Styled.p><em>A permanent link to this devotion can be found <Link href={slug} passHref>here</Link></em></Styled.p>}
-        {!content && <div>No devotion found for today ({zonedDate}).</div>}
+          {devotions &&
+            devotions.map((devotion) => (
+              <Styled.p>
+                <Link href={devotion.slug}>{devotion.title}</Link>
+              </Styled.p>
+            ))}
+          {!devotions && <div>No devotions found for today ({zonedDate}).</div>}
         </Box>
       </Flex>
     </PageLayout>
-    
   );
 };
 
 Content.propTypes = {
-  devotionContent: PropTypes.exact({
-    _id: PropTypes.string.isRequired,
-    _type: is("devotionContent"),
-    content: PropTypes.array.isRequired,
-    date: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-  }).isRequired,
+  devotions: PropTypes.arrayOf(
+    PropTypes.shape({
+      _id: PropTypes.string.isRequired,
+      _type: is("devotionContent"),
+      content: PropTypes.array.isRequired,
+      date: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      slug: PropTypes.string.isRequired,
+    })
+  ).isRequired,
   menuItems: PropTypes.array.isRequired,
 };
 
 export default Content;
 
 export const getServerSideProps: GetServerSideProps<{
-  devotionContent: DevotionContent;
+  devotions: DevotionContent | any;
   menuItems: MenuItem[];
   zonedDate: string;
+  formattedDate: string;
 }> = async function (context) {
-  const today = new Date()
-  const timeZone = 'Australia/Melbourne'
-  const zonedDate = formatInTimeZone(today, timeZone, 'yyyy-MM-dd')
-  const slug=zonedDate
+  const today = new Date();
+  const timeZone = "Australia/Melbourne";
+  //const zonedDate = formatInTimeZone(today, timeZone, "yyyy-MM-dd");
+  const zonedDate = "2023-01-01";
+  const date = new Date(zonedDate);
+  const month = date.toLocaleString("default", { month: "long" });
+  const day = date.getDate();
+  const suffix =
+    day > 3 && day < 21 ? "th" : ["st", "nd", "rd"][(day % 10) - 1] || "th";
+  const formattedDate = `${month} ${day}${suffix}`;
 
   if (typeof today === "undefined") {
     return {
@@ -81,15 +96,14 @@ export const getServerSideProps: GetServerSideProps<{
   }
 
   const menuItems = await resourceQuery.menuItems();
-  const devotionContent = await devotionContentQuery.getByRestrictedSlug(
-    slug
-  );
+  const devotions = await getByDevotionsByDate(zonedDate);
 
   return {
     props: {
       menuItems,
-      devotionContent,
-      zonedDate
+      devotions,
+      zonedDate,
+      formattedDate,
     },
   };
 };

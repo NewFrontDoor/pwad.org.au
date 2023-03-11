@@ -1,16 +1,29 @@
 /** @jsx jsx */
-import {ReactNode} from 'react';
-import {jsx, Box, Styled, Button} from 'theme-ui';
-import PropTypes from 'prop-types';
-import prettyBytes from 'pretty-bytes';
-import {AudioManager} from '@newfrontdoor/audio-player';
-import Link, {authorLinkProps, assetLinkProps} from './link';
-import {Asset, Author, Tune, Copyright, BlockContent} from '../../queries/_types';
-import useToggle from './use-toggle';
-import { Page, Text, View, Document, StyleSheet, pdf } from '@react-pdf/renderer';
-import { saveAs } from 'file-saver';
-import PDFReaderBlocks from './pdf-reader-blocks'
-import {FaDownload} from 'react-icons/fa'
+import { ReactNode } from "react";
+import { jsx, Box, Styled, Button } from "theme-ui";
+import PropTypes from "prop-types";
+import prettyBytes from "pretty-bytes";
+import { AudioManager } from "@newfrontdoor/audio-player";
+import Link, { authorLinkProps, assetLinkProps } from "./link";
+import {
+  Asset,
+  Author,
+  Tune,
+  Copyright,
+  BlockContent,
+} from "../../queries/_types";
+import useToggle from "./use-toggle";
+import {
+  Page,
+  Text,
+  View,
+  Document,
+  StyleSheet,
+  pdf,
+} from "@react-pdf/renderer";
+import { saveAs } from "file-saver";
+import PDFReaderBlocks from "./pdf-reader-blocks";
+import { FaDownload } from "react-icons/fa";
 
 /* _Function Index_
 -Composer (used within SidebarTune)
@@ -36,11 +49,11 @@ const Composer = (props: Author) => {
 };
 
 Composer.propTypes = {
-  name: PropTypes.string
+  name: PropTypes.string,
 };
 
 Composer.defaultProps = {
-  name: undefined
+  name: undefined,
 };
 
 type SidebarFilesProps = {
@@ -48,13 +61,13 @@ type SidebarFilesProps = {
   generatePPT: () => void;
 };
 
-export const SidebarFiles = ({files, generatePPT}: SidebarFilesProps) => (
+export const SidebarFiles = ({ files, generatePPT }: SidebarFilesProps) => (
   <>
     <Styled.h3>Files</Styled.h3>
     <Styled.ul
       sx={{
-        listStyle: 'none',
-        padding: 0
+        listStyle: "none",
+        padding: 0,
       }}
     >
       {files.map((file) => (
@@ -65,7 +78,7 @@ export const SidebarFiles = ({files, generatePPT}: SidebarFilesProps) => (
       <li key="ppt">
         <Button
           variant="transparent"
-          sx={{padding: 0}}
+          sx={{ padding: 0 }}
           onClick={() => {
             generatePPT();
           }}
@@ -79,12 +92,12 @@ export const SidebarFiles = ({files, generatePPT}: SidebarFilesProps) => (
 
 SidebarFiles.propTypes = {
   files: PropTypes.array,
-  generatePPT: PropTypes.func
+  generatePPT: PropTypes.func,
 };
 
 SidebarFiles.defaultProps = {
   files: [],
-  generatePPT: () => undefined
+  generatePPT: () => undefined,
 };
 
 type SidebarContentPDF = {
@@ -95,58 +108,66 @@ type SidebarContentPDF = {
   header?: string;
 };
 
-
-export const SidebarContentPDF = ({content, title, hymnNumber, header}: SidebarContentPDF) => {
-  const fullTitle = hymnNumber ? `${hymnNumber}. ${title}` : title
-    const generatePdfDocument = async () => {
-      const document = <PDFReaderBlocks blocks={content} title={fullTitle}/>
-      const blob = await pdf((
-        document
-      )).toBlob();
-      saveAs(blob, `${fullTitle}.pdf`);
-      return blob;
-};
+export const SidebarContentPDF = ({
+  content,
+  title,
+  hymnNumber,
+  header,
+}: SidebarContentPDF) => {
+  const fullTitle = hymnNumber ? `${hymnNumber}. ${title}` : title;
+  const generatePdfDocument = async () => {
+    const document = <PDFReaderBlocks blocks={content} title={fullTitle} />;
+    const blob = await pdf(document).toBlob();
+    saveAs(blob, `${fullTitle}.pdf`);
+    return blob;
+  };
   return (
-  <>
-    <Styled.h3>{header ? header : ''}</Styled.h3>
-    <Styled.ul
-      sx={{
-        listStyle: 'none',
-        padding: 0
-      }}
-    >
-      <li key="ppt">
-      <Button
-          variant="transparent"
-          sx={{padding: 0, display: "flex", alignItems: 'center', gap: "5px"}}
-          onClick={() => {
-            generatePdfDocument();
-          }}
-        >
-         <FaDownload/> PDF
-        </Button>
-      </li>
-    </Styled.ul>
-  </>
-)};
+    <>
+      <Styled.h3>{header ? header : ""}</Styled.h3>
+      <Styled.ul
+        sx={{
+          listStyle: "none",
+          padding: 0,
+        }}
+      >
+        <li key="ppt">
+          <Button
+            variant="transparent"
+            sx={{
+              padding: 0,
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+            }}
+            onClick={() => {
+              generatePdfDocument();
+            }}
+          >
+            <FaDownload /> PDF
+          </Button>
+        </li>
+      </Styled.ul>
+    </>
+  );
+};
 
 SidebarFiles.propTypes = {
   files: PropTypes.array,
-  generatePPT: PropTypes.func
+  generatePPT: PropTypes.func,
 };
 
 SidebarFiles.defaultProps = {
   files: [],
-  generatePPT: () => undefined
+  generatePPT: () => undefined,
 };
 
-export const SidebarTune = ({_id, title, file}: Tune) => (
+export const SidebarTune = ({ _id, title, file }: Tune) => (
   <>
     <Styled.h3>Tune</Styled.h3>
     <Styled.ul
       sx={{
-        listStyle: 'none',
-        padding: 0
+        listStyle: "none",
+        padding: 0,
       }}
     >
       <li key={_id}>
@@ -165,21 +186,21 @@ export const SidebarTune = ({_id, title, file}: Tune) => (
 SidebarTune.propTypes = {
   _id: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
-  file: PropTypes.any
+  file: PropTypes.any,
 };
 
 SidebarTune.defaultProps = {
-  file: undefined
+  file: undefined,
 };
 
-export const SidebarAlternateTunes = ({tunes}: {tunes: Tune[]}) => {
+export const SidebarAlternateTunes = ({ tunes }: { tunes: Tune[] }) => {
   return (
     <>
       <Styled.h3>Alternate Tunes</Styled.h3>
       <Styled.ul
         sx={{
-          listStyle: 'none',
-          padding: 0
+          listStyle: "none",
+          padding: 0,
         }}
       >
         {tunes.map((tune) => (
@@ -202,11 +223,11 @@ export const SidebarAlternateTunes = ({tunes}: {tunes: Tune[]}) => {
 };
 
 SidebarAlternateTunes.propTypes = {
-  tunes: PropTypes.array
+  tunes: PropTypes.array,
 };
 
 SidebarAlternateTunes.defaultProps = {
-  tunes: []
+  tunes: [],
 };
 
 export const SidebarAuthor = (props: Author) => (
@@ -219,14 +240,14 @@ export const SidebarAuthor = (props: Author) => (
 );
 
 SidebarAuthor.propTypes = {
-  name: PropTypes.string
+  name: PropTypes.string,
 };
 
 SidebarAuthor.defaultProps = {
-  name: undefined
+  name: undefined,
 };
 
-export const SidebarScripture = ({scripture}: {scripture: string}) => (
+export const SidebarScripture = ({ scripture }: { scripture: string }) => (
   <>
     <Styled.h3>Scripture</Styled.h3>
     <Styled.p>{scripture}</Styled.p>
@@ -234,14 +255,14 @@ export const SidebarScripture = ({scripture}: {scripture: string}) => (
 );
 
 SidebarScripture.propTypes = {
-  scripture: PropTypes.string
+  scripture: PropTypes.string,
 };
 
 SidebarScripture.defaultProps = {
-  scripture: undefined
+  scripture: undefined,
 };
 
-export const SidebarTuneComposer = ({composer, metre}: Tune) => (
+export const SidebarTuneComposer = ({ composer, metre }: Tune) => (
   <>
     <Styled.h3>Tune Composer</Styled.h3>
     <Composer {...composer} />
@@ -256,43 +277,43 @@ export const SidebarTuneComposer = ({composer, metre}: Tune) => (
 
 SidebarTuneComposer.propTypes = {
   composer: PropTypes.any,
-  metre: PropTypes.any
+  metre: PropTypes.any,
 };
 
 SidebarTuneComposer.defaultProps = {
   composer: undefined,
-  metre: undefined
+  metre: undefined,
 };
 
-export const SidebarCopyright = ({name}: Copyright) => (
+export const SidebarCopyright = ({ name }: Copyright) => (
   <>
     <Styled.h3>Copyright (words)</Styled.h3>
-    <Styled.p>{name || '-'}</Styled.p>
+    <Styled.p>{name || "-"}</Styled.p>
   </>
 );
 
 SidebarCopyright.propTypes = {
-  name: PropTypes.string
+  name: PropTypes.string,
 };
 
 SidebarCopyright.defaultProps = {
-  name: undefined
+  name: undefined,
 };
 
-export const SidebarMusicCopyright = (props: Pick<Copyright, 'name'>) => (
+export const SidebarMusicCopyright = (props: Pick<Copyright, "name">) => (
   <>
     <Styled.h3>Copyright (music)</Styled.h3>
-    <Styled.p>{props.name || '-'}</Styled.p>
+    <Styled.p>{props.name || "-"}</Styled.p>
   </>
 );
 
 SidebarMusicCopyright.propTypes = {
-  name: PropTypes.string
+  name: PropTypes.string,
 };
 
-const Sidebar = ({children}: {children: ReactNode}) => (
+const Sidebar = ({ children }: { children: ReactNode }) => (
   <AudioManager>
-    <Box sx={{marginRight: '40px'}}>
+    <Box sx={{ marginRight: "40px" }}>
       <AudioManager.NativePlayer controls={false} />
       {children}
     </Box>
@@ -300,11 +321,11 @@ const Sidebar = ({children}: {children: ReactNode}) => (
 );
 
 Sidebar.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 Sidebar.defaultProps = {
-  children: undefined
+  children: undefined,
 };
 
 export default Sidebar;

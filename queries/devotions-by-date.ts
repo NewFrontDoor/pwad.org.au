@@ -1,19 +1,19 @@
 import sanity from "../lib/sanity";
 import { DevotionContent } from "./_types";
 
-export async function getByDevotionSlug(
-  slug: string
+export async function getByDevotionsByDate(
+  date: string
 ): Promise<DevotionContent> {
   return sanity.fetch(
     ["*"]
       .concat([
-        '[_type=="devotionContent" && slug.current==$slug][0]',
+        '[_type=="devotionContent" && date==$date]',
         `{
             _id,
             _type,
             title,
             date,
-            slug,
+            "slug": '/devotion/' + slug.current,
             content[] {
               ...,
               markDefs[] {
@@ -28,9 +28,9 @@ export async function getByDevotionSlug(
               },
               "asset": asset->
             }
-          }`,
+          }| order(title asc)`,
       ])
       .join("|"),
-    { slug }
+    { date }
   );
 }

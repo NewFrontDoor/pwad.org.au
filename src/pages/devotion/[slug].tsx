@@ -17,31 +17,36 @@ import Sidebar, { SidebarContentPDF } from "../../components/sidebar";
 
 type ContentProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const Content: NextPage<ContentProps> = ({ menuItems, devotionContent, slug }) => {
-  const {title, content} = devotionContent
+const Content: NextPage<ContentProps> = ({
+  menuItems,
+  devotionContent,
+  slug,
+}) => {
+  const { title, content } = devotionContent;
   return (
     <PageLayout menuItems={menuItems}>
-        <Styled.h1>{devotionContent.title}</Styled.h1>
-        <Flex
+      <Styled.h1>{devotionContent.title}</Styled.h1>
+      <Flex
         sx={{
-          flexDirection: ['column-reverse', 'row', 'row'],
+          flexDirection: ["column-reverse", "row", "row"],
           // TODO: What should this value actually be?
-          justifyContent: 'flex-start',
-          gap: "30px"
+          justifyContent: "flex-start",
+          gap: "30px",
         }}
       >
         <Sidebar>
           <>
-            {content && <SidebarContentPDF content={content} title={title} header={''}/>}
+            {content && (
+              <SidebarContentPDF content={content} title={title} header={""} />
+            )}
           </>
         </Sidebar>
         <Box>
-        {content && <BlockContent blocks={content} />}
-        {!content && <div>No devotion found for that date.</div>}
+          {content && <BlockContent blocks={content} />}
+          {!content && <div>No devotion found at /{slug}.</div>}
         </Box>
       </Flex>
     </PageLayout>
-    
   );
 };
 
@@ -52,6 +57,7 @@ Content.propTypes = {
     content: PropTypes.array.isRequired,
     date: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
+    slug: PropTypes.string.isRequired,
   }).isRequired,
   menuItems: PropTypes.array.isRequired,
 };
@@ -76,15 +82,13 @@ export const getServerSideProps: GetServerSideProps<{
   }
 
   const menuItems = await resourceQuery.menuItems();
-  const devotionContent = await devotionContentQuery.getByRestrictedSlug(
-    slug
-  );
+  const devotionContent = await devotionContentQuery.getByDevotionSlug(slug);
 
   return {
     props: {
       menuItems,
       devotionContent,
-      slug
+      slug,
     },
   };
 };
