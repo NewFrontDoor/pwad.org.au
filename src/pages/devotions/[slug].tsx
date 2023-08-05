@@ -80,13 +80,8 @@ export const getServerSideProps: GetServerSideProps<{
 }> = async function (context) {
   const slug = context?.params?.slug?.toString() || "";
   const dateRegex = /^\d{4}-\d{2}-\d{2}$/g;
-
-  if (typeof slug === "undefined" || !dateRegex.test(slug)) {
-    return {
-      notFound: true,
-    };
-  }
   const zonedDate = slug.toString();
+  const slugMonth = slug.split("-")[1]; //get slug month to check if invalid day has been used for specific month
   const date = new Date(slug);
   const paddedMonth = ("0" + (date.getMonth() + 1)).slice(-2); //prefix 0 and get last to chars to pad with 0
   const paddedDay = ("0" + date.getDate()).slice(-2); //prefix 0 and get last to chars to pad with 0
@@ -100,11 +95,24 @@ export const getServerSideProps: GetServerSideProps<{
 
   const formattedDate = date ? `${month} ${day}${suffix}` : "";
 
+  if (
+    typeof slug === "undefined" ||
+    !dateRegex.test(slug) ||
+    !Date.parse(slug) ||
+    slugMonth !== paddedMonth
+  ) {
+    return {
+      notFound: true,
+    };
+  }
+
   const menuItems = await resourceQuery.menuItems();
   const devotions = await getByDevotionsByDate(
     `2023-${paddedMonth}-${paddedDay}`
   );
   console.log(`2023-${paddedMonth}-${paddedDay}`);
+  console.log(month);
+  console.log(slugMonth);
   return {
     props: {
       menuItems,
