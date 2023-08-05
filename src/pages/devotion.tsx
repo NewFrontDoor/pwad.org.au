@@ -44,8 +44,8 @@ const Content: NextPage<ContentProps> = ({
 
         <Box>
           {devotions &&
-            devotions.map((devotion) => (
-              <Styled.p>
+            devotions.map((devotion, idx) => (
+              <Styled.p key={`devotion-${idx}`}>
                 <Link href={devotion.slug}>{devotion.title}</Link>
               </Styled.p>
             ))}
@@ -80,8 +80,7 @@ export const getServerSideProps: GetServerSideProps<{
 }> = async function (context) {
   const today = new Date();
   const timeZone = "Australia/Melbourne";
-  //const zonedDate = formatInTimeZone(today, timeZone, "yyyy-MM-dd");
-  const zonedDate = "2023-01-01";
+  const zonedDate = formatInTimeZone(today, timeZone, "yyyy-MM-dd");
   const date = new Date(zonedDate);
   const month = date.toLocaleString("default", { month: "long" });
   const day = date.getDate();
