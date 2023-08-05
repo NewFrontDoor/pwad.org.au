@@ -79,14 +79,15 @@ export const getServerSideProps: GetServerSideProps<{
   zonedDate: string;
 }> = async function (context) {
   const slug = context?.params?.slug?.toString() || "";
+  const dateRegex = /^\d{4}-\d{2}-\d{2}$/g;
 
-  if (typeof slug === "undefined" || slug.length == 0 || !Date.parse(slug)) {
+  if (typeof slug === "undefined" || !dateRegex.test(slug)) {
     return {
       notFound: true,
     };
   }
   const zonedDate = slug.toString();
-  const date = new Date();
+  const date = new Date(slug);
   const paddedMonth = ("0" + (date.getMonth() + 1)).slice(-2); //prefix 0 and get last to chars to pad with 0
   const paddedDay = ("0" + date.getDate()).slice(-2); //prefix 0 and get last to chars to pad with 0
   const month = date ? date.toLocaleString("default", { month: "long" }) : null;
@@ -103,6 +104,7 @@ export const getServerSideProps: GetServerSideProps<{
   const devotions = await getByDevotionsByDate(
     `2023-${paddedMonth}-${paddedDay}`
   );
+  console.log(`2023-${paddedMonth}-${paddedDay}`);
   return {
     props: {
       menuItems,
