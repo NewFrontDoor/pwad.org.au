@@ -179,5 +179,8 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
+  },
+  "volta": {
+    "node": "16.20.1"
   }
 }
