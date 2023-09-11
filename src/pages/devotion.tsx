@@ -49,6 +49,21 @@ const Content: NextPage<ContentProps> = ({
                 <Link href={devotion.slug}>{devotion.title}</Link>
               </Styled.p>
             ))}
+          {devotions && (
+            <>
+              {" "}
+              <br />
+              <div sx={{ mt: "50px" }}>
+                <a
+                  href="https://bibleguideposts.org/about/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Author
+                </a>
+              </div>
+            </>
+          )}
           {!devotions && <div>No devotions found for today ({zonedDate}).</div>}
         </Box>
       </Flex>
