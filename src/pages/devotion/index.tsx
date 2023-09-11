@@ -5,17 +5,17 @@ import {
   InferGetServerSidePropsType,
 } from "next";
 import { Styled, Box, Flex } from "theme-ui";
-import BlockContent from "../components/block-content";
+import BlockContent from "../../components/block-content";
 import { formatInTimeZone } from "date-fns-tz";
 
-import is from "../is";
-import * as resourceQuery from "../../queries/resource";
-import { DevotionContent, MenuItem } from "../../queries/_types";
+import is from "../../is";
+import * as resourceQuery from "../../../queries/resource";
+import { DevotionContent, MenuItem } from "../../../queries/_types";
 
-import PageLayout from "../components/page-layout";
-import Sidebar, { SidebarContentPDF } from "../components/sidebar";
+import PageLayout from "../../components/page-layout";
+import Sidebar, { SidebarContentPDF } from "../../components/sidebar";
 import Link from "next/link";
-import { getByDevotionsByDate } from "../../queries/devotions-by-date";
+import { getByDevotionsByDate } from "../../../queries/devotions-by-date";
 
 type ContentProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
@@ -51,7 +51,12 @@ const Content: NextPage<ContentProps> = ({
             ))}
           {devotions && (
             <>
-              {" "}
+              <div>
+                <em>
+                  A permanent link to these devotions can be found{" "}
+                  <Link href={`/devotions/${zonedDate}`}>here</Link>.
+                </em>
+              </div>
               <br />
               <div sx={{ mt: "50px" }}>
                 <a

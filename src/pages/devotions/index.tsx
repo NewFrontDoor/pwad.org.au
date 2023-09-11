@@ -31,6 +31,7 @@ const Content: NextPage<ContentProps> = ({
       <Flex
         sx={{
           flexDirection: ["column-reverse", "row", "row"],
+          // TODO: What should this value actually be?
           justifyContent: "flex-start",
           gap: "30px",
         }}
@@ -50,6 +51,12 @@ const Content: NextPage<ContentProps> = ({
             ))}
           {devotions && (
             <>
+              <div>
+                <em>
+                  A permanent link to these devotions can be found{" "}
+                  <Link href={`/devotions/${zonedDate}`}>here</Link>.
+                </em>
+              </div>
               <br />
               <div sx={{ mt: "50px" }}>
                 <a
@@ -88,49 +95,34 @@ export default Content;
 export const getServerSideProps: GetServerSideProps<{
   devotions: DevotionContent | any;
   menuItems: MenuItem[];
-  slug: string;
-  formattedDate: string;
   zonedDate: string;
+  formattedDate: string;
 }> = async function (context) {
-  const slug = context?.params?.slug?.toString() || "";
-  const dateRegex = /^\d{4}-\d{2}-\d{2}$/g;
-  const zonedDate = slug.toString();
-  const slugMonth = slug.split("-")[1]; //get slug month to check if invalid day has been used for specific month
-  const date = new Date(slug);
-  const paddedMonth = ("0" + (date.getMonth() + 1)).slice(-2); //prefix 0 and get last to chars to pad with 0
-  const paddedDay = ("0" + date.getDate()).slice(-2); //prefix 0 and get last to chars to pad with 0
-  const month = date ? date.toLocaleString("default", { month: "long" }) : null;
-  const day = date ? date.getDate() : null;
-  const suffix = day
-    ? day > 3 && day < 21
-      ? "th"
-      : ["st", "nd", "rd"][(day % 10) - 1] || "th"
-    : null;
+  const today = new Date();
+  const timeZone = "Australia/Melbourne";
+  const zonedDate = formatInTimeZone(today, timeZone, "yyyy-MM-dd");
+  const date = new Date(zonedDate);
+  const month = date.toLocaleString("default", { month: "long" });
+  const day = date.getDate();
+  const suffix =
+    day > 3 && day < 21 ? "th" : ["st", "nd", "rd"][(day % 10) - 1] || "th";
+  const formattedDate = `${month} ${day}${suffix}`;
 
-  const formattedDate = date ? `${month} ${day}${suffix}` : "";
-
-  if (
-    typeof slug === "undefined" ||
-    !dateRegex.test(slug) ||
-    !Date.parse(slug) ||
-    slugMonth !== paddedMonth
-  ) {
+  if (typeof today === "undefined") {
     return {
       notFound: true,
     };
   }
 
   const menuItems = await resourceQuery.menuItems();
-  const devotions = await getByDevotionsByDate(
-    `2023-${paddedMonth}-${paddedDay}`
-  );
+  const devotions = await getByDevotionsByDate(zonedDate);
+
   return {
     props: {
       menuItems,
       devotions,
-      slug,
-      formattedDate,
       zonedDate,
+      formattedDate,
     },
   };
 };
