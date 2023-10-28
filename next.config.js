@@ -19,6 +19,15 @@ module.exports = withBundleAnalyzer(
     env: {
       AUTH0_BASE_URL: process.env.VERCEL_URL || process.env.AUTH0_BASE_URL,
       RESTRICTED_PAGES_PASSWORD: process.env.RESTRICTED_PAGES_PASSWORD
+    },
+    async redirects() {
+      return [
+        {
+          source: '/content/devotion',
+          destination: '/devotion',
+          permanent: true
+        }
+      ];
     }
   })
 );

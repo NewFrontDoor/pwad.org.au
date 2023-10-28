@@ -1,11 +1,6 @@
 {
   "possibleTypes": {
-    "SearchResult": [
-      "Hymn",
-      "Prayer",
-      "Liturgy",
-      "Scripture"
-    ],
+    "SearchResult": ["Hymn", "Prayer", "Liturgy", "Scripture"],
     "Document": [
       "Main",
       "Author",
@@ -42,12 +37,10 @@
       "Liturgy",
       "Scripture",
       "Asset",
-      "ExternalUrl"
+      "ExternalUrl",
+      "CustomInternalPage"
     ],
-    "PageTypes": [
-      "PageContent",
-      "RestrictedContent"
-    ],
+    "PageTypes": ["PageContent", "RestrictedContent"],
     "ResourceType": [
       "Asset",
       "RelativeUrl",
@@ -55,11 +48,6 @@
       "PageContent",
       "RestrictedContent"
     ],
-    "ShortList": [
-      "Hymn",
-      "Prayer",
-      "Liturgy",
-      "Scripture"
-    ]
+    "ShortList": ["Hymn", "Prayer", "Liturgy", "Scripture"]
   }
 }
