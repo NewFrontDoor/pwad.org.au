@@ -1,17 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import {NextPage, GetServerSideProps, InferGetServerSidePropsType} from 'next';
-import {Styled} from 'theme-ui';
+import React from "react";
+import PropTypes from "prop-types";
+import {
+  NextPage,
+  GetServerSideProps,
+  InferGetServerSidePropsType,
+} from "next";
+import { Styled } from "theme-ui";
 
-import * as resourceQuery from '../../../queries/resource';
-import {MenuItem} from '../../../queries/_types';
+import * as resourceQuery from "../../../queries/resource";
+import { MenuItem } from "../../../queries/_types";
 
-import PageLayout from '../../components/page-layout';
-import PraySearchControl from '../../components/search-box/pray-search-control';
+import PageLayout from "../../components/page-layout";
+import PraySearchControl from "../../components/search-box/pray-search-control";
 
 type PrayProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
-const Pray: NextPage<PrayProps> = ({menuItems}) => {
+const Pray: NextPage<PrayProps> = ({ menuItems }) => {
   return (
     <PageLayout menuItems={menuItems}>
       <Styled.h1 fontWeight="extraBold">
@@ -19,9 +23,8 @@ const Pray: NextPage<PrayProps> = ({menuItems}) => {
       </Styled.h1>
       <Styled.h2>Pray</Styled.h2>
       <Styled.p variant="prose">
-        Search for hymns, worship resources, prayer resources and worship aids
-        using the search box below. Advanced search will allow you to refine
-        your criteria on data available in the resource.
+        Search here for prayers for different aspects of the service or
+        occasions.
       </Styled.p>
       <PraySearchControl />
     </PageLayout>
@@ -31,7 +34,7 @@ const Pray: NextPage<PrayProps> = ({menuItems}) => {
 export default Pray;
 
 Pray.propTypes = {
-  menuItems: PropTypes.array.isRequired
+  menuItems: PropTypes.array.isRequired,
 };
 
 export const getServerSideProps: GetServerSideProps<{
@@ -41,7 +44,7 @@ export const getServerSideProps: GetServerSideProps<{
 
   return {
     props: {
-      menuItems
-    }
+      menuItems,
+    },
   };
 };

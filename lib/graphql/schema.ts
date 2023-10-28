@@ -4,6 +4,7 @@ import {resolvers} from './resolvers';
 
 export const schema = makeExecutableSchema({
   typeDefs,
-  // @ts-expect-error it's difficult to type this correctly
+  //it's difficult to type this correctly
+  // @ts-ignore
   resolvers
 });

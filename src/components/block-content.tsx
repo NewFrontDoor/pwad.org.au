@@ -1,12 +1,13 @@
-import React, {FC, ReactNode} from 'react';
-import PropTypes from 'prop-types';
-import {Styled} from 'theme-ui';
-import SanityBlockContent from '@sanity/block-content-to-react';
-import getVideoId from 'get-video-id';
-import Vimeo from '@u-wave/react-vimeo';
-import Youtube from '@u-wave/react-youtube';
-import Link, {linkProps, GenLinkProps} from './link';
-import {useSlugger} from '../use-slugger';
+import React, { FC, ReactNode } from "react";
+import PropTypes from "prop-types";
+import { Styled, sx } from "theme-ui";
+import SanityBlockContent from "@sanity/block-content-to-react";
+import getVideoId from "get-video-id";
+import Vimeo from "@u-wave/react-vimeo";
+import Youtube from "@u-wave/react-youtube";
+import Link, { linkProps, GenLinkProps } from "./link";
+import { useSlugger } from "../use-slugger";
+import Image from "next/image";
 
 type InternalLinkProps = {
   mark: {
@@ -15,20 +16,25 @@ type InternalLinkProps = {
   children: string;
 };
 
-const InternalLink = ({children, mark}: InternalLinkProps) => {
-  const reference = {...mark.reference, title: children, children};
+const InternalLink = ({ children, mark }: InternalLinkProps) => {
+  const reference = { ...mark.reference, title: children, children };
   return <Link {...linkProps(reference)}>{children}</Link>;
 };
 
 InternalLink.propTypes = {
   mark: PropTypes.shape({
-    reference: PropTypes.any
+    reference: PropTypes.any,
   }).isRequired,
-  children: PropTypes.any
+  children: PropTypes.any,
 };
 
-const ExternalLink = ({children, mark}) => {
-  const reference = {...mark, isBlank: mark.blank, children, isInternal: false};
+const ExternalLink = ({ children, mark }) => {
+  const reference = {
+    ...mark,
+    isBlank: mark.blank,
+    children,
+    isInternal: false,
+  };
   return <Link {...reference} />;
 };
 
@@ -37,19 +43,21 @@ ExternalLink.propTypes = {
     _key: PropTypes.string.isRequired,
     _type: PropTypes.string.isRequired,
     blank: PropTypes.bool,
-    href: PropTypes.string.isRequired
+    href: PropTypes.string.isRequired,
   }).isRequired,
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 };
 
-const Image = ({node}) => {
-  return <img {...node.asset} />;
+const ImageSerializer = ({ node }) => {
+  const { url, metadata } = node.asset;
+  const { height, width } = metadata.dimensions;
+  return <Image src={url} height={height} width={width} />;
 };
 
-Image.propTypes = {
+ImageSerializer.propTypes = {
   node: PropTypes.shape({
-    asset: PropTypes.any
-  }).isRequired
+    asset: PropTypes.any,
+  }).isRequired,
 };
 
 type VideoProps = {
@@ -58,16 +66,16 @@ type VideoProps = {
   };
 };
 
-const Video: FC<VideoProps> = ({node}) => {
-  const {url} = node;
-  if (typeof url === 'string') {
+const Video: FC<VideoProps> = ({ node }) => {
+  const { url } = node;
+  if (typeof url === "string") {
     const video = getVideoId(url);
 
-    if (video.service === 'youtube' && typeof video.id === 'string') {
+    if (video.service === "youtube" && typeof video.id === "string") {
       return <Youtube modestBranding annotations={false} video={video.id} />;
     }
 
-    if (video.service === 'vimeo' && typeof video.id === 'string') {
+    if (video.service === "vimeo" && typeof video.id === "string") {
       return <Vimeo showTitle={false} showByline={false} video={video.id} />;
     }
   }
@@ -77,8 +85,8 @@ const Video: FC<VideoProps> = ({node}) => {
 
 Video.propTypes = {
   node: PropTypes.shape({
-    url: PropTypes.string
-  }).isRequired
+    url: PropTypes.string,
+  }).isRequired,
 };
 
 type SerializerProps = {
@@ -94,26 +102,40 @@ const Block = (props: SerializerProps) => {
   const slugger = useSlugger();
 
   switch (props.node.style) {
-    case 'h2': {
-      const name = props.node.children.map((child) => child.text).join(' ');
+    case "h2": {
+      const name = props.node.children.map((child) => child.text).join(" ");
       const slug = slugger.slug(name);
       return <Styled.h2 {...props} id={slug} />;
     }
 
-    case 'h3':
+    case "h3":
       return <Styled.h3 {...props} />;
-    case 'h4':
+    case "h4":
       return <Styled.h4 {...props} />;
-    case 'h5':
+    case "h5":
       return <Styled.h5 {...props} />;
-    case 'ul':
+    case "ul":
       return <Styled.ul {...props} />;
-    case 'ol':
+    case "ol":
       return <Styled.ol {...props} />;
-    case 'li':
+    case "li":
       return <Styled.li {...props} />;
-    case 'normal':
+    case "normal":
       return <Styled.p variant="prose" {...props} />;
+    case "blockquote":
+      return (
+        <blockquote
+          style={{
+            borderLeft: "0.2em solid #707070",
+            margin: "0 0 1.75em",
+            paddingLeft: "1em",
+            fontSize: "20px",
+            lineHeight: "36px",
+            fontStyle: "italic",
+          }}
+          {...props}
+        />
+      );
     default:
       return <Styled.p variant="prose" {...props} />;
   }
@@ -122,13 +144,14 @@ const Block = (props: SerializerProps) => {
 const serializers = {
   types: {
     block: Block,
-    img: Image,
-    video: Video
+    img: ImageSerializer,
+    video: Video,
+    image: ImageSerializer,
   },
   marks: {
     internalLink: InternalLink,
-    link: ExternalLink
-  }
+    link: ExternalLink,
+  },
 };
 
 type BlockContentProps = {

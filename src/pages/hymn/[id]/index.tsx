@@ -27,16 +27,17 @@ import Sidebar, {
   SidebarScripture,
   SidebarTuneComposer,
   SidebarTune,
-  SidebarAlternateTunes
+  SidebarAlternateTunes,
+  SidebarContentPDF
 } from '../../../components/sidebar';
 
 type SongProps = InferGetServerSidePropsType<typeof getServerSideProps>;
 
 const Song: NextPage<SongProps> = ({hymn, menuItems}) => {
+  
   const {loggedInUser} = useUser({
     redirectTo: '/api/auth/login'
   });
-
   if (!loggedInUser.user) {
     return <Loading />;
   }
@@ -68,7 +69,6 @@ const Song: NextPage<SongProps> = ({hymn, menuItems}) => {
 
   let files = hymn.files ?? [];
   files = files.filter(Boolean);
-
   return (
     <PageLayout menuItems={menuItems}>
       <Styled.h1 fontWeight="extraBold">
@@ -95,6 +95,7 @@ const Song: NextPage<SongProps> = ({hymn, menuItems}) => {
               <SidebarMusicCopyright {...tune.musicCopyright} />
             )}
             <SidebarFiles files={files} generatePPT={generatePPT} />
+            <SidebarContentPDF content={content} hymnNumber={hymnNumber} title={title} header={'Lyrics'}/>
           </>
         </Sidebar>
 
