@@ -1,4 +1,4 @@
-import {gql} from '@apollo/client';
+import { gql } from "@apollo/client";
 
 export const typeDefs = gql`
   type Query {
@@ -195,7 +195,11 @@ export const typeDefs = gql`
     _updatedAt: Date
   }
 
-  union FeaturedReference = PageContent | RestrictedContent | ExternalUrl | RelativeUrl
+  union FeaturedReference =
+      PageContent
+    | RestrictedContent
+    | ExternalUrl
+    | RelativeUrl
 
   type Main implements Document {
     _createdAt: Date
@@ -212,7 +216,7 @@ export const typeDefs = gql`
   }
 
   union ChildPageReference =
-      PageContent 
+      PageContent
     | RestrictedContent
     | Hymn
     | Prayer
@@ -220,6 +224,7 @@ export const typeDefs = gql`
     | Scripture
     | Asset
     | ExternalUrl
+    | CustomInternalPage
 
   type MenuItem {
     _key: String
@@ -422,7 +427,12 @@ export const typeDefs = gql`
     url: String
   }
 
-  union ResourceType = Asset | RelativeUrl | ExternalUrl | PageContent | RestrictedContent 
+  union ResourceType =
+      Asset
+    | RelativeUrl
+    | ExternalUrl
+    | PageContent
+    | RestrictedContent
 
   type Resource implements Document {
     _createdAt: Date
@@ -459,7 +469,6 @@ export const typeDefs = gql`
     hasToc: Boolean
     content: JSON
   }
-
 
   union ShortList = Hymn | Prayer | Liturgy | Scripture
 
@@ -513,6 +522,16 @@ export const typeDefs = gql`
   }
 
   type ExternalUrl implements Document {
+    _createdAt: Date
+    _id: ID!
+    _rev: String
+    _type: String
+    _updatedAt: Date
+    title: String
+    url: String
+  }
+
+  type CustomInternalPage implements Document {
     _createdAt: Date
     _id: ID!
     _rev: String

@@ -1,28 +1,29 @@
-import upperFirst from 'lodash/upperFirst';
-import books from '../books';
-import {defineAbilitiesFor} from '../abilities';
-import {Resolvers, Hymn, Maybe, Document} from './gen-types';
+import upperFirst from "lodash/upperFirst";
+import books from "../books";
+import { defineAbilitiesFor } from "../abilities";
+import { Resolvers, Hymn, Maybe, Document } from "./gen-types";
 
 type SanityType =
-  | 'User'
-  | 'Hymn'
-  | 'Author'
-  | 'Tune'
-  | 'Metre'
-  | 'Asset'
-  | 'Copyright'
-  | 'Occasion'
-  | 'Prayer'
-  | 'Keyword'
-  | 'Category'
-  | 'Liturgy'
-  | 'Scripture'
-  | 'PageContent'
-  | 'ExternalUrl'
-  | 'RelativeUrl'
-  | 'Main'
-  | 'Menu'
-  | 'Resource';
+  | "User"
+  | "Hymn"
+  | "Author"
+  | "Tune"
+  | "Metre"
+  | "Asset"
+  | "Copyright"
+  | "Occasion"
+  | "Prayer"
+  | "Keyword"
+  | "Category"
+  | "Liturgy"
+  | "Scripture"
+  | "PageContent"
+  | "ExternalUrl"
+  | "CustomInternalPage"
+  | "RelativeUrl"
+  | "Main"
+  | "Menu"
+  | "Resource";
 
 const resolveSanityDocument = <T extends SanityType>(
   parent: Document
@@ -65,8 +66,8 @@ export const resolvers: Resolvers = {
       const ability = await context.user
         .map((user) => defineAbilitiesFor(user))
         .unwrapOr(defineAbilitiesFor());
-      const {search} = args.filter;
-      return context.models.resource.textSearch(ability, search ?? '');
+      const { search } = args.filter;
+      return context.models.resource.textSearch(ability, search ?? "");
     },
     async authorById(_parent, args, context) {
       return context.models.author.getById(args.id);
@@ -75,8 +76,8 @@ export const resolvers: Resolvers = {
       return context.models.occasion.findAll();
     },
     async pageContentOne(_parent, args, context) {
-      const {slug} = args.filter;
-      return context.models.pageContent.getBySlug(slug ?? '');
+      const { slug } = args.filter;
+      return context.models.pageContent.getBySlug(slug ?? "");
     },
     async metreMany(_parent, args, context) {
       return context.models.metre.findMany(
@@ -117,7 +118,7 @@ export const resolvers: Resolvers = {
           return context.models.stripe.getUserSubscription(user);
         })
         .unwrapOr(null);
-    }
+    },
   },
   Mutation: {
     async changePassword(_parent, _args, context) {
@@ -135,7 +136,7 @@ export const resolvers: Resolvers = {
             context.host
           );
         })
-        .unwrapOr({sessionId: null});
+        .unwrapOr({ sessionId: null });
     },
     async cancelSubscription(_parent, _args, context) {
       return context.user
@@ -170,20 +171,20 @@ export const resolvers: Resolvers = {
           );
         })
         .unwrapOr({
-          font: 'arial',
-          background: 'pca',
-          ratio: 'LAYOUT_16x9'
+          font: "arial",
+          background: "pca",
+          ratio: "LAYOUT_16x9",
         });
-    }
+    },
   },
   Document: {
-    __resolveType: resolveSanityDocument
+    __resolveType: resolveSanityDocument,
   },
   Hymn: {
     scripture(parent, _context, _info) {
-      const {book, chapter, verses} = parent as Hymn;
-      let scripture = '';
-      const found = books.find(({value}) => book === value);
+      const { book, chapter, verses } = parent as Hymn;
+      let scripture = "";
+      const found = books.find(({ value }) => book === value);
 
       if (found) {
         scripture += found.label;
@@ -198,26 +199,26 @@ export const resolvers: Resolvers = {
       }
 
       return scripture;
-    }
+    },
   },
   ShortList: {
     // @ts-expect-error
-    __resolveType: resolveSanityDocument
+    __resolveType: resolveSanityDocument,
   },
   SearchResult: {
     // @ts-expect-error
-    __resolveType: resolveSanityDocument
+    __resolveType: resolveSanityDocument,
   },
   FeaturedReference: {
     // @ts-expect-error
-    __resolveType: resolveSanityDocument
+    __resolveType: resolveSanityDocument,
   },
   ChildPageReference: {
     // @ts-expect-error
-    __resolveType: resolveSanityDocument
+    __resolveType: resolveSanityDocument,
   },
   ResourceType: {
     // @ts-expect-error
-    __resolveType: resolveSanityDocument
-  }
+    __resolveType: resolveSanityDocument,
+  },
 };

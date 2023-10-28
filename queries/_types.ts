@@ -98,6 +98,13 @@ export type ExternalUrl = {
   blank?: boolean;
 };
 
+export type CustomInternalPage = {
+  _id: string;
+  _type: "customInternalPage";
+  title: string;
+  slug: string;
+};
+
 export type ChildPageReference =
   | PageContent
   | RestrictedContent
@@ -106,7 +113,8 @@ export type ChildPageReference =
   | Liturgy
   | Scripture
   | Asset
-  | ExternalUrl;
+  | ExternalUrl
+  | CustomInternalPage;
 
 export type ChildPage = {
   _id: string;

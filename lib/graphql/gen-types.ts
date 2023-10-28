@@ -750,7 +750,7 @@ export type ResolversTypes = {
   EnumHymnBook: ResolverTypeWrapper<any>;
   PageInfo: ResolverTypeWrapper<any>;
   FilterInput: ResolverTypeWrapper<any>;
-  Document: ResolversTypes['Main'] | ResolversTypes['Author'] | ResolversTypes['Category'] | ResolversTypes['Copyright'] | ResolversTypes['Hymn'] | ResolversTypes['Keyword'] | ResolversTypes['Liturgy'] | ResolversTypes['Menu'] | ResolversTypes['Metre'] | ResolversTypes['Occasion'] | ResolversTypes['Prayer'] | ResolversTypes['Scripture'] | ResolversTypes['Tune'] | ResolversTypes['Asset'] | ResolversTypes['Resource'] | ResolversTypes['PageContent'] | ResolversTypes['RestrictedContent'] | ResolversTypes['User'] | ResolversTypes['RelativeUrl'] | ResolversTypes['ExternalUrl'];
+  Document: ResolversTypes['Main'] | ResolversTypes['Author'] | ResolversTypes['Category'] | ResolversTypes['Copyright'] | ResolversTypes['Hymn'] | ResolversTypes['Keyword'] | ResolversTypes['Liturgy'] | ResolversTypes['Menu'] | ResolversTypes['Metre'] | ResolversTypes['Occasion'] | ResolversTypes['Prayer'] | ResolversTypes['Scripture'] | ResolversTypes['Tune'] | ResolversTypes['Asset'] | ResolversTypes['Resource'] | ResolversTypes['PageContent'] | ResolversTypes['RestrictedContent'] | ResolversTypes['User'] | ResolversTypes['RelativeUrl'] | ResolversTypes['ExternalUrl'] | ResolversTypes['CustomInternalPage'];
   FeaturedReference: ResolverTypeWrapper<any>;
   Main: ResolverTypeWrapper<any>;
   ChildPageReference: ResolverTypeWrapper<any>;
@@ -784,6 +784,7 @@ export type ResolversTypes = {
   User: ResolverTypeWrapper<any>;
   RelativeUrl: ResolverTypeWrapper<any>;
   ExternalUrl: ResolverTypeWrapper<any>;
+  CustomInternalPage: ResolverTypeWrapper<any>;
   StripeCheckoutSession: ResolverTypeWrapper<any>;
   StripeSubscription: ResolverTypeWrapper<any>;
   PasswordChangeTicket: ResolverTypeWrapper<any>;
@@ -903,7 +904,7 @@ export type PageInfoResolvers<ContextType = Context, ParentType extends Resolver
 };
 
 export type DocumentResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Document'] = ResolversParentTypes['Document']> = {
-  __resolveType: TypeResolveFn<'Main' | 'Author' | 'Category' | 'Copyright' | 'Hymn' | 'Keyword' | 'Liturgy' | 'Menu' | 'Metre' | 'Occasion' | 'Prayer' | 'Scripture' | 'Tune' | 'Asset' | 'Resource' | 'PageContent' | 'RestrictedContent' | 'User' | 'RelativeUrl' | 'ExternalUrl', ParentType, ContextType>;
+  __resolveType: TypeResolveFn<'Main' | 'Author' | 'Category' | 'Copyright' | 'Hymn' | 'Keyword' | 'Liturgy' | 'Menu' | 'Metre' | 'Occasion' | 'Prayer' | 'Scripture' | 'Tune' | 'Asset' | 'Resource' | 'PageContent' | 'RestrictedContent' | 'User' | 'RelativeUrl' | 'ExternalUrl' | 'CustomInternalPage', ParentType, ContextType>;
   _createdAt?: Resolver<Maybe<ResolversTypes['Date']>, ParentType, ContextType>;
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   _rev?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;

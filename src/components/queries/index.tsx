@@ -308,7 +308,7 @@ export type Main = Document & {
   menuItems?: Maybe<Array<MenuItem>>;
 };
 
-export type ChildPageReference = PageContent | RestrictedContent | Hymn | Prayer | Liturgy | Scripture | Asset | ExternalUrl;
+export type ChildPageReference = PageContent | RestrictedContent | Hymn | Prayer | Liturgy | Scripture | Asset | ExternalUrl | CustomInternalPage;
 
 export type MenuItem = {
   __typename?: 'MenuItem';
@@ -631,6 +631,17 @@ export type ExternalUrl = Document & {
   _updatedAt?: Maybe<Scalars['Date']>;
   title?: Maybe<Scalars['String']>;
   url?: Maybe<Scalars['String']>;
+};
+
+export type CustomInternalPage = Document & {
+  __typename?: 'CustomInternalPage';
+  _createdAt?: Maybe<Scalars['Date']>;
+  _id: Scalars['ID'];
+  _rev?: Maybe<Scalars['String']>;
+  _type?: Maybe<Scalars['String']>;
+  _updatedAt?: Maybe<Scalars['Date']>;
+  title?: Maybe<Scalars['String']>;
+  slug?: Maybe<Scalars['String']>;
 };
 
 export type StripeCheckoutSession = {
