@@ -5,8 +5,6 @@ import {
   InferGetServerSidePropsType,
 } from "next";
 import { Styled, Box, Flex } from "theme-ui";
-import BlockContent from "../../components/block-content";
-import { formatInTimeZone } from "date-fns-tz";
 
 import is from "../../is";
 import * as resourceQuery from "../../../queries/resource";
@@ -120,9 +118,11 @@ export const getServerSideProps: GetServerSideProps<{
     };
   }
 
+  const queryYear =
+    paddedDay === "29" && paddedMonth === "02" ? "2024" : "2023"; //ensure valid leap year date in query
   const menuItems = await resourceQuery.menuItems();
   const devotions = await getByDevotionsByDate(
-    `2023-${paddedMonth}-${paddedDay}`
+    `${queryYear}-${paddedMonth}-${paddedDay}`
   );
   return {
     props: {
